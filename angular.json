@@ -7,7 +7,8 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "standalone": true
         }
       },
       "root": "",
@@ -30,6 +31,7 @@
               }
             ],
             "styles": [
+              "node_modules/@angular/material/prebuilt-themes/azure-blue.css",
               "src/styles.scss"
             ]
           },
@@ -88,11 +90,45 @@
               }
             ],
             "styles": [
+              "node_modules/@angular/material/prebuilt-themes/azure-blue.css",
               "src/styles.scss"
             ]
+          }
+        },
+        "storybook": {
+          "builder": "@storybook/angular:start-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "browserTarget": "new-project-bot:build",
+            "compodoc": true,
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              "."
+            ],
+            "port": 6006
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular:build-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "browserTarget": "new-project-bot:build",
+            "compodoc": true,
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              "."
+            ],
+            "outputDir": "storybook-static"
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "cbacea3d-3767-45d2-8898-a52095c57c58"
   }
 }

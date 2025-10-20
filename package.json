@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "storybook": "ng run new-project-bot:storybook",
+    "build-storybook": "ng run new-project-bot:build-storybook"
   },
   "prettier": {
     "printWidth": 100,
@@ -22,20 +24,31 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/cdk": "^20.2.9",
     "@angular/common": "^20.3.0",
     "@angular/compiler": "^20.3.0",
     "@angular/core": "^20.3.0",
     "@angular/forms": "^20.3.0",
+    "@angular/material": "^20.2.9",
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
+    "@ngrx/effects": "^20.0.1",
+    "@ngrx/router-store": "^20.0.1",
+    "@ngrx/store": "^20.0.1",
+    "@ngrx/store-devtools": "^20.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "^20.3.5",
     "@angular/build": "^20.3.5",
     "@angular/cli": "^20.3.5",
     "@angular/compiler-cli": "^20.3.0",
+    "@compodoc/compodoc": "^1.1.31",
+    "@schematics/angular": "^20.3.6",
+    "@storybook/addon-docs": "^9.1.10",
+    "@storybook/angular": "^9.1.10",
     "@types/jasmine": "~5.1.0",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.0",
@@ -43,6 +56,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "storybook": "^9.1.10",
     "typescript": "~5.9.2"
   }
 }
