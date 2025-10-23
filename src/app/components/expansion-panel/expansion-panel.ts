@@ -14,9 +14,15 @@ export class ExpansionPanel {
     {
       blockTitle: '123',
     },
-    // {
-    //   blockTitle: '2-123',
-    // }
+    {
+      blockTitle: '2-123',
+    },
+    {
+      blockTitle: '2-123',
+    },
+    {
+      blockTitle: '2-123',
+    }
   ];
   readonly panelOpenState = signal(false);
 }

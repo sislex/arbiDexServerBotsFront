@@ -1,0 +1,10 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+app-sidebar-container {
+  display: flex;
+  flex: 1;
+}

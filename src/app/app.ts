@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {Toolbar} from './components/toolbar/toolbar';
+import {QuoteWatcher} from './containers/quote-watcher/quote-watcher';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Toolbar],
+  imports: [RouterOutlet, QuoteWatcher],
   standalone: true,
   templateUrl: './app.html',
   styleUrl: './app.scss'

@@ -1,12 +1,18 @@
-//@use '@angular/material' as mat;
+@use '@angular/material' as mat;
+
+.toolbar {
+  @include mat.toolbar-overrides((
+    container-background-color: linear-gradient(to right, #8E2D23, #DC5229),
+    container-text-color: #ffff,
+  ));
+}
+
 .example-spacer {
   flex: 1 1 auto;
 }
 
-
-//.toolbar {
-//  @include mat.toolbar-overrides((
-//    container-background-color: orange,
-//    container-text-color: red,
-//  ));
-//}
+mat-toolbar {
+  button {
+    color: #fff;
+  }
+}

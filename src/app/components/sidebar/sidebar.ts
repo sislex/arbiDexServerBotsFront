@@ -5,10 +5,11 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
+import {UpperCasePipe} from '@angular/common';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [MatSidenavModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatIconModule, MatDividerModule],
+  imports: [MatSidenavModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatIconModule, MatDividerModule, UpperCasePipe],
   standalone: true,
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss'

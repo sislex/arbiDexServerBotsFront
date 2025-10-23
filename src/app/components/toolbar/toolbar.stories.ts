@@ -1,5 +1,6 @@
 import {Toolbar} from './toolbar';
 import {Meta, moduleMetadata, StoryObj} from '@storybook/angular';
+import { fn } from 'storybook/test';
 
 const meta: Meta<Toolbar> = {
   component: Toolbar,
@@ -11,7 +12,22 @@ const meta: Meta<Toolbar> = {
     }),
   ],
   args: {
+    emitter: fn(),
     header: 'Header',
+    menuItemList: [
+      {
+        title: 'firstItem',
+        url: '/firstUrl'
+      },
+      {
+        title: 'secondItem',
+        url: '/secondUrl'
+      },
+      {
+        title: 'thirdItem',
+        url: '/thirdUrl'
+      },
+    ]
   },
 };
 export default meta;

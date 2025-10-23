@@ -4,20 +4,16 @@
       <div class="panel-content-open">
         <div class="button-group">
           <div class="header">
-            <span class="title">{{ sidebarTitle }}</span>
+            <span class="title">{{ sidebarTitle | uppercase }}</span>
             <button mat-icon-button (click)="togglePanel()" class="toggle-button side-button">
               <mat-icon>arrow_left</mat-icon>
             </button>
           </div>
           <mat-divider></mat-divider>
           <div class="content">
-            <div class="button-item">
-              <button mat-icon-button (click)="togglePanel()" class="toggle-button side-button">
-                <mat-icon>arrow_left</mat-icon>
-              </button>
-            </div>
+            <!-- Здесь будут только заголовки вкладок -->
+            <ng-content select="[sidebar]"></ng-content>
           </div>
-
         </div>
       </div>
     } @else {
@@ -32,8 +28,7 @@
   </div>
 
   <div class="main-content">
-    <h2>Основной контент</h2>
-    <p>Эта область занимает оставшуюся ширину родительского контейнера.</p>
-    <p>Текущее состояние панели: <strong>{{ isPanelOpen ? 'Открыта' : 'Закрыта' }}</strong></p>
+    <!-- Здесь будет содержимое вкладок -->
+    <ng-content select="[main]"></ng-content>
   </div>
 </div>

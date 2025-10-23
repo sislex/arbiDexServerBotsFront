@@ -5,7 +5,9 @@
         {{ block.blockTitle }}
       </mat-expansion-panel-header>
       <div class="block-subtitles">
-        <button>CONTENT</button>
+        контент1
+        <ng-content select="[tabs]"></ng-content>
+        контент2
       </div>
     </mat-expansion-panel>
   }

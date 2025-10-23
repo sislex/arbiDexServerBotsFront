@@ -3,3 +3,9 @@
   flex-direction: row;
 }
 
+
+.vertical-tabs .mdc-tab--active {
+  border-left: 3px solid var(--mdc-theme-primary, #3f51b5);
+  background-color: rgba(63, 81, 181, 0.08);
+}
+
