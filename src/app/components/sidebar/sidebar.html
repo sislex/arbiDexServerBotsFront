@@ -11,8 +11,9 @@
           </div>
           <mat-divider></mat-divider>
           <div class="content">
-            <!-- Здесь будут только заголовки вкладок -->
-            <ng-content select="[sidebar]"></ng-content>
+            @for (item of list; track item) {
+
+            }
           </div>
         </div>
       </div>
@@ -28,7 +29,6 @@
   </div>
 
   <div class="main-content">
-    <!-- Здесь будет содержимое вкладок -->
     <ng-content select="[main]"></ng-content>
   </div>
 </div>

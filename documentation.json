@@ -2,6 +2,210 @@
     "pipes": [],
     "interfaces": [
         {
+            "name": "IBotData",
+            "id": "interface-IBotData-68947faf8e4a70bbf7890d4f49178e34bcfd633cc07de70b252247ba13efb8ed69fb71128980819647641a8ee44a644820aa1c9078e681f8190629952cc342f5",
+            "file": "src/app/+state/servers/servers.reducer.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { createReducer } from '@ngrx/store';\n// import * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n}\nexport interface IGateData {\n}\nexport interface IServerData {\n  serverName: string;\n  login: string;\n  password: string;\n  version: string;\n  timeToClose: Date;\n  timeAfterClose: Date;\n  status: boolean;\n  bots: IBotData[];\n  gates: IGateData[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  serverListApi: string[];\n  serverListData: IServerData[];\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'servers',\n  serverListApi: [],\n  serverListData: [],\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n\n);\n\n",
+            "properties": [],
+            "indexSignatures": [],
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "IGateData",
+            "id": "interface-IGateData-68947faf8e4a70bbf7890d4f49178e34bcfd633cc07de70b252247ba13efb8ed69fb71128980819647641a8ee44a644820aa1c9078e681f8190629952cc342f5",
+            "file": "src/app/+state/servers/servers.reducer.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { createReducer } from '@ngrx/store';\n// import * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n}\nexport interface IGateData {\n}\nexport interface IServerData {\n  serverName: string;\n  login: string;\n  password: string;\n  version: string;\n  timeToClose: Date;\n  timeAfterClose: Date;\n  status: boolean;\n  bots: IBotData[];\n  gates: IGateData[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  serverListApi: string[];\n  serverListData: IServerData[];\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'servers',\n  serverListApi: [],\n  serverListData: [],\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n\n);\n\n",
+            "properties": [],
+            "indexSignatures": [],
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "IServerData",
+            "id": "interface-IServerData-68947faf8e4a70bbf7890d4f49178e34bcfd633cc07de70b252247ba13efb8ed69fb71128980819647641a8ee44a644820aa1c9078e681f8190629952cc342f5",
+            "file": "src/app/+state/servers/servers.reducer.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { createReducer } from '@ngrx/store';\n// import * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n}\nexport interface IGateData {\n}\nexport interface IServerData {\n  serverName: string;\n  login: string;\n  password: string;\n  version: string;\n  timeToClose: Date;\n  timeAfterClose: Date;\n  status: boolean;\n  bots: IBotData[];\n  gates: IGateData[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  serverListApi: string[];\n  serverListData: IServerData[];\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'servers',\n  serverListApi: [],\n  serverListData: [],\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n\n);\n\n",
+            "properties": [
+                {
+                    "name": "bots",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "IBotData[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 18
+                },
+                {
+                    "name": "gates",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "IGateData[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 19
+                },
+                {
+                    "name": "login",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 12
+                },
+                {
+                    "name": "password",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 13
+                },
+                {
+                    "name": "serverName",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 11
+                },
+                {
+                    "name": "status",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 17
+                },
+                {
+                    "name": "timeAfterClose",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Date",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 16
+                },
+                {
+                    "name": "timeToClose",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Date",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 15
+                },
+                {
+                    "name": "version",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 14
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "ServersPartialState",
+            "id": "interface-ServersPartialState-68947faf8e4a70bbf7890d4f49178e34bcfd633cc07de70b252247ba13efb8ed69fb71128980819647641a8ee44a644820aa1c9078e681f8190629952cc342f5",
+            "file": "src/app/+state/servers/servers.reducer.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { createReducer } from '@ngrx/store';\n// import * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n}\nexport interface IGateData {\n}\nexport interface IServerData {\n  serverName: string;\n  login: string;\n  password: string;\n  version: string;\n  timeToClose: Date;\n  timeAfterClose: Date;\n  status: boolean;\n  bots: IBotData[];\n  gates: IGateData[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  serverListApi: string[];\n  serverListData: IServerData[];\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'servers',\n  serverListApi: [],\n  serverListData: [],\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n\n);\n\n",
+            "properties": [
+                {
+                    "name": "SERVERS_FEATURE_KEY",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ServersState",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 29,
+                    "modifierKind": [
+                        148
+                    ]
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "ServersState",
+            "id": "interface-ServersState-68947faf8e4a70bbf7890d4f49178e34bcfd633cc07de70b252247ba13efb8ed69fb71128980819647641a8ee44a644820aa1c9078e681f8190629952cc342f5",
+            "file": "src/app/+state/servers/servers.reducer.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { createReducer } from '@ngrx/store';\n// import * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n}\nexport interface IGateData {\n}\nexport interface IServerData {\n  serverName: string;\n  login: string;\n  password: string;\n  version: string;\n  timeToClose: Date;\n  timeAfterClose: Date;\n  status: boolean;\n  bots: IBotData[];\n  gates: IGateData[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  serverListApi: string[];\n  serverListData: IServerData[];\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'servers',\n  serverListApi: [],\n  serverListData: [],\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n\n);\n\n",
+            "properties": [
+                {
+                    "name": "featureName",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 23
+                },
+                {
+                    "name": "serverListApi",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 24
+                },
+                {
+                    "name": "serverListData",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "IServerData[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 25
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": []
+        },
+        {
             "name": "User",
             "id": "interface-User-d4821beac0e4a852e513391b7470981c4353fdd95a18628bb68136c8695b489ee15b926e2e5031bc26cf30e1508e0a362c3ee13a06734702b4d15af140e485d5",
             "file": "src/stories/user.ts",
@@ -27,15 +231,95 @@
             "extends": []
         }
     ],
-    "injectables": [],
+    "injectables": [
+        {
+            "name": "ServersEffects",
+            "id": "injectable-ServersEffects-5c1648f06d5e8724ed6bd6eb05872388fda71059229f42326e67a342ebe91bc5215b06a5f9a637681324cf93861b8b6202f42adf03a9d83070ac3c9cd0a57975",
+            "file": "src/app/+state/servers/servers.effects.ts",
+            "properties": [],
+            "methods": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "description": "",
+            "rawdescription": "\n",
+            "sourceCode": "import { Injectable } from '@angular/core';\n\n@Injectable()\nexport class ServersEffects {\n\n}\n",
+            "extends": [],
+            "type": "injectable"
+        }
+    ],
     "guards": [],
     "interceptors": [],
     "classes": [],
     "directives": [],
     "components": [
         {
+            "name": "AgGrid",
+            "id": "component-AgGrid-a5c40a995a34709a3b527c1bc87103cec7742abbf5db66917c638561c350896be58fa898d07333da6082b593f76f90cbe4f2a838a948d7870269355d4fd9b1c2",
+            "file": "src/app/components/ag-grid/ag-grid.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-ag-grid",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./ag-grid.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "colDefs",
+                    "defaultValue": "[\n    { field: \"make\", flex: 1},\n    { field: \"model\", flex: 1},\n    { field: \"price\" , flex: 1},\n    { field: \"electric\", flex: 1 }\n  ]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ColDef[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 23
+                },
+                {
+                    "name": "rowData",
+                    "defaultValue": "[\n    { make: \"Tesla\", model: \"Model Y\", price: 64950, electric: true },\n    { make: \"Ford\", model: \"F-Series\", price: 33850, electric: false },\n    { make: \"Toyota\", model: \"Corolla\", price: 29600, electric: false },\n    { make: \"Toyota\", model: \"Corolla\", price: 29600, electric: false },\n  ]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 16
+                }
+            ],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "AgGridAngular"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport { Component } from '@angular/core';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid',\n  imports: [AgGridAngular],\n  standalone: true,\n  templateUrl: './ag-grid.html',\n  styleUrl: './ag-grid.scss'\n})\nexport class AgGrid {\n  rowData = [\n    { make: \"Tesla\", model: \"Model Y\", price: 64950, electric: true },\n    { make: \"Ford\", model: \"F-Series\", price: 33850, electric: false },\n    { make: \"Toyota\", model: \"Corolla\", price: 29600, electric: false },\n    { make: \"Toyota\", model: \"Corolla\", price: 29600, electric: false },\n  ];\n\n  colDefs: ColDef[] = [\n    { field: \"make\", flex: 1},\n    { field: \"model\", flex: 1},\n    { field: \"price\" , flex: 1},\n    { field: \"electric\", flex: 1 }\n  ];\n}\n",
+            "styleUrl": "./ag-grid.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<ag-grid-angular\n  [rowData]=\"rowData\"\n  [columnDefs]=\"colDefs\"\n>\n</ag-grid-angular>\n"
+        },
+        {
             "name": "App",
-            "id": "component-App-c10ae5a8b98954d10d8ae4cafd769891d96c9ed7d7659fd7665715ff10f82625eecc72b6f7817ca32c35fde671ec9cedff7d114fa9b679f39995e9f758ad01d5",
+            "id": "component-App-babe23036cf010507144a6f074dd8cf9c5d5bce34409ae51d4d27fbfe85580c9546bf796b39cb1e601a785444f46c3ae6301c912a75421056c7f181d21cdd8f2",
             "file": "src/app/app.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -80,19 +364,19 @@
                     "name": "RouterOutlet"
                 },
                 {
-                    "name": "QuoteWatcher"
+                    "name": "AgGrid"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, signal } from '@angular/core';\nimport { RouterOutlet } from '@angular/router';\nimport {QuoteWatcher} from './containers/quote-watcher/quote-watcher';\n\n@Component({\n  selector: 'app-root',\n  imports: [RouterOutlet, QuoteWatcher],\n  standalone: true,\n  templateUrl: './app.html',\n  styleUrl: './app.scss'\n})\nexport class App {\n  protected readonly title = signal('new-project-bot');\n}\n",
+            "sourceCode": "import { Component, signal } from '@angular/core';\nimport { RouterOutlet } from '@angular/router';\nimport {AgGrid} from './components/ag-grid/ag-grid';\n\n@Component({\n  selector: 'app-root',\n  imports: [RouterOutlet, AgGrid],\n  standalone: true,\n  templateUrl: './app.html',\n  styleUrl: './app.scss'\n})\nexport class App {\n  protected readonly title = signal('new-project-bot');\n}\n",
             "styleUrl": "./app.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<app-quote-watcher></app-quote-watcher>\n"
+            "templateData": "<app-ag-grid></app-ag-grid>\n"
         },
         {
             "name": "ButtonComponent",
@@ -324,7 +608,7 @@
         },
         {
             "name": "ExpansionPanel",
-            "id": "component-ExpansionPanel-edd34c555829d52b9b457d5b90c354aa39fd8c83192863bb7def58e474e4fa87fc16c590e65e90fe390803309e0b834a3c4068d660ddcb4e15047c0da5d788e8",
+            "id": "component-ExpansionPanel-f35dd5945fefd8b1bc5c41bc595d88eedf9968679e0c992b28717228c30aa6ae906548555cd9e6485b8f99e25f2e0023a53ca8d8b47af368dcbd395dce26e84c",
             "file": "src/app/components/expansion-panel/expansion-panel.ts",
             "changeDetection": "ChangeDetectionStrategy.OnPush",
             "encapsulation": [],
@@ -343,7 +627,7 @@
             "inputsClass": [
                 {
                     "name": "blockList",
-                    "defaultValue": "[\n    {\n      blockTitle: '123',\n    },\n    // {\n    //   blockTitle: '2-123',\n    // }\n  ]",
+                    "defaultValue": "[\n    {\n      blockTitle: '123',\n    },\n    {\n      blockTitle: '2-123',\n    },\n    {\n      blockTitle: '2-123',\n    },\n    {\n      blockTitle: '2-123',\n    }\n  ]",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "line": 13,
@@ -362,7 +646,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 21,
+                    "line": 27,
                     "modifierKind": [
                         148
                     ]
@@ -383,13 +667,58 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {ChangeDetectionStrategy, Component, Input, signal} from '@angular/core';\nimport {MatExpansionModule} from '@angular/material/expansion';\n\n@Component({\n  selector: 'app-expansion-panel',\n  imports: [MatExpansionModule],\n  standalone: true,\n  templateUrl: './expansion-panel.html',\n  styleUrl: './expansion-panel.scss',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class ExpansionPanel {\n  @Input() blockList: any = [\n    {\n      blockTitle: '123',\n    },\n    // {\n    //   blockTitle: '2-123',\n    // }\n  ];\n  readonly panelOpenState = signal(false);\n}\n",
+            "sourceCode": "import {ChangeDetectionStrategy, Component, Input, signal} from '@angular/core';\nimport {MatExpansionModule} from '@angular/material/expansion';\n\n@Component({\n  selector: 'app-expansion-panel',\n  imports: [MatExpansionModule],\n  standalone: true,\n  templateUrl: './expansion-panel.html',\n  styleUrl: './expansion-panel.scss',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class ExpansionPanel {\n  @Input() blockList: any = [\n    {\n      blockTitle: '123',\n    },\n    {\n      blockTitle: '2-123',\n    },\n    {\n      blockTitle: '2-123',\n    },\n    {\n      blockTitle: '2-123',\n    }\n  ];\n  readonly panelOpenState = signal(false);\n}\n",
             "styleUrl": "./expansion-panel.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<mat-accordion>\n  @for (block of blockList; track block) {\n    <mat-expansion-panel (opened)=\"panelOpenState.set(true)\" (closed)=\"panelOpenState.set(false)\">\n      <mat-expansion-panel-header>\n        {{ block.blockTitle }}\n      </mat-expansion-panel-header>\n      <div class=\"block-subtitles\">\n        <button>CONTENT</button>\n      </div>\n    </mat-expansion-panel>\n  }\n\n</mat-accordion>\n"
+            "templateData": "<mat-accordion>\n  @for (block of blockList; track block) {\n    <mat-expansion-panel (opened)=\"panelOpenState.set(true)\" (closed)=\"panelOpenState.set(false)\">\n      <mat-expansion-panel-header>\n        {{ block.blockTitle }}\n      </mat-expansion-panel-header>\n      <div class=\"block-subtitles\">\n        контент1\n        <ng-content select=\"[tabs]\"></ng-content>\n        контент2\n      </div>\n    </mat-expansion-panel>\n  }\n\n</mat-accordion>\n"
+        },
+        {
+            "name": "ExpansionPanelContainer",
+            "id": "component-ExpansionPanelContainer-b777fec1a75966ee31694c11d9f2136b452b216c271201ed1a7373c256875324fa7b07617e28af6b12a1c95f071db4d199a313b37624b8735efc9ff4c29e416b",
+            "file": "src/app/containers/expansion-panel-container/expansion-panel-container.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-expansion-panel-container",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./expansion-panel-container.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "ExpansionPanel"
+                },
+                {
+                    "name": "TabsContainer"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\nimport {ExpansionPanel} from '../../components/expansion-panel/expansion-panel';\nimport {TabsContainer} from '../tabs-container/tabs-container';\n\n@Component({\n  selector: 'app-expansion-panel-container',\n  imports: [\n    ExpansionPanel,\n    TabsContainer\n  ],\n  standalone: true,\n  templateUrl: './expansion-panel-container.html',\n  styleUrl: './expansion-panel-container.scss'\n})\nexport class ExpansionPanelContainer {\n\n}\n",
+            "styleUrl": "./expansion-panel-container.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<app-expansion-panel>\n  <app-tabs-container tabs></app-tabs-container>\n</app-expansion-panel>\n"
         },
         {
             "name": "Filter",
@@ -643,7 +972,7 @@
         },
         {
             "name": "QuoteWatcher",
-            "id": "component-QuoteWatcher-a49c94e4559340f615bfc02a2564fb933d623f47c4a6e9c5a55ad5ec83321f8c8adad3e85525733503d86c0c56cc1fdc602199b765a322613a1d043ee28179f0",
+            "id": "component-QuoteWatcher-971a7de66edebdb90bbec94f67146bc2543807fb9c849996e5eb431bd256ca43085c527b81ac7c701741b0b86338d61f9a2b32b60d8a7b404e123b1a03d8425e",
             "file": "src/app/containers/quote-watcher/quote-watcher.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -670,22 +999,25 @@
             "imports": [
                 {
                     "name": "ToolbarContainer"
+                },
+                {
+                    "name": "SidebarContainer"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\nimport {ToolbarContainer} from '../toolbar-container/toolbar-container';\n\n@Component({\n  selector: 'app-quote-watcher',\n  imports: [\n    ToolbarContainer\n  ],\n  standalone: true,\n  templateUrl: './quote-watcher.html',\n  styleUrl: './quote-watcher.scss'\n})\nexport class QuoteWatcher {\n\n}\n",
+            "sourceCode": "import { Component } from '@angular/core';\nimport {ToolbarContainer} from '../toolbar-container/toolbar-container';\nimport {SidebarContainer} from '../sidebar-container/sidebar-container';\n\n@Component({\n  selector: 'app-quote-watcher',\n  imports: [\n    ToolbarContainer,\n    SidebarContainer\n  ],\n  standalone: true,\n  templateUrl: './quote-watcher.html',\n  styleUrl: './quote-watcher.scss'\n})\nexport class QuoteWatcher {\n\n}\n",
             "styleUrl": "./quote-watcher.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<app-toolbar-container></app-toolbar-container>\n"
+            "templateData": "<app-toolbar-container></app-toolbar-container>\n<app-sidebar-container></app-sidebar-container>\n"
         },
         {
             "name": "Sidebar",
-            "id": "component-Sidebar-2f2db845ff100ed2c5a2111f22cf0e463f89eba620a5647dc5a220592cde9cc95dcaa4b08e80e6cf7cdbe9309721b8784caeab63e125ae4f831e1fdd21d269a4",
+            "id": "component-Sidebar-3e57a3a7a9e1ea3094bb0927bb094be810d196da6e73aeb0fff7b5ccb58789a26170bc7006e2aad340ed456261e71e1fd6a2f519b1daf2546eb219b43d49e2bf",
             "file": "src/app/components/sidebar/sidebar.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -706,7 +1038,7 @@
                     "defaultValue": "''",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 17,
+                    "line": 18,
                     "type": "string",
                     "decorators": []
                 }
@@ -722,7 +1054,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 18
+                    "line": 19
                 }
             ],
             "methodsClass": [
@@ -732,7 +1064,7 @@
                     "optional": false,
                     "returnType": "string",
                     "typeParameters": [],
-                    "line": 24,
+                    "line": 25,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -742,7 +1074,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 20,
+                    "line": 21,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -776,18 +1108,97 @@
                 {
                     "name": "MatDividerModule",
                     "type": "module"
+                },
+                {
+                    "name": "UpperCasePipe",
+                    "type": "pipe"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, Input} from '@angular/core';\nimport {MatButtonModule} from '@angular/material/button';\nimport {MatSelectModule} from '@angular/material/select';\nimport {MatFormFieldModule} from '@angular/material/form-field';\nimport {MatSidenavModule} from '@angular/material/sidenav';\nimport {MatIconModule} from '@angular/material/icon';\nimport {MatDividerModule} from '@angular/material/divider';\n\n@Component({\n  selector: 'app-sidebar',\n  imports: [MatSidenavModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatIconModule, MatDividerModule],\n  standalone: true,\n  templateUrl: './sidebar.html',\n  styleUrl: './sidebar.scss'\n})\nexport class Sidebar {\n  @Input() sidebarTitle: string = '';\n  isPanelOpen = true;\n\n  togglePanel(): void {\n    this.isPanelOpen = !this.isPanelOpen;\n  }\n\n  getPanelClass(): string {\n    return this.isPanelOpen ? 'panel-open' : 'panel-closed';\n  }\n\n}\n",
+            "sourceCode": "import {Component, Input} from '@angular/core';\nimport {MatButtonModule} from '@angular/material/button';\nimport {MatSelectModule} from '@angular/material/select';\nimport {MatFormFieldModule} from '@angular/material/form-field';\nimport {MatSidenavModule} from '@angular/material/sidenav';\nimport {MatIconModule} from '@angular/material/icon';\nimport {MatDividerModule} from '@angular/material/divider';\nimport {UpperCasePipe} from '@angular/common';\n\n@Component({\n  selector: 'app-sidebar',\n  imports: [MatSidenavModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatIconModule, MatDividerModule, UpperCasePipe],\n  standalone: true,\n  templateUrl: './sidebar.html',\n  styleUrl: './sidebar.scss'\n})\nexport class Sidebar {\n  @Input() sidebarTitle: string = '';\n  isPanelOpen = true;\n\n  togglePanel(): void {\n    this.isPanelOpen = !this.isPanelOpen;\n  }\n\n  getPanelClass(): string {\n    return this.isPanelOpen ? 'panel-open' : 'panel-closed';\n  }\n\n}\n",
             "styleUrl": "./sidebar.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<div class=\"container\">\n  <div class=\"panel\" [class]=\"getPanelClass()\">\n    @if (isPanelOpen) {\n      <div class=\"panel-content-open\">\n        <div class=\"button-group\">\n          <div class=\"header\">\n            <span class=\"title\">{{ sidebarTitle }}</span>\n            <button mat-icon-button (click)=\"togglePanel()\" class=\"toggle-button side-button\">\n              <mat-icon>arrow_left</mat-icon>\n            </button>\n          </div>\n          <mat-divider></mat-divider>\n          <div class=\"content\">\n            CONTENT\n          </div>\n\n        </div>\n      </div>\n    } @else {\n      <div class=\"panel-content-closed\">\n        <div class=\"closed-content\">\n          <button mat-icon-button (click)=\"togglePanel()\" class=\"toggle-button\">\n            <mat-icon>arrow_right</mat-icon>\n          </button>\n        </div>\n      </div>\n    }\n  </div>\n\n  <div class=\"main-content\">\n    MAIN CONTENT\n  </div>\n</div>\n"
+            "templateData": "<div class=\"container\">\n  <div class=\"panel\" [class]=\"getPanelClass()\">\n    @if (isPanelOpen) {\n      <div class=\"panel-content-open\">\n        <div class=\"button-group\">\n          <div class=\"header\">\n            <span class=\"title\">{{ sidebarTitle | uppercase }}</span>\n            <button mat-icon-button (click)=\"togglePanel()\" class=\"toggle-button side-button\">\n              <mat-icon>arrow_left</mat-icon>\n            </button>\n          </div>\n          <mat-divider></mat-divider>\n          <div class=\"content\">\n            <!-- Здесь будут только заголовки вкладок -->\n            <ng-content select=\"[sidebar]\"></ng-content>\n          </div>\n        </div>\n      </div>\n    } @else {\n      <div class=\"panel-content-closed\">\n        <div class=\"closed-content\">\n          <button mat-icon-button (click)=\"togglePanel()\" class=\"toggle-button\">\n            <mat-icon>arrow_right</mat-icon>\n          </button>\n        </div>\n      </div>\n    }\n  </div>\n\n  <div class=\"main-content\">\n    <!-- Здесь будет содержимое вкладок -->\n    <ng-content select=\"[main]\"></ng-content>\n  </div>\n</div>\n"
+        },
+        {
+            "name": "SidebarContainer",
+            "id": "component-SidebarContainer-9a0dbfbbba4f0f905c151d499ea95b1c9acccaddcb976a6938162717ceb78ae31f4f7f5385084033500c331b2cbeea85eda7a9db8ff5ddc3d66c8850e0f918d3",
+            "file": "src/app/containers/sidebar-container/sidebar-container.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-sidebar-container",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./sidebar-container.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "featureName$",
+                    "defaultValue": "this.store.select(getFeatureName)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 22
+                },
+                {
+                    "name": "store",
+                    "defaultValue": "inject(Store)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 20,
+                    "modifierKind": [
+                        123
+                    ]
+                }
+            ],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "Sidebar"
+                },
+                {
+                    "name": "AsyncPipe",
+                    "type": "pipe"
+                },
+                {
+                    "name": "ExpansionPanelContainer"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {Sidebar} from '../../components/sidebar/sidebar';\nimport {Store} from '@ngrx/store';\nimport {getFeatureName} from '../../+state/servers/servers.selectors';\nimport {AsyncPipe} from '@angular/common';\nimport {ExpansionPanelContainer} from '../expansion-panel-container/expansion-panel-container';\n\n@Component({\n  selector: 'app-sidebar-container',\n  imports: [\n    Sidebar,\n    AsyncPipe,\n    ExpansionPanelContainer,\n  ],\n  standalone: true,\n  templateUrl: './sidebar-container.html',\n  styleUrl: './sidebar-container.scss'\n})\nexport class SidebarContainer {\n  private store = inject(Store);\n\n  featureName$ = this.store.select(getFeatureName);\n}\n",
+            "styleUrl": "./sidebar-container.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<app-sidebar\n  [sidebarTitle]=\"(featureName$ | async)!\"\n>\n  <app-expansion-panel-container sidebar>\n  </app-expansion-panel-container>\n</app-sidebar>\n"
         },
         {
             "name": "Tabs",
@@ -874,8 +1285,50 @@
             "templateData": "<mat-tab-group class=\"vertical-tabs\">\n  <mat-tab label=\"First\">Content 1</mat-tab>\n  <mat-tab label=\"Second\">Content 2</mat-tab>\n  <mat-tab label=\"Third\">Content 3</mat-tab>\n</mat-tab-group>\n"
         },
         {
+            "name": "TabsContainer",
+            "id": "component-TabsContainer-79d10658e2c694544c2768e4cb317703362c6799491a7a24749e9fbe50febc093bd38d5fbb93b2c79112553960cb07a7be4273c587d6aca056f471d517cfb9fd",
+            "file": "src/app/containers/tabs-container/tabs-container.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-tabs-container",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./tabs-container.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "Tabs"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\nimport {Tabs} from '../../components/tabs/tabs';\n\n@Component({\n  selector: 'app-tabs-container',\n  imports: [\n    Tabs\n  ],\n  standalone: true,\n  templateUrl: './tabs-container.html',\n  styleUrl: './tabs-container.scss'\n})\nexport class TabsContainer {\n\n}\n",
+            "styleUrl": "./tabs-container.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<app-tabs></app-tabs>\n"
+        },
+        {
             "name": "Toolbar",
-            "id": "component-Toolbar-b41f0292a61a2f4da2aa435ca7779bd321bdcaabcb8c5f546bed3998a67e39ff37be37cff50a6fd1f842ed7a52bfbbf1856df52a7034be9536655f58adb7a2fb",
+            "id": "component-Toolbar-70b908dc633d6683a967c0cdb5a19fa09e7286340e0a64a146d0b45be0fb825f96743a4913477b955a642e1f7583e08e974ada4503df699592654f05d03a5bbe",
             "file": "src/app/components/toolbar/toolbar.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -896,7 +1349,7 @@
                     "defaultValue": "''",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 15,
+                    "line": 16,
                     "type": "string",
                     "decorators": []
                 },
@@ -905,7 +1358,7 @@
                     "defaultValue": "[]",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 16,
+                    "line": 17,
                     "type": "any",
                     "decorators": []
                 }
@@ -916,7 +1369,7 @@
                     "defaultValue": "new EventEmitter()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 18,
+                    "line": 19,
                     "type": "EventEmitter"
                 }
             ],
@@ -935,7 +1388,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 20,
+                    "line": 21,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -972,22 +1425,26 @@
                 {
                     "name": "MatMenuModule",
                     "type": "module"
+                },
+                {
+                    "name": "UpperCasePipe",
+                    "type": "pipe"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {MatToolbarModule} from '@angular/material/toolbar';\nimport {MatButtonModule} from '@angular/material/button';\nimport {MatIconModule} from '@angular/material/icon';\nimport {MatMenuModule} from '@angular/material/menu';\n\n@Component({\n  selector: 'app-toolbar',\n  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule],\n  standalone: true,\n  templateUrl: './toolbar.html',\n  styleUrl: './toolbar.scss'\n})\nexport class Toolbar {\n  @Input() header: string = '';\n  @Input() menuItemList: any = [];\n\n  @Output() emitter = new EventEmitter();\n\n  menuClick(data: any) {\n    this.emitter.emit({\n      event: 'Toolbar:MENU_CLICKED',\n      data\n    });\n  }\n}\n",
+            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {MatToolbarModule} from '@angular/material/toolbar';\nimport {MatButtonModule} from '@angular/material/button';\nimport {MatIconModule} from '@angular/material/icon';\nimport {MatMenuModule} from '@angular/material/menu';\nimport {UpperCasePipe} from '@angular/common';\n\n@Component({\n  selector: 'app-toolbar',\n  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, UpperCasePipe],\n  standalone: true,\n  templateUrl: './toolbar.html',\n  styleUrl: './toolbar.scss'\n})\nexport class Toolbar {\n  @Input() header: string = '';\n  @Input() menuItemList: any = [];\n\n  @Output() emitter = new EventEmitter();\n\n  menuClick(data: any) {\n    this.emitter.emit({\n      event: 'Toolbar:MENU_CLICKED',\n      data\n    });\n  }\n}\n",
             "styleUrl": "./toolbar.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<mat-toolbar class=\"toolbar\">\n  <mat-icon>logo_dev</mat-icon>\n  <span class=\"example-spacer\"></span>\n  <span>{{ header }}</span>\n  <span class=\"example-spacer\"></span>\n  @if (menuItemList.length > 0) {\n    <button\n      matIconButton\n      class=\"example-icon\"\n      aria-label=\"Example icon-button with menu icon\"\n      [matMenuTriggerFor]=\"menu\"\n\n    >\n      <mat-icon>menu</mat-icon>\n    </button>\n  }\n\n</mat-toolbar>\n\n<mat-menu #menu=\"matMenu\">\n  @for (item of menuItemList; track item) {\n    <button mat-menu-item (click)=\"menuClick(item.url)\" > {{item.title}} </button>\n  }\n</mat-menu>\n\n"
+            "templateData": "<mat-toolbar class=\"toolbar\">\n  <mat-icon>logo_dev</mat-icon>\n  <span class=\"example-spacer\"></span>\n  <span>{{ header | uppercase }}</span>\n  <span class=\"example-spacer\"></span>\n  @if (menuItemList.length > 0) {\n    <button\n      matIconButton\n      class=\"example-icon\"\n      aria-label=\"Example icon-button with menu icon\"\n      [matMenuTriggerFor]=\"menu\"\n\n    >\n      <mat-icon>menu</mat-icon>\n    </button>\n  }\n\n</mat-toolbar>\n\n<mat-menu #menu=\"matMenu\">\n  @for (item of menuItemList; track item) {\n    <button mat-menu-item (click)=\"menuClick(item.url)\" > {{item.title}} </button>\n  }\n</mat-menu>\n\n"
         },
         {
             "name": "ToolbarContainer",
-            "id": "component-ToolbarContainer-9ff06150d77ed77629266a40c0a73cce6d23d4b927606c92d7b1ee1ac27d90b113135224abc67077e8ddbb8efd2b4813454517f7f6f22020f7c8936d83b1c0f0",
+            "id": "component-ToolbarContainer-67c67b00587544159d9d576443934eb0896659cff7d592e4d07c2a243c24551bdf27231b7da489efd3b9a1d236c37aad715fd4b4a14dc42bb8638f02270eee88",
             "file": "src/app/containers/toolbar-container/toolbar-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1004,7 +1461,33 @@
             "hostDirectives": [],
             "inputsClass": [],
             "outputsClass": [],
-            "propertiesClass": [],
+            "propertiesClass": [
+                {
+                    "name": "featureName$",
+                    "defaultValue": "this.store.select(getFeatureName)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 20
+                },
+                {
+                    "name": "store",
+                    "defaultValue": "inject(Store)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 18,
+                    "modifierKind": [
+                        123
+                    ]
+                }
+            ],
             "methodsClass": [
                 {
                     "name": "events",
@@ -1019,7 +1502,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 14,
+                    "line": 21,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -1043,18 +1526,22 @@
             "imports": [
                 {
                     "name": "Toolbar"
+                },
+                {
+                    "name": "AsyncPipe",
+                    "type": "pipe"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\nimport {Toolbar} from '../../components/toolbar/toolbar';\n\n@Component({\n  selector: 'app-toolbar-container',\n  imports: [\n    Toolbar\n  ],\n  standalone: true,\n  templateUrl: './toolbar-container.html',\n  styleUrl: './toolbar-container.scss'\n})\nexport class ToolbarContainer {\n  events(event: any) {\n\n  }\n}\n",
+            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {Toolbar} from '../../components/toolbar/toolbar';\nimport {Store} from '@ngrx/store';\nimport {getFeatureName} from '../../+state/servers/servers.selectors';\nimport {AsyncPipe} from '@angular/common';\n\n@Component({\n  selector: 'app-toolbar-container',\n  imports: [\n    Toolbar,\n    AsyncPipe\n  ],\n  standalone: true,\n  templateUrl: './toolbar-container.html',\n  styleUrl: './toolbar-container.scss'\n})\nexport class ToolbarContainer {\n  private store = inject(Store);\n\n  featureName$ = this.store.select(getFeatureName);\n  events(event: any) {\n\n  }\n}\n",
             "styleUrl": "./toolbar-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<app-toolbar\n  [header]=\"'1'\"\n  [menuItemList]=[]\n  (emitter)=\"events($event)\"\n></app-toolbar>\n"
+            "templateData": "<app-toolbar\n  [header]=\"(featureName$ | async)!\"\n  [menuItemList]=[]\n  (emitter)=\"events($event)\"\n></app-toolbar>\n"
         }
     ],
     "modules": [],
@@ -1068,7 +1555,27 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "ApplicationConfig",
-                "defaultValue": "{\n  providers: [\n    provideBrowserGlobalErrorListeners(),\n    provideZoneChangeDetection({ eventCoalescing: true }),\n    provideRouter(routes),\n    provideStore(),\n    provideEffects(),\n    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),\n    provideRouterStore()\n]\n}"
+                "defaultValue": "{\n  providers: [\n    provideBrowserGlobalErrorListeners(),\n    provideZoneChangeDetection({ eventCoalescing: true }),\n    provideRouter(routes),\n    provideState(SERVERS_FEATURE_KEY, serversReducer),\n    provideStore(),\n    provideEffects(ServersEffects),\n    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),\n    provideRouterStore(),\n    importProvidersFrom(\n      AgGridModule\n    )\n]\n}"
+            },
+            {
+                "name": "getFeatureName",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/+state/servers/servers.selectors.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.featureName\n)"
+            },
+            {
+                "name": "initialState",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/+state/servers/servers.reducer.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "ServersState",
+                "defaultValue": "{\n  featureName: 'servers',\n  serverListApi: [],\n  serverListData: [],\n}"
             },
             {
                 "name": "routes",
@@ -1079,6 +1586,36 @@
                 "deprecationMessage": "",
                 "type": "Routes",
                 "defaultValue": "[]"
+            },
+            {
+                "name": "selectFeature",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/+state/servers/servers.selectors.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createFeatureSelector<ServersState>(SERVERS_FEATURE_KEY)"
+            },
+            {
+                "name": "SERVERS_FEATURE_KEY",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/+state/servers/servers.reducer.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "string",
+                "defaultValue": "'servers'"
+            },
+            {
+                "name": "serversReducer",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/+state/servers/servers.reducer.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createReducer(\n  initialState,\n\n)"
             }
         ],
         "functions": [],
@@ -1094,7 +1631,61 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "ApplicationConfig",
-                    "defaultValue": "{\n  providers: [\n    provideBrowserGlobalErrorListeners(),\n    provideZoneChangeDetection({ eventCoalescing: true }),\n    provideRouter(routes),\n    provideStore(),\n    provideEffects(),\n    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),\n    provideRouterStore()\n]\n}"
+                    "defaultValue": "{\n  providers: [\n    provideBrowserGlobalErrorListeners(),\n    provideZoneChangeDetection({ eventCoalescing: true }),\n    provideRouter(routes),\n    provideState(SERVERS_FEATURE_KEY, serversReducer),\n    provideStore(),\n    provideEffects(ServersEffects),\n    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),\n    provideRouterStore(),\n    importProvidersFrom(\n      AgGridModule\n    )\n]\n}"
+                }
+            ],
+            "src/app/+state/servers/servers.selectors.ts": [
+                {
+                    "name": "getFeatureName",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/servers/servers.selectors.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.featureName\n)"
+                },
+                {
+                    "name": "selectFeature",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/servers/servers.selectors.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createFeatureSelector<ServersState>(SERVERS_FEATURE_KEY)"
+                }
+            ],
+            "src/app/+state/servers/servers.reducer.ts": [
+                {
+                    "name": "initialState",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/servers/servers.reducer.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ServersState",
+                    "defaultValue": "{\n  featureName: 'servers',\n  serverListApi: [],\n  serverListData: [],\n}"
+                },
+                {
+                    "name": "SERVERS_FEATURE_KEY",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/servers/servers.reducer.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "defaultValue": "'servers'"
+                },
+                {
+                    "name": "serversReducer",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/servers/servers.reducer.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createReducer(\n  initialState,\n\n)"
                 }
             ],
             "src/app/app.routes.ts": [
@@ -1120,9 +1711,113 @@
         "children": []
     },
     "coverage": {
-        "count": 5,
+        "count": 2,
         "status": "low",
         "files": [
+            {
+                "filePath": "src/app/+state/servers/servers.effects.ts",
+                "type": "injectable",
+                "linktype": "injectable",
+                "name": "ServersEffects",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.reducer.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IBotData",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.reducer.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IGateData",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.reducer.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IServerData",
+                "coveragePercent": 0,
+                "coverageCount": "0/10",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.reducer.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "ServersPartialState",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.reducer.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "ServersState",
+                "coveragePercent": 0,
+                "coverageCount": "0/4",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.reducer.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "initialState",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.reducer.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "SERVERS_FEATURE_KEY",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.reducer.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "serversReducer",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.selectors.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "getFeatureName",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.selectors.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "selectFeature",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
             {
                 "filePath": "src/app/app.config.ts",
                 "type": "variable",
@@ -1150,6 +1845,15 @@
                 "name": "App",
                 "coveragePercent": 0,
                 "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/ag-grid/ag-grid.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "AgGrid",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
                 "status": "low"
             },
             {
@@ -1216,10 +1920,37 @@
                 "status": "low"
             },
             {
+                "filePath": "src/app/containers/expansion-panel-container/expansion-panel-container.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "ExpansionPanelContainer",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
                 "filePath": "src/app/containers/quote-watcher/quote-watcher.ts",
                 "type": "component",
                 "linktype": "component",
                 "name": "QuoteWatcher",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/containers/sidebar-container/sidebar-container.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "SidebarContainer",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/containers/tabs-container/tabs-container.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "TabsContainer",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
@@ -1230,7 +1961,7 @@
                 "linktype": "component",
                 "name": "ToolbarContainer",
                 "coveragePercent": 0,
-                "coverageCount": "0/2",
+                "coverageCount": "0/4",
                 "status": "low"
             },
             {

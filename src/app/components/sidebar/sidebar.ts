@@ -16,6 +16,7 @@ import {UpperCasePipe} from '@angular/common';
 })
 export class Sidebar {
   @Input() sidebarTitle: string = '';
+  @Input() list: string = '';
   isPanelOpen = true;
 
   togglePanel(): void {

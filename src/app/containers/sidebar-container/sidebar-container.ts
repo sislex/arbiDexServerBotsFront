@@ -4,7 +4,6 @@ import {Store} from '@ngrx/store';
 import {getFeatureName} from '../../+state/servers/servers.selectors';
 import {AsyncPipe} from '@angular/common';
 import {ExpansionPanelContainer} from '../expansion-panel-container/expansion-panel-container';
-import {TabsContainer} from '../tabs-container/tabs-container';
 
 @Component({
   selector: 'app-sidebar-container',
@@ -12,7 +11,6 @@ import {TabsContainer} from '../tabs-container/tabs-container';
     Sidebar,
     AsyncPipe,
     ExpansionPanelContainer,
-    TabsContainer,
   ],
   standalone: true,
   templateUrl: './sidebar-container.html',
