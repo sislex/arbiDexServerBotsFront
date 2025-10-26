@@ -20,7 +20,6 @@ export class Toggle {
   onToggle() {
     this.emitter.emit({
       event: 'Toggle:TOGGLE_CLICKED',
-      data: this.isChecked
     });
   }
 }

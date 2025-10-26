@@ -1,1 +1,9 @@
-<!--play_arrow-->
+@if (isStarted) {
+  <button matMiniFab (click)="toggleLaunch()">
+    <mat-icon>stop</mat-icon>
+  </button>
+} @else {
+  <button matMiniFab (click)="toggleLaunch()">
+    <mat-icon>play_arrow</mat-icon>
+  </button>
+}

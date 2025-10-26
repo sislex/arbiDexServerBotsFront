@@ -1,8 +1,4 @@
 :host {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
   .future {
     color: var(--true-color);
   }
@@ -14,5 +10,4 @@
   .colorNone {
     color: var(--none-color);
   }
-
 }

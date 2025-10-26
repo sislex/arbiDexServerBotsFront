@@ -26,8 +26,14 @@ type Story = StoryObj<LaunchControl>;
 
 export const Base: Story = {};
 
-// export const Active: Story = {
-//   args: {
-//     status: 'active',
-//   },
-// };
+export const Active: Story = {
+  args: {
+    isStarted: true,
+  },
+};
+
+export const NotActive: Story = {
+  args: {
+    isStarted: false,
+  },
+};
