@@ -288,6 +288,44 @@
     "directives": [],
     "components": [
         {
+            "name": "Actions",
+            "id": "component-Actions-11923d302dac1d9ad1326d8ca1237a56da0b615153de793fce72e39c8b6f42f87d5dfc20a83c577a636cd9f3b585b34723eed54dfda15044c1a4432cfc25cd79",
+            "file": "src/app/components/ag-grid-components/actions/actions.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-actions",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./actions.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\n\n@Component({\n  selector: 'app-actions',\n  imports: [],\n  standalone: true,\n  templateUrl: './actions.html',\n  styleUrl: './actions.scss'\n})\nexport class Actions {\n\n}\n",
+            "styleUrl": "./actions.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<p>actions works!</p>\n"
+        },
+        {
             "name": "AgGrid",
             "id": "component-AgGrid-7beea27c119327f518eb0ec9eee7b7aaff2c26a0982d28a9cfb9e182255a7bc808a506272b94f26bef289bb469e5295d36e451d0052d33c790f49226b76c1a9c",
             "file": "src/app/components/ag-grid/ag-grid.ts",
@@ -364,7 +402,7 @@
         },
         {
             "name": "AgGridBotList",
-            "id": "component-AgGridBotList-9be31822c6e3e0b30e183c6bc7418ef6938eaab73dcefca61a9e535a64f82efcb9aa3ca81d2d30c2e807faeb141ddcd25e78e9103335f14ebb7103de3d930c39",
+            "id": "component-AgGridBotList-fe542c04fdec728721656e253fd6b50f3f7b270dffdd2956482724e529fd3abd26e63b660443165e4f962d6856a31df6172d58760aff6ed5a067e1a672839935",
             "file": "src/app/components/ag-grid-bot-list/ag-grid-bot-list.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -394,7 +432,7 @@
             "propertiesClass": [
                 {
                     "name": "colDefs",
-                    "defaultValue": "[\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n    },\n    {\n      field: \"name\",\n      headerName: 'Name',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n    },\n    {\n      field: \"type\",\n      headerName: 'Type',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n    },\n    {\n      field: \"description\",\n      headerName: 'Description',\n      flex: 3,\n      cellStyle: { textAlign: 'left', lineHeight: '1.5'},\n      autoHeight: true,\n      wrapText: true,\n    },\n  ]",
+                    "defaultValue": "[\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"name\",\n      headerName: 'Name',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n    },\n    {\n      field: \"type\",\n      headerName: 'Type',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n    },\n    {\n      field: \"description\",\n      headerName: 'Description',\n      flex: 3,\n      cellStyle: { textAlign: 'left', lineHeight: '1.5'},\n      autoHeight: true,\n      wrapText: true,\n    },\n  ]",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "ColDef[]",
@@ -412,7 +450,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 46
+                    "line": 50
                 }
             ],
             "methodsClass": [],
@@ -429,7 +467,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, Input} from '@angular/core';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-bot-list',\n  imports: [AgGridAngular],\n  standalone: true,\n  templateUrl: './ag-grid-bot-list.html',\n  styleUrl: './ag-grid-bot-list.scss'\n})\nexport class AgGridBotList {\n  @Input() rowData: any[] = [];\n\n  colDefs: ColDef[] = [\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n    },\n    {\n      field: \"name\",\n      headerName: 'Name',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n    },\n    {\n      field: \"type\",\n      headerName: 'Type',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n    },\n    {\n      field: \"description\",\n      headerName: 'Description',\n      flex: 3,\n      cellStyle: { textAlign: 'left', lineHeight: '1.5'},\n      autoHeight: true,\n      wrapText: true,\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n  };\n}\n",
+            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, Input} from '@angular/core';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-bot-list',\n  imports: [AgGridAngular],\n  standalone: true,\n  templateUrl: './ag-grid-bot-list.html',\n  styleUrl: './ag-grid-bot-list.scss'\n})\nexport class AgGridBotList {\n  @Input() rowData: any[] = [];\n\n  colDefs: ColDef[] = [\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"name\",\n      headerName: 'Name',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n    },\n    {\n      field: \"type\",\n      headerName: 'Type',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n    },\n    {\n      field: \"description\",\n      headerName: 'Description',\n      flex: 3,\n      cellStyle: { textAlign: 'left', lineHeight: '1.5'},\n      autoHeight: true,\n      wrapText: true,\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n  };\n}\n",
             "styleUrl": "./ag-grid-bot-list.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -438,8 +476,83 @@
             "templateData": "<ag-grid-angular\n  [rowData]=\"rowData\"\n  [columnDefs]=\"colDefs\"\n  [defaultColDef]=\"defaultColDef\"\n>\n</ag-grid-angular>\n"
         },
         {
+            "name": "AgGridBotsControl",
+            "id": "component-AgGridBotsControl-c27f46d322caf65f6f975c4643b82c55b7420592ffdecdaec2e32f771bb7b301082aa57d5713543b598613a98d6e93528df5a9322a1090b248211cfb9e9a7cbf",
+            "file": "src/app/components/ag-grid-bots-control/ag-grid-bots-control.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-ag-grid-bots-control",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./ag-grid-bots-control.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "rowData",
+                    "defaultValue": "[]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 17,
+                    "type": "any[]",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "colDefs",
+                    "defaultValue": "[\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"id\",\n      headerName: 'ID',\n    },\n    {\n      field: \"gate\",\n      headerName: 'Gate',\n    },\n    {\n      field: \"maxTimeRequest\",\n      headerName: 'Max Time Request(ms)',\n    },\n    {\n      field: \"TimeRequest\",\n      headerName: 'Time Request(ms)',\n    },\n    {\n      field: \"status\",\n      headerName: 'Status',\n    },\n    {\n      field: \"isSendData\",\n      headerName: 'Send Data',\n    },\n    {\n      field: \"isStart\",\n      headerName: 'Start/Stop',\n    },\n    {\n      field: \"actions\",\n      headerName: 'Actions',\n    },\n  ]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ColDef[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 19
+                },
+                {
+                    "name": "defaultColDef",
+                    "defaultValue": "{\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n    flex: 1\n  }",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ColDef",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 63
+                }
+            ],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": false,
+            "imports": [
+                {
+                    "name": "AgGridAngular"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, Input} from '@angular/core';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-bots-control',\n  imports: [\n    AgGridAngular\n  ],\n  templateUrl: './ag-grid-bots-control.html',\n  styleUrl: './ag-grid-bots-control.scss'\n})\nexport class AgGridBotsControl {\n  @Input() rowData: any[] = [];\n\n  colDefs: ColDef[] = [\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"id\",\n      headerName: 'ID',\n    },\n    {\n      field: \"gate\",\n      headerName: 'Gate',\n    },\n    {\n      field: \"maxTimeRequest\",\n      headerName: 'Max Time Request(ms)',\n    },\n    {\n      field: \"TimeRequest\",\n      headerName: 'Time Request(ms)',\n    },\n    {\n      field: \"status\",\n      headerName: 'Status',\n    },\n    {\n      field: \"isSendData\",\n      headerName: 'Send Data',\n    },\n    {\n      field: \"isStart\",\n      headerName: 'Start/Stop',\n    },\n    {\n      field: \"actions\",\n      headerName: 'Actions',\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n    flex: 1\n  };\n}\n",
+            "styleUrl": "./ag-grid-bots-control.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<ag-grid-angular\n  [rowData]=\"rowData\"\n  [columnDefs]=\"colDefs\"\n  [defaultColDef]=\"defaultColDef\"\n>\n</ag-grid-angular>\n"
+        },
+        {
             "name": "AgGridGateList",
-            "id": "component-AgGridGateList-a4e30eba54ade650ae3f60d523343bb40b344c4597568c6c0f582900cdc45e966703615b9c8bf4b49e7dd0b48090d25b59ff018a6bca9107e0e6bfd59779258a",
+            "id": "component-AgGridGateList-e1d3422d7e527be21743a77d6506494738a35362d337ba6fbf9f1084a7a40772343ebe7db7f4dad846a82d98c000a830de40e21ca92cb0bb32125b1f16b9d664",
             "file": "src/app/components/ag-grid-gate-list/ag-grid-gate-list.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -460,7 +573,7 @@
                     "defaultValue": "[]",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 15,
+                    "line": 23,
                     "type": "any[]",
                     "decorators": []
                 }
@@ -469,25 +582,25 @@
             "propertiesClass": [
                 {
                     "name": "autoGroupColumnDef",
-                    "defaultValue": "{\n    headerName: \"Gate\",\n    field: \"gate\", // Показываем gate в группировке\n    cellRendererParams: {\n      suppressCount: true,\n    },\n  }",
+                    "defaultValue": "{\n    headerName: \"Gate\",\n    field: \"gate\",\n    cellRendererParams: { suppressCount: true },\n    valueGetter: params => {\n      return params.node?.group ? params.data?.gate : '';\n    },\n    cellStyle: params =>\n      params.node?.group ? { fontWeight: 'bold' } : { fontWeight: 'normal' }\n  }",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "ColDef",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 58
+                    "line": 60
                 },
                 {
                     "name": "colDefs",
-                    "defaultValue": "[\n    // {\n    //   field: \"#\",\n    //   headerName: '#',\n    //   cellRenderer: \"agGroupCellRenderer\"\n    // },\n    {\n      field: \"gate\",\n      headerName: 'Gates',\n    },\n    {\n      field: \"bots\",\n      headerName: 'Bot Name',\n    },\n    {\n      field: \"requests\",\n      aggFunc: \"sum\",\n      headerName: 'Requests',\n    },\n    {\n      field: \"errors\",\n      aggFunc: \"sum\",\n      headerName: 'Errors',\n    },\n  ]",
+                    "defaultValue": "[\n    {\n      field: \"bots\",\n      headerName: 'Bot Name',\n      cellStyle: params => params.node.group ? { fontWeight: 'bold', textAlign: 'center' } : { fontWeight: 'normal', textAlign: 'center' }\n    },\n    {\n      field: \"requests\",\n      aggFunc: \"sum\",\n      headerName: 'Requests',\n      cellStyle: params => params.node.group ? { fontWeight: 'bold', textAlign: 'center' } : { fontWeight: 'normal', textAlign: 'center' }\n    },\n    {\n      field: \"errors\",\n      aggFunc: \"sum\",\n      headerName: 'Errors',\n      cellStyle: params => params.node.group ? { fontWeight: 'bold', textAlign: 'center' } : { fontWeight: 'normal', textAlign: 'center' }\n    },\n  ]",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "ColDef[]",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 32
+                    "line": 73
                 },
                 {
                     "name": "defaultColDef",
@@ -498,7 +611,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 103
+                    "line": 93
                 },
                 {
                     "name": "getDataPath",
@@ -509,7 +622,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 101
+                    "line": 71
                 },
                 {
                     "name": "gridData",
@@ -520,18 +633,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 16
-                },
-                {
-                    "name": "groupDefaultExpanded",
-                    "defaultValue": "0",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "number",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 99
+                    "line": 24
                 }
             ],
             "methodsClass": [
@@ -548,7 +650,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 18,
+                    "line": 26,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -574,9 +676,9 @@
                         }
                     ],
                     "optional": false,
-                    "returnType": "any",
+                    "returnType": "{}",
                     "typeParameters": [],
-                    "line": 24,
+                    "line": 32,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -608,7 +710,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef, GetDataPath } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, Input, OnChanges, SimpleChanges} from '@angular/core';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-gate-list',\n  imports: [AgGridAngular],\n  templateUrl: './ag-grid-gate-list.html',\n  styleUrl: './ag-grid-gate-list.scss'\n})\nexport class AgGridGateList implements OnChanges {\n  @Input() rowData: any[] = [];\n  gridData: any[] = [];\n\n  ngOnChanges(changes: SimpleChanges) {\n    if (changes['rowData'] && this.rowData) {\n      this.gridData = this.prepareData(this.rowData);\n    }\n  }\n\n  private prepareData(data: any[]) {\n    // группируем по gate\n    return data.map((item, index) => ({\n      ...item,\n      path: [item.gate, `Bot #${index + 1}`], // каждый бот — узел внутри gate\n    }));\n  }\n\n  colDefs: ColDef[] = [\n    // {\n    //   field: \"#\",\n    //   headerName: '#',\n    //   cellRenderer: \"agGroupCellRenderer\"\n    // },\n    {\n      field: \"gate\",\n      headerName: 'Gates',\n    },\n    {\n      field: \"bots\",\n      headerName: 'Bot Name',\n    },\n    {\n      field: \"requests\",\n      aggFunc: \"sum\",\n      headerName: 'Requests',\n    },\n    {\n      field: \"errors\",\n      aggFunc: \"sum\",\n      headerName: 'Errors',\n    },\n  ];\n\n  autoGroupColumnDef: ColDef = {\n    headerName: \"Gate\",\n    field: \"gate\", // Показываем gate в группировке\n    cellRendererParams: {\n      suppressCount: true,\n    },\n  };\n\n  // colDefs: ColDef[] = [\n  //   {\n  //     field: \"#\",\n  //     headerName: '#',\n  //     cellRenderer: \"agGroupCellRenderer\"\n  //   },\n  //   {\n  //     field: \"gate\",\n  //     headerName: 'Gate',\n  //   },\n  //   {\n  //     field: \"bots\",\n  //     headerName: 'Bots',\n  //   },\n  //   {\n  //     field: \"requests\",\n  //     aggFunc: \"sum\",\n  //     headerName: 'Requests (req/min)',\n  //   },\n  //   {\n  //     field: \"errors\",\n  //     aggFunc: \"sum\",\n  //     headerName: 'Errors (err/min)',\n  //   },\n  // ];\n  //\n  // autoGroupColumnDef: ColDef = {\n  //   headerName: \"Gate\",\n  //   cellRendererParams: {\n  //     suppressCount: true,\n  //   },\n  // };\n\n  groupDefaultExpanded = 0;\n\n  getDataPath: GetDataPath = (data) => data.path;\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n    flex: 1\n  };\n}\n",
+            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef, GetDataPath } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, Input, OnChanges, SimpleChanges} from '@angular/core';\nimport {\n  RowGroupingModule,\n  TreeDataModule\n} from 'ag-grid-enterprise';\n\nModuleRegistry.registerModules([\n  AllCommunityModule,\n  RowGroupingModule,\n  TreeDataModule\n]);\n\n@Component({\n  selector: 'app-ag-grid-gate-list',\n  imports: [AgGridAngular],\n  templateUrl: './ag-grid-gate-list.html',\n  styleUrl: './ag-grid-gate-list.scss'\n})\nexport class AgGridGateList implements OnChanges {\n  @Input() rowData: any[] = [];\n  gridData: any[] = [];\n\n  ngOnChanges(changes: SimpleChanges) {\n    if (changes['rowData'] && this.rowData) {\n      this.gridData = this.prepareData(this.rowData);\n    }\n  }\n\n  private prepareData(data: any[]) {\n    const grouped: any[] = [];\n    const gatesMap = new Map<string, any[]>();\n\n    data.forEach(item => {\n      if (!gatesMap.has(item.gate)) {\n        gatesMap.set(item.gate, []);\n      }\n      gatesMap.get(item.gate)?.push(item);\n    });\n\n    gatesMap.forEach((bots, gate) => {\n      grouped.push({\n        gate,\n        isParent: true,\n        path: [gate]\n      });\n      bots.forEach(bot => {\n        grouped.push({\n          ...bot,\n          path: [gate, bot.bots]\n        });\n      });\n    });\n\n    return grouped;\n  }\n\n  autoGroupColumnDef: ColDef = {\n    headerName: \"Gate\",\n    field: \"gate\",\n    cellRendererParams: { suppressCount: true },\n    valueGetter: params => {\n      return params.node?.group ? params.data?.gate : '';\n    },\n    cellStyle: params =>\n      params.node?.group ? { fontWeight: 'bold' } : { fontWeight: 'normal' }\n  };\n\n  getDataPath: GetDataPath = (data) => data.path;\n\n  colDefs: ColDef[] = [\n    {\n      field: \"bots\",\n      headerName: 'Bot Name',\n      cellStyle: params => params.node.group ? { fontWeight: 'bold', textAlign: 'center' } : { fontWeight: 'normal', textAlign: 'center' }\n    },\n    {\n      field: \"requests\",\n      aggFunc: \"sum\",\n      headerName: 'Requests',\n      cellStyle: params => params.node.group ? { fontWeight: 'bold', textAlign: 'center' } : { fontWeight: 'normal', textAlign: 'center' }\n    },\n    {\n      field: \"errors\",\n      aggFunc: \"sum\",\n      headerName: 'Errors',\n      cellStyle: params => params.node.group ? { fontWeight: 'bold', textAlign: 'center' } : { fontWeight: 'normal', textAlign: 'center' }\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n    flex: 1\n  };\n}\n",
             "styleUrl": "./ag-grid-gate-list.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -617,7 +719,7 @@
             "implements": [
                 "OnChanges"
             ],
-            "templateData": "<ag-grid-angular\n  [rowData]=\"gridData\"\n  [columnDefs]=\"colDefs\"\n  [defaultColDef]=\"defaultColDef\"\n  [treeData]=\"true\"\n  [autoGroupColumnDef]=\"autoGroupColumnDef\"\n  [groupDefaultExpanded]=\"groupDefaultExpanded\"\n  [getDataPath]=\"getDataPath\"\n>\n</ag-grid-angular>\n"
+            "templateData": "<ag-grid-angular\n  [rowData]=\"gridData\"\n  [columnDefs]=\"colDefs\"\n  [defaultColDef]=\"defaultColDef\"\n  [treeData]=\"true\"\n  [autoGroupColumnDef]=\"autoGroupColumnDef\"\n  [groupDefaultExpanded]=\"0\"\n  [getDataPath]=\"getDataPath\"\n>\n</ag-grid-angular>\n"
         },
         {
             "name": "AgGridServerData",
@@ -1402,6 +1504,44 @@
             "templateData": "<mat-icon [style.color]=\"color\">radio_button_checked</mat-icon>\n"
         },
         {
+            "name": "LaunchControl",
+            "id": "component-LaunchControl-90138f2f6198f3a4f52f8770ba4ba4759e16c53adca18d59680b705b31c610361a07cd8a5ec770f7426fd9a8cbcf1f97ade3319828f0bc4454ba4d2112d6d324",
+            "file": "src/app/components/ag-grid-components/launch-control/launch-control.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-launch-control",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./launch-control.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\n\n@Component({\n  selector: 'app-launch-control',\n  imports: [],\n  standalone: true,\n  templateUrl: './launch-control.html',\n  styleUrl: './launch-control.scss'\n})\nexport class LaunchControl {\n\n}\n",
+            "styleUrl": "./launch-control.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<p>launch-control works!</p>\n"
+        },
+        {
             "name": "PageComponent",
             "id": "component-PageComponent-21dd6eb370b4983b5c21c84d40e6f54d266a9d9af9889e6e76b35c43058bd53b3e451bad089d5adf4bea46647ba10265a2fa8cb15630398e75636307d4817fc6",
             "file": "src/stories/page.component.ts",
@@ -1921,7 +2061,7 @@
         },
         {
             "name": "Timer",
-            "id": "component-Timer-8c5e4a3c249e7d8e2890b565dfec0b8710f4e06d97ae6512a4fddb79efc7a9249679aafd54d3c28bae1a696e8282e9eed983b91020634138bbf6d879dc825ea0",
+            "id": "component-Timer-b60d450faf4208a8e0e71c3f1536cde2a1ab1616b89bf3a84fab7ec18125235a798e6513c2bc19c0c83d571d8677be4050b9a2085d726f8750b285b5e775a514",
             "file": "src/app/components/ag-grid-components/timer/timer.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2026,7 +2166,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 32,
+                    "line": 31,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2036,7 +2176,7 @@
                     "optional": false,
                     "returnType": "boolean",
                     "typeParameters": [],
-                    "line": 28,
+                    "line": 27,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2046,7 +2186,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 36,
+                    "line": 35,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -2059,7 +2199,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 40,
+                    "line": 39,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -2076,7 +2216,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, OnDestroy } from '@angular/core';\nimport { ICellRendererAngularComp } from 'ag-grid-angular';\n\n@Component({\n  selector: 'app-timer',\n  standalone: true,\n  templateUrl: './timer.html',\n  styleUrls: ['./timer.scss'],\n})\nexport class Timer implements ICellRendererAngularComp, OnDestroy {\n  private intervalId: any;\n  private timestamp: number = 0;\n  displayTime = '--:--';\n  isPast = false;\n\n  agInit(params: any) {\n    if (!params.value) {\n      this.displayTime = '—';\n      return;\n    }\n\n    this.timestamp = Number(params.value);\n    this.updateDisplay();\n    this.startTimer();\n  }\n\n\n  refresh(): boolean {\n    return false;\n  }\n\n  ngOnDestroy(): void {\n    clearInterval(this.intervalId);\n  }\n\n  private startTimer() {\n    this.intervalId = setInterval(() => this.updateDisplay(), 1000);\n  }\n\n  private updateDisplay() {\n    const now = Date.now();\n    const diff = this.timestamp - now;\n\n    this.isPast = diff < 0;\n\n    const absDiff = Math.abs(diff);\n    const seconds = Math.floor((absDiff / 1000) % 60);\n    const minutes = Math.floor((absDiff / (1000 * 60)) % 60);\n    const hours = Math.floor((absDiff / (1000 * 60 * 60)) % 24);\n    const days = Math.floor(absDiff / (1000 * 60 * 60 * 24));\n\n    const pad = (n: number) => (n < 10 ? '0' + n : n);\n\n    if (days > 0) {\n      this.displayTime = `${days}d ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;\n    } else {\n      this.displayTime = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;\n    }\n  }\n}\n",
+            "sourceCode": "import { Component, OnDestroy } from '@angular/core';\nimport { ICellRendererAngularComp } from 'ag-grid-angular';\n\n@Component({\n  selector: 'app-timer',\n  standalone: true,\n  templateUrl: './timer.html',\n  styleUrls: ['./timer.scss'],\n})\nexport class Timer implements ICellRendererAngularComp, OnDestroy {\n  private intervalId: any;\n  private timestamp: number = 0;\n  displayTime = '--:--';\n  isPast = false;\n\n  agInit(params: any) {\n    if (!params.value) {\n      this.displayTime = '—';\n      return;\n    }\n\n    this.timestamp = Number(params.value);\n    this.updateDisplay();\n    this.startTimer();\n  }\n\n  refresh(): boolean {\n    return false;\n  }\n\n  ngOnDestroy(): void {\n    clearInterval(this.intervalId);\n  }\n\n  private startTimer() {\n    this.intervalId = setInterval(() => this.updateDisplay(), 1000);\n  }\n\n  private updateDisplay() {\n    const now = Date.now();\n    const diff = this.timestamp - now;\n\n    this.isPast = diff < 0;\n\n    const absDiff = Math.abs(diff);\n    const seconds = Math.floor((absDiff / 1000) % 60);\n    const minutes = Math.floor((absDiff / (1000 * 60)) % 60);\n    const hours = Math.floor((absDiff / (1000 * 60 * 60)) % 24);\n    const days = Math.floor(absDiff / (1000 * 60 * 60 * 24));\n\n    const pad = (n: number) => (n < 10 ? '0' + n : n);\n\n    if (days > 0) {\n      this.displayTime = `${days}d ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;\n    } else {\n      this.displayTime = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;\n    }\n  }\n}\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
@@ -2091,6 +2231,174 @@
                 "OnDestroy"
             ],
             "templateData": "<span [class.past]=\"isPast\" [class.future]=\"!isPast\">\n  {{ displayTime }}\n</span>\n"
+        },
+        {
+            "name": "Toggle",
+            "id": "component-Toggle-2ddf999b64f04c9d7516a1817dc9bf29091e9e6fa82cc84e8b83c352f4ea9bdf0c4a99d631ad167628ac3c716e4979523321caa8060f7a5f972a21b88b03ba4f",
+            "file": "src/app/components/ag-grid-components/toggle/toggle.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-toggle",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./toggle.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "description",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 16
+                },
+                {
+                    "name": "isChecked",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 17
+                },
+                {
+                    "name": "params",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "any",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 18
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "agInit",
+                    "args": [
+                        {
+                            "name": "params",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 20,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "params",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "onToggle",
+                    "args": [
+                        {
+                            "name": "value",
+                            "type": "boolean",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 31,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "value",
+                            "type": "boolean",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "refresh",
+                    "args": [
+                        {
+                            "name": "params",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "boolean",
+                    "typeParameters": [],
+                    "line": 26,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "params",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "MatSlideToggleModule",
+                    "type": "module"
+                },
+                {
+                    "name": "FormsModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import {Component, ViewEncapsulation} from '@angular/core';\nimport {MatSlideToggleModule} from '@angular/material/slide-toggle';\nimport {FormsModule} from '@angular/forms';\nimport {ICellRendererAngularComp} from 'ag-grid-angular';\n\n@Component({\n  selector: 'app-toggle',\n  imports: [MatSlideToggleModule, FormsModule],\n  standalone: true,\n  templateUrl: './toggle.html',\n  styleUrl: './toggle.scss',\n  // encapsulation: ViewEncapsulation.None\n})\n\nexport class Toggle implements ICellRendererAngularComp {\n  description: string = '';\n  isChecked: boolean = false;\n  params: any;\n\n  agInit(params: any): void {\n    this.params = params;\n    this.description = params.description || '';\n    this.isChecked = params.value || false;\n  }\n\n  refresh(params: any): boolean {\n    this.agInit(params);\n    return true;\n  }\n\n  onToggle(value: boolean) {\n    // Обновляем значение в AG Grid\n    if (this.params && this.params.node) {\n      this.params.node.setDataValue(this.params.colDef.field, value);\n    }\n  }\n}\n",
+            "styleUrl": "./toggle.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "implements": [
+                "ICellRendererAngularComp"
+            ],
+            "templateData": "<mat-slide-toggle\n  [(ngModel)]=\"isChecked\"\n  (ngModelChange)=\"onToggle($event)\"\n>\n  {{ description }}\n</mat-slide-toggle>\n"
         },
         {
             "name": "Toolbar",
@@ -2331,7 +2639,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\n  {\n    \"#\": 1,\n    \"name\": \"Binance Parser\",\n    \"type\": \"Crypto Exchange\",\n    \"description\": \"High-frequency trading bot parsing BTC/USDT, ETH/USDT pairs with real-time order book data and 99.9% uptime\"\n  }\n]"
+                "defaultValue": "[\n  {\n    \"name\": \"Binance Parser\",\n    \"type\": \"Crypto Exchange\",\n    \"description\": \"High-frequency trading bot parsing BTC/USDT, ETH/USDT pairs with real-time order book data and 99.9% uptime\"\n  }\n]"
             },
             {
                 "name": "botListStabs_2",
@@ -2341,7 +2649,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\n  {\n    \"#\": 1,\n    \"name\": \"Coinbase Pro Scraper\",\n    \"type\": \"Crypto API\",\n    \"description\": \"REST API parser for major cryptocurrency pairs with WebSocket support for live market data\"\n  },\n  {\n    \"#\": 2,\n    \"name\": \"Forex Factory Bot\",\n    \"type\": \"Forex Data\",\n    \"description\": \"Economic calendar parser extracting EUR/USD, GBP/USD impact levels and news events\"\n  },\n  {\n    \"#\": 3,\n    \"name\": \"Kraken Market Maker\",\n    \"type\": \"Trading Bot\",\n    \"description\": \"Algorithmic trading bot parsing XRP/USD, LTC/USD with spread analysis and liquidity monitoring\"\n  },\n  {\n    \"#\": 4,\n    \"name\": \"Bybit Derivatives\",\n    \"type\": \"Futures Parser\",\n    \"description\": \"Derivatives market data collector for BTC/USDT perpetual swaps with funding rate calculations\"\n  },\n  {\n    \"#\": 5,\n    \"name\": \"Uniswap V3 Scanner\",\n    \"type\": \"DeFi Analytics\",\n    \"description\": \"DEX liquidity pool parser tracking ETH/USDC pairs with concentration ranges and volume analysis\"\n  }\n]"
+                "defaultValue": "[\n  {\n    \"name\": \"Coinbase Pro Scraper\",\n    \"type\": \"Crypto API\",\n    \"description\": \"REST API parser for major cryptocurrency pairs with WebSocket support for live market data\"\n  },\n  {\n    \"name\": \"Forex Factory Bot\",\n    \"type\": \"Forex Data\",\n    \"description\": \"Economic calendar parser extracting EUR/USD, GBP/USD impact levels and news events\"\n  },\n  {\n    \"name\": \"Kraken Market Maker\",\n    \"type\": \"Trading Bot\",\n    \"description\": \"Algorithmic trading bot parsing XRP/USD, LTC/USD with spread analysis and liquidity monitoring\"\n  },\n  {\n    \"name\": \"Bybit Derivatives\",\n    \"type\": \"Futures Parser\",\n    \"description\": \"Derivatives market data collector for BTC/USDT perpetual swaps with funding rate calculations\"\n  },\n  {\n    \"name\": \"Uniswap V3 Scanner\",\n    \"type\": \"DeFi Analytics\",\n    \"description\": \"DEX liquidity pool parser tracking ETH/USDC pairs with concentration ranges and volume analysis\"\n  }\n]"
             },
             {
                 "name": "botListStabs_3",
@@ -2351,17 +2659,47 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\n  {\n    \"#\": 1,\n    \"name\": \"Binance Spot Parser\",\n    \"type\": \"Spot Market\",\n    \"description\": \"Real-time order book data for major pairs: BTC/USDT, ETH/USDT, BNB/BTC with depth chart analysis\"\n  },\n  {\n    \"#\": 2,\n    \"name\": \"FTX Arbitrage Bot\",\n    \"type\": \"Arbitrage\",\n    \"description\": \"Cross-exchange price difference detection between FTX and Binance for BTC, ETH perpetuals\"\n  },\n  {\n    \"#\": 3,\n    \"name\": \"Kraken OHLCV Collector\",\n    \"type\": \"Historical Data\",\n    \"description\": \"Minute-level OHLCV data aggregation for technical analysis and backtesting strategies\"\n  },\n  {\n    \"#\": 4,\n    \"name\": \"CoinGecko Scraper\",\n    \"type\": \"Market Cap\",\n    \"description\": \"Global cryptocurrency market data including prices, volumes, and market dominance metrics\"\n  },\n  {\n    \"#\": 5,\n    \"name\": \"Deribit Options Parser\",\n    \"type\": \"Options Data\",\n    \"description\": \"BTC and ETH options chain data with implied volatility and Greeks calculation\"\n  },\n  {\n    \"#\": 6,\n    \"name\": \"BitMEX Liquidations\",\n    \"type\": \"Risk Monitoring\",\n    \"description\": \"Real-time liquidation tracking for XBT/USD perpetual swaps with position size analysis\"\n  },\n  {\n    \"#\": 7,\n    \"name\": \"Huobi Margin Parser\",\n    \"type\": \"Margin Trading\",\n    \"description\": \"Isolated and cross-margin data for top trading pairs with interest rate monitoring\"\n  },\n  {\n    \"#\": 8,\n    \"name\": \"OKEx Futures Scanner\",\n    \"type\": \"Futures Data\",\n    \"description\": \"Quarterly and perpetual futures data with basis and mark price calculations\"\n  },\n  {\n    \"#\": 9,\n    \"name\": \"PancakeSwap Farm Bot\",\n    \"type\": \"Yield Farming\",\n    \"description\": \"BSC DEX liquidity pool APY tracking and impermanent loss calculation for CAKE/BNB pairs\"\n  },\n  {\n    \"#\": 10,\n    \"name\": \"Forex.com Streamer\",\n    \"type\": \"Forex Pairs\",\n    \"description\": \"Major forex pairs parser: EUR/USD, GBP/USD, USD/JPY with pip movement tracking\"\n  },\n  {\n    \"#\": 11,\n    \"name\": \"Gate.io Market Maker\",\n    \"type\": \"Market Making\",\n    \"description\": \"Automated bid-ask spread maintenance for low-cap altcoins with volatility adjustment\"\n  },\n  {\n    \"#\": 12,\n    \"name\": \"dYdX Order Book\",\n    \"type\": \"Layer 2 DEX\",\n    \"description\": \"StarkWare-based perpetual swaps parser with cross-margin and isolated position tracking\"\n  },\n  {\n    \"#\": 13,\n    \"name\": \"Bitfinex Lending Bot\",\n    \"type\": \"Lending Data\",\n    \"description\": \"Cryptocurrency lending rate monitoring and automated fund provisioning system\"\n  },\n  {\n    \"#\": 14,\n    \"name\": \"SushiSwap Analytics\",\n    \"type\": \"AMM Parser\",\n    \"description\": \"Multi-chain DEX analytics tracking TVL, volume, and LP rewards across Ethereum/Polygon\"\n  },\n  {\n    \"#\": 15,\n    \"name\": \"MetaTrader 5 Bridge\",\n    \"type\": \"Forex Bridge\",\n    \"description\": \"Real-time forex price streaming from MT5 platform to custom trading algorithms\"\n  },\n  {\n    \"#\": 16,\n    \"name\": \"KuCoin Small Cap\",\n    \"type\": \"Altcoin Scanner\",\n    \"description\": \"Low market cap cryptocurrency discovery and volume spike detection bot\"\n  },\n  {\n    \"#\": 17,\n    \"name\": \"Aave Protocol Monitor\",\n    \"type\": \"Lending Protocol\",\n    \"description\": \"DeFi lending rates and collateralization ratio monitoring across multiple blockchains\"\n  },\n  {\n    \"#\": 18,\n    \"name\": \"FTX OTC Parser\",\n    \"type\": \"OTC Market\",\n    \"description\": \"Large block trade detection and institutional order flow analysis\"\n  },\n  {\n    \"#\": 19,\n    \"name\": \"Chainlink Oracle\",\n    \"type\": \"Price Feeds\",\n    \"description\": \"Decentralized oracle price feed verification and deviation monitoring system\"\n  },\n  {\n    \"#\": 20,\n    \"name\": \"Polygon Bridge Bot\",\n    \"type\": \"Cross-Chain\",\n    \"description\": \"Asset bridge monitoring between Ethereum and Polygon for arbitrage opportunities\"\n  }\n]"
+                "defaultValue": "[\n  {\n    \"name\": \"Binance Spot Parser\",\n    \"type\": \"Spot Market\",\n    \"description\": \"Real-time order book data for major pairs: BTC/USDT, ETH/USDT, BNB/BTC with depth chart analysis\"\n  },\n  {\n    \"name\": \"FTX Arbitrage Bot\",\n    \"type\": \"Arbitrage\",\n    \"description\": \"Cross-exchange price difference detection between FTX and Binance for BTC, ETH perpetuals\"\n  },\n  {\n    \"name\": \"Kraken OHLCV Collector\",\n    \"type\": \"Historical Data\",\n    \"description\": \"Minute-level OHLCV data aggregation for technical analysis and backtesting strategies\"\n  },\n  {\n    \"name\": \"CoinGecko Scraper\",\n    \"type\": \"Market Cap\",\n    \"description\": \"Global cryptocurrency market data including prices, volumes, and market dominance metrics\"\n  },\n  {\n    \"name\": \"Deribit Options Parser\",\n    \"type\": \"Options Data\",\n    \"description\": \"BTC and ETH options chain data with implied volatility and Greeks calculation\"\n  },\n  {\n    \"name\": \"BitMEX Liquidations\",\n    \"type\": \"Risk Monitoring\",\n    \"description\": \"Real-time liquidation tracking for XBT/USD perpetual swaps with position size analysis\"\n  },\n  {\n    \"name\": \"Huobi Margin Parser\",\n    \"type\": \"Margin Trading\",\n    \"description\": \"Isolated and cross-margin data for top trading pairs with interest rate monitoring\"\n  },\n  {\n    \"name\": \"OKEx Futures Scanner\",\n    \"type\": \"Futures Data\",\n    \"description\": \"Quarterly and perpetual futures data with basis and mark price calculations\"\n  },\n  {\n    \"name\": \"PancakeSwap Farm Bot\",\n    \"type\": \"Yield Farming\",\n    \"description\": \"BSC DEX liquidity pool APY tracking and impermanent loss calculation for CAKE/BNB pairs\"\n  },\n  {\n    \"name\": \"Forex.com Streamer\",\n    \"type\": \"Forex Pairs\",\n    \"description\": \"Major forex pairs parser: EUR/USD, GBP/USD, USD/JPY with pip movement tracking\"\n  },\n  {\n    \"name\": \"Gate.io Market Maker\",\n    \"type\": \"Market Making\",\n    \"description\": \"Automated bid-ask spread maintenance for low-cap altcoins with volatility adjustment\"\n  },\n  {\n    \"name\": \"dYdX Order Book\",\n    \"type\": \"Layer 2 DEX\",\n    \"description\": \"StarkWare-based perpetual swaps parser with cross-margin and isolated position tracking\"\n  },\n  {\n    \"name\": \"Bitfinex Lending Bot\",\n    \"type\": \"Lending Data\",\n    \"description\": \"Cryptocurrency lending rate monitoring and automated fund provisioning system\"\n  },\n  {\n    \"name\": \"SushiSwap Analytics\",\n    \"type\": \"AMM Parser\",\n    \"description\": \"Multi-chain DEX analytics tracking TVL, volume, and LP rewards across Ethereum/Polygon\"\n  },\n  {\n    \"name\": \"MetaTrader 5 Bridge\",\n    \"type\": \"Forex Bridge\",\n    \"description\": \"Real-time forex price streaming from MT5 platform to custom trading algorithms\"\n  },\n  {\n    \"name\": \"KuCoin Small Cap\",\n    \"type\": \"Altcoin Scanner\",\n    \"description\": \"Low market cap cryptocurrency discovery and volume spike detection bot\"\n  },\n  {\n    \"name\": \"Aave Protocol Monitor\",\n    \"type\": \"Lending Protocol\",\n    \"description\": \"DeFi lending rates and collateralization ratio monitoring across multiple blockchains\"\n  },\n  {\n    \"name\": \"FTX OTC Parser\",\n    \"type\": \"OTC Market\",\n    \"description\": \"Large block trade detection and institutional order flow analysis\"\n  },\n  {\n    \"name\": \"Chainlink Oracle\",\n    \"type\": \"Price Feeds\",\n    \"description\": \"Decentralized oracle price feed verification and deviation monitoring system\"\n  },\n  {\n    \"name\": \"Polygon Bridge Bot\",\n    \"type\": \"Cross-Chain\",\n    \"description\": \"Asset bridge monitoring between Ethereum and Polygon for arbitrage opportunities\"\n  }\n]"
             },
             {
-                "name": "gateListStabs_1",
+                "name": "exampleRow",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/ag-grid-bots-control/stabs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "object",
+                "defaultValue": "{\n  id: 1,\n  gate: \"Main Entrance\",\n  maxTimeRequest: 250,\n  TimeRequest: 200,\n  status: \"Running\", //Error, Stopped\n  isSendData: true,\n  isStart: true,\n}"
+            },
+            {
+                "name": "gateListStabs_2",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
                 "file": "src/app/components/ag-grid-gate-list/stabs.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\n  { gate: \"Main Entrance\", bots: 'bot13', requests: 245, errors: 3 },\n  { gate: \"API Gateway\",   bots: 'bot23', requests: 180, errors: 12 },\n  { gate: \"Backup Server\", bots: 'bot122', requests: 95, errors: 1 },\n  { gate: \"Backup Server\", bots: 'bot121', requests: 10, errors: 13 },\n  { gate: \"Backup Server\", bots: 'bot123', requests: 2, errors: 11 }\n]"
+                "defaultValue": "[\n  { gate: \"Entrance A\", bots: 'bot01', requests: 50, errors: 0 },\n  { gate: \"Entrance A\", bots: 'bot02', requests: 75, errors: 2 },\n  { gate: \"Entrance B\", bots: 'bot03', requests: 100, errors: 1 },\n  { gate: \"Entrance C\", bots: 'bot04', requests: 30, errors: 0 },\n  { gate: \"Entrance C\", bots: 'bot05', requests: 20, errors: 1 },\n  { gate: \"Entrance C\", bots: 'bot06', requests: 15, errors: 0 }\n]"
+            },
+            {
+                "name": "gateListStabs_3",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/ag-grid-gate-list/stabs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "[]",
+                "defaultValue": "[\n  { gate: \"Server X\", bots: 'botA', requests: 120, errors: 5 },\n  { gate: \"Server X\", bots: 'botB', requests: 80, errors: 2 },\n  { gate: \"Server X\", bots: 'botC', requests: 60, errors: 1 }\n]"
+            },
+            {
+                "name": "gateListStabs_4",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/ag-grid-gate-list/stabs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "[]",
+                "defaultValue": "[\n  { gate: \"Gateway 1\", bots: 'bot11', requests: 25, errors: 0 },\n  { gate: \"Gateway 2\", bots: 'bot21', requests: 40, errors: 1 },\n  { gate: \"Gateway 3\", bots: 'bot31', requests: 55, errors: 3 }\n]"
             },
             {
                 "name": "getFeatureName",
@@ -2509,7 +2847,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\n  {\n    \"#\": 1,\n    \"name\": \"Binance Parser\",\n    \"type\": \"Crypto Exchange\",\n    \"description\": \"High-frequency trading bot parsing BTC/USDT, ETH/USDT pairs with real-time order book data and 99.9% uptime\"\n  }\n]"
+                    "defaultValue": "[\n  {\n    \"name\": \"Binance Parser\",\n    \"type\": \"Crypto Exchange\",\n    \"description\": \"High-frequency trading bot parsing BTC/USDT, ETH/USDT pairs with real-time order book data and 99.9% uptime\"\n  }\n]"
                 },
                 {
                     "name": "botListStabs_2",
@@ -2519,7 +2857,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\n  {\n    \"#\": 1,\n    \"name\": \"Coinbase Pro Scraper\",\n    \"type\": \"Crypto API\",\n    \"description\": \"REST API parser for major cryptocurrency pairs with WebSocket support for live market data\"\n  },\n  {\n    \"#\": 2,\n    \"name\": \"Forex Factory Bot\",\n    \"type\": \"Forex Data\",\n    \"description\": \"Economic calendar parser extracting EUR/USD, GBP/USD impact levels and news events\"\n  },\n  {\n    \"#\": 3,\n    \"name\": \"Kraken Market Maker\",\n    \"type\": \"Trading Bot\",\n    \"description\": \"Algorithmic trading bot parsing XRP/USD, LTC/USD with spread analysis and liquidity monitoring\"\n  },\n  {\n    \"#\": 4,\n    \"name\": \"Bybit Derivatives\",\n    \"type\": \"Futures Parser\",\n    \"description\": \"Derivatives market data collector for BTC/USDT perpetual swaps with funding rate calculations\"\n  },\n  {\n    \"#\": 5,\n    \"name\": \"Uniswap V3 Scanner\",\n    \"type\": \"DeFi Analytics\",\n    \"description\": \"DEX liquidity pool parser tracking ETH/USDC pairs with concentration ranges and volume analysis\"\n  }\n]"
+                    "defaultValue": "[\n  {\n    \"name\": \"Coinbase Pro Scraper\",\n    \"type\": \"Crypto API\",\n    \"description\": \"REST API parser for major cryptocurrency pairs with WebSocket support for live market data\"\n  },\n  {\n    \"name\": \"Forex Factory Bot\",\n    \"type\": \"Forex Data\",\n    \"description\": \"Economic calendar parser extracting EUR/USD, GBP/USD impact levels and news events\"\n  },\n  {\n    \"name\": \"Kraken Market Maker\",\n    \"type\": \"Trading Bot\",\n    \"description\": \"Algorithmic trading bot parsing XRP/USD, LTC/USD with spread analysis and liquidity monitoring\"\n  },\n  {\n    \"name\": \"Bybit Derivatives\",\n    \"type\": \"Futures Parser\",\n    \"description\": \"Derivatives market data collector for BTC/USDT perpetual swaps with funding rate calculations\"\n  },\n  {\n    \"name\": \"Uniswap V3 Scanner\",\n    \"type\": \"DeFi Analytics\",\n    \"description\": \"DEX liquidity pool parser tracking ETH/USDC pairs with concentration ranges and volume analysis\"\n  }\n]"
                 },
                 {
                     "name": "botListStabs_3",
@@ -2529,19 +2867,51 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\n  {\n    \"#\": 1,\n    \"name\": \"Binance Spot Parser\",\n    \"type\": \"Spot Market\",\n    \"description\": \"Real-time order book data for major pairs: BTC/USDT, ETH/USDT, BNB/BTC with depth chart analysis\"\n  },\n  {\n    \"#\": 2,\n    \"name\": \"FTX Arbitrage Bot\",\n    \"type\": \"Arbitrage\",\n    \"description\": \"Cross-exchange price difference detection between FTX and Binance for BTC, ETH perpetuals\"\n  },\n  {\n    \"#\": 3,\n    \"name\": \"Kraken OHLCV Collector\",\n    \"type\": \"Historical Data\",\n    \"description\": \"Minute-level OHLCV data aggregation for technical analysis and backtesting strategies\"\n  },\n  {\n    \"#\": 4,\n    \"name\": \"CoinGecko Scraper\",\n    \"type\": \"Market Cap\",\n    \"description\": \"Global cryptocurrency market data including prices, volumes, and market dominance metrics\"\n  },\n  {\n    \"#\": 5,\n    \"name\": \"Deribit Options Parser\",\n    \"type\": \"Options Data\",\n    \"description\": \"BTC and ETH options chain data with implied volatility and Greeks calculation\"\n  },\n  {\n    \"#\": 6,\n    \"name\": \"BitMEX Liquidations\",\n    \"type\": \"Risk Monitoring\",\n    \"description\": \"Real-time liquidation tracking for XBT/USD perpetual swaps with position size analysis\"\n  },\n  {\n    \"#\": 7,\n    \"name\": \"Huobi Margin Parser\",\n    \"type\": \"Margin Trading\",\n    \"description\": \"Isolated and cross-margin data for top trading pairs with interest rate monitoring\"\n  },\n  {\n    \"#\": 8,\n    \"name\": \"OKEx Futures Scanner\",\n    \"type\": \"Futures Data\",\n    \"description\": \"Quarterly and perpetual futures data with basis and mark price calculations\"\n  },\n  {\n    \"#\": 9,\n    \"name\": \"PancakeSwap Farm Bot\",\n    \"type\": \"Yield Farming\",\n    \"description\": \"BSC DEX liquidity pool APY tracking and impermanent loss calculation for CAKE/BNB pairs\"\n  },\n  {\n    \"#\": 10,\n    \"name\": \"Forex.com Streamer\",\n    \"type\": \"Forex Pairs\",\n    \"description\": \"Major forex pairs parser: EUR/USD, GBP/USD, USD/JPY with pip movement tracking\"\n  },\n  {\n    \"#\": 11,\n    \"name\": \"Gate.io Market Maker\",\n    \"type\": \"Market Making\",\n    \"description\": \"Automated bid-ask spread maintenance for low-cap altcoins with volatility adjustment\"\n  },\n  {\n    \"#\": 12,\n    \"name\": \"dYdX Order Book\",\n    \"type\": \"Layer 2 DEX\",\n    \"description\": \"StarkWare-based perpetual swaps parser with cross-margin and isolated position tracking\"\n  },\n  {\n    \"#\": 13,\n    \"name\": \"Bitfinex Lending Bot\",\n    \"type\": \"Lending Data\",\n    \"description\": \"Cryptocurrency lending rate monitoring and automated fund provisioning system\"\n  },\n  {\n    \"#\": 14,\n    \"name\": \"SushiSwap Analytics\",\n    \"type\": \"AMM Parser\",\n    \"description\": \"Multi-chain DEX analytics tracking TVL, volume, and LP rewards across Ethereum/Polygon\"\n  },\n  {\n    \"#\": 15,\n    \"name\": \"MetaTrader 5 Bridge\",\n    \"type\": \"Forex Bridge\",\n    \"description\": \"Real-time forex price streaming from MT5 platform to custom trading algorithms\"\n  },\n  {\n    \"#\": 16,\n    \"name\": \"KuCoin Small Cap\",\n    \"type\": \"Altcoin Scanner\",\n    \"description\": \"Low market cap cryptocurrency discovery and volume spike detection bot\"\n  },\n  {\n    \"#\": 17,\n    \"name\": \"Aave Protocol Monitor\",\n    \"type\": \"Lending Protocol\",\n    \"description\": \"DeFi lending rates and collateralization ratio monitoring across multiple blockchains\"\n  },\n  {\n    \"#\": 18,\n    \"name\": \"FTX OTC Parser\",\n    \"type\": \"OTC Market\",\n    \"description\": \"Large block trade detection and institutional order flow analysis\"\n  },\n  {\n    \"#\": 19,\n    \"name\": \"Chainlink Oracle\",\n    \"type\": \"Price Feeds\",\n    \"description\": \"Decentralized oracle price feed verification and deviation monitoring system\"\n  },\n  {\n    \"#\": 20,\n    \"name\": \"Polygon Bridge Bot\",\n    \"type\": \"Cross-Chain\",\n    \"description\": \"Asset bridge monitoring between Ethereum and Polygon for arbitrage opportunities\"\n  }\n]"
+                    "defaultValue": "[\n  {\n    \"name\": \"Binance Spot Parser\",\n    \"type\": \"Spot Market\",\n    \"description\": \"Real-time order book data for major pairs: BTC/USDT, ETH/USDT, BNB/BTC with depth chart analysis\"\n  },\n  {\n    \"name\": \"FTX Arbitrage Bot\",\n    \"type\": \"Arbitrage\",\n    \"description\": \"Cross-exchange price difference detection between FTX and Binance for BTC, ETH perpetuals\"\n  },\n  {\n    \"name\": \"Kraken OHLCV Collector\",\n    \"type\": \"Historical Data\",\n    \"description\": \"Minute-level OHLCV data aggregation for technical analysis and backtesting strategies\"\n  },\n  {\n    \"name\": \"CoinGecko Scraper\",\n    \"type\": \"Market Cap\",\n    \"description\": \"Global cryptocurrency market data including prices, volumes, and market dominance metrics\"\n  },\n  {\n    \"name\": \"Deribit Options Parser\",\n    \"type\": \"Options Data\",\n    \"description\": \"BTC and ETH options chain data with implied volatility and Greeks calculation\"\n  },\n  {\n    \"name\": \"BitMEX Liquidations\",\n    \"type\": \"Risk Monitoring\",\n    \"description\": \"Real-time liquidation tracking for XBT/USD perpetual swaps with position size analysis\"\n  },\n  {\n    \"name\": \"Huobi Margin Parser\",\n    \"type\": \"Margin Trading\",\n    \"description\": \"Isolated and cross-margin data for top trading pairs with interest rate monitoring\"\n  },\n  {\n    \"name\": \"OKEx Futures Scanner\",\n    \"type\": \"Futures Data\",\n    \"description\": \"Quarterly and perpetual futures data with basis and mark price calculations\"\n  },\n  {\n    \"name\": \"PancakeSwap Farm Bot\",\n    \"type\": \"Yield Farming\",\n    \"description\": \"BSC DEX liquidity pool APY tracking and impermanent loss calculation for CAKE/BNB pairs\"\n  },\n  {\n    \"name\": \"Forex.com Streamer\",\n    \"type\": \"Forex Pairs\",\n    \"description\": \"Major forex pairs parser: EUR/USD, GBP/USD, USD/JPY with pip movement tracking\"\n  },\n  {\n    \"name\": \"Gate.io Market Maker\",\n    \"type\": \"Market Making\",\n    \"description\": \"Automated bid-ask spread maintenance for low-cap altcoins with volatility adjustment\"\n  },\n  {\n    \"name\": \"dYdX Order Book\",\n    \"type\": \"Layer 2 DEX\",\n    \"description\": \"StarkWare-based perpetual swaps parser with cross-margin and isolated position tracking\"\n  },\n  {\n    \"name\": \"Bitfinex Lending Bot\",\n    \"type\": \"Lending Data\",\n    \"description\": \"Cryptocurrency lending rate monitoring and automated fund provisioning system\"\n  },\n  {\n    \"name\": \"SushiSwap Analytics\",\n    \"type\": \"AMM Parser\",\n    \"description\": \"Multi-chain DEX analytics tracking TVL, volume, and LP rewards across Ethereum/Polygon\"\n  },\n  {\n    \"name\": \"MetaTrader 5 Bridge\",\n    \"type\": \"Forex Bridge\",\n    \"description\": \"Real-time forex price streaming from MT5 platform to custom trading algorithms\"\n  },\n  {\n    \"name\": \"KuCoin Small Cap\",\n    \"type\": \"Altcoin Scanner\",\n    \"description\": \"Low market cap cryptocurrency discovery and volume spike detection bot\"\n  },\n  {\n    \"name\": \"Aave Protocol Monitor\",\n    \"type\": \"Lending Protocol\",\n    \"description\": \"DeFi lending rates and collateralization ratio monitoring across multiple blockchains\"\n  },\n  {\n    \"name\": \"FTX OTC Parser\",\n    \"type\": \"OTC Market\",\n    \"description\": \"Large block trade detection and institutional order flow analysis\"\n  },\n  {\n    \"name\": \"Chainlink Oracle\",\n    \"type\": \"Price Feeds\",\n    \"description\": \"Decentralized oracle price feed verification and deviation monitoring system\"\n  },\n  {\n    \"name\": \"Polygon Bridge Bot\",\n    \"type\": \"Cross-Chain\",\n    \"description\": \"Asset bridge monitoring between Ethereum and Polygon for arbitrage opportunities\"\n  }\n]"
+                }
+            ],
+            "src/app/components/ag-grid-bots-control/stabs.ts": [
+                {
+                    "name": "exampleRow",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/components/ag-grid-bots-control/stabs.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "object",
+                    "defaultValue": "{\n  id: 1,\n  gate: \"Main Entrance\",\n  maxTimeRequest: 250,\n  TimeRequest: 200,\n  status: \"Running\", //Error, Stopped\n  isSendData: true,\n  isStart: true,\n}"
                 }
             ],
             "src/app/components/ag-grid-gate-list/stabs.ts": [
                 {
-                    "name": "gateListStabs_1",
+                    "name": "gateListStabs_2",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
                     "file": "src/app/components/ag-grid-gate-list/stabs.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\n  { gate: \"Main Entrance\", bots: 'bot13', requests: 245, errors: 3 },\n  { gate: \"API Gateway\",   bots: 'bot23', requests: 180, errors: 12 },\n  { gate: \"Backup Server\", bots: 'bot122', requests: 95, errors: 1 },\n  { gate: \"Backup Server\", bots: 'bot121', requests: 10, errors: 13 },\n  { gate: \"Backup Server\", bots: 'bot123', requests: 2, errors: 11 }\n]"
+                    "defaultValue": "[\n  { gate: \"Entrance A\", bots: 'bot01', requests: 50, errors: 0 },\n  { gate: \"Entrance A\", bots: 'bot02', requests: 75, errors: 2 },\n  { gate: \"Entrance B\", bots: 'bot03', requests: 100, errors: 1 },\n  { gate: \"Entrance C\", bots: 'bot04', requests: 30, errors: 0 },\n  { gate: \"Entrance C\", bots: 'bot05', requests: 20, errors: 1 },\n  { gate: \"Entrance C\", bots: 'bot06', requests: 15, errors: 0 }\n]"
+                },
+                {
+                    "name": "gateListStabs_3",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/components/ag-grid-gate-list/stabs.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "[]",
+                    "defaultValue": "[\n  { gate: \"Server X\", bots: 'botA', requests: 120, errors: 5 },\n  { gate: \"Server X\", bots: 'botB', requests: 80, errors: 2 },\n  { gate: \"Server X\", bots: 'botC', requests: 60, errors: 1 }\n]"
+                },
+                {
+                    "name": "gateListStabs_4",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/components/ag-grid-gate-list/stabs.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "[]",
+                    "defaultValue": "[\n  { gate: \"Gateway 1\", bots: 'bot11', requests: 25, errors: 0 },\n  { gate: \"Gateway 2\", bots: 'bot21', requests: 40, errors: 1 },\n  { gate: \"Gateway 3\", bots: 'bot31', requests: 55, errors: 3 }\n]"
                 }
             ],
             "src/app/+state/servers/servers.selectors.ts": [
@@ -2892,12 +3262,49 @@
                 "status": "low"
             },
             {
+                "filePath": "src/app/components/ag-grid-bots-control/ag-grid-bots-control.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "AgGridBotsControl",
+                "coveragePercent": 0,
+                "coverageCount": "0/4",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/ag-grid-bots-control/stabs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "exampleRow",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/ag-grid-components/actions/actions.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "Actions",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
                 "filePath": "src/app/components/ag-grid-components/indicator/indicator.ts",
                 "type": "component",
                 "linktype": "component",
                 "name": "Indicator",
                 "coveragePercent": 0,
                 "coverageCount": "0/4",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/ag-grid-components/launch-control/launch-control.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "LaunchControl",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
                 "status": "low"
             },
             {
@@ -2910,12 +3317,21 @@
                 "status": "low"
             },
             {
+                "filePath": "src/app/components/ag-grid-components/toggle/toggle.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "Toggle",
+                "coveragePercent": 0,
+                "coverageCount": "0/7",
+                "status": "low"
+            },
+            {
                 "filePath": "src/app/components/ag-grid-gate-list/ag-grid-gate-list.ts",
                 "type": "component",
                 "linktype": "component",
                 "name": "AgGridGateList",
                 "coveragePercent": 0,
-                "coverageCount": "0/10",
+                "coverageCount": "0/9",
                 "status": "low"
             },
             {
@@ -2923,7 +3339,27 @@
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
-                "name": "gateListStabs_1",
+                "name": "gateListStabs_2",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/ag-grid-gate-list/stabs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "gateListStabs_3",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/ag-grid-gate-list/stabs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "gateListStabs_4",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"

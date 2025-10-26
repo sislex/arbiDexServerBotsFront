@@ -11,7 +11,6 @@ const meta: Meta<DropMenu> = {
     }),
   ],
   args: {
-    // DropMenuTitle: 'DropMenuTitle',
   },
 };
 export default meta;

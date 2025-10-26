@@ -24,7 +24,6 @@ export class Timer implements ICellRendererAngularComp, OnDestroy {
     this.startTimer();
   }
 
-
   refresh(): boolean {
     return false;
   }

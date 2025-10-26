@@ -1,0 +1,28 @@
+@use '@angular/material' as mat;
+
+.custom-toggle {
+  @include mat.slide-toggle-overrides((
+    selected-track-color: green,
+    selected-hover-track-color: green,
+    selected-focus-track-color: green,
+    selected-pressed-track-color: green,
+
+    unselected-track-color: red,
+    unselected-hover-track-color: red,
+    unselected-focus-track-color: red,
+    unselected-pressed-track-color: red,
+
+    selected-handle-color: white,
+    selected-hover-handle-color: white,
+    selected-focus-handle-color: white,
+    selected-pressed-handle-color: white,
+
+    unselected-handle-color: white,
+    unselected-hover-handle-color: white,
+    unselected-focus-handle-color: white,
+    unselected-pressed-handle-color: white,
+
+    selected-icon-color: transparent,
+    unselected-icon-color: transparent,
+  ));
+}
