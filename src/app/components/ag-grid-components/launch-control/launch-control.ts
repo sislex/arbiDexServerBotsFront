@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-launch-control',
@@ -8,5 +8,7 @@ import { Component } from '@angular/core';
   styleUrl: './launch-control.scss'
 })
 export class LaunchControl {
+  @Input() isStarted: boolean = false;
+
 
 }
