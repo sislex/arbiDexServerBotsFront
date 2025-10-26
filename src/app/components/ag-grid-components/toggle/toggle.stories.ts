@@ -1,5 +1,6 @@
 import {Meta, moduleMetadata, StoryObj} from '@storybook/angular';
 import {Toggle} from './toggle';
+import {fn} from 'storybook/test';
 
 const meta: Meta<Toggle> = {
   component: Toggle,
@@ -12,50 +13,31 @@ const meta: Meta<Toggle> = {
     (story) => ({
       ...story(),
       template: `
-        <div style="width: 200px; height: 200px; background-color: gray ">
+        <div class="custom-toggle" style="width: 300px; height: 500px; background-color: bisque">
           ${story().template}
         </div>
       `,
     }),
   ],
-  argTypes: {
-    isChecked: { control: 'boolean' },
-    description: { control: 'text' },
+  args: {
+    emitter: fn(),
   },
-
 };
 export default meta;
 type Story = StoryObj<Toggle>;
 
-export const Base: Story = {
-  args: {
-    description: 'Simple toggle',
-    isChecked: false,
-  },
-  render: (args) => ({
-    props: args,
-    template: `<app-toggle class="custom-toggle" [description]="description" [(ngModel)]="isChecked"></app-toggle>`,
-  }),
-};
+export const Base: Story = {};
 
-export const Checked: Story = {
+export const Active: Story = {
   args: {
-    description: 'Enabled toggle',
     isChecked: true,
+    description: 'Toggle is active'
   },
-  render: (args) => ({
-    props: args,
-    template: `<app-toggle class="custom-toggle" [description]="description" [(ngModel)]="isChecked"></app-toggle>`,
-  }),
 };
 
-export const Unchecked: Story = {
+export const NoActive: Story = {
   args: {
-    description: 'Disabled toggle',
     isChecked: false,
+    description: 'Toggle is inactive'
   },
-  render: (args) => ({
-    props: args,
-    template: `<app-toggle class="custom-toggle" [description]="description" [(ngModel)]="isChecked"></app-toggle>`,
-  }),
 };

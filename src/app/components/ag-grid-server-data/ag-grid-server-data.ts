@@ -2,8 +2,8 @@ import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 import type { ColDef } from 'ag-grid-community';
 import { AgGridAngular } from 'ag-grid-angular';
 import {Component, Input} from '@angular/core';
-import {Timer} from '../ag-grid-components/timer/timer';
 import {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';
+import {TimerContainer} from '../../containers/ag-grid-containers/timer-container/timer-container';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -36,7 +36,7 @@ export class AgGridServerData {
     },
     {
       headerName: 'Time To Close',
-      cellRenderer: Timer,
+      cellRenderer: TimerContainer,
       flex: 1,
       valueGetter: (params) => {
         const ts = params.data?.timestamp;
@@ -45,7 +45,7 @@ export class AgGridServerData {
     },
     {
       headerName: 'Time After Close',
-      cellRenderer: Timer,
+      cellRenderer: TimerContainer,
       flex: 1,
       valueGetter: (params) => {
         const ts = params.data?.timestamp;

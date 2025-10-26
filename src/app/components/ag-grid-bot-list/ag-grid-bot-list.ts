@@ -41,7 +41,7 @@ export class AgGridBotList {
       field: "description",
       headerName: 'Description',
       flex: 3,
-      cellStyle: { textAlign: 'left', lineHeight: '1.5'},
+      cellStyle: { textAlign: 'left'},
       autoHeight: true,
       wrapText: true,
     },

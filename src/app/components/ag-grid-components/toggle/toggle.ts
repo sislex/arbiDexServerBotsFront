@@ -1,7 +1,6 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {FormsModule} from '@angular/forms';
-import {ICellRendererAngularComp} from 'ag-grid-angular';
 
 @Component({
   selector: 'app-toggle',
@@ -12,26 +11,16 @@ import {ICellRendererAngularComp} from 'ag-grid-angular';
   encapsulation: ViewEncapsulation.None
 })
 
-export class Toggle implements ICellRendererAngularComp {
-  description: string = '';
-  isChecked: boolean = false;
-  params: any;
+export class Toggle {
+  @Input() isChecked: boolean = false;
+  @Input() description: string = '';
 
-  agInit(params: any): void {
-    this.params = params;
-    this.description = params.description || '';
-    this.isChecked = params.value || false;
-  }
+  @Output() emitter = new EventEmitter();
 
-  refresh(params: any): boolean {
-    this.agInit(params);
-    return true;
-  }
-
-  onToggle(value: boolean) {
-    // Обновляем значение в AG Grid
-    if (this.params && this.params.node) {
-      this.params.node.setDataValue(this.params.colDef.field, value);
-    }
+  onToggle() {
+    this.emitter.emit({
+      event: 'Toggle:TOGGLE_CLICKED',
+      data: this.isChecked
+    });
   }
 }

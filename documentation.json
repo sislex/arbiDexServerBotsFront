@@ -440,7 +440,7 @@
         },
         {
             "name": "AgGridBotList",
-            "id": "component-AgGridBotList-fe542c04fdec728721656e253fd6b50f3f7b270dffdd2956482724e529fd3abd26e63b660443165e4f962d6856a31df6172d58760aff6ed5a067e1a672839935",
+            "id": "component-AgGridBotList-990bfcd764c16adfabdca120ae5f4d83888676dba1413d10a1b6b398b27f3833159e00a0e2df6cca9df7c67bc767551278b292b9e902a6c226db580235854c8a",
             "file": "src/app/components/ag-grid-bot-list/ag-grid-bot-list.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -470,7 +470,7 @@
             "propertiesClass": [
                 {
                     "name": "colDefs",
-                    "defaultValue": "[\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"name\",\n      headerName: 'Name',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n    },\n    {\n      field: \"type\",\n      headerName: 'Type',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n    },\n    {\n      field: \"description\",\n      headerName: 'Description',\n      flex: 3,\n      cellStyle: { textAlign: 'left', lineHeight: '1.5'},\n      autoHeight: true,\n      wrapText: true,\n    },\n  ]",
+                    "defaultValue": "[\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"name\",\n      headerName: 'Name',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n    },\n    {\n      field: \"type\",\n      headerName: 'Type',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n    },\n    {\n      field: \"description\",\n      headerName: 'Description',\n      flex: 3,\n      cellStyle: { textAlign: 'left'},\n      autoHeight: true,\n      wrapText: true,\n    },\n  ]",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "ColDef[]",
@@ -505,7 +505,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, Input} from '@angular/core';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-bot-list',\n  imports: [AgGridAngular],\n  standalone: true,\n  templateUrl: './ag-grid-bot-list.html',\n  styleUrl: './ag-grid-bot-list.scss'\n})\nexport class AgGridBotList {\n  @Input() rowData: any[] = [];\n\n  colDefs: ColDef[] = [\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"name\",\n      headerName: 'Name',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n    },\n    {\n      field: \"type\",\n      headerName: 'Type',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n    },\n    {\n      field: \"description\",\n      headerName: 'Description',\n      flex: 3,\n      cellStyle: { textAlign: 'left', lineHeight: '1.5'},\n      autoHeight: true,\n      wrapText: true,\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n  };\n}\n",
+            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, Input} from '@angular/core';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-bot-list',\n  imports: [AgGridAngular],\n  standalone: true,\n  templateUrl: './ag-grid-bot-list.html',\n  styleUrl: './ag-grid-bot-list.scss'\n})\nexport class AgGridBotList {\n  @Input() rowData: any[] = [];\n\n  colDefs: ColDef[] = [\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"name\",\n      headerName: 'Name',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n    },\n    {\n      field: \"type\",\n      headerName: 'Type',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n    },\n    {\n      field: \"description\",\n      headerName: 'Description',\n      flex: 3,\n      cellStyle: { textAlign: 'left'},\n      autoHeight: true,\n      wrapText: true,\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n  };\n}\n",
             "styleUrl": "./ag-grid-bot-list.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -761,7 +761,7 @@
         },
         {
             "name": "AgGridServerData",
-            "id": "component-AgGridServerData-085bf92c13334230c77b4065c0a397fd13430637e13d703c5b637591e63e9c2cf836e306f198daf371f60f199eae45293ed7fd47d1d24f715e172a71ced96d5f",
+            "id": "component-AgGridServerData-65e7ae2b25de0603f1217c28b6a1ffa0e2c4c83bf66795f0a45c57052bd4428eae343d730886d0b380ea0865ded92e06acda500c91ec732179b4f675f86c0df2",
             "file": "src/app/components/ag-grid-server-data/ag-grid-server-data.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -782,7 +782,7 @@
                     "defaultValue": "[]",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 18,
+                    "line": 19,
                     "type": "any[]",
                     "decorators": []
                 }
@@ -791,14 +791,14 @@
             "propertiesClass": [
                 {
                     "name": "colDefs",
-                    "defaultValue": "[\n    {\n      field: 'id',\n      headerName: 'ID',\n      width: 80,\n    },\n    {\n      field: 'authorizationData',\n      headerName: 'Authorization Data',\n      flex: 1,\n\n    },\n    {\n      field: 'version',\n      headerName: 'Version',\n      flex: 1,\n    },\n    {\n      headerName: 'Time To Close',\n      cellRenderer: Timer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestamp;\n        return ts > Date.now() ? ts : null;\n      },\n    },\n    {\n      headerName: 'Time After Close',\n      cellRenderer: Timer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestamp;\n        return ts < Date.now() ? ts : null;\n      },\n    },\n    {\n      field: 'bots',\n      headerName: 'Bots',\n      flex: 1,\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n  ]",
+                    "defaultValue": "[\n    {\n      field: 'id',\n      headerName: 'ID',\n      width: 80,\n    },\n    {\n      field: 'authorizationData',\n      headerName: 'Authorization Data',\n      flex: 1,\n\n    },\n    {\n      field: 'version',\n      headerName: 'Version',\n      flex: 1,\n    },\n    {\n      headerName: 'Time To Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestamp;\n        return ts > Date.now() ? ts : null;\n      },\n    },\n    {\n      headerName: 'Time After Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestamp;\n        return ts < Date.now() ? ts : null;\n      },\n    },\n    {\n      field: 'bots',\n      headerName: 'Bots',\n      flex: 1,\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n  ]",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "ColDef[]",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 20
+                    "line": 21
                 },
                 {
                     "name": "defaultColDef",
@@ -809,7 +809,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 70
+                    "line": 71
                 }
             ],
             "methodsClass": [],
@@ -826,7 +826,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, Input} from '@angular/core';\nimport {Timer} from '../ag-grid-components/timer/timer';\nimport {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-server-data',\n  imports: [AgGridAngular],\n  standalone: true,\n  templateUrl: './ag-grid-server-data.html',\n  styleUrl: './ag-grid-server-data.scss'\n})\nexport class AgGridServerData {\n  @Input() rowData: any[] = [];\n\n  colDefs: ColDef[] = [\n    {\n      field: 'id',\n      headerName: 'ID',\n      width: 80,\n    },\n    {\n      field: 'authorizationData',\n      headerName: 'Authorization Data',\n      flex: 1,\n\n    },\n    {\n      field: 'version',\n      headerName: 'Version',\n      flex: 1,\n    },\n    {\n      headerName: 'Time To Close',\n      cellRenderer: Timer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestamp;\n        return ts > Date.now() ? ts : null;\n      },\n    },\n    {\n      headerName: 'Time After Close',\n      cellRenderer: Timer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestamp;\n        return ts < Date.now() ? ts : null;\n      },\n    },\n    {\n      field: 'bots',\n      headerName: 'Bots',\n      flex: 1,\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n  };\n}\n",
+            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, Input} from '@angular/core';\nimport {Timer} from '../ag-grid-components/timer/timer';\nimport {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';\nimport {TimerContainer} from '../../containers/ag-grid-containers/timer-container/timer-container';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-server-data',\n  imports: [AgGridAngular],\n  standalone: true,\n  templateUrl: './ag-grid-server-data.html',\n  styleUrl: './ag-grid-server-data.scss'\n})\nexport class AgGridServerData {\n  @Input() rowData: any[] = [];\n\n  colDefs: ColDef[] = [\n    {\n      field: 'id',\n      headerName: 'ID',\n      width: 80,\n    },\n    {\n      field: 'authorizationData',\n      headerName: 'Authorization Data',\n      flex: 1,\n\n    },\n    {\n      field: 'version',\n      headerName: 'Version',\n      flex: 1,\n    },\n    {\n      headerName: 'Time To Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestamp;\n        return ts > Date.now() ? ts : null;\n      },\n    },\n    {\n      headerName: 'Time After Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestamp;\n        return ts < Date.now() ? ts : null;\n      },\n    },\n    {\n      field: 'bots',\n      headerName: 'Bots',\n      flex: 1,\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n  };\n}\n",
             "styleUrl": "./ag-grid-server-data.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -1446,7 +1446,7 @@
         },
         {
             "name": "Indicator",
-            "id": "component-Indicator-5edd638ab696a88ebbdc3f4cbe6abead8f4cb85efb2fa4061bf645fe4615ba80c2ab6bab5c2565b1976540c15a9a0c224129e37c2cc2bee9b94701268ff2d62a",
+            "id": "component-Indicator-7e12da546c0b0282968b1b46c19e5a8482febfe077ca520ac21912c25dea51728e7dcd8f4d2dde3bef570e05e72d04ac4f91476877b4d6f4cbc36f69c702bda3",
             "file": "src/app/components/ag-grid-components/indicator/indicator.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1463,20 +1463,11 @@
             "hostDirectives": [],
             "inputsClass": [
                 {
-                    "name": "color",
-                    "defaultValue": "'gray'",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 14,
-                    "type": "string",
-                    "decorators": []
-                },
-                {
                     "name": "status",
                     "defaultValue": "''",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 13,
+                    "line": 12,
                     "type": "string",
                     "decorators": []
                 }
@@ -1485,14 +1476,14 @@
             "propertiesClass": [
                 {
                     "name": "statusColorMap",
-                    "defaultValue": "{\n    'active': 'green',\n    'pending': 'orange',\n    'error': 'red',\n    'closed': 'gray'\n  }",
+                    "defaultValue": "{\n    'active': 'var(--true-color)',\n    'pending': 'var(--warn-color)',\n    'error': 'var(--error-color)',\n    'closed': 'var(--neutral-color)'\n  }",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "literal type",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 16,
+                    "line": 14,
                     "modifierKind": [
                         123,
                         148
@@ -1514,7 +1505,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, Input} from '@angular/core';\nimport {MatIconModule} from '@angular/material/icon';\nimport {ICellRendererAngularComp} from 'ag-grid-angular';\n\n@Component({\n  selector: 'app-indicator',\n  imports: [MatIconModule],\n  standalone: true,\n  templateUrl: './indicator.html',\n  styleUrl: './indicator.scss'\n})\nexport class Indicator {\n  @Input() status: string = '';\n  @Input() color: string = 'gray';\n\n  private readonly statusColorMap: { [key: string]: string } = {\n    'active': 'green',\n    'pending': 'orange',\n    'error': 'red',\n    'closed': 'gray'\n  };\n\n  get computedColor(): string {\n    const normalizedStatus = this.status?.toLowerCase();\n    return this.statusColorMap[normalizedStatus] || 'gray';\n  }\n}\n",
+            "sourceCode": "import {Component, Input} from '@angular/core';\nimport {MatIconModule} from '@angular/material/icon';\n\n@Component({\n  selector: 'app-indicator',\n  imports: [MatIconModule],\n  standalone: true,\n  templateUrl: './indicator.html',\n  styleUrl: './indicator.scss'\n})\nexport class Indicator {\n  @Input() status: string = '';\n\n  private readonly statusColorMap: { [key: string]: string } = {\n    'active': 'var(--true-color)',\n    'pending': 'var(--warn-color)',\n    'error': 'var(--error-color)',\n    'closed': 'var(--neutral-color)'\n  };\n\n  get computedColor(): string {\n    const normalizedStatus = this.status?.toLowerCase();\n    return this.statusColorMap[normalizedStatus] || 'var(--neutral-color)';\n  }\n}\n",
             "styleUrl": "./indicator.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -1527,15 +1518,15 @@
                         "name": "computedColor",
                         "type": "string",
                         "returnType": "string",
-                        "line": 23
+                        "line": 21
                     }
                 }
             },
-            "templateData": "<mat-icon [style.color]=\"color\">radio_button_checked</mat-icon>\n"
+            "templateData": "<mat-icon [style.color]=\"computedColor\">radio_button_checked</mat-icon>\n"
         },
         {
             "name": "IndicatorContainer",
-            "id": "component-IndicatorContainer-7b0d95d31973305c400a9e0c3fc8f59e9963d74646106b96a40e7a6556d3bd950b53a293ee4581e9432ca411a62808a545e18f56d1ff687fa41afc75fca669b5",
+            "id": "component-IndicatorContainer-ef6476bd7c021fa69b7d14e1891b2b41931dc7200e98f00c6f07d432daedcb8aa3e25c0992a3b6f125f5c48310bd8712496f2e1813bbd3ee767a6981d9405073",
             "file": "src/app/containers/ag-grid-containers/indicator-container/indicator-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1618,7 +1609,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\nimport {ICellRendererAngularComp} from 'ag-grid-angular';\nimport {Indicator} from '../../../components/ag-grid-components/indicator/indicator';\n\n@Component({\n  selector: 'app-indicator-container',\n  imports: [\n    Indicator\n  ],\n  standalone: true,\n  templateUrl: './indicator-container.html',\n  styleUrl: './indicator-container.scss'\n})\nexport class IndicatorContainer implements ICellRendererAngularComp {\n  status = '';\n\n  agInit(params: any): void {\n    this.status = params.value || '';\n  }\n\n  refresh(): boolean {\n    return false;\n  }\n\n  // color = 'gray';\n  //\n  // agInit(params: any): void {\n  //   const value = params.value?.toLowerCase();\n  //   if (value === 'active') this.color = 'green';\n  //   else if (value === 'pending') this.color = 'orange';\n  //   else if (value === 'error') this.color = 'red';\n  //   else if (value === 'closed') this.color = 'gray';\n  // }\n  //\n  // refresh(): boolean {\n  //   return false;\n  // }\n\n}\n",
+            "sourceCode": "import { Component } from '@angular/core';\nimport {ICellRendererAngularComp} from 'ag-grid-angular';\nimport {Indicator} from '../../../components/ag-grid-components/indicator/indicator';\n\n@Component({\n  selector: 'app-indicator-container',\n  imports: [\n    Indicator\n  ],\n  standalone: true,\n  templateUrl: './indicator-container.html',\n  styleUrl: './indicator-container.scss'\n})\nexport class IndicatorContainer implements ICellRendererAngularComp {\n  status = '';\n\n  agInit(params: any): void {\n    this.status = params.value || '';\n  }\n\n  refresh(): boolean {\n    return false;\n  }\n}\n",
             "styleUrl": "./indicator-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -2235,7 +2226,7 @@
         },
         {
             "name": "Timer",
-            "id": "component-Timer-b60d450faf4208a8e0e71c3f1536cde2a1ab1616b89bf3a84fab7ec18125235a798e6513c2bc19c0c83d571d8677be4050b9a2085d726f8750b285b5e775a514",
+            "id": "component-Timer-e2f87e71a2dd55bd322bd6981c39c87c28c5b2ed7f030ab59fc5eff4e5988bdd4f88a72d7ed2a3db02da123b5466dd87e3fc200a8fc777385d27ff2b98f1c3f9",
             "file": "src/app/components/ag-grid-components/timer/timer.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2252,135 +2243,29 @@
             ],
             "viewProviders": [],
             "hostDirectives": [],
-            "inputsClass": [],
-            "outputsClass": [],
-            "propertiesClass": [
+            "inputsClass": [
                 {
                     "name": "displayTime",
                     "defaultValue": "'--:--'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 13
-                },
-                {
-                    "name": "intervalId",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "any",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
                     "line": 11,
-                    "modifierKind": [
-                        123
-                    ]
+                    "type": "string",
+                    "decorators": []
                 },
                 {
                     "name": "isPast",
                     "defaultValue": "false",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 14
-                },
-                {
-                    "name": "timestamp",
-                    "defaultValue": "0",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "number",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
                     "line": 12,
-                    "modifierKind": [
-                        123
-                    ]
+                    "type": "boolean",
+                    "decorators": []
                 }
             ],
-            "methodsClass": [
-                {
-                    "name": "agInit",
-                    "args": [
-                        {
-                            "name": "params",
-                            "type": "any",
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 16,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "jsdoctags": [
-                        {
-                            "name": "params",
-                            "type": "any",
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "ngOnDestroy",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 31,
-                    "deprecated": false,
-                    "deprecationMessage": ""
-                },
-                {
-                    "name": "refresh",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "boolean",
-                    "typeParameters": [],
-                    "line": 27,
-                    "deprecated": false,
-                    "deprecationMessage": ""
-                },
-                {
-                    "name": "startTimer",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 35,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "modifierKind": [
-                        123
-                    ]
-                },
-                {
-                    "name": "updateDisplay",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 39,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "modifierKind": [
-                        123
-                    ]
-                }
-            ],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
             "deprecated": false,
             "deprecationMessage": "",
             "hostBindings": [],
@@ -2390,25 +2275,21 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, OnDestroy } from '@angular/core';\nimport { ICellRendererAngularComp } from 'ag-grid-angular';\n\n@Component({\n  selector: 'app-timer',\n  standalone: true,\n  templateUrl: './timer.html',\n  styleUrls: ['./timer.scss'],\n})\nexport class Timer implements ICellRendererAngularComp, OnDestroy {\n  private intervalId: any;\n  private timestamp: number = 0;\n  displayTime = '--:--';\n  isPast = false;\n\n  agInit(params: any) {\n    if (!params.value) {\n      this.displayTime = '—';\n      return;\n    }\n\n    this.timestamp = Number(params.value);\n    this.updateDisplay();\n    this.startTimer();\n  }\n\n  refresh(): boolean {\n    return false;\n  }\n\n  ngOnDestroy(): void {\n    clearInterval(this.intervalId);\n  }\n\n  private startTimer() {\n    this.intervalId = setInterval(() => this.updateDisplay(), 1000);\n  }\n\n  private updateDisplay() {\n    const now = Date.now();\n    const diff = this.timestamp - now;\n\n    this.isPast = diff < 0;\n\n    const absDiff = Math.abs(diff);\n    const seconds = Math.floor((absDiff / 1000) % 60);\n    const minutes = Math.floor((absDiff / (1000 * 60)) % 60);\n    const hours = Math.floor((absDiff / (1000 * 60 * 60)) % 24);\n    const days = Math.floor(absDiff / (1000 * 60 * 60 * 24));\n\n    const pad = (n: number) => (n < 10 ? '0' + n : n);\n\n    if (days > 0) {\n      this.displayTime = `${days}d ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;\n    } else {\n      this.displayTime = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;\n    }\n  }\n}\n",
+            "sourceCode": "import {Component, Input} from '@angular/core';\n\n@Component({\n  selector: 'app-timer',\n  imports: [],\n  standalone: true,\n  templateUrl: './timer.html',\n  styleUrls: ['./timer.scss'],\n})\nexport class Timer {\n  @Input() displayTime: string = '--:--';\n  @Input() isPast: boolean = false;\n}\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ":host {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\nspan.future {\n  color: #4caf50;\n}\n\nspan.past {\n  color: #f44336;\n}\n",
+                    "data": ":host {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n\n  .future {\n    color: var(--true-color);\n  }\n\n  .past {\n    color: var(--error-color);\n  }\n\n  .colorNone {\n    color: black;\n  }\n\n}\n\n",
                     "styleUrl": "./timer.scss"
                 }
             ],
             "stylesData": "",
             "extends": [],
-            "implements": [
-                "ICellRendererAngularComp",
-                "OnDestroy"
-            ],
-            "templateData": "<span [class.past]=\"isPast\" [class.future]=\"!isPast\">\n  {{ displayTime }}\n</span>\n"
+            "templateData": "<span [class.past]=\"isPast\" [class.future]=\"!isPast\" [class.colorNone]=\"displayTime === '—'\">\n  {{ displayTime }}\n</span>\n"
         },
         {
             "name": "TimerContainer",
-            "id": "component-TimerContainer-5bd3143ff6b71318328d86b85d787ba77ae8dc640eec7809d2960e06be7466cb53c6e90bcd4ff256aac4ebecd1c73c3e64df4bb8b88e49c17de41daf4678d5f9",
+            "id": "component-TimerContainer-39a079fae3900a5ccae2c8255084da112b05a0fd1705fd79d1aae97598c856d0c9d2ecb3630167ae9816d8cf995f335a1c1f5280162a5e35c29ece11a2a45dbb",
             "file": "src/app/containers/ag-grid-containers/timer-container/timer-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2425,78 +2306,55 @@
             "hostDirectives": [],
             "inputsClass": [],
             "outputsClass": [],
-            "propertiesClass": [],
-            "methodsClass": [],
-            "deprecated": false,
-            "deprecationMessage": "",
-            "hostBindings": [],
-            "hostListeners": [],
-            "standalone": false,
-            "imports": [],
-            "description": "",
-            "rawdescription": "\n",
-            "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\n\n@Component({\n  selector: 'app-timer-container',\n  imports: [],\n  templateUrl: './timer-container.html',\n  styleUrl: './timer-container.scss'\n})\nexport class TimerContainer {\n\n}\n",
-            "styleUrl": "./timer-container.scss",
-            "assetsDirs": [],
-            "styleUrlsData": "",
-            "stylesData": "",
-            "extends": [],
-            "templateData": "<p>timer-container works!</p>\n"
-        },
-        {
-            "name": "Toggle",
-            "id": "component-Toggle-e8b60b8b156afeb80320d1a14aa1efd3d64fdb2c1cc252745d30ac246de3a0d0b6b0168b7aabfaed075e4a15eaae046140039416c73cbd85a2293a12dc62f2ff",
-            "file": "src/app/components/ag-grid-components/toggle/toggle.ts",
-            "encapsulation": [
-                "ViewEncapsulation.None"
-            ],
-            "entryComponents": [],
-            "inputs": [],
-            "outputs": [],
-            "providers": [],
-            "selector": "app-toggle",
-            "styleUrls": [],
-            "styles": [],
-            "templateUrl": [
-                "./toggle.html"
-            ],
-            "viewProviders": [],
-            "hostDirectives": [],
-            "inputsClass": [],
-            "outputsClass": [],
             "propertiesClass": [
                 {
-                    "name": "description",
-                    "defaultValue": "''",
+                    "name": "displayTime",
+                    "defaultValue": "'--:--'",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "string",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 16
-                },
-                {
-                    "name": "isChecked",
-                    "defaultValue": "false",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "boolean",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
                     "line": 17
                 },
                 {
-                    "name": "params",
+                    "name": "intervalId",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "any",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
+                    "line": 15,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "isPast",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
                     "line": 18
+                },
+                {
+                    "name": "timestamp",
+                    "defaultValue": "0",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 16,
+                    "modifierKind": [
+                        123
+                    ]
                 }
             ],
             "methodsClass": [
@@ -2529,7 +2387,249 @@
                     ]
                 },
                 {
+                    "name": "ngOnDestroy",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 35,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "refresh",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "boolean",
+                    "typeParameters": [],
+                    "line": 31,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "startTimer",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 39,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "updateDisplay",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 43,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "Timer"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import {Component, OnDestroy} from '@angular/core';\nimport {Timer} from '../../../components/ag-grid-components/timer/timer';\nimport {ICellRendererAngularComp} from 'ag-grid-angular';\n\n@Component({\n  selector: 'app-timer-container',\n  imports: [\n    Timer\n  ],\n  standalone: true,\n  templateUrl: './timer-container.html',\n  styleUrl: './timer-container.scss'\n})\nexport class TimerContainer implements ICellRendererAngularComp, OnDestroy {\n  private intervalId: any;\n  private timestamp: number = 0;\n  displayTime = '--:--';\n  isPast = false;\n\n  agInit(params: any): void {\n    if (!params.value) {\n      this.displayTime = '—';\n      return;\n    }\n\n    this.timestamp = Number(params.value);\n    this.updateDisplay();\n    this.startTimer();\n  }\n\n  refresh(): boolean {\n    return false;\n  }\n\n  ngOnDestroy(): void {\n    clearInterval(this.intervalId);\n  }\n\n  private startTimer(): void {\n    this.intervalId = setInterval(() => this.updateDisplay(), 1000);\n  }\n\n  private updateDisplay(): void {\n    const now = Date.now();\n    const diff = this.timestamp - now;\n\n    this.isPast = diff < 0;\n\n    const absDiff = Math.abs(diff);\n    const seconds = Math.floor((absDiff / 1000) % 60);\n    const minutes = Math.floor((absDiff / (1000 * 60)) % 60);\n    const hours = Math.floor((absDiff / (1000 * 60 * 60)) % 24);\n    const days = Math.floor(absDiff / (1000 * 60 * 60 * 24));\n\n    const pad = (n: number) => (n < 10 ? '0' + n : n);\n\n    if (days > 0) {\n      this.displayTime = `${days}d ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;\n    } else {\n      this.displayTime = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;\n    }\n  }\n}\n",
+            "styleUrl": "./timer-container.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "implements": [
+                "ICellRendererAngularComp",
+                "OnDestroy"
+            ],
+            "templateData": "<app-timer\n  [displayTime]=\"displayTime\"\n  [isPast]=\"isPast\"\n>\n</app-timer>\n"
+        },
+        {
+            "name": "Toggle",
+            "id": "component-Toggle-b7bd8b469fe67f28e91f5478bffdbea4e4676bd8cb6479ecdb4bc16486a760cefcd1d13ebd82ba43fc123476d826969957375e41d252312a8e0e09740879f86c",
+            "file": "src/app/components/ag-grid-components/toggle/toggle.ts",
+            "encapsulation": [
+                "ViewEncapsulation.None"
+            ],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-toggle",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./toggle.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "description",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 16,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "isChecked",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 15,
+                    "type": "boolean",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [
+                {
+                    "name": "emitter",
+                    "defaultValue": "new EventEmitter()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 18,
+                    "type": "EventEmitter"
+                }
+            ],
+            "propertiesClass": [],
+            "methodsClass": [
+                {
                     "name": "onToggle",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 20,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "MatSlideToggleModule",
+                    "type": "module"
+                },
+                {
+                    "name": "FormsModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';\nimport {MatSlideToggleModule} from '@angular/material/slide-toggle';\nimport {FormsModule} from '@angular/forms';\n\n@Component({\n  selector: 'app-toggle',\n  imports: [MatSlideToggleModule, FormsModule],\n  standalone: true,\n  templateUrl: './toggle.html',\n  styleUrl: './toggle.scss',\n  encapsulation: ViewEncapsulation.None\n})\n\nexport class Toggle {\n  @Input() isChecked: boolean = false;\n  @Input() description: string = '';\n\n  @Output() emitter = new EventEmitter();\n\n  onToggle() {\n    console.log(this.isChecked)\n  }\n}\n",
+            "styleUrl": "./toggle.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<mat-slide-toggle\n  [(ngModel)]=\"isChecked\"\n  (ngModelChange)=\"onToggle()\"\n>\n  {{ description }}\n</mat-slide-toggle>\n"
+        },
+        {
+            "name": "ToggleContainer",
+            "id": "component-ToggleContainer-847d3060c13aab44466058c736c2ce83ac14d7871ca5949e30fafe334cc154a89108a77591fa111fc34c21f568e6b88e747759cfc3e90c0a4bd8479df0850346",
+            "file": "src/app/containers/ag-grid-containers/toggle-container/toggle-container.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-toggle-container",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./toggle-container.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "description",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 15
+                },
+                {
+                    "name": "isChecked",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 16
+                },
+                {
+                    "name": "params",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "any",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 17
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "agInit",
+                    "args": [
+                        {
+                            "name": "params",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 19,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "params",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "events",
                     "args": [
                         {
                             "name": "value",
@@ -2541,7 +2641,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 31,
+                    "line": 30,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2569,7 +2669,7 @@
                     "optional": false,
                     "returnType": "boolean",
                     "typeParameters": [],
-                    "line": 26,
+                    "line": 25,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2592,19 +2692,14 @@
             "standalone": true,
             "imports": [
                 {
-                    "name": "MatSlideToggleModule",
-                    "type": "module"
-                },
-                {
-                    "name": "FormsModule",
-                    "type": "module"
+                    "name": "Toggle"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, ViewEncapsulation} from '@angular/core';\nimport {MatSlideToggleModule} from '@angular/material/slide-toggle';\nimport {FormsModule} from '@angular/forms';\nimport {ICellRendererAngularComp} from 'ag-grid-angular';\n\n@Component({\n  selector: 'app-toggle',\n  imports: [MatSlideToggleModule, FormsModule],\n  standalone: true,\n  templateUrl: './toggle.html',\n  styleUrl: './toggle.scss',\n  encapsulation: ViewEncapsulation.None\n})\n\nexport class Toggle implements ICellRendererAngularComp {\n  description: string = '';\n  isChecked: boolean = false;\n  params: any;\n\n  agInit(params: any): void {\n    this.params = params;\n    this.description = params.description || '';\n    this.isChecked = params.value || false;\n  }\n\n  refresh(params: any): boolean {\n    this.agInit(params);\n    return true;\n  }\n\n  onToggle(value: boolean) {\n    // Обновляем значение в AG Grid\n    if (this.params && this.params.node) {\n      this.params.node.setDataValue(this.params.colDef.field, value);\n    }\n  }\n}\n",
-            "styleUrl": "./toggle.scss",
+            "sourceCode": "import { Component } from '@angular/core';\nimport {ICellRendererAngularComp} from 'ag-grid-angular';\nimport {Toggle} from '../../../components/ag-grid-components/toggle/toggle';\n\n@Component({\n  selector: 'app-toggle-container',\n  imports: [\n    Toggle\n  ],\n  standalone: true,\n  templateUrl: './toggle-container.html',\n  styleUrl: './toggle-container.scss'\n})\nexport class ToggleContainer implements ICellRendererAngularComp {\n  description: string = '';\n  isChecked: boolean = false;\n  params: any;\n\n  agInit(params: any): void {\n    this.params = params;\n    this.description = params.description || '';\n    this.isChecked = params.value || false;\n  }\n\n  refresh(params: any): boolean {\n    this.agInit(params);\n    return true;\n  }\n\n  events(value: boolean) {\n    // Обновляем значение в AG Grid\n    if (this.params && this.params.node) {\n      this.params.node.setDataValue(this.params.colDef.field, value);\n    }\n    // this.store.dispatch\n  }\n\n}\n",
+            "styleUrl": "./toggle-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
@@ -2612,45 +2707,7 @@
             "implements": [
                 "ICellRendererAngularComp"
             ],
-            "templateData": "<mat-slide-toggle\n  [(ngModel)]=\"isChecked\"\n  (ngModelChange)=\"onToggle($event)\"\n>\n  {{ description }}\n</mat-slide-toggle>\n"
-        },
-        {
-            "name": "ToggleContainer",
-            "id": "component-ToggleContainer-825c37a37c85a46497dccd452b00b4b40eff1132281092b0b2aa9d0cc871f30e984874bcd7b4e2961cf9b2c96f8185b1133e9c584466d56180f29a0af644037b",
-            "file": "src/app/containers/ag-grid-containers/toggle-container/toggle-container.ts",
-            "encapsulation": [],
-            "entryComponents": [],
-            "inputs": [],
-            "outputs": [],
-            "providers": [],
-            "selector": "app-toggle-container",
-            "styleUrls": [],
-            "styles": [],
-            "templateUrl": [
-                "./toggle-container.html"
-            ],
-            "viewProviders": [],
-            "hostDirectives": [],
-            "inputsClass": [],
-            "outputsClass": [],
-            "propertiesClass": [],
-            "methodsClass": [],
-            "deprecated": false,
-            "deprecationMessage": "",
-            "hostBindings": [],
-            "hostListeners": [],
-            "standalone": false,
-            "imports": [],
-            "description": "",
-            "rawdescription": "\n",
-            "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\n\n@Component({\n  selector: 'app-toggle-container',\n  imports: [],\n  templateUrl: './toggle-container.html',\n  styleUrl: './toggle-container.scss'\n})\nexport class ToggleContainer {\n\n}\n",
-            "styleUrl": "./toggle-container.scss",
-            "assetsDirs": [],
-            "styleUrlsData": "",
-            "stylesData": "",
-            "extends": [],
-            "templateData": "<p>toggle-container works!</p>\n"
+            "templateData": "<app-toggle\n  [isChecked]=\"isChecked\"\n  [description]=\"description\"\n  (emitter)=\"events($event)\"\n></app-toggle>\n"
         },
         {
             "name": "Toolbar",
@@ -3547,7 +3604,7 @@
                 "linktype": "component",
                 "name": "Indicator",
                 "coveragePercent": 0,
-                "coverageCount": "0/4",
+                "coverageCount": "0/3",
                 "status": "low"
             },
             {
@@ -3565,7 +3622,7 @@
                 "linktype": "component",
                 "name": "Timer",
                 "coveragePercent": 0,
-                "coverageCount": "0/10",
+                "coverageCount": "0/3",
                 "status": "low"
             },
             {
@@ -3574,7 +3631,7 @@
                 "linktype": "component",
                 "name": "Toggle",
                 "coveragePercent": 0,
-                "coverageCount": "0/7",
+                "coverageCount": "0/5",
                 "status": "low"
             },
             {
@@ -3770,7 +3827,7 @@
                 "linktype": "component",
                 "name": "TimerContainer",
                 "coveragePercent": 0,
-                "coverageCount": "0/1",
+                "coverageCount": "0/10",
                 "status": "low"
             },
             {
@@ -3779,7 +3836,7 @@
                 "linktype": "component",
                 "name": "ToggleContainer",
                 "coveragePercent": 0,
-                "coverageCount": "0/1",
+                "coverageCount": "0/7",
                 "status": "low"
             },
             {

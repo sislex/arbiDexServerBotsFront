@@ -3,6 +3,22 @@
 @import 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap';
 @import 'https://fonts.googleapis.com/icon?family=Material+Icons';
 
+$true-color: #4caf50;
+$error-color: #f44336;
+$warn-color: #FFA500FF;
+$none-color: #000000;
+$neutral-color: #808080FF;
+$white-color: #fff;
+
+:root {
+  --true-color:#{$true-color};
+  --error-color: #{$error-color};
+  --warn-color: #{$warn-color};
+  --none-color: #{$none-color};
+  --neutral-color: #{$neutral-color};
+  --white-color: #{$white-color};
+}
+
 html, body {
   height: 100%;
   margin: 0;

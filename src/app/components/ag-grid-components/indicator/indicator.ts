@@ -12,14 +12,14 @@ export class Indicator {
   @Input() status: string = '';
 
   private readonly statusColorMap: { [key: string]: string } = {
-    'active': 'green',
-    'pending': 'orange',
-    'error': 'red',
-    'closed': 'gray'
+    'active': 'var(--true-color)',
+    'pending': 'var(--warn-color)',
+    'error': 'var(--error-color)',
+    'closed': 'var(--neutral-color)'
   };
 
   get computedColor(): string {
     const normalizedStatus = this.status?.toLowerCase();
-    return this.statusColorMap[normalizedStatus] || 'gray';
+    return this.statusColorMap[normalizedStatus] || 'var(--neutral-color)';
   }
 }

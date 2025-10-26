@@ -1,1 +1,5 @@
-<p>toggle-container works!</p>
+<app-toggle
+  [isChecked]="isChecked"
+  [description]="description"
+  (emitter)="events($event)"
+></app-toggle>
