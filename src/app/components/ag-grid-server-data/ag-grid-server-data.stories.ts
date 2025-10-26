@@ -1,5 +1,4 @@
 import {Meta, moduleMetadata, StoryObj} from '@storybook/angular';
-import {AgGridAngular} from 'ag-grid-angular';
 import {AgGridServerData} from './ag-grid-server-data';
 import {serverStabs_1, serverStabs_2, serverStabs_3} from './stabs';
 
@@ -7,7 +6,7 @@ const meta: Meta<AgGridServerData> = {
   component: AgGridServerData,
   decorators: [
     moduleMetadata({
-      imports: [AgGridAngular],
+      imports: [],
       declarations: [],
       providers: [],
     }),

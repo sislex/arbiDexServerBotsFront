@@ -1,13 +1,12 @@
 import {Meta, moduleMetadata, StoryObj} from '@storybook/angular';
-import {AgGridAngular} from 'ag-grid-angular';
-import {AgGridBotsList} from './ag-grid-bots-list';
+import {AgGridBotList} from './ag-grid-bot-list';
 import {botListStabs_1, botListStabs_2, botListStabs_3} from './stabs';
 
-const meta: Meta<AgGridBotsList> = {
-  component: AgGridBotsList,
+const meta: Meta<AgGridBotList> = {
+  component: AgGridBotList,
   decorators: [
     moduleMetadata({
-      imports: [AgGridAngular],
+      imports: [],
       declarations: [],
       providers: [],
     }),
@@ -25,7 +24,7 @@ const meta: Meta<AgGridBotsList> = {
 
 };
 export default meta;
-type Story = StoryObj<AgGridBotsList>;
+type Story = StoryObj<AgGridBotList>;
 
 export const Base: Story = {};
 

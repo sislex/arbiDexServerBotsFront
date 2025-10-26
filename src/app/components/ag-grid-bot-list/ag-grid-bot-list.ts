@@ -6,13 +6,13 @@ import {Component, Input} from '@angular/core';
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
-  selector: 'app-ag-grid-bots-list',
+  selector: 'app-ag-grid-bot-list',
   imports: [AgGridAngular],
   standalone: true,
-  templateUrl: './ag-grid-bots-list.html',
-  styleUrl: './ag-grid-bots-list.scss'
+  templateUrl: './ag-grid-bot-list.html',
+  styleUrl: './ag-grid-bot-list.scss'
 })
-export class AgGridBotsList {
+export class AgGridBotList {
   @Input() rowData: any[] = [];
 
   colDefs: ColDef[] = [
