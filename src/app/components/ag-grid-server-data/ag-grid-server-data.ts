@@ -2,8 +2,8 @@ import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 import type { ColDef } from 'ag-grid-community';
 import { AgGridAngular } from 'ag-grid-angular';
 import {Component, Input} from '@angular/core';
-import {Indicator} from '../ag-grid-components/indicator/indicator';
 import {Timer} from '../ag-grid-components/timer/timer';
+import {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -61,7 +61,7 @@ export class AgGridServerData {
       field: 'status',
       width: 80,
       headerName: 'Status',
-      cellRenderer: Indicator,
+      cellRenderer: IndicatorContainer,
       cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },
       headerClass: 'align-center little-width',
     },

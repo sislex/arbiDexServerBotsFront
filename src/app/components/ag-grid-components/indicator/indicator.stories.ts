@@ -1,58 +1,51 @@
 import {Meta, moduleMetadata, StoryObj} from '@storybook/angular';
-import {AgGridAngular} from 'ag-grid-angular';
 import {Indicator} from './indicator';
 
 const meta: Meta<Indicator> = {
   component: Indicator,
   decorators: [
     moduleMetadata({
-      imports: [AgGridAngular],
+      imports: [],
       declarations: [],
       providers: [],
     }),
     (story) => ({
       ...story(),
       template: `
-        <div style="width: 200px; height: 200px; background-color: black ">
-            <app-indicator [color]="color"></app-indicator>
-            COMMENT: {{comment || 'cleared'}}
+        <div class="ag-grid-container" style="width: 300px; height: 500px; background-color: bisque">
+          ${story().template}
         </div>
-
       `,
     }),
   ],
   args: {
   },
-
 };
 export default meta;
 type Story = StoryObj<Indicator>;
 
 export const Base: Story = {};
 
-export const Green: Story = {
-  render: () => ({
-    props: {
-      color: 'green',
-      comment: 'Green Indicator'
-    },
-  })
-}
+export const Active: Story = {
+  args: {
+    status: 'active',
+  },
+};
 
-export const Orange: Story = {
-  render: () => ({
-    props: {
-      color: 'orange',
-      comment: 'Orange Indicator'
-    },
-  })
-}
+export const Error: Story = {
+  args: {
+    status: 'error',
+  },
+};
 
-export const Red: Story = {
-  render: () => ({
-    props: {
-      color: 'red',
-      comment: 'Red Indicator'
-    },
-  })
-}
+export const Pending: Story = {
+  args: {
+    status: 'pending',
+  },
+};
+
+export const Close: Story = {
+  args: {
+    status: 'close',
+  },
+};

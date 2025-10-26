@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
-import {ICellRendererAngularComp} from 'ag-grid-angular';
 
 @Component({
   selector: 'app-indicator',
@@ -9,18 +8,18 @@ import {ICellRendererAngularComp} from 'ag-grid-angular';
   templateUrl: './indicator.html',
   styleUrl: './indicator.scss'
 })
-export class Indicator implements ICellRendererAngularComp {
-  color = 'gray';
+export class Indicator {
+  @Input() status: string = '';
 
-  agInit(params: any): void {
-    const value = params.value?.toLowerCase();
-    if (value === 'active') this.color = 'green';
-    else if (value === 'pending') this.color = 'orange';
-    else if (value === 'error') this.color = 'red';
-    else if (value === 'closed') this.color = 'gray';
-  }
+  private readonly statusColorMap: { [key: string]: string } = {
+    'active': 'green',
+    'pending': 'orange',
+    'error': 'red',
+    'closed': 'gray'
+  };
 
-  refresh(): boolean {
-    return false;
+  get computedColor(): string {
+    const normalizedStatus = this.status?.toLowerCase();
+    return this.statusColorMap[normalizedStatus] || 'gray';
   }
 }
