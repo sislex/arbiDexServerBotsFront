@@ -1,5 +1,6 @@
 import {Meta, moduleMetadata, StoryObj} from '@storybook/angular';
 import {Sidebar} from './sidebar';
+import {fn} from 'storybook/test';
 
 const meta: Meta<Sidebar> = {
   component: Sidebar,
@@ -11,6 +12,7 @@ const meta: Meta<Sidebar> = {
     }),
   ],
   args: {
+    emitter: fn(),
     sidebarTitle: 'sidebarTitle',
   },
 };
@@ -29,6 +31,5 @@ export const WithCustomProvider: Story = {
     }),
   ],
   args: {
-    // header: '33',
   },
 };

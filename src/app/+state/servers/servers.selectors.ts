@@ -7,3 +7,7 @@ export const getFeatureName = createSelector(
   selectFeature,
   (state: ServersState) => state.featureName
 );
+export const getIsSidebarOpen = createSelector(
+  selectFeature,
+  (state: ServersState) => state.environmentData.isSidebarOpen
+);

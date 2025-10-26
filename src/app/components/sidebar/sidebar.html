@@ -1,6 +1,10 @@
 <div class="container">
-  <div class="panel" [class]="getPanelClass()">
-    @if (isPanelOpen) {
+  <div
+    class="panel"
+    [class.panel-open]="isSidebarOpen"
+    [class.panel-closed]="!isSidebarOpen"
+  >
+    @if (isSidebarOpen) {
       <div class="panel-content-open">
         <div class="button-group">
           <div class="header">
@@ -11,9 +15,13 @@
           </div>
           <mat-divider></mat-divider>
           <div class="content">
-            @for (item of list; track item) {
-
-            }
+            <mat-button-toggle-group name="fontStyle" aria-label="Font Style" class="custom-toggle-group">
+              @for (item of list; track item) {
+                <mat-button-toggle value="{{item.name}}" (click)="setActiveItem(item)">
+                  {{item.name | titlecase}}
+                </mat-button-toggle>
+              }
+            </mat-button-toggle-group>
           </div>
         </div>
       </div>

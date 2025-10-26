@@ -1,7 +1,7 @@
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 import type { ColDef } from 'ag-grid-community';
 import { AgGridAngular } from 'ag-grid-angular';
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -13,17 +13,33 @@ ModuleRegistry.registerModules([AllCommunityModule]);
   styleUrl: './ag-grid.scss'
 })
 export class AgGrid {
-  rowData = [
-    { make: "Tesla", model: "Model Y", price: 64950, electric: true },
-    { make: "Ford", model: "F-Series", price: 33850, electric: false },
-    { make: "Toyota", model: "Corolla", price: 29600, electric: false },
-    { make: "Toyota", model: "Corolla", price: 29600, electric: false },
-  ];
+  @Input() rowData: any[] = [];
 
   colDefs: ColDef[] = [
-    { field: "make", flex: 1},
-    { field: "model", flex: 1},
-    { field: "price", flex: 1},
-    { field: "electric", flex: 1}
+    {
+      field: "make",
+      headerName: 'Make',
+    },
+    {
+      field: "model",
+      headerName: 'Model',
+    },
+    {
+      field: "price",
+      headerName: 'Price',
+    },
+    {
+      field: "make",
+      headerName: 'Electric',
+    },
   ];
+
+  defaultColDef: ColDef = {
+    sortable: false,
+    cellStyle: { textAlign: 'center'},
+    headerClass: 'align-center',
+    resizable: false,
+    suppressMovable: true,
+    flex: 1
+  };
 }
