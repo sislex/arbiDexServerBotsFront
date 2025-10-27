@@ -1,8 +1,8 @@
-<button matButton [matMenuTriggerFor]="menu" class="q123">Menu</button>
-<mat-menu #menu="matMenu">
-<!--  @for () {-->
-
-<!--  }-->
-  <button mat-menu-item>Item 1</button>
-  <button mat-menu-item>Item 2</button>
-</mat-menu>
+@if (menuData) {
+  <button mat-button [matMenuTriggerFor]="menu">{{ menuData.title }}</button>
+  <mat-menu #menu="matMenu">
+    @for (item of menuData?.list ?? []; track item) {
+      <button mat-menu-item (click)="click(item)">{{ item.label }}</button>
+    }
+  </mat-menu>
+}

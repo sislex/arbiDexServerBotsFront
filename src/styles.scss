@@ -9,6 +9,7 @@ $warn-color: #FFA500FF;
 $none-color: #000000;
 $neutral-color: #808080FF;
 $white-color: #fff;
+$main-back: linear-gradient(to right, #D2B585, #FFFFFF);
 
 :root {
   --true-color:#{$true-color};
@@ -17,6 +18,7 @@ $white-color: #fff;
   --none-color: #{$none-color};
   --neutral-color: #{$neutral-color};
   --white-color: #{$white-color};
+  --main-back: #{$main-back};
 }
 
 html, body {

@@ -1,4 +1,13 @@
-<app-launch-control
-  [isStarted]="isStarted"
-  (emitter)="events($event)"
-></app-launch-control>
+@if (!isStarted) {
+  <app-actions
+    [icon]="'play_arrow'"
+    [type]="'green'"
+    (emitter)="events($event)"
+  ></app-actions>
+} @else {
+  <app-actions
+    [icon]="'stop'"
+    [type]="'red'"
+    (emitter)="events($event)"
+  ></app-actions>
+}

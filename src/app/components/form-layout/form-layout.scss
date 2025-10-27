@@ -13,7 +13,7 @@ mat-toolbar{
 .container {
   display: flex;
   flex-direction: column;
-  background-color: yellow;
+  background: var(--main-back);
   width: 500px;
   height: 500px;
 
@@ -27,10 +27,10 @@ mat-toolbar{
   }
 
   .form-settings {
-    background-color: #1ea7fd;
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
+    padding: 16px;
   }
 
   .footer {

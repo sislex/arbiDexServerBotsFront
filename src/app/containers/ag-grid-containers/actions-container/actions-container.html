@@ -1,4 +1,12 @@
-<app-actions
-  [data]="data"
-  (emitter)="events($event)"
-></app-actions>
+<div class="action-buttons">
+  <app-actions
+    [icon]="'edit'"
+    [type]="'default'"
+    (emitter)="events($event)"
+  ></app-actions>
+  <app-actions
+    [icon]="'delete'"
+    [type]="'red'"
+    (emitter)="events($event)"
+  ></app-actions>
+</div>

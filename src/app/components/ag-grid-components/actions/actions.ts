@@ -13,16 +13,13 @@ import {MatIconModule} from '@angular/material/icon';
   styleUrl: './actions.scss',
 })
 export class Actions {
-  @Input() data: any;
+  @Input() icon: string = '';
+  @Input() type: 'green' | 'red' | 'default' = 'default';
   @Output() emitter = new EventEmitter();
 
-  click(action: string) {
+  click() {
     this.emitter.emit({
       event: 'Actions:ACTION_CLICKED',
-      data: {
-        action,
-        rowData: this.data
-      }
     });
   }
 }

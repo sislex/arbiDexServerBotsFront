@@ -13,7 +13,7 @@ const meta: Meta<Actions> = {
     (story) => ({
       ...story(),
       template: `
-        <div class="custom-icon-button" style="width: 300px; height: 500px; background-color: bisque">
+        <div style="width: 300px; height: 500px; background-color: bisque">
           ${story().template}
         </div>
       `,
@@ -28,11 +28,30 @@ type Story = StoryObj<Actions>;
 
 export const Base: Story = {};
 
-export const Active: Story = {
+export const Edit: Story = {
   args: {
-    data: {
-      name: 'Test Item',
-      id: '1',
-    },
+    icon: 'edit',
+    type: 'default',
+  },
+};
+
+export const Delete: Story = {
+  args: {
+    icon: 'delete',
+    type: 'red',
+  },
+};
+
+export const Stop: Story = {
+  args: {
+    icon: 'stop',
+    type: 'red',
+  },
+};
+
+export const Start: Story = {
+  args: {
+    icon: 'play_arrow',
+    type: 'green',
   },
 };

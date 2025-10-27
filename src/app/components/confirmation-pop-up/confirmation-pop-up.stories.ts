@@ -1,9 +1,9 @@
 import {Meta, moduleMetadata, StoryObj} from '@storybook/angular';
-import {LaunchControl} from './launch-control';
 import {fn} from 'storybook/test';
+import {ConfirmationPopUp} from './confirmation-pop-up';
 
-const meta: Meta<LaunchControl> = {
-  component: LaunchControl,
+const meta: Meta<ConfirmationPopUp> = {
+  component: ConfirmationPopUp,
   decorators: [
     moduleMetadata({
       imports: [],
@@ -13,7 +13,7 @@ const meta: Meta<LaunchControl> = {
     (story) => ({
       ...story(),
       template: `
-        <div class="ag-grid-container" style="width: 300px; height: 500px; background-color: bisque">
+        <div style="width: 300px; height: 500px; background-color: bisque">
           ${story().template}
         </div>
       `,
@@ -24,18 +24,13 @@ const meta: Meta<LaunchControl> = {
   },
 };
 export default meta;
-type Story = StoryObj<LaunchControl>;
+type Story = StoryObj<ConfirmationPopUp>;
 
 export const Base: Story = {};
 
-export const Active: Story = {
-  args: {
-    isStarted: true,
-  },
-};
-
-export const NotActive: Story = {
-  args: {
-    isStarted: false,
-  },
-};
+// export const Edit: Story = {
+//   args: {
+//     icon: 'edit',
+//     type: 'default',
+//   },
+// };

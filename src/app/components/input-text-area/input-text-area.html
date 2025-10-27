@@ -1,0 +1,14 @@
+<div class="input-component">
+  @if (title) {
+    <span class="title">{{ title }}</span>
+  }
+  <mat-form-field class="example-full-width">
+    @if (label) {
+      <mat-label>{{label}}</mat-label>
+    }
+    <textarea matInput placeholder="{{ placeholder }}"
+              [(ngModel)]="inputValue"
+              (ngModelChange)="onInputChange($event)">
+  </textarea>
+  </mat-form-field>
+</div>

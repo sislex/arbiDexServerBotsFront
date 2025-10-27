@@ -14,6 +14,7 @@ import {FormsModule} from '@angular/forms';
 export class Toggle {
   @Input() isChecked: boolean = false;
   @Input() description: string = '';
+  @Input() title: string = '';
 
   @Output() emitter = new EventEmitter();
 

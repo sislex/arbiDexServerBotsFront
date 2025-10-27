@@ -30,12 +30,21 @@ export const Base: Story = {};
 
 export const Active: Story = {
   args: {
+    title: 'Custom Toggle Title',
     isChecked: true,
     description: 'Toggle is active'
   },
 };
 
 export const NoActive: Story = {
+  args: {
+    title: 'Custom Toggle Title',
+    isChecked: false,
+    description: 'Toggle is inactive'
+  },
+};
+
+export const WIthOutTitle: Story = {
   args: {
     isChecked: false,
     description: 'Toggle is inactive'

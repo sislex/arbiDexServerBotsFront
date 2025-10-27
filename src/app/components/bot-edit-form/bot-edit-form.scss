@@ -1,0 +1,14 @@
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: end;
+}
+
+app-toggle {
+  margin-bottom: 20px;
+}
+
+mat-divider {
+  margin-bottom: 20px;
+}

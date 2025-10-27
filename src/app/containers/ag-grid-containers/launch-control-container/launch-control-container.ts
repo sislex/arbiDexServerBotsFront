@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import {LaunchControl} from '../../../components/ag-grid-components/launch-control/launch-control';
+import {Actions} from '../../../components/ag-grid-components/actions/actions';
 
 @Component({
   selector: 'app-launch-control-container',
   imports: [
-    LaunchControl
+    Actions
   ],
   standalone: true,
   templateUrl: './launch-control-container.html',

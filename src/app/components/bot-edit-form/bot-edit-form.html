@@ -1,0 +1,51 @@
+<div class="row">
+  <app-select-field
+    [menuData]="data"
+    [selected]=""
+    (emitter)="events($event)"
+  ></app-select-field>
+  <app-input-text-area
+    [title]="''"
+    [label]="''"
+    [placeholder]="''"
+    [inputValue]="''"
+    (emitter)="events($event)"
+  >
+  </app-input-text-area>
+</div>
+
+<mat-divider></mat-divider>
+
+<div class="row">
+  <app-input-field
+    [title]="'Max request time (ms)'"
+    [label]="''"
+    [placeholder]="''"
+    [inputValue]="''"
+    (emitter)="events($event)"
+  >
+  </app-input-field>
+  <app-toggle
+    [title]="'Send data'"
+    [isChecked]="false"
+    [description]="''"
+    (emitter)="events($event)"
+  ></app-toggle>
+  <app-input-field
+    [title]="'Answer API'"
+    [label]="''"
+    [placeholder]="''"
+    [inputValue]="''"
+    (emitter)="events($event)"
+  >
+  </app-input-field>
+  <app-input-field
+    [title]="'Max saved errors'"
+    [label]="''"
+    [placeholder]="''"
+    [inputValue]="''"
+    (emitter)="events($event)"
+  >
+  </app-input-field>
+</div>
+

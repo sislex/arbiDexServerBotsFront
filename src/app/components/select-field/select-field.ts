@@ -1,15 +1,16 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
-import {MatMenuModule} from '@angular/material/menu';
+import {MatSelectModule} from '@angular/material/select';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 @Component({
-  selector: 'app-drop-menu',
-  imports: [MatButtonModule, MatMenuModule],
+  selector: 'app-select-field',
+  imports: [MatFormFieldModule, MatSelectModule
+  ],
   standalone: true,
-  templateUrl: './drop-menu.html',
-  styleUrl: './drop-menu.scss'
+  templateUrl: './select-field.html',
+  styleUrl: './select-field.scss'
 })
-export class DropMenu {
+export class SelectField {
   @Input() menuData: {
     title: string;
     list: { label: string; }[];
@@ -18,14 +19,15 @@ export class DropMenu {
       label: ''
     }]
   }; //TODO: сделать интерфейс в стэйте
+  @Input() selected: any;
 
   @Output() emitter = new EventEmitter();
 
-
   click(data: any) {
     this.emitter.emit({
-      event: 'DropMenu:ITEM_CLICKED',
+      event: 'SelectField:ITEM_SELECTED',
       data
     });
   }
+
 }
