@@ -1,9 +1,9 @@
 import {Meta, moduleMetadata, StoryObj} from '@storybook/angular';
-import {LaunchControl} from './launch-control';
+import {Actions} from './actions';
 import {fn} from 'storybook/test';
 
-const meta: Meta<LaunchControl> = {
-  component: LaunchControl,
+const meta: Meta<Actions> = {
+  component: Actions,
   decorators: [
     moduleMetadata({
       imports: [],
@@ -13,7 +13,7 @@ const meta: Meta<LaunchControl> = {
     (story) => ({
       ...story(),
       template: `
-        <div class="ag-grid-container" style="width: 300px; height: 500px; background-color: bisque">
+        <div class="custom-icon-button" style="width: 300px; height: 500px; background-color: bisque">
           ${story().template}
         </div>
       `,
@@ -24,18 +24,15 @@ const meta: Meta<LaunchControl> = {
   },
 };
 export default meta;
-type Story = StoryObj<LaunchControl>;
+type Story = StoryObj<Actions>;
 
 export const Base: Story = {};
 
 export const Active: Story = {
   args: {
-    isStarted: true,
-  },
-};
-
-export const NotActive: Story = {
-  args: {
-    isStarted: false,
+    data: {
+      name: 'Test Item',
+      id: '1',
+    },
   },
 };

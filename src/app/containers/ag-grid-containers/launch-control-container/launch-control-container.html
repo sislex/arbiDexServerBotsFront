@@ -1,1 +1,4 @@
-<p>launch-control-container works!</p>
+<app-launch-control
+  [isStarted]="isStarted"
+  (emitter)="events($event)"
+></app-launch-control>
