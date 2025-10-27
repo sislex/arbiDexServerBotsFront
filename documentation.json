@@ -289,7 +289,7 @@
     "components": [
         {
             "name": "Actions",
-            "id": "component-Actions-0add4b5c6b60e07255eb33db97e7ab0578b45fe71db55a6cfc751e62dbe5358e59e8e0e91eb64076d4a3e6d5788c665427d0b1e8cdaefe1c4079f6b15fde091c",
+            "id": "component-Actions-cc71b95097ef9c2b757386dd251270930f978ae23f9d6f7be20324198b0e50cc876ca87e2af6900420d3260b93d579fa378b35045b08299454df4191572f3e5d",
             "file": "src/app/components/ag-grid-components/actions/actions.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -373,13 +373,13 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {MatButtonModule} from '@angular/material/button';\nimport {MatIconModule} from '@angular/material/icon';\n\n@Component({\n  selector: 'app-actions',\n  imports: [\n    MatIconModule,\n    MatButtonModule\n  ],\n  standalone: true,\n  templateUrl: './actions.html',\n  styleUrl: './actions.scss'\n})\nexport class Actions {\n  @Input() data: any;\n  @Output() emitter = new EventEmitter();\n\n  click(action: string) {\n    this.emitter.emit({\n      event: 'Actions:ACTION_CLICKED',\n      data: {\n        action,\n        rowData: this.data\n      }\n    });\n  }\n}\n",
+            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {MatButtonModule} from '@angular/material/button';\nimport {MatIconModule} from '@angular/material/icon';\n\n@Component({\n  selector: 'app-actions',\n  imports: [\n    MatIconModule,\n    MatButtonModule\n  ],\n  standalone: true,\n  templateUrl: './actions.html',\n  styleUrl: './actions.scss',\n})\nexport class Actions {\n  @Input() data: any;\n  @Output() emitter = new EventEmitter();\n\n  click(action: string) {\n    this.emitter.emit({\n      event: 'Actions:ACTION_CLICKED',\n      data: {\n        action,\n        rowData: this.data\n      }\n    });\n  }\n}\n",
             "styleUrl": "./actions.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<div class=\"action-buttons\">\n  <button class=\"custom-button\" matMiniFab (click)=\"click('edit')\">\n    <mat-icon>edit</mat-icon>\n  </button>\n  <button class=\"custom-button\" matMiniFab (click)=\"click('delete')\">\n    <mat-icon>delete</mat-icon>\n  </button>\n</div>\n"
+            "templateData": "<div class=\"action-buttons\">\n  <button class=\"custom-icon-button\" matMiniFab (click)=\"click('edit')\">\n    <mat-icon>edit</mat-icon>\n  </button>\n  <button class=\"custom-icon-button\" matMiniFab (click)=\"click('delete')\">\n    <mat-icon>delete</mat-icon>\n  </button>\n</div>\n"
         },
         {
             "name": "ActionsContainer",
@@ -1047,6 +1047,44 @@
             "templateData": "<app-quote-watcher></app-quote-watcher>\n"
         },
         {
+            "name": "BotEditForm",
+            "id": "component-BotEditForm-b5f82b3a5aff2fb6ca3f2df4f8a190c2f516ac1d30a901fe788fb096c61235786e095d93db215503a2ccdde658edb0eb56e668171a1c00c53ad10bb6d9886fa1",
+            "file": "src/app/components/bot-edit-form/bot-edit-form.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-bot-edit-form",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./bot-edit-form.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\n\n@Component({\n  selector: 'app-bot-edit-form',\n  imports: [],\n  standalone: true,\n  templateUrl: './bot-edit-form.html',\n  styleUrl: './bot-edit-form.scss'\n})\nexport class BotEditForm {\n\n}\n",
+            "styleUrl": "./bot-edit-form.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": ""
+        },
+        {
             "name": "ButtonComponent",
             "id": "component-ButtonComponent-d7bf0323e6da130e2609e2af0117b4a8d7cd874132206af50bf43dfc37044485fe50f2867ea76525730dd195b9b95a43802a12dadc6ad5cd7bf2faa07f19f0da",
             "file": "src/stories/button.component.ts",
@@ -1225,7 +1263,7 @@
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<!--<section class=\"example-section\">-->\n  <mat-checkbox>Check me!</mat-checkbox>\n<!--</section>-->\n"
+            "templateData": "<mat-checkbox>Check me!</mat-checkbox>\n"
         },
         {
             "name": "DropMenu",
@@ -1457,6 +1495,209 @@
             "stylesData": "",
             "extends": [],
             "templateData": "<mat-accordion class=\"filter-core\" >\n  <mat-expansion-panel\n    (opened)=\"panelOpenState.set(true)\"\n    (closed)=\"panelOpenState.set(false)\">\n    <mat-expansion-panel-header class=\"filter-header\">\n      <mat-icon>filter_alt</mat-icon>\n      Filters\n<!--      <button mat-icon-button>-->\n<!--        <mat-icon>refresh</mat-icon>-->\n<!--      </button>-->\n    </mat-expansion-panel-header>\n\n    <div class=\"block-subtitles\">\n      <button>CONTENT</button>\n    </div>\n  </mat-expansion-panel>\n</mat-accordion>\n<mat-divider></mat-divider>\n\n"
+        },
+        {
+            "name": "FormLayout",
+            "id": "component-FormLayout-7141f9ab1a5f10087de777b55137f756de0b2481d2ad3aad084df71b425317163f6557d4d9cd3ce2fccfa5d94aa42f001c80045aadc7dc978bcb558cb25630ef",
+            "file": "src/app/components/form-layout/form-layout.ts",
+            "encapsulation": [
+                "ViewEncapsulation.None"
+            ],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-form-layout",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./form-layout.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "itemData",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 19,
+                    "type": "any",
+                    "decorators": []
+                },
+                {
+                    "name": "title",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 18,
+                    "type": "string",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [
+                {
+                    "name": "emitter",
+                    "defaultValue": "new EventEmitter()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 21,
+                    "type": "EventEmitter"
+                }
+            ],
+            "propertiesClass": [],
+            "methodsClass": [
+                {
+                    "name": "event",
+                    "args": [
+                        {
+                            "name": "event",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 23,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "event",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": false,
+            "imports": [
+                {
+                    "name": "MatToolbarModule",
+                    "type": "module"
+                },
+                {
+                    "name": "MatButtonModule",
+                    "type": "module"
+                },
+                {
+                    "name": "MatIconModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';\nimport {MatIconModule} from '@angular/material/icon';\nimport {MatButtonModule} from '@angular/material/button';\nimport {MatToolbarModule} from '@angular/material/toolbar';\n\n@Component({\n  selector: 'app-form-layout',\n  imports: [\n    MatToolbarModule,\n    MatButtonModule,\n    MatIconModule\n  ],\n  templateUrl: './form-layout.html',\n  styleUrl: './form-layout.scss',\n  encapsulation: ViewEncapsulation.None\n})\nexport class FormLayout {\n  @Input() title: string = '';\n  @Input() itemData: any;\n\n  @Output() emitter = new EventEmitter();\n\n  event(event: string) {\n    this.emitter.emit({\n      event: 'FormLayout:TOGGLE_CLICKED',\n      data: event\n    });\n  }\n}\n",
+            "styleUrl": "./form-layout.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<div class=\"container\">\n  <mat-toolbar>\n    <span>{{title}}</span>\n    <span class=\"example-spacer\"></span>\n    <button matIconButton class=\"example-icon\" (click)=\"event('close')\">\n      <mat-icon>close</mat-icon>\n    </button>\n  </mat-toolbar>\n\n  <ng-content class=\"form-settings\" select=\"[form]\"></ng-content>\n\n  <div class=\"footer\">\n    <mat-toolbar>\n      <span class=\"example-spacer\"></span>\n      <div class=\"footer-buttons\">\n        <button matButton=\"outlined\" (click)=\"event('close')\">Cancel</button>\n        @if (itemData.id) {\n          <button matButton=\"outlined\" (click)=\"event('save')\">Save</button>\n        } @else {\n          <button matButton=\"outlined\" (click)=\"event('save')\">Create</button>\n        }\n      </div>\n    </mat-toolbar>\n  </div>\n\n</div>\n"
+        },
+        {
+            "name": "FormLayoutContainer",
+            "id": "component-FormLayoutContainer-4549a417fb160475a1f0b4f1b4c04968516eac1f9c09501075a3a3999b8214f8228d28bdb0d6b11aed2b04d156f27ed634e5aa1715fce7170c8761c78d047e8d",
+            "file": "src/app/containers/form-layout-container/form-layout-container.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-form-layout-container",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./form-layout-container.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "itemData",
+                    "defaultValue": "{}",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "object",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 15
+                },
+                {
+                    "name": "title",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 14
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "events",
+                    "args": [
+                        {
+                            "name": "$event",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 16,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "$event",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "FormLayout"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\nimport {FormLayout} from '../../components/form-layout/form-layout';\n\n@Component({\n  selector: 'app-form-layout-container',\n  imports: [\n    FormLayout\n  ],\n  standalone: true,\n  templateUrl: './form-layout-container.html',\n  styleUrl: './form-layout-container.scss'\n})\nexport class FormLayoutContainer {\n  title = '';\n  itemData = {}\n  events($event: any) {\n    console.log('event', $event);\n  }\n}\n",
+            "styleUrl": "./form-layout-container.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<app-form-layout\n  [title]=\"title\"\n  [itemData]=\"itemData\"\n  (emitter)=\"events($event)\"\n\n></app-form-layout>\n"
         },
         {
             "name": "HeaderComponent",
@@ -1795,7 +2036,7 @@
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "@if (isStarted) {\n  <button matMiniFab (click)=\"toggleLaunch()\">\n    <mat-icon>stop</mat-icon>\n  </button>\n} @else {\n  <button matMiniFab (click)=\"toggleLaunch()\">\n    <mat-icon>play_arrow</mat-icon>\n  </button>\n}\n"
+            "templateData": "@if (isStarted) {\n  <button class=\"custom-icon-button cib-stop\" matMiniFab (click)=\"toggleLaunch()\">\n    <mat-icon>stop</mat-icon>\n  </button>\n} @else {\n  <button class=\"custom-icon-button cib-start\" matMiniFab (click)=\"toggleLaunch()\">\n    <mat-icon>play_arrow</mat-icon>\n  </button>\n}\n"
         },
         {
             "name": "LaunchControlContainer",
@@ -3906,6 +4147,15 @@
                 "status": "low"
             },
             {
+                "filePath": "src/app/components/bot-edit-form/bot-edit-form.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "BotEditForm",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
                 "filePath": "src/app/components/checkbox/checkbox.ts",
                 "type": "component",
                 "linktype": "component",
@@ -3939,6 +4189,15 @@
                 "name": "Filter",
                 "coveragePercent": 0,
                 "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/form-layout/form-layout.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "FormLayout",
+                "coveragePercent": 0,
+                "coverageCount": "0/5",
                 "status": "low"
             },
             {
@@ -4029,6 +4288,15 @@
                 "name": "ExpansionPanelContainer",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/containers/form-layout-container/form-layout-container.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "FormLayoutContainer",
+                "coveragePercent": 0,
+                "coverageCount": "0/4",
                 "status": "low"
             },
             {

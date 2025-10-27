@@ -1,0 +1,26 @@
+<div class="container">
+  <mat-toolbar>
+    <span>{{title}}</span>
+    <span class="example-spacer"></span>
+    <button matIconButton class="example-icon" (click)="event('close')">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <ng-content class="form-settings" select="[form]"></ng-content>
+
+  <div class="footer">
+    <mat-toolbar>
+      <span class="example-spacer"></span>
+      <div class="footer-buttons">
+        <button matButton="outlined" (click)="event('close')">Cancel</button>
+        @if (itemData.id) {
+          <button matButton="outlined" (click)="event('save')">Save</button>
+        } @else {
+          <button matButton="outlined" (click)="event('save')">Create</button>
+        }
+      </div>
+    </mat-toolbar>
+  </div>
+
+</div>

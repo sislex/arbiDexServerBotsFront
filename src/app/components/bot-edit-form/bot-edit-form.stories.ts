@@ -1,8 +1,8 @@
 import {Meta, moduleMetadata, StoryObj} from '@storybook/angular';
-import {Checkbox} from './checkbox';
+import {BotEditForm} from './bot-edit-form';
 
-const meta: Meta<Checkbox> = {
-  component: Checkbox,
+const meta: Meta<BotEditForm> = {
+  component: BotEditForm,
   decorators: [
     moduleMetadata({
       imports: [],
@@ -14,19 +14,11 @@ const meta: Meta<Checkbox> = {
   },
 };
 export default meta;
-type Story = StoryObj<Checkbox>;
+type Story = StoryObj<BotEditForm>;
 
 export const Base: Story = {};
 
 export const WithCustomProvider: Story = {
-  decorators: [
-    moduleMetadata({
-      imports: [],
-      declarations: [],
-      providers: [
-      ],
-    }),
-  ],
   args: {
   },
 };
