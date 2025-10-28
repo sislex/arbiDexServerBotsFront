@@ -13,7 +13,7 @@ const meta: Meta<ConfirmationPopUp> = {
     (story) => ({
       ...story(),
       template: `
-        <div style="width: 300px; height: 500px; background-color: bisque">
+        <div style="width: 900px; height: 500px; background-color: bisque">
           ${story().template}
         </div>
       `,
@@ -28,9 +28,17 @@ type Story = StoryObj<ConfirmationPopUp>;
 
 export const Base: Story = {};
 
-// export const Edit: Story = {
-//   args: {
-//     icon: 'edit',
-//     type: 'default',
-//   },
-// };
+export const Primary: Story = {
+  args: {
+    title: 'Standard title',
+    message: 'This is a standard message for confirmation pop up',
+    buttons: ['yes', 'no'],
+  },
+};
+
+export const WithoutButtons: Story = {
+  args: {
+    title: 'Standard title',
+    message: 'This is a standard message for confirmation pop up Without Buttons',
+  },
+};

@@ -1,0 +1,33 @@
+<div class="container">
+  <mat-toolbar>
+    @if (title) {
+      <span>{{title}}</span>
+    }
+    <span class="example-spacer"></span>
+    <!--    <app-actions-->
+    <!--      [icon]="'close'"-->
+    <!--      [type]="'red'"-->
+    <!--      (emitter)="event('close')"-->
+    <!--    ></app-actions>-->
+    <button matIconButton class="example-icon" (click)="event('close')">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <div class="main-message">
+    {{message}}
+  </div>
+
+  @if (buttons.length) {
+    <div class="footer">
+      <mat-toolbar>
+        <span class="example-spacer"></span>
+        <div class="footer-buttons">
+          @for (button of buttons; track button) {
+            <button matButton="outlined" (click)="event(button)">{{ button | uppercase }}</button>
+          }
+        </div>
+      </mat-toolbar>
+    </div>
+  }
+</div>

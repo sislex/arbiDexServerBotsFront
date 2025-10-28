@@ -289,7 +289,7 @@
     "components": [
         {
             "name": "Actions",
-            "id": "component-Actions-cc71b95097ef9c2b757386dd251270930f978ae23f9d6f7be20324198b0e50cc876ca87e2af6900420d3260b93d579fa378b35045b08299454df4191572f3e5d",
+            "id": "component-Actions-6a96d12cb3adf068081d4095fe41c31321e0fa8a1d1e0f61b05edb19c9846a6e1ef7783843080f51a54c2cdfed351f6e4f99f947357d60a4e35d5d60c9fb120a",
             "file": "src/app/components/ag-grid-components/actions/actions.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -306,11 +306,21 @@
             "hostDirectives": [],
             "inputsClass": [
                 {
-                    "name": "data",
+                    "name": "icon",
+                    "defaultValue": "''",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "line": 16,
-                    "type": "any",
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "type",
+                    "defaultValue": "'default'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 17,
+                    "type": "\"green\" | \"red\" | \"default\"",
                     "decorators": []
                 }
             ],
@@ -320,7 +330,7 @@
                     "defaultValue": "new EventEmitter()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 17,
+                    "line": 18,
                     "type": "EventEmitter"
                 }
             ],
@@ -328,31 +338,13 @@
             "methodsClass": [
                 {
                     "name": "click",
-                    "args": [
-                        {
-                            "name": "action",
-                            "type": "string",
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
+                    "args": [],
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 19,
+                    "line": 20,
                     "deprecated": false,
-                    "deprecationMessage": "",
-                    "jsdoctags": [
-                        {
-                            "name": "action",
-                            "type": "string",
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
+                    "deprecationMessage": ""
                 }
             ],
             "deprecated": false,
@@ -373,13 +365,13 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {MatButtonModule} from '@angular/material/button';\nimport {MatIconModule} from '@angular/material/icon';\n\n@Component({\n  selector: 'app-actions',\n  imports: [\n    MatIconModule,\n    MatButtonModule\n  ],\n  standalone: true,\n  templateUrl: './actions.html',\n  styleUrl: './actions.scss',\n})\nexport class Actions {\n  @Input() data: any;\n  @Output() emitter = new EventEmitter();\n\n  click(action: string) {\n    this.emitter.emit({\n      event: 'Actions:ACTION_CLICKED',\n      data: {\n        action,\n        rowData: this.data\n      }\n    });\n  }\n}\n",
+            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {MatButtonModule} from '@angular/material/button';\nimport {MatIconModule} from '@angular/material/icon';\n\n@Component({\n  selector: 'app-actions',\n  imports: [\n    MatIconModule,\n    MatButtonModule\n  ],\n  standalone: true,\n  templateUrl: './actions.html',\n  styleUrl: './actions.scss',\n})\nexport class Actions {\n  @Input() icon: string = '';\n  @Input() type: 'green' | 'red' | 'default' = 'default';\n  @Output() emitter = new EventEmitter();\n\n  click() {\n    this.emitter.emit({\n      event: 'Actions:ACTION_CLICKED',\n    });\n  }\n}\n",
             "styleUrl": "./actions.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<div class=\"action-buttons\">\n  <button class=\"custom-icon-button\" matMiniFab (click)=\"click('edit')\">\n    <mat-icon>edit</mat-icon>\n  </button>\n  <button class=\"custom-icon-button\" matMiniFab (click)=\"click('delete')\">\n    <mat-icon>delete</mat-icon>\n  </button>\n</div>\n"
+            "templateData": "<button class=\"custom-icon-button\"\n        [class.cib-start]=\"type === 'green'\"\n        [class.cib-stop]=\"type === 'red'\"\n        matMiniFab\n        (click)=\"click()\"\n>\n  <mat-icon>{{ icon }}</mat-icon>\n</button>\n"
         },
         {
             "name": "ActionsContainer",
@@ -461,7 +453,7 @@
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<app-actions\n  [data]=\"data\"\n  (emitter)=\"events($event)\"\n></app-actions>\n"
+            "templateData": "<div class=\"action-buttons\">\n  <app-actions\n    [icon]=\"'edit'\"\n    [type]=\"'default'\"\n    (emitter)=\"events($event)\"\n  ></app-actions>\n  <app-actions\n    [icon]=\"'delete'\"\n    [type]=\"'red'\"\n    (emitter)=\"events($event)\"\n  ></app-actions>\n</div>\n"
         },
         {
             "name": "AgGrid",
@@ -1048,7 +1040,7 @@
         },
         {
             "name": "BotEditForm",
-            "id": "component-BotEditForm-bfff2e2e276933b650069b7fa2e14e5278ae6dbb35e860b4481c3870be3a8700dd682e6b4bfc0ac3f52da25b04909a567a3b324d3ed8e2bc71a0d2ec5f7b6eae",
+            "id": "component-BotEditForm-8b13c4c69a1ea76ed1a80761546acd2dae69771ad8f8dad506faf48c68f22a08cb375bbe726ef8db714f68144655ec907285978043a39a754392b916dbc90444",
             "file": "src/app/components/bot-edit-form/bot-edit-form.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1075,10 +1067,39 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 16
+                    "line": 22
                 }
             ],
-            "methodsClass": [],
+            "methodsClass": [
+                {
+                    "name": "events",
+                    "args": [
+                        {
+                            "name": "event",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 34,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "event",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
             "deprecated": false,
             "deprecationMessage": "",
             "hostBindings": [],
@@ -1090,18 +1111,28 @@
                 },
                 {
                     "name": "SelectField"
+                },
+                {
+                    "name": "InputField"
+                },
+                {
+                    "name": "Toggle"
+                },
+                {
+                    "name": "MatDividerModule",
+                    "type": "module"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\nimport {InputTextArea} from '../input-text-area/input-text-area';\nimport {SelectField} from '../select-field/select-field';\n\n@Component({\n  selector: 'app-bot-edit-form',\n  imports: [\n    InputTextArea,\n    SelectField,\n  ],\n  standalone: true,\n  templateUrl: './bot-edit-form.html',\n  styleUrl: './bot-edit-form.scss'\n})\nexport class BotEditForm {\n  data = {\n    title: 'type',\n    list: [\n      {\n        label: '1type',\n      },\n      {\n        label: '2type',\n      },\n    ]\n  };\n\n}\n",
+            "sourceCode": "import { Component } from '@angular/core';\nimport {InputTextArea} from '../input-text-area/input-text-area';\nimport {SelectField} from '../select-field/select-field';\nimport {InputField} from '../input-field/input-field';\nimport {Toggle} from '../ag-grid-components/toggle/toggle';\nimport {MatDividerModule} from '@angular/material/divider';\n\n@Component({\n  selector: 'app-bot-edit-form',\n  imports: [\n    InputTextArea,\n    SelectField,\n    InputField,\n    Toggle,\n    MatDividerModule\n  ],\n  standalone: true,\n  templateUrl: './bot-edit-form.html',\n  styleUrl: './bot-edit-form.scss'\n})\nexport class BotEditForm {\n  data = {\n    title: 'type',\n    list: [\n      {\n        label: '1type',\n      },\n      {\n        label: '2type',\n      },\n    ]\n  };\n\n  events(event: any) {\n    if (event.event === 'InputField:INPUT_CHANGED') {\n      console.log(event.event, event.data);\n    } else if (event.event === 'SelectField:ITEM_SELECTED') {\n      console.log(event.event, event.data);\n    } else if (event.event === 'InputTextArea:INPUT_CHANGED') {\n      console.log(event.event, event.data);\n    } else if (event.event === 'Toggle:TOGGLE_CHANGED') {\n      console.log(event.event, event.data);\n    }\n  }\n}\n",
             "styleUrl": "./bot-edit-form.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<app-select-field\n  [menuData]=\"data\"\n  [selected]=\"\"\n></app-select-field>\n<app-input-text-area\n  [label]=\"''\"\n  [placeholder]=\"''\"\n></app-input-text-area>\n"
+            "templateData": "<div class=\"row\">\n  <app-select-field\n    [menuData]=\"data\"\n    [selected]=\"\"\n    (emitter)=\"events($event)\"\n  ></app-select-field>\n  <app-input-text-area\n    [title]=\"''\"\n    [label]=\"''\"\n    [placeholder]=\"''\"\n    [inputValue]=\"''\"\n    (emitter)=\"events($event)\"\n  >\n  </app-input-text-area>\n</div>\n\n<mat-divider></mat-divider>\n\n<div class=\"row\">\n  <app-input-field\n    [title]=\"'Max request time (ms)'\"\n    [label]=\"''\"\n    [placeholder]=\"''\"\n    [inputValue]=\"''\"\n    (emitter)=\"events($event)\"\n  >\n  </app-input-field>\n  <app-toggle\n    [title]=\"'Send data'\"\n    [isChecked]=\"false\"\n    [description]=\"''\"\n    (emitter)=\"events($event)\"\n  ></app-toggle>\n  <app-input-field\n    [title]=\"'Answer API'\"\n    [label]=\"''\"\n    [placeholder]=\"''\"\n    [inputValue]=\"''\"\n    (emitter)=\"events($event)\"\n  >\n  </app-input-field>\n  <app-input-field\n    [title]=\"'Max saved errors'\"\n    [label]=\"''\"\n    [placeholder]=\"''\"\n    [inputValue]=\"''\"\n    (emitter)=\"events($event)\"\n  >\n  </app-input-field>\n</div>\n\n"
         },
         {
             "name": "ButtonComponent",
@@ -1283,6 +1314,130 @@
             "stylesData": "",
             "extends": [],
             "templateData": "<mat-checkbox>Check me!</mat-checkbox>\n"
+        },
+        {
+            "name": "ConfirmationPopUp",
+            "id": "component-ConfirmationPopUp-2d19be716f3698551f762f86b5feb4bb353f6bc56227412e1dd300c41998827f9d86f1813981f52a0e0acce7bdf20554e1d956023e7a493662165e64779114e7",
+            "file": "src/app/components/confirmation-pop-up/confirmation-pop-up.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-confirmation-pop-up",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./confirmation-pop-up.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "buttons",
+                    "defaultValue": "[]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 24,
+                    "type": "string[]",
+                    "decorators": []
+                },
+                {
+                    "name": "message",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 23,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "title",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 22,
+                    "type": "string",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [
+                {
+                    "name": "emitter",
+                    "defaultValue": "new EventEmitter()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 26,
+                    "type": "EventEmitter"
+                }
+            ],
+            "propertiesClass": [],
+            "methodsClass": [
+                {
+                    "name": "event",
+                    "args": [
+                        {
+                            "name": "$event",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 27,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "$event",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "MatToolbarModule",
+                    "type": "module"
+                },
+                {
+                    "name": "MatButtonModule",
+                    "type": "module"
+                },
+                {
+                    "name": "MatIconModule",
+                    "type": "module"
+                },
+                {
+                    "name": "UpperCasePipe",
+                    "type": "pipe"
+                },
+                {
+                    "name": "Actions"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {MatToolbarModule} from '@angular/material/toolbar';\nimport {MatButtonModule} from '@angular/material/button';\nimport {MatIconModule} from '@angular/material/icon';\nimport {UpperCasePipe} from '@angular/common';\nimport {Actions} from '../ag-grid-components/actions/actions';\n\n@Component({\n  selector: 'app-confirmation-pop-up',\n  imports: [\n    MatToolbarModule,\n    MatButtonModule,\n    MatIconModule,\n    UpperCasePipe,\n    Actions\n  ],\n  standalone: true,\n  templateUrl: './confirmation-pop-up.html',\n  styleUrl: './confirmation-pop-up.scss'\n})\nexport class ConfirmationPopUp {\n  @Input() title: string = '';\n  @Input() message: string = '';\n  @Input() buttons: string[] = [];\n\n  @Output() emitter = new EventEmitter();\n  event($event: any) {\n    this.emitter.emit({\n      event: 'ConfirmationPopUp:RESULT_CLICKED',\n      data: $event\n    });\n  }\n}\n",
+            "styleUrl": "./confirmation-pop-up.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<div class=\"container\">\n  <mat-toolbar>\n    @if (title) {\n      <span>{{title}}</span>\n    }\n    <span class=\"example-spacer\"></span>\n    <app-actions\n      [icon]=\"'close'\"\n      [type]=\"'default'\"\n      (emitter)=\"event('close')\"\n    ></app-actions>\n<!--    <button matIconButton class=\"example-icon\" (click)=\"event('close')\">-->\n<!--      <mat-icon>close</mat-icon>-->\n<!--    </button>-->\n  </mat-toolbar>\n\n  <div class=\"main-message\">\n    {{message}}\n  </div>\n\n  @if (buttons.length) {\n    <div class=\"footer\">\n      <mat-toolbar>\n        <span class=\"example-spacer\"></span>\n        <div class=\"footer-buttons\">\n          @for (button of buttons; track button) {\n            <button matButton=\"outlined\" (click)=\"event(button)\">{{ button | uppercase }}</button>\n          }\n        </div>\n      </mat-toolbar>\n    </div>\n  }\n</div>\n"
         },
         {
             "name": "DropMenu",
@@ -2030,7 +2185,7 @@
         },
         {
             "name": "InputField",
-            "id": "component-InputField-a189109258b13ae57701bf36b13f6d5c82f5e98fa6409b48ab6bd142cbbcbfee920e83448b790656e324937bf71be36988a9a347e0511b95bafaed4c8d0fbb32",
+            "id": "component-InputField-7a7ce5993c7603a950a925a95863aa64b838e005b99b8414cfc407de9abed5365b6ad9873d9b2de1f31c4f43e8d9532b968c655817194acb4d9308f7b8050b06",
             "file": "src/app/components/input-field/input-field.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2072,6 +2227,15 @@
                     "line": 15,
                     "type": "string",
                     "decorators": []
+                },
+                {
+                    "name": "title",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 17,
+                    "type": "string",
+                    "decorators": []
                 }
             ],
             "outputsClass": [
@@ -2080,7 +2244,7 @@
                     "defaultValue": "new EventEmitter()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 18,
+                    "line": 19,
                     "type": "EventEmitter"
                 }
             ],
@@ -2099,7 +2263,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 20,
+                    "line": 21,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2137,17 +2301,17 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {FormsModule} from '@angular/forms';\nimport {MatFormFieldModule} from '@angular/material/form-field';\nimport {MatInputModule} from '@angular/material/input';\n\n@Component({\n  selector: 'app-input-field',\n  imports: [FormsModule, MatFormFieldModule, MatInputModule],\n  standalone: true,\n  templateUrl: './input-field.html',\n  styleUrl: './input-field.scss'\n})\nexport class InputField {\n  @Input() label: string = '';\n  @Input() placeholder: string = ''\n  @Input() inputValue: string = ''\n\n  @Output() emitter = new EventEmitter();\n\n  onInputChange(data: any) {\n    this.emitter.emit({\n      event: 'InputField:INPUT_CHANGED',\n      data\n    });\n  }\n}\n",
+            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {FormsModule} from '@angular/forms';\nimport {MatFormFieldModule} from '@angular/material/form-field';\nimport {MatInputModule} from '@angular/material/input';\n\n@Component({\n  selector: 'app-input-field',\n  imports: [FormsModule, MatFormFieldModule, MatInputModule],\n  standalone: true,\n  templateUrl: './input-field.html',\n  styleUrl: './input-field.scss'\n})\nexport class InputField {\n  @Input() label: string = '';\n  @Input() placeholder: string = ''\n  @Input() inputValue: string = ''\n  @Input() title: string = ''\n\n  @Output() emitter = new EventEmitter();\n\n  onInputChange(data: any) {\n    this.emitter.emit({\n      event: 'InputField:INPUT_CHANGED',\n      data\n    });\n  }\n}\n",
             "styleUrl": "./input-field.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<mat-form-field class=\"example-full-width\">\n  <mat-label>{{label}}</mat-label>\n  <input matInput\n         placeholder=\"{{ placeholder }}\"\n         [(ngModel)]=\"inputValue\"\n         (ngModelChange)=\"onInputChange($event)\"\n         value=\"{{inputValue}}\">\n</mat-form-field>\n"
+            "templateData": "<div class=\"input-component\">\n  @if (title) {\n    <span class=\"title\">{{ title }}</span>\n  }\n  <mat-form-field class=\"example-full-width\">\n    @if (label) {\n      <mat-label>{{label}}</mat-label>\n    }\n    <input matInput\n           placeholder=\"{{ placeholder }}\"\n           [(ngModel)]=\"inputValue\"\n           (ngModelChange)=\"onInputChange($event)\"\n           value=\"{{inputValue}}\">\n  </mat-form-field>\n</div>\n\n"
         },
         {
             "name": "InputTextArea",
-            "id": "component-InputTextArea-d07e3bb78d809186ee02460f5fd5f26333926d0ac0d7d26fb6a3d0c586c8911fdac2850e9d0e06745a0a1acfc7cc23c400edc336ef27ae03a9327d0ead2d3efe",
+            "id": "component-InputTextArea-132a15e6f0b8c6f70bc7d58f01af74814fe469daa2bb1dd3b42fa5e2471078ffea249d616516433da3b5a2ec1ac27a37abbccd376edae3bb7d8de71f08a645d2",
             "file": "src/app/components/input-text-area/input-text-area.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2189,6 +2353,15 @@
                     "line": 15,
                     "type": "string",
                     "decorators": []
+                },
+                {
+                    "name": "title",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 17,
+                    "type": "string",
+                    "decorators": []
                 }
             ],
             "outputsClass": [
@@ -2197,7 +2370,7 @@
                     "defaultValue": "new EventEmitter()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 18,
+                    "line": 19,
                     "type": "EventEmitter"
                 }
             ],
@@ -2216,7 +2389,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 20,
+                    "line": 21,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2254,94 +2427,17 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {FormsModule} from '@angular/forms';\nimport {MatFormFieldModule} from '@angular/material/form-field';\nimport {MatInputModule} from '@angular/material/input';\n\n@Component({\n  selector: 'app-input-text-area',\n  imports: [FormsModule, MatFormFieldModule, MatInputModule],\n  standalone: true,\n  templateUrl: './input-text-area.html',\n  styleUrl: './input-text-area.scss'\n})\nexport class InputTextArea {\n  @Input() label: string = '';\n  @Input() placeholder: string = ''\n  @Input() inputValue: string = ''\n\n  @Output() emitter = new EventEmitter();\n\n  onInputChange(data: any) {\n    this.emitter.emit({\n      event: 'InputTextArea:INPUT_CHANGED',\n      data\n    });\n  }\n}\n",
+            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {FormsModule} from '@angular/forms';\nimport {MatFormFieldModule} from '@angular/material/form-field';\nimport {MatInputModule} from '@angular/material/input';\n\n@Component({\n  selector: 'app-input-text-area',\n  imports: [FormsModule, MatFormFieldModule, MatInputModule],\n  standalone: true,\n  templateUrl: './input-text-area.html',\n  styleUrl: './input-text-area.scss'\n})\nexport class InputTextArea {\n  @Input() label: string = '';\n  @Input() placeholder: string = ''\n  @Input() inputValue: string = ''\n  @Input() title: string = ''\n\n  @Output() emitter = new EventEmitter();\n\n  onInputChange(data: any) {\n    this.emitter.emit({\n      event: 'InputTextArea:INPUT_CHANGED',\n      data\n    });\n  }\n}\n",
             "styleUrl": "./input-text-area.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<mat-form-field class=\"example-full-width\">\n  <mat-label>{{label}}</mat-label>\n  <textarea matInput placeholder=\"{{ placeholder }}\"\n            [(ngModel)]=\"inputValue\"\n            (ngModelChange)=\"onInputChange($event)\">\n  </textarea>\n</mat-form-field>\n"
-        },
-        {
-            "name": "LaunchControl",
-            "id": "component-LaunchControl-a471775fcaa77b8e5456df66364d0d6ecffc8c730ef2d16765f061b60675cef6ec706e4babdacdb056f92d38bc88b5a974aa00136ec8e4062fe6c29e0c34f3c3",
-            "file": "src/app/components/ag-grid-components/launch-control/launch-control.ts",
-            "encapsulation": [],
-            "entryComponents": [],
-            "inputs": [],
-            "outputs": [],
-            "providers": [],
-            "selector": "app-launch-control",
-            "styleUrls": [],
-            "styles": [],
-            "templateUrl": [
-                "./launch-control.html"
-            ],
-            "viewProviders": [],
-            "hostDirectives": [],
-            "inputsClass": [
-                {
-                    "name": "isStarted",
-                    "defaultValue": "false",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 16,
-                    "type": "boolean",
-                    "decorators": []
-                }
-            ],
-            "outputsClass": [
-                {
-                    "name": "emitter",
-                    "defaultValue": "new EventEmitter()",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 18,
-                    "type": "EventEmitter"
-                }
-            ],
-            "propertiesClass": [],
-            "methodsClass": [
-                {
-                    "name": "toggleLaunch",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 20,
-                    "deprecated": false,
-                    "deprecationMessage": ""
-                }
-            ],
-            "deprecated": false,
-            "deprecationMessage": "",
-            "hostBindings": [],
-            "hostListeners": [],
-            "standalone": true,
-            "imports": [
-                {
-                    "name": "MatIconModule",
-                    "type": "module"
-                },
-                {
-                    "name": "MatButtonModule",
-                    "type": "module"
-                }
-            ],
-            "description": "",
-            "rawdescription": "\n",
-            "type": "component",
-            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {MatIconModule} from '@angular/material/icon';\nimport {MatButtonModule} from '@angular/material/button';\n\n@Component({\n  selector: 'app-launch-control',\n  imports: [\n    MatIconModule,\n    MatButtonModule\n  ],\n  standalone: true,\n  templateUrl: './launch-control.html',\n  styleUrl: './launch-control.scss'\n})\nexport class LaunchControl {\n  @Input() isStarted: boolean = false;\n\n  @Output() emitter = new EventEmitter();\n\n  toggleLaunch() {\n    this.emitter.emit({\n      event: 'Toggle:TOGGLE_CLICKED',\n    });\n  }\n}\n",
-            "styleUrl": "./launch-control.scss",
-            "assetsDirs": [],
-            "styleUrlsData": "",
-            "stylesData": "",
-            "extends": [],
-            "templateData": "@if (isStarted) {\n  <button class=\"custom-icon-button cib-stop\" matMiniFab (click)=\"toggleLaunch()\">\n    <mat-icon>stop</mat-icon>\n  </button>\n} @else {\n  <button class=\"custom-icon-button cib-start\" matMiniFab (click)=\"toggleLaunch()\">\n    <mat-icon>play_arrow</mat-icon>\n  </button>\n}\n"
+            "templateData": "<div class=\"input-component\">\n  @if (title) {\n    <span class=\"title\">{{ title }}</span>\n  }\n  <mat-form-field class=\"example-full-width\">\n    @if (label) {\n      <mat-label>{{label}}</mat-label>\n    }\n    <textarea matInput placeholder=\"{{ placeholder }}\"\n              [(ngModel)]=\"inputValue\"\n              (ngModelChange)=\"onInputChange($event)\">\n  </textarea>\n  </mat-form-field>\n</div>\n"
         },
         {
             "name": "LaunchControlContainer",
-            "id": "component-LaunchControlContainer-9bec07bb1b62af7760c16b7ea83be7b51ddc23509966c016854a6e669f18bfe74f20684504843273a417116dfc9360ccec395d655d71fc0e91ff6d7e5010a4e3",
+            "id": "component-LaunchControlContainer-9808b5152a495dccf55561ce06969b26118b8d88e3a03cc4d14333fc2de4b9e4ee8e45cf14dfd784ceb8c1744c4f7ee0ddd53a0548f1e840a6cc3390035953c8",
             "file": "src/app/containers/ag-grid-containers/launch-control-container/launch-control-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2408,19 +2504,19 @@
             "standalone": true,
             "imports": [
                 {
-                    "name": "LaunchControl"
+                    "name": "Actions"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\nimport {LaunchControl} from '../../../components/ag-grid-components/launch-control/launch-control';\n\n@Component({\n  selector: 'app-launch-control-container',\n  imports: [\n    LaunchControl\n  ],\n  standalone: true,\n  templateUrl: './launch-control-container.html',\n  styleUrl: './launch-control-container.scss'\n})\nexport class LaunchControlContainer {\n  isStarted: boolean = false;\n  events(event: any) {\n\n  }\n}\n",
+            "sourceCode": "import { Component } from '@angular/core';\nimport {Actions} from '../../../components/ag-grid-components/actions/actions';\n\n@Component({\n  selector: 'app-launch-control-container',\n  imports: [\n    Actions\n  ],\n  standalone: true,\n  templateUrl: './launch-control-container.html',\n  styleUrl: './launch-control-container.scss'\n})\nexport class LaunchControlContainer {\n  isStarted: boolean = false;\n  events(event: any) {\n\n  }\n}\n",
             "styleUrl": "./launch-control-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<app-launch-control\n  [isStarted]=\"isStarted\"\n  (emitter)=\"events($event)\"\n></app-launch-control>\n"
+            "templateData": "@if (!isStarted) {\n  <app-actions\n    [icon]=\"'play_arrow'\"\n    [type]=\"'green'\"\n    (emitter)=\"events($event)\"\n  ></app-actions>\n} @else {\n  <app-actions\n    [icon]=\"'stop'\"\n    [type]=\"'red'\"\n    (emitter)=\"events($event)\"\n  ></app-actions>\n}\n"
         },
         {
             "name": "PageComponent",
@@ -3279,7 +3375,7 @@
         },
         {
             "name": "Toggle",
-            "id": "component-Toggle-c0a64d055f4b7d06f23da503cef6c876802c3534cab48067a3f14d1a9ec847dcf55e1b5dd3df178cf4587b2e7411150ccd3d508743149c5f5431f4bd2959a7bf",
+            "id": "component-Toggle-916ffae16a2b0bc440873290e71c7ece013e86f5b7f93eb3174c58233f8f41d2ac363d7a6c6c990a06b77100548c29f1e05c8df4d602f1169de2fad4ac04a504",
             "file": "src/app/components/ag-grid-components/toggle/toggle.ts",
             "encapsulation": [
                 "ViewEncapsulation.None"
@@ -3314,6 +3410,15 @@
                     "line": 15,
                     "type": "boolean",
                     "decorators": []
+                },
+                {
+                    "name": "title",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 17,
+                    "type": "string",
+                    "decorators": []
                 }
             ],
             "outputsClass": [
@@ -3322,7 +3427,7 @@
                     "defaultValue": "new EventEmitter()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 18,
+                    "line": 19,
                     "type": "EventEmitter"
                 }
             ],
@@ -3334,7 +3439,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 20,
+                    "line": 21,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -3357,13 +3462,13 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';\nimport {MatSlideToggleModule} from '@angular/material/slide-toggle';\nimport {FormsModule} from '@angular/forms';\n\n@Component({\n  selector: 'app-toggle',\n  imports: [MatSlideToggleModule, FormsModule],\n  standalone: true,\n  templateUrl: './toggle.html',\n  styleUrl: './toggle.scss',\n  encapsulation: ViewEncapsulation.None\n})\n\nexport class Toggle {\n  @Input() isChecked: boolean = false;\n  @Input() description: string = '';\n\n  @Output() emitter = new EventEmitter();\n\n  onToggle() {\n    this.emitter.emit({\n      event: 'Toggle:TOGGLE_CLICKED',\n    });\n  }\n}\n",
+            "sourceCode": "import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';\nimport {MatSlideToggleModule} from '@angular/material/slide-toggle';\nimport {FormsModule} from '@angular/forms';\n\n@Component({\n  selector: 'app-toggle',\n  imports: [MatSlideToggleModule, FormsModule],\n  standalone: true,\n  templateUrl: './toggle.html',\n  styleUrl: './toggle.scss',\n  encapsulation: ViewEncapsulation.None\n})\n\nexport class Toggle {\n  @Input() isChecked: boolean = false;\n  @Input() description: string = '';\n  @Input() title: string = '';\n\n  @Output() emitter = new EventEmitter();\n\n  onToggle() {\n    this.emitter.emit({\n      event: 'Toggle:TOGGLE_CLICKED',\n    });\n  }\n}\n",
             "styleUrl": "./toggle.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<mat-slide-toggle\n  [(ngModel)]=\"isChecked\"\n  (ngModelChange)=\"onToggle()\"\n>\n  {{ description }}\n</mat-slide-toggle>\n"
+            "templateData": "<div class=\"custom-toggle\">\n  @if (title) {\n    <span class=\"toggle-title\">{{ title }}</span>\n  }\n  <mat-slide-toggle\n    [(ngModel)]=\"isChecked\"\n    (ngModelChange)=\"onToggle()\"\n  >\n    {{ description }}\n  </mat-slide-toggle>\n</div>\n\n"
         },
         {
             "name": "ToggleContainer",
@@ -4414,7 +4519,7 @@
                 "linktype": "component",
                 "name": "Actions",
                 "coveragePercent": 0,
-                "coverageCount": "0/4",
+                "coverageCount": "0/5",
                 "status": "low"
             },
             {
@@ -4424,15 +4529,6 @@
                 "name": "Indicator",
                 "coveragePercent": 0,
                 "coverageCount": "0/3",
-                "status": "low"
-            },
-            {
-                "filePath": "src/app/components/ag-grid-components/launch-control/launch-control.ts",
-                "type": "component",
-                "linktype": "component",
-                "name": "LaunchControl",
-                "coveragePercent": 0,
-                "coverageCount": "0/4",
                 "status": "low"
             },
             {
@@ -4450,7 +4546,7 @@
                 "linktype": "component",
                 "name": "Toggle",
                 "coveragePercent": 0,
-                "coverageCount": "0/5",
+                "coverageCount": "0/6",
                 "status": "low"
             },
             {
@@ -4556,7 +4652,7 @@
                 "linktype": "component",
                 "name": "BotEditForm",
                 "coveragePercent": 0,
-                "coverageCount": "0/2",
+                "coverageCount": "0/3",
                 "status": "low"
             },
             {
@@ -4566,6 +4662,15 @@
                 "name": "Checkbox",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/confirmation-pop-up/confirmation-pop-up.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "ConfirmationPopUp",
+                "coveragePercent": 0,
+                "coverageCount": "0/6",
                 "status": "low"
             },
             {
@@ -4610,7 +4715,7 @@
                 "linktype": "component",
                 "name": "InputField",
                 "coveragePercent": 0,
-                "coverageCount": "0/6",
+                "coverageCount": "0/7",
                 "status": "low"
             },
             {
@@ -4619,7 +4724,7 @@
                 "linktype": "component",
                 "name": "InputTextArea",
                 "coveragePercent": 0,
-                "coverageCount": "0/6",
+                "coverageCount": "0/7",
                 "status": "low"
             },
             {

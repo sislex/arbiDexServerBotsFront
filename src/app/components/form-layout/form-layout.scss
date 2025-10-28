@@ -7,6 +7,8 @@ mat-toolbar{
     container-background-color: linear-gradient(to right, #8E2D23, #DC5229),
     container-text-color: #ffff,
   ));
+
+  display: flex;
 }
 
 
@@ -16,10 +18,6 @@ mat-toolbar{
   background: var(--main-back);
   width: 500px;
   height: 500px;
-
-  .example-spacer {
-    flex: 1 1 auto;
-  }
 
   .mat-mdc-button-touch-target {
     height: 24px !important;
@@ -49,6 +47,7 @@ mat-toolbar{
   }
 
 }
+
 
 
 

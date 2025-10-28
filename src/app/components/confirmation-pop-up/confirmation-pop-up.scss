@@ -1,0 +1,57 @@
+@use '@angular/material' as mat;
+
+mat-toolbar{
+  @include mat.toolbar-overrides((
+    standard-height: 36px,
+    title-text-size: 16px,
+    container-background-color: linear-gradient(to right, #8E2D23, #DC5229),
+    container-text-color: #ffff,
+  ));
+}
+
+:host {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  max-width: 700px;
+  max-height: 300px;
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background: var(--main-back);
+
+    .mat-mdc-button-touch-target {
+      height: 24px !important;
+      width: 24px !important;
+    }
+
+    .example-icon {
+      color: var(--white-color);
+    }
+
+    .main-message {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      padding: 16px;
+    }
+
+    .footer {
+      margin-top: auto;
+
+      .footer-buttons {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+
+        button {
+          height: 24px;
+          border: 1px solid black;
+        }
+      }
+    }
+  }
+}
