@@ -12,17 +12,25 @@ import {ICellRendererAngularComp} from 'ag-grid-angular';
   styleUrl: './actions-container.scss'
 })
 export class ActionsContainer implements ICellRendererAngularComp {
-  data: any;
+  params: any;
 
   agInit(params: any): void {
-    this.data = params.value || '';
+    this.params = params;
   }
 
   refresh(): boolean {
     return false;
   }
 
-  events(event: any) {
-
+  onAction($event: any, actionType: string) {
+    if (this.params?.onAction) {
+      this.params.onAction(
+        {
+          event: $event.event,
+          actionType,
+        },
+        this.params.data
+      );
+    }
   }
 }

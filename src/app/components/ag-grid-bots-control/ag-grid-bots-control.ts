@@ -1,7 +1,7 @@
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 import type { ColDef } from 'ag-grid-community';
 import { AgGridAngular } from 'ag-grid-angular';
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';
 import {ToggleContainer} from '../../containers/ag-grid-containers/toggle-container/toggle-container';
 import {
@@ -21,6 +21,12 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class AgGridBotsControl {
   @Input() rowData: any[] = [];
+
+  @Output() emitter = new EventEmitter<any>();
+
+  onAction(event: any, row: any) {
+    this.emitter.emit({ ...event, row });
+  }
 
   colDefs: ColDef[] = [
     {
@@ -65,11 +71,17 @@ export class AgGridBotsControl {
       field: "isStart",
       headerName: 'Start/Stop',
       cellRenderer: LaunchControlContainer,
+      cellRendererParams: {
+        onAction: this.onAction.bind(this),
+      },
     },
     {
       field: "actions",
       headerName: 'Actions',
       cellRenderer: ActionsContainer,
+      cellRendererParams: {
+        onAction: this.onAction.bind(this),
+      },
     },
   ];
 

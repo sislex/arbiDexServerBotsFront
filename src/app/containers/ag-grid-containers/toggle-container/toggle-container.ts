@@ -31,7 +31,7 @@ export class ToggleContainer implements ICellRendererAngularComp {
     // Обновляем значение в AG Grid
     if(event.event === 'Toggle:TOGGLE_CLICKED') {
       if (this.params && this.params.node) {
-        this.params.node.setDataValue(this.params.colDef.field, !this.isChecked);
+        this.params.node.setDataValue(this.params.colDef.field, event.event.data);
       }
       // this.store.dispatch(toggleSendData({data: event.data})); //передаем потом сюда не значение toggle а просто id для смены
     }

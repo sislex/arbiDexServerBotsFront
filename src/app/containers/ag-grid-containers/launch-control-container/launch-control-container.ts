@@ -12,17 +12,27 @@ import {ICellRendererAngularComp} from 'ag-grid-angular';
   styleUrl: './launch-control-container.scss'
 })
 export class LaunchControlContainer implements ICellRendererAngularComp {
+  params: any;
   isStarted: boolean = false;
 
   agInit(params: any): void {
-    this.isStarted = params.value || '';
+    this.params = params;
+    this.isStarted = params.value ?? false;
   }
 
   refresh(): boolean {
     return false;
   }
 
-  events(event: any) {
-
+  onAction($event: any, actionType: string) {
+    if (this.params?.onAction) {
+      this.params.onAction(
+        {
+          event: $event.event,
+          actionType
+        },
+        this.params.data
+      );
+    }
   }
 }

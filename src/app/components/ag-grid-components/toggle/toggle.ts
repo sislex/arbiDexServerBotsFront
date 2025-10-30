@@ -17,9 +17,10 @@ export class Toggle {
 
   @Output() emitter = new EventEmitter();
 
-  onToggle() {
+  onToggle($event: boolean) {
     this.emitter.emit({
       event: 'Toggle:TOGGLE_CLICKED',
+      data: $event
     });
   }
 }

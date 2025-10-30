@@ -2,12 +2,12 @@
   <app-actions
     [icon]="'play_arrow'"
     [type]="'green'"
-    (emitter)="events($event)"
+    (emitter)="onAction($event, 'start')"
   ></app-actions>
 } @else {
   <app-actions
     [icon]="'stop'"
     [type]="'red'"
-    (emitter)="events($event)"
+    (emitter)="onAction($event, 'stop')"
   ></app-actions>
 }

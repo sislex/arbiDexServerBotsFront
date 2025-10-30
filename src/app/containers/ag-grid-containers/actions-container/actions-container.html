@@ -2,11 +2,11 @@
   <app-actions
     [icon]="'edit'"
     [type]="'default'"
-    (emitter)="events($event)"
+    (emitter)="onAction($event, 'edit')"
   ></app-actions>
   <app-actions
     [icon]="'delete'"
     [type]="'red'"
-    (emitter)="events($event)"
+    (emitter)="onAction($event, 'delete')"
   ></app-actions>
 </div>
