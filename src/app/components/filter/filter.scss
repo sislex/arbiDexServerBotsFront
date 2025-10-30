@@ -1,11 +1,3 @@
-@use '@angular/material' as mat;
-
-.filter-core {
-  @include mat.expansion-overrides((
-    container-shape: none,
-    container-elevation-shadow: none,
-  ));
-}
 .mat-expansion-panel-header {
   display: flex;
   border-bottom: 1px solid #e0e0e0;

@@ -1,16 +1,6 @@
-@use '@angular/material' as mat;
-
 mat-toolbar{
-  @include mat.toolbar-overrides((
-    standard-height: 36px,
-    title-text-size: 16px,
-    container-background-color: linear-gradient(to right, #8E2D23, #DC5229),
-    container-text-color: #ffff,
-  ));
-
   display: flex;
 }
-
 
 .container {
   display: flex;

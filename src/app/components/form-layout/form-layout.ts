@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -12,7 +12,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   ],
   templateUrl: './form-layout.html',
   styleUrl: './form-layout.scss',
-  encapsulation: ViewEncapsulation.None
 })
 export class FormLayout {
   @Input() title: string = '';

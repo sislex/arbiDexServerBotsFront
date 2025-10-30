@@ -3,7 +3,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {UpperCasePipe} from '@angular/common';
-import {Actions} from '../ag-grid-components/actions/actions';
 
 @Component({
   selector: 'app-confirmation-pop-up',
@@ -12,7 +11,6 @@ import {Actions} from '../ag-grid-components/actions/actions';
     MatButtonModule,
     MatIconModule,
     UpperCasePipe,
-    Actions
   ],
   standalone: true,
   templateUrl: './confirmation-pop-up.html',

@@ -12,6 +12,7 @@ import {MatIconModule} from '@angular/material/icon';
   templateUrl: './actions.html',
   styleUrl: './actions.scss',
 })
+
 export class Actions {
   @Input() icon: string = '';
   @Input() type: 'green' | 'red' | 'default' = 'default';

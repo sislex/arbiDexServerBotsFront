@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {FormsModule} from '@angular/forms';
 
@@ -8,7 +8,6 @@ import {FormsModule} from '@angular/forms';
   standalone: true,
   templateUrl: './toggle.html',
   styleUrl: './toggle.scss',
-  encapsulation: ViewEncapsulation.None
 })
 
 export class Toggle {

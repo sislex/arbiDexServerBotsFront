@@ -1,12 +1,3 @@
-@use '@angular/material' as mat;
-
-.toolbar {
-  @include mat.toolbar-overrides((
-    container-background-color: linear-gradient(to right, #8E2D23, #DC5229),
-    container-text-color: #ffff,
-  ));
-}
-
 mat-toolbar {
   button {
     color: #fff;

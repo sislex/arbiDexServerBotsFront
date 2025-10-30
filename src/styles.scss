@@ -21,6 +21,52 @@ $main-back: linear-gradient(to right, #D2B585, #FFFFFF);
   --main-back: #{$main-back};
 }
 
+:root {
+  @include mat.slide-toggle-overrides((
+    selected-track-color: var(--true-color),
+    selected-hover-track-color: var(--true-color),
+    selected-focus-track-color: var(--true-color),
+    selected-pressed-track-color: var(--true-color),
+
+    unselected-track-color: var(--error-color),
+    unselected-hover-track-color: var(--error-color),
+    unselected-focus-track-color: var(--error-color),
+    unselected-pressed-track-color: var(--error-color),
+
+    selected-handle-color: var(--white-color),
+    selected-hover-handle-color: var(--white-color),
+    selected-focus-handle-color: var(--white-color),
+    selected-pressed-handle-color: var(--white-color),
+
+    unselected-handle-color: var(--white-color),
+    unselected-hover-handle-color: var(--white-color),
+    unselected-focus-handle-color: var(--white-color),
+    unselected-pressed-handle-color: var(--white-color),
+
+    selected-icon-color: transparent,
+    unselected-icon-color: transparent,
+  ));
+
+  @include mat.toolbar-overrides((
+    standard-height: 36px,
+    title-text-size: 16px,
+    container-background-color: linear-gradient(to right, #8E2D23, #DC5229),
+    container-text-color: #ffff,
+  ));
+
+  @include mat.menu-overrides((
+    container-shape: 12px,
+    item-with-icon-leading-spacing: true,
+    item-with-icon-trailing-spacing: true,
+  ));
+
+  @include mat.expansion-overrides((
+    container-shape: none,
+    container-elevation-shadow: none,
+  ));
+
+}
+
 html, body {
   height: 100%;
   margin: 0;

@@ -2,13 +2,19 @@ import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 import type { ColDef } from 'ag-grid-community';
 import { AgGridAngular } from 'ag-grid-angular';
 import {Component, Input} from '@angular/core';
+import {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';
+import {ToggleContainer} from '../../containers/ag-grid-containers/toggle-container/toggle-container';
+import {
+  LaunchControlContainer
+} from '../../containers/ag-grid-containers/launch-control-container/launch-control-container';
+import {ActionsContainer} from '../../containers/ag-grid-containers/actions-container/actions-container';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-ag-grid-bots-control',
   imports: [
-    AgGridAngular
+    AgGridAngular,
   ],
   templateUrl: './ag-grid-bots-control.html',
   styleUrl: './ag-grid-bots-control.scss'
@@ -43,26 +49,33 @@ export class AgGridBotsControl {
       headerName: 'Time Request(ms)',
     },
     {
-      field: "status",
+      field: 'status',
+      width: 80,
       headerName: 'Status',
+      cellRenderer: IndicatorContainer,
+      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },
+      headerClass: 'align-center little-width',
     },
     {
       field: "isSendData",
       headerName: 'Send Data',
+      cellRenderer: ToggleContainer,
     },
     {
       field: "isStart",
       headerName: 'Start/Stop',
+      cellRenderer: LaunchControlContainer,
     },
     {
       field: "actions",
       headerName: 'Actions',
+      cellRenderer: ActionsContainer,
     },
   ];
 
   defaultColDef: ColDef = {
     sortable: false,
-    cellStyle: { textAlign: 'center'},
+    cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },
     headerClass: 'align-center',
     resizable: false,
     suppressMovable: true,

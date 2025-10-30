@@ -289,7 +289,7 @@
     "components": [
         {
             "name": "Actions",
-            "id": "component-Actions-6a96d12cb3adf068081d4095fe41c31321e0fa8a1d1e0f61b05edb19c9846a6e1ef7783843080f51a54c2cdfed351f6e4f99f947357d60a4e35d5d60c9fb120a",
+            "id": "component-Actions-6dd00439f78a8efef7f14f31c8124146c9a37ca8cc3ed98e022ee28cb27aeb9caa4368f45a1d8022e9ca8e4123ab1763a39dec27974d13457acc3e6c953074dd",
             "file": "src/app/components/ag-grid-components/actions/actions.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -310,7 +310,7 @@
                     "defaultValue": "''",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 16,
+                    "line": 17,
                     "type": "string",
                     "decorators": []
                 },
@@ -319,7 +319,7 @@
                     "defaultValue": "'default'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 17,
+                    "line": 18,
                     "type": "\"green\" | \"red\" | \"default\"",
                     "decorators": []
                 }
@@ -330,7 +330,7 @@
                     "defaultValue": "new EventEmitter()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 18,
+                    "line": 19,
                     "type": "EventEmitter"
                 }
             ],
@@ -342,7 +342,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 20,
+                    "line": 21,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -365,7 +365,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {MatButtonModule} from '@angular/material/button';\nimport {MatIconModule} from '@angular/material/icon';\n\n@Component({\n  selector: 'app-actions',\n  imports: [\n    MatIconModule,\n    MatButtonModule\n  ],\n  standalone: true,\n  templateUrl: './actions.html',\n  styleUrl: './actions.scss',\n})\nexport class Actions {\n  @Input() icon: string = '';\n  @Input() type: 'green' | 'red' | 'default' = 'default';\n  @Output() emitter = new EventEmitter();\n\n  click() {\n    this.emitter.emit({\n      event: 'Actions:ACTION_CLICKED',\n    });\n  }\n}\n",
+            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {MatButtonModule} from '@angular/material/button';\nimport {MatIconModule} from '@angular/material/icon';\n\n@Component({\n  selector: 'app-actions',\n  imports: [\n    MatIconModule,\n    MatButtonModule\n  ],\n  standalone: true,\n  templateUrl: './actions.html',\n  styleUrl: './actions.scss',\n})\n\nexport class Actions {\n  @Input() icon: string = '';\n  @Input() type: 'green' | 'red' | 'default' = 'default';\n  @Output() emitter = new EventEmitter();\n\n  click() {\n    this.emitter.emit({\n      event: 'Actions:ACTION_CLICKED',\n    });\n  }\n}\n",
             "styleUrl": "./actions.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -375,7 +375,7 @@
         },
         {
             "name": "ActionsContainer",
-            "id": "component-ActionsContainer-824de44ecd3fb502d06990bd9d7d43866288beff45a5e19e5e4e9582fad4974c0a490aa0c7f2d5199bcc3a7a6be8222699ed92dbf62d403759d15d0a2af85e91",
+            "id": "component-ActionsContainer-e78893d922cb3318d30309bbe35207832dc2dc7146461134a95db7b91d61143895776393b72b009846a8895b7c77c82c5fa993f973e1498e097c95261b7e7818",
             "file": "src/app/containers/ag-grid-containers/actions-container/actions-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -401,10 +401,38 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 14
+                    "line": 15
                 }
             ],
             "methodsClass": [
+                {
+                    "name": "agInit",
+                    "args": [
+                        {
+                            "name": "params",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 17,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "params",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
                 {
                     "name": "events",
                     "args": [
@@ -418,7 +446,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 15,
+                    "line": 25,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -432,6 +460,16 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "refresh",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "boolean",
+                    "typeParameters": [],
+                    "line": 21,
+                    "deprecated": false,
+                    "deprecationMessage": ""
                 }
             ],
             "deprecated": false,
@@ -447,12 +485,15 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\nimport {Actions} from '../../../components/ag-grid-components/actions/actions';\n\n@Component({\n  selector: 'app-actions-container',\n  imports: [\n    Actions\n  ],\n  standalone: true,\n  templateUrl: './actions-container.html',\n  styleUrl: './actions-container.scss'\n})\nexport class ActionsContainer {\n  data: any;\n  events(event: any) {\n\n  }\n}\n",
+            "sourceCode": "import { Component } from '@angular/core';\nimport {Actions} from '../../../components/ag-grid-components/actions/actions';\nimport {ICellRendererAngularComp} from 'ag-grid-angular';\n\n@Component({\n  selector: 'app-actions-container',\n  imports: [\n    Actions\n  ],\n  standalone: true,\n  templateUrl: './actions-container.html',\n  styleUrl: './actions-container.scss'\n})\nexport class ActionsContainer implements ICellRendererAngularComp {\n  data: any;\n\n  agInit(params: any): void {\n    this.data = params.value || '';\n  }\n\n  refresh(): boolean {\n    return false;\n  }\n\n  events(event: any) {\n\n  }\n}\n",
             "styleUrl": "./actions-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
+            "implements": [
+                "ICellRendererAngularComp"
+            ],
             "templateData": "<div class=\"action-buttons\">\n  <app-actions\n    [icon]=\"'edit'\"\n    [type]=\"'default'\"\n    (emitter)=\"events($event)\"\n  ></app-actions>\n  <app-actions\n    [icon]=\"'delete'\"\n    [type]=\"'red'\"\n    (emitter)=\"events($event)\"\n  ></app-actions>\n</div>\n"
         },
         {
@@ -607,7 +648,7 @@
         },
         {
             "name": "AgGridBotsControl",
-            "id": "component-AgGridBotsControl-c27f46d322caf65f6f975c4643b82c55b7420592ffdecdaec2e32f771bb7b301082aa57d5713543b598613a98d6e93528df5a9322a1090b248211cfb9e9a7cbf",
+            "id": "component-AgGridBotsControl-db2a847a3f23eb71055a1438da61b3a517c7793e0a2a6c019c21be43eaa26fe7decc15c032394a96207bae666a75ed84b43b87a5e981c4bef076499bfc154595",
             "file": "src/app/components/ag-grid-bots-control/ag-grid-bots-control.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -628,7 +669,7 @@
                     "defaultValue": "[]",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 17,
+                    "line": 23,
                     "type": "any[]",
                     "decorators": []
                 }
@@ -637,25 +678,25 @@
             "propertiesClass": [
                 {
                     "name": "colDefs",
-                    "defaultValue": "[\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"id\",\n      headerName: 'ID',\n    },\n    {\n      field: \"gate\",\n      headerName: 'Gate',\n    },\n    {\n      field: \"maxTimeRequest\",\n      headerName: 'Max Time Request(ms)',\n    },\n    {\n      field: \"TimeRequest\",\n      headerName: 'Time Request(ms)',\n    },\n    {\n      field: \"status\",\n      headerName: 'Status',\n    },\n    {\n      field: \"isSendData\",\n      headerName: 'Send Data',\n    },\n    {\n      field: \"isStart\",\n      headerName: 'Start/Stop',\n    },\n    {\n      field: \"actions\",\n      headerName: 'Actions',\n    },\n  ]",
+                    "defaultValue": "[\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"id\",\n      headerName: 'ID',\n    },\n    {\n      field: \"gate\",\n      headerName: 'Gate',\n    },\n    {\n      field: \"maxTimeRequest\",\n      headerName: 'Max Time Request(ms)',\n    },\n    {\n      field: \"TimeRequest\",\n      headerName: 'Time Request(ms)',\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n    {\n      field: \"isSendData\",\n      headerName: 'Send Data',\n      cellRenderer: ToggleContainer,\n    },\n    {\n      field: \"isStart\",\n      headerName: 'Start/Stop',\n      cellRenderer: LaunchControlContainer,\n    },\n    {\n      field: \"actions\",\n      headerName: 'Actions',\n      cellRenderer: ActionsContainer,\n    },\n  ]",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "ColDef[]",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 19
+                    "line": 25
                 },
                 {
                     "name": "defaultColDef",
-                    "defaultValue": "{\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n    flex: 1\n  }",
+                    "defaultValue": "{\n    sortable: false,\n    cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n    flex: 1\n  }",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "ColDef",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 63
+                    "line": 76
                 }
             ],
             "methodsClass": [],
@@ -672,7 +713,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, Input} from '@angular/core';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-bots-control',\n  imports: [\n    AgGridAngular\n  ],\n  templateUrl: './ag-grid-bots-control.html',\n  styleUrl: './ag-grid-bots-control.scss'\n})\nexport class AgGridBotsControl {\n  @Input() rowData: any[] = [];\n\n  colDefs: ColDef[] = [\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"id\",\n      headerName: 'ID',\n    },\n    {\n      field: \"gate\",\n      headerName: 'Gate',\n    },\n    {\n      field: \"maxTimeRequest\",\n      headerName: 'Max Time Request(ms)',\n    },\n    {\n      field: \"TimeRequest\",\n      headerName: 'Time Request(ms)',\n    },\n    {\n      field: \"status\",\n      headerName: 'Status',\n    },\n    {\n      field: \"isSendData\",\n      headerName: 'Send Data',\n    },\n    {\n      field: \"isStart\",\n      headerName: 'Start/Stop',\n    },\n    {\n      field: \"actions\",\n      headerName: 'Actions',\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n    flex: 1\n  };\n}\n",
+            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, Input} from '@angular/core';\nimport {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';\nimport {ToggleContainer} from '../../containers/ag-grid-containers/toggle-container/toggle-container';\nimport {\n  LaunchControlContainer\n} from '../../containers/ag-grid-containers/launch-control-container/launch-control-container';\nimport {ActionsContainer} from '../../containers/ag-grid-containers/actions-container/actions-container';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-bots-control',\n  imports: [\n    AgGridAngular,\n  ],\n  templateUrl: './ag-grid-bots-control.html',\n  styleUrl: './ag-grid-bots-control.scss'\n})\nexport class AgGridBotsControl {\n  @Input() rowData: any[] = [];\n\n  colDefs: ColDef[] = [\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"id\",\n      headerName: 'ID',\n    },\n    {\n      field: \"gate\",\n      headerName: 'Gate',\n    },\n    {\n      field: \"maxTimeRequest\",\n      headerName: 'Max Time Request(ms)',\n    },\n    {\n      field: \"TimeRequest\",\n      headerName: 'Time Request(ms)',\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n    {\n      field: \"isSendData\",\n      headerName: 'Send Data',\n      cellRenderer: ToggleContainer,\n    },\n    {\n      field: \"isStart\",\n      headerName: 'Start/Stop',\n      cellRenderer: LaunchControlContainer,\n    },\n    {\n      field: \"actions\",\n      headerName: 'Actions',\n      cellRenderer: ActionsContainer,\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n    flex: 1\n  };\n}\n",
             "styleUrl": "./ag-grid-bots-control.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -982,7 +1023,7 @@
         },
         {
             "name": "App",
-            "id": "component-App-8f2f19aa7641671ca9d2498027a663d527732f4273ff0dee2c944c2cf7bc4d65e2ddd567f0dda3e8072df269b462783332d10a6100b0b5b8bb3c692a6fe7238a",
+            "id": "component-App-a52edf2d8416a82b1ad5566890fd416df97a2fe2c6122f4db0a5f7dd910ec2b858a760f949ab792e1b9cde29f2d976d0b2398626f534e4b5f5b856e6e45251c8",
             "file": "src/app/app.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1001,6 +1042,21 @@
             "outputsClass": [],
             "propertiesClass": [
                 {
+                    "name": "botsControlStabs_1",
+                    "defaultValue": "botsControlStabs_1",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 15,
+                    "modifierKind": [
+                        124,
+                        148
+                    ]
+                },
+                {
                     "name": "title",
                     "defaultValue": "signal('new-project-bot')",
                     "deprecated": false,
@@ -1009,7 +1065,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 12,
+                    "line": 14,
                     "modifierKind": [
                         124,
                         148
@@ -1025,18 +1081,21 @@
             "imports": [
                 {
                     "name": "QuoteWatcher"
+                },
+                {
+                    "name": "AgGridBotsControl"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, signal } from '@angular/core';\nimport {QuoteWatcher} from './containers/quote-watcher/quote-watcher';\n\n@Component({\n  selector: 'app-root',\n  imports: [QuoteWatcher],\n  standalone: true,\n  templateUrl: './app.html',\n  styleUrl: './app.scss'\n})\nexport class App {\n  protected readonly title = signal('new-project-bot');\n}\n",
+            "sourceCode": "import { Component, signal } from '@angular/core';\nimport {QuoteWatcher} from './containers/quote-watcher/quote-watcher';\nimport {AgGridBotsControl} from './components/ag-grid-bots-control/ag-grid-bots-control';\nimport {botsControlStabs_1} from './components/ag-grid-bots-control/stabs';\n\n@Component({\n  selector: 'app-root',\n  imports: [QuoteWatcher, AgGridBotsControl],\n  standalone: true,\n  templateUrl: './app.html',\n  styleUrl: './app.scss'\n})\nexport class App {\n  protected readonly title = signal('new-project-bot');\n  protected readonly botsControlStabs_1 = botsControlStabs_1;\n}\n",
             "styleUrl": "./app.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<app-quote-watcher></app-quote-watcher>\n"
+            "templateData": "<!--<app-quote-watcher></app-quote-watcher>-->\n<app-ag-grid-bots-control\n  [rowData]=\"botsControlStabs_1\"\n></app-ag-grid-bots-control>\n"
         },
         {
             "name": "BotEditForm",
@@ -1317,7 +1376,7 @@
         },
         {
             "name": "ConfirmationPopUp",
-            "id": "component-ConfirmationPopUp-2d19be716f3698551f762f86b5feb4bb353f6bc56227412e1dd300c41998827f9d86f1813981f52a0e0acce7bdf20554e1d956023e7a493662165e64779114e7",
+            "id": "component-ConfirmationPopUp-a6d0de18d228698ce660f59b663a0aa1253fa23ccb2bdef623f96b77c4e9fe0cc8850b4a7a5225db52cf58e5830c343635fbf36ca1ad00be53dd4c305e53db39",
             "file": "src/app/components/confirmation-pop-up/confirmation-pop-up.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1338,7 +1397,7 @@
                     "defaultValue": "[]",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 24,
+                    "line": 22,
                     "type": "string[]",
                     "decorators": []
                 },
@@ -1347,7 +1406,7 @@
                     "defaultValue": "''",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 23,
+                    "line": 21,
                     "type": "string",
                     "decorators": []
                 },
@@ -1356,7 +1415,7 @@
                     "defaultValue": "''",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 22,
+                    "line": 20,
                     "type": "string",
                     "decorators": []
                 }
@@ -1367,7 +1426,7 @@
                     "defaultValue": "new EventEmitter()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 26,
+                    "line": 24,
                     "type": "EventEmitter"
                 }
             ],
@@ -1386,7 +1445,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 27,
+                    "line": 25,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -1423,21 +1482,18 @@
                 {
                     "name": "UpperCasePipe",
                     "type": "pipe"
-                },
-                {
-                    "name": "Actions"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {MatToolbarModule} from '@angular/material/toolbar';\nimport {MatButtonModule} from '@angular/material/button';\nimport {MatIconModule} from '@angular/material/icon';\nimport {UpperCasePipe} from '@angular/common';\nimport {Actions} from '../ag-grid-components/actions/actions';\n\n@Component({\n  selector: 'app-confirmation-pop-up',\n  imports: [\n    MatToolbarModule,\n    MatButtonModule,\n    MatIconModule,\n    UpperCasePipe,\n    Actions\n  ],\n  standalone: true,\n  templateUrl: './confirmation-pop-up.html',\n  styleUrl: './confirmation-pop-up.scss'\n})\nexport class ConfirmationPopUp {\n  @Input() title: string = '';\n  @Input() message: string = '';\n  @Input() buttons: string[] = [];\n\n  @Output() emitter = new EventEmitter();\n  event($event: any) {\n    this.emitter.emit({\n      event: 'ConfirmationPopUp:RESULT_CLICKED',\n      data: $event\n    });\n  }\n}\n",
+            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {MatToolbarModule} from '@angular/material/toolbar';\nimport {MatButtonModule} from '@angular/material/button';\nimport {MatIconModule} from '@angular/material/icon';\nimport {UpperCasePipe} from '@angular/common';\n\n@Component({\n  selector: 'app-confirmation-pop-up',\n  imports: [\n    MatToolbarModule,\n    MatButtonModule,\n    MatIconModule,\n    UpperCasePipe,\n  ],\n  standalone: true,\n  templateUrl: './confirmation-pop-up.html',\n  styleUrl: './confirmation-pop-up.scss'\n})\nexport class ConfirmationPopUp {\n  @Input() title: string = '';\n  @Input() message: string = '';\n  @Input() buttons: string[] = [];\n\n  @Output() emitter = new EventEmitter();\n  event($event: any) {\n    this.emitter.emit({\n      event: 'ConfirmationPopUp:RESULT_CLICKED',\n      data: $event\n    });\n  }\n}\n",
             "styleUrl": "./confirmation-pop-up.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<div class=\"container\">\n  <mat-toolbar>\n    @if (title) {\n      <span>{{title}}</span>\n    }\n    <span class=\"example-spacer\"></span>\n    <app-actions\n      [icon]=\"'close'\"\n      [type]=\"'default'\"\n      (emitter)=\"event('close')\"\n    ></app-actions>\n<!--    <button matIconButton class=\"example-icon\" (click)=\"event('close')\">-->\n<!--      <mat-icon>close</mat-icon>-->\n<!--    </button>-->\n  </mat-toolbar>\n\n  <div class=\"main-message\">\n    {{message}}\n  </div>\n\n  @if (buttons.length) {\n    <div class=\"footer\">\n      <mat-toolbar>\n        <span class=\"example-spacer\"></span>\n        <div class=\"footer-buttons\">\n          @for (button of buttons; track button) {\n            <button matButton=\"outlined\" (click)=\"event(button)\">{{ button | uppercase }}</button>\n          }\n        </div>\n      </mat-toolbar>\n    </div>\n  }\n</div>\n"
+            "templateData": "<div class=\"container\">\n  <mat-toolbar>\n    @if (title) {\n      <span>{{title}}</span>\n    }\n    <span class=\"example-spacer\"></span>\n    <!--    <app-actions-->\n    <!--      [icon]=\"'close'\"-->\n    <!--      [type]=\"'red'\"-->\n    <!--      (emitter)=\"event('close')\"-->\n    <!--    ></app-actions>-->\n    <button matIconButton class=\"example-icon\" (click)=\"event('close')\">\n      <mat-icon>close</mat-icon>\n    </button>\n  </mat-toolbar>\n\n  <div class=\"main-message\">\n    {{message}}\n  </div>\n\n  @if (buttons.length) {\n    <div class=\"footer\">\n      <mat-toolbar>\n        <span class=\"example-spacer\"></span>\n        <div class=\"footer-buttons\">\n          @for (button of buttons; track button) {\n            <button matButton=\"outlined\" (click)=\"event(button)\">{{ button | uppercase }}</button>\n          }\n        </div>\n      </mat-toolbar>\n    </div>\n  }\n</div>\n"
         },
         {
             "name": "DropMenu",
@@ -2437,7 +2493,7 @@
         },
         {
             "name": "LaunchControlContainer",
-            "id": "component-LaunchControlContainer-9808b5152a495dccf55561ce06969b26118b8d88e3a03cc4d14333fc2de4b9e4ee8e45cf14dfd784ceb8c1744c4f7ee0ddd53a0548f1e840a6cc3390035953c8",
+            "id": "component-LaunchControlContainer-ed8e7e887e554551809649256ebb6767cb8558fab4cd7cc0783246acd45c456c1c685e2befd5fd72149261c995c12160e21504b5a00c403844df18845090a356",
             "file": "src/app/containers/ag-grid-containers/launch-control-container/launch-control-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2464,10 +2520,38 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 14
+                    "line": 15
                 }
             ],
             "methodsClass": [
+                {
+                    "name": "agInit",
+                    "args": [
+                        {
+                            "name": "params",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 17,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "params",
+                            "type": "any",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
                 {
                     "name": "events",
                     "args": [
@@ -2481,7 +2565,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 15,
+                    "line": 25,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -2495,6 +2579,16 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "refresh",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "boolean",
+                    "typeParameters": [],
+                    "line": 21,
+                    "deprecated": false,
+                    "deprecationMessage": ""
                 }
             ],
             "deprecated": false,
@@ -2510,12 +2604,15 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\nimport {Actions} from '../../../components/ag-grid-components/actions/actions';\n\n@Component({\n  selector: 'app-launch-control-container',\n  imports: [\n    Actions\n  ],\n  standalone: true,\n  templateUrl: './launch-control-container.html',\n  styleUrl: './launch-control-container.scss'\n})\nexport class LaunchControlContainer {\n  isStarted: boolean = false;\n  events(event: any) {\n\n  }\n}\n",
+            "sourceCode": "import { Component } from '@angular/core';\nimport {Actions} from '../../../components/ag-grid-components/actions/actions';\nimport {ICellRendererAngularComp} from 'ag-grid-angular';\n\n@Component({\n  selector: 'app-launch-control-container',\n  imports: [\n    Actions\n  ],\n  standalone: true,\n  templateUrl: './launch-control-container.html',\n  styleUrl: './launch-control-container.scss'\n})\nexport class LaunchControlContainer implements ICellRendererAngularComp {\n  isStarted: boolean = false;\n\n  agInit(params: any): void {\n    this.isStarted = params.value || '';\n  }\n\n  refresh(): boolean {\n    return false;\n  }\n\n  events(event: any) {\n\n  }\n}\n",
             "styleUrl": "./launch-control-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
+            "implements": [
+                "ICellRendererAngularComp"
+            ],
             "templateData": "@if (!isStarted) {\n  <app-actions\n    [icon]=\"'play_arrow'\"\n    [type]=\"'green'\"\n    (emitter)=\"events($event)\"\n  ></app-actions>\n} @else {\n  <app-actions\n    [icon]=\"'stop'\"\n    [type]=\"'red'\"\n    (emitter)=\"events($event)\"\n  ></app-actions>\n}\n"
         },
         {
@@ -3375,11 +3472,9 @@
         },
         {
             "name": "Toggle",
-            "id": "component-Toggle-916ffae16a2b0bc440873290e71c7ece013e86f5b7f93eb3174c58233f8f41d2ac363d7a6c6c990a06b77100548c29f1e05c8df4d602f1169de2fad4ac04a504",
+            "id": "component-Toggle-bc2bfc8e837cfa46178ed44dbefaad6011c488fe9c3a9909f82adcbf051cb0d76369c8f15ca893eb2eb1fd0287715f59b16ef53f447819f1c58419c156001368",
             "file": "src/app/components/ag-grid-components/toggle/toggle.ts",
-            "encapsulation": [
-                "ViewEncapsulation.None"
-            ],
+            "encapsulation": [],
             "entryComponents": [],
             "inputs": [],
             "outputs": [],
@@ -3398,7 +3493,7 @@
                     "defaultValue": "''",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 16,
+                    "line": 15,
                     "type": "string",
                     "decorators": []
                 },
@@ -3407,7 +3502,7 @@
                     "defaultValue": "false",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 15,
+                    "line": 14,
                     "type": "boolean",
                     "decorators": []
                 },
@@ -3416,7 +3511,7 @@
                     "defaultValue": "''",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 17,
+                    "line": 16,
                     "type": "string",
                     "decorators": []
                 }
@@ -3427,7 +3522,7 @@
                     "defaultValue": "new EventEmitter()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 19,
+                    "line": 18,
                     "type": "EventEmitter"
                 }
             ],
@@ -3439,7 +3534,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 21,
+                    "line": 20,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -3462,7 +3557,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';\nimport {MatSlideToggleModule} from '@angular/material/slide-toggle';\nimport {FormsModule} from '@angular/forms';\n\n@Component({\n  selector: 'app-toggle',\n  imports: [MatSlideToggleModule, FormsModule],\n  standalone: true,\n  templateUrl: './toggle.html',\n  styleUrl: './toggle.scss',\n  encapsulation: ViewEncapsulation.None\n})\n\nexport class Toggle {\n  @Input() isChecked: boolean = false;\n  @Input() description: string = '';\n  @Input() title: string = '';\n\n  @Output() emitter = new EventEmitter();\n\n  onToggle() {\n    this.emitter.emit({\n      event: 'Toggle:TOGGLE_CLICKED',\n    });\n  }\n}\n",
+            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {MatSlideToggleModule} from '@angular/material/slide-toggle';\nimport {FormsModule} from '@angular/forms';\n\n@Component({\n  selector: 'app-toggle',\n  imports: [MatSlideToggleModule, FormsModule],\n  standalone: true,\n  templateUrl: './toggle.html',\n  styleUrl: './toggle.scss',\n})\n\nexport class Toggle {\n  @Input() isChecked: boolean = false;\n  @Input() description: string = '';\n  @Input() title: string = '';\n\n  @Output() emitter = new EventEmitter();\n\n  onToggle() {\n    this.emitter.emit({\n      event: 'Toggle:TOGGLE_CLICKED',\n    });\n  }\n}\n",
             "styleUrl": "./toggle.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -3895,14 +3990,14 @@
                 "defaultValue": "[\n  {\n    \"name\": \"Binance Spot Parser\",\n    \"type\": \"Spot Market\",\n    \"description\": \"Real-time order book data for major pairs: BTC/USDT, ETH/USDT, BNB/BTC with depth chart analysis\"\n  },\n  {\n    \"name\": \"FTX Arbitrage Bot\",\n    \"type\": \"Arbitrage\",\n    \"description\": \"Cross-exchange price difference detection between FTX and Binance for BTC, ETH perpetuals\"\n  },\n  {\n    \"name\": \"Kraken OHLCV Collector\",\n    \"type\": \"Historical Data\",\n    \"description\": \"Minute-level OHLCV data aggregation for technical analysis and backtesting strategies\"\n  },\n  {\n    \"name\": \"CoinGecko Scraper\",\n    \"type\": \"Market Cap\",\n    \"description\": \"Global cryptocurrency market data including prices, volumes, and market dominance metrics\"\n  },\n  {\n    \"name\": \"Deribit Options Parser\",\n    \"type\": \"Options Data\",\n    \"description\": \"BTC and ETH options chain data with implied volatility and Greeks calculation\"\n  },\n  {\n    \"name\": \"BitMEX Liquidations\",\n    \"type\": \"Risk Monitoring\",\n    \"description\": \"Real-time liquidation tracking for XBT/USD perpetual swaps with position size analysis\"\n  },\n  {\n    \"name\": \"Huobi Margin Parser\",\n    \"type\": \"Margin Trading\",\n    \"description\": \"Isolated and cross-margin data for top trading pairs with interest rate monitoring\"\n  },\n  {\n    \"name\": \"OKEx Futures Scanner\",\n    \"type\": \"Futures Data\",\n    \"description\": \"Quarterly and perpetual futures data with basis and mark price calculations\"\n  },\n  {\n    \"name\": \"PancakeSwap Farm Bot\",\n    \"type\": \"Yield Farming\",\n    \"description\": \"BSC DEX liquidity pool APY tracking and impermanent loss calculation for CAKE/BNB pairs\"\n  },\n  {\n    \"name\": \"Forex.com Streamer\",\n    \"type\": \"Forex Pairs\",\n    \"description\": \"Major forex pairs parser: EUR/USD, GBP/USD, USD/JPY with pip movement tracking\"\n  },\n  {\n    \"name\": \"Gate.io Market Maker\",\n    \"type\": \"Market Making\",\n    \"description\": \"Automated bid-ask spread maintenance for low-cap altcoins with volatility adjustment\"\n  },\n  {\n    \"name\": \"dYdX Order Book\",\n    \"type\": \"Layer 2 DEX\",\n    \"description\": \"StarkWare-based perpetual swaps parser with cross-margin and isolated position tracking\"\n  },\n  {\n    \"name\": \"Bitfinex Lending Bot\",\n    \"type\": \"Lending Data\",\n    \"description\": \"Cryptocurrency lending rate monitoring and automated fund provisioning system\"\n  },\n  {\n    \"name\": \"SushiSwap Analytics\",\n    \"type\": \"AMM Parser\",\n    \"description\": \"Multi-chain DEX analytics tracking TVL, volume, and LP rewards across Ethereum/Polygon\"\n  },\n  {\n    \"name\": \"MetaTrader 5 Bridge\",\n    \"type\": \"Forex Bridge\",\n    \"description\": \"Real-time forex price streaming from MT5 platform to custom trading algorithms\"\n  },\n  {\n    \"name\": \"KuCoin Small Cap\",\n    \"type\": \"Altcoin Scanner\",\n    \"description\": \"Low market cap cryptocurrency discovery and volume spike detection bot\"\n  },\n  {\n    \"name\": \"Aave Protocol Monitor\",\n    \"type\": \"Lending Protocol\",\n    \"description\": \"DeFi lending rates and collateralization ratio monitoring across multiple blockchains\"\n  },\n  {\n    \"name\": \"FTX OTC Parser\",\n    \"type\": \"OTC Market\",\n    \"description\": \"Large block trade detection and institutional order flow analysis\"\n  },\n  {\n    \"name\": \"Chainlink Oracle\",\n    \"type\": \"Price Feeds\",\n    \"description\": \"Decentralized oracle price feed verification and deviation monitoring system\"\n  },\n  {\n    \"name\": \"Polygon Bridge Bot\",\n    \"type\": \"Cross-Chain\",\n    \"description\": \"Asset bridge monitoring between Ethereum and Polygon for arbitrage opportunities\"\n  }\n]"
             },
             {
-                "name": "exampleRow",
+                "name": "botsControlStabs_1",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
                 "file": "src/app/components/ag-grid-bots-control/stabs.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "object",
-                "defaultValue": "{\n  id: 1,\n  gate: \"Main Entrance\",\n  maxTimeRequest: 250,\n  TimeRequest: 200,\n  status: \"Running\", //Error, Stopped\n  isSendData: true,\n  isStart: true,\n}"
+                "type": "[]",
+                "defaultValue": "[\n  {\n    id: 'req-001',\n    gate: 'Gate-A',\n    maxTimeRequest: 2500,\n    TimeRequest: 1800,\n    status: 'active',\n    isSendData: true,\n    isStart: true,\n  },\n  {\n    id: 'req-002',\n    gate: 'Gate-B',\n    maxTimeRequest: 3000,\n    TimeRequest: 3200,\n    status: 'pending',\n    isSendData: false,\n    isStart: true,\n  },\n  {\n    id: 'req-003',\n    gate: 'Gate-C',\n    maxTimeRequest: 2000,\n    TimeRequest: 2400,\n    status: 'error',\n    isSendData: true,\n    isStart: false,\n  },\n  {\n    id: 'req-004',\n    gate: 'Gate-D',\n    maxTimeRequest: 4000,\n    TimeRequest: 3700,\n    status: 'closed',\n    isSendData: false,\n    isStart: false,\n  },\n  {\n    id: 'req-005',\n    gate: 'Gate-E',\n    maxTimeRequest: 1500,\n    TimeRequest: 1400,\n    status: 'active',\n    isSendData: true,\n    isStart: true,\n  },\n]"
             },
             {
                 "name": "gateListStabs_2",
@@ -4105,14 +4200,14 @@
             ],
             "src/app/components/ag-grid-bots-control/stabs.ts": [
                 {
-                    "name": "exampleRow",
+                    "name": "botsControlStabs_1",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
                     "file": "src/app/components/ag-grid-bots-control/stabs.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "object",
-                    "defaultValue": "{\n  id: 1,\n  gate: \"Main Entrance\",\n  maxTimeRequest: 250,\n  TimeRequest: 200,\n  status: \"Running\", //Error, Stopped\n  isSendData: true,\n  isStart: true,\n}"
+                    "type": "[]",
+                    "defaultValue": "[\n  {\n    id: 'req-001',\n    gate: 'Gate-A',\n    maxTimeRequest: 2500,\n    TimeRequest: 1800,\n    status: 'active',\n    isSendData: true,\n    isStart: true,\n  },\n  {\n    id: 'req-002',\n    gate: 'Gate-B',\n    maxTimeRequest: 3000,\n    TimeRequest: 3200,\n    status: 'pending',\n    isSendData: false,\n    isStart: true,\n  },\n  {\n    id: 'req-003',\n    gate: 'Gate-C',\n    maxTimeRequest: 2000,\n    TimeRequest: 2400,\n    status: 'error',\n    isSendData: true,\n    isStart: false,\n  },\n  {\n    id: 'req-004',\n    gate: 'Gate-D',\n    maxTimeRequest: 4000,\n    TimeRequest: 3700,\n    status: 'closed',\n    isSendData: false,\n    isStart: false,\n  },\n  {\n    id: 'req-005',\n    gate: 'Gate-E',\n    maxTimeRequest: 1500,\n    TimeRequest: 1400,\n    status: 'active',\n    isSendData: true,\n    isStart: true,\n  },\n]"
                 }
             ],
             "src/app/components/ag-grid-gate-list/stabs.ts": [
@@ -4452,7 +4547,7 @@
                 "linktype": "component",
                 "name": "App",
                 "coveragePercent": 0,
-                "coverageCount": "0/2",
+                "coverageCount": "0/3",
                 "status": "low"
             },
             {
@@ -4508,7 +4603,7 @@
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
-                "name": "exampleRow",
+                "name": "botsControlStabs_1",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
@@ -4769,7 +4864,7 @@
                 "linktype": "component",
                 "name": "ActionsContainer",
                 "coveragePercent": 0,
-                "coverageCount": "0/3",
+                "coverageCount": "0/5",
                 "status": "low"
             },
             {
@@ -4787,7 +4882,7 @@
                 "linktype": "component",
                 "name": "LaunchControlContainer",
                 "coveragePercent": 0,
-                "coverageCount": "0/3",
+                "coverageCount": "0/5",
                 "status": "low"
             },
             {

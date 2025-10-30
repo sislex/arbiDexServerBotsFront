@@ -1,9 +1,47 @@
-const exampleRow = {
-  id: 1,
-  gate: "Main Entrance",
-  maxTimeRequest: 250,
-  TimeRequest: 200,
-  status: "Running", //Error, Stopped
-  isSendData: true,
-  isStart: true,
-};
+export const botsControlStabs_1 = [
+  {
+    id: 'req-001',
+    gate: 'Gate-A',
+    maxTimeRequest: 2500,
+    TimeRequest: 1800,
+    status: 'active',
+    isSendData: true,
+    isStart: true,
+  },
+  {
+    id: 'req-002',
+    gate: 'Gate-B',
+    maxTimeRequest: 3000,
+    TimeRequest: 3200,
+    status: 'pending',
+    isSendData: false,
+    isStart: true,
+  },
+  {
+    id: 'req-003',
+    gate: 'Gate-C',
+    maxTimeRequest: 2000,
+    TimeRequest: 2400,
+    status: 'error',
+    isSendData: true,
+    isStart: false,
+  },
+  {
+    id: 'req-004',
+    gate: 'Gate-D',
+    maxTimeRequest: 4000,
+    TimeRequest: 3700,
+    status: 'closed',
+    isSendData: false,
+    isStart: false,
+  },
+  {
+    id: 'req-005',
+    gate: 'Gate-E',
+    maxTimeRequest: 1500,
+    TimeRequest: 1400,
+    status: 'active',
+    isSendData: true,
+    isStart: true,
+  },
+];
