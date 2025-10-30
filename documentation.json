@@ -663,7 +663,7 @@
         },
         {
             "name": "AgGridBotsControl",
-            "id": "component-AgGridBotsControl-346b6834ddcfd2bd8eeaaf76e70df1d08e8ca6cfd738db60e42bee764997a6a8e8c9775de6871bd87ed3d9fe4dd1e7d142f2d441f1151dc561ce14f594c7a73a",
+            "id": "component-AgGridBotsControl-4cb726bd2e4d05d0ff5d9fcd8c6d2b15934b0c4f89c093b1c55171ecdaf9758e2c8d22947b96b0fdfbc09aaf8a5f0a91e751fef6b6b8bab51dbb312a0249222b",
             "file": "src/app/components/ag-grid-bots-control/ag-grid-bots-control.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -702,7 +702,7 @@
             "propertiesClass": [
                 {
                     "name": "colDefs",
-                    "defaultValue": "[\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"id\",\n      headerName: 'ID',\n    },\n    {\n      field: \"gate\",\n      headerName: 'Gate',\n    },\n    {\n      field: \"maxTimeRequest\",\n      headerName: 'Max Time Request(ms)',\n    },\n    {\n      field: \"TimeRequest\",\n      headerName: 'Time Request(ms)',\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n    {\n      field: \"isSendData\",\n      headerName: 'Send Data',\n      cellRenderer: ToggleContainer,\n    },\n    {\n      field: \"isStart\",\n      headerName: 'Start/Stop',\n      cellRenderer: LaunchControlContainer,\n      cellRendererParams: {\n        onAction: this.onAction.bind(this),\n      },\n    },\n    {\n      field: \"actions\",\n      headerName: 'Actions',\n      cellRenderer: ActionsContainer,\n      cellRendererParams: {\n        onAction: this.onAction.bind(this),\n      },\n    },\n  ]",
+                    "defaultValue": "[\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"id\",\n      headerName: 'ID',\n    },\n    {\n      field: \"gate\",\n      headerName: 'Gate',\n    },\n    {\n      field: \"maxTimeRequest\",\n      headerName: 'Max Time Request(ms)',\n    },\n    {\n      field: \"TimeRequest\",\n      headerName: 'Time Request(ms)',\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n    {\n      field: \"isSendData\",\n      headerName: 'Send Data',\n      cellRenderer: ToggleContainer,\n      cellRendererParams: {\n        onAction: this.onAction.bind(this),\n      },\n    },\n    {\n      field: \"isStart\",\n      headerName: 'Start/Stop',\n      cellRenderer: LaunchControlContainer,\n      cellRendererParams: {\n        onAction: this.onAction.bind(this),\n      },\n    },\n    {\n      field: \"actions\",\n      headerName: 'Actions',\n      cellRenderer: ActionsContainer,\n      cellRendererParams: {\n        onAction: this.onAction.bind(this),\n      },\n    },\n  ]",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "ColDef[]",
@@ -720,7 +720,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 88
+                    "line": 91
                 }
             ],
             "methodsClass": [
@@ -781,7 +781,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';\nimport {ToggleContainer} from '../../containers/ag-grid-containers/toggle-container/toggle-container';\nimport {\n  LaunchControlContainer\n} from '../../containers/ag-grid-containers/launch-control-container/launch-control-container';\nimport {ActionsContainer} from '../../containers/ag-grid-containers/actions-container/actions-container';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-bots-control',\n  imports: [\n    AgGridAngular,\n  ],\n  templateUrl: './ag-grid-bots-control.html',\n  styleUrl: './ag-grid-bots-control.scss'\n})\nexport class AgGridBotsControl {\n  @Input() rowData: any[] = [];\n\n  @Output() emitter = new EventEmitter<any>();\n\n  onAction(event: any, row: any) {\n    this.emitter.emit({ ...event, row });\n  }\n\n  colDefs: ColDef[] = [\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"id\",\n      headerName: 'ID',\n    },\n    {\n      field: \"gate\",\n      headerName: 'Gate',\n    },\n    {\n      field: \"maxTimeRequest\",\n      headerName: 'Max Time Request(ms)',\n    },\n    {\n      field: \"TimeRequest\",\n      headerName: 'Time Request(ms)',\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n    {\n      field: \"isSendData\",\n      headerName: 'Send Data',\n      cellRenderer: ToggleContainer,\n    },\n    {\n      field: \"isStart\",\n      headerName: 'Start/Stop',\n      cellRenderer: LaunchControlContainer,\n      cellRendererParams: {\n        onAction: this.onAction.bind(this),\n      },\n    },\n    {\n      field: \"actions\",\n      headerName: 'Actions',\n      cellRenderer: ActionsContainer,\n      cellRendererParams: {\n        onAction: this.onAction.bind(this),\n      },\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n    flex: 1\n  };\n}\n",
+            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';\nimport {ToggleContainer} from '../../containers/ag-grid-containers/toggle-container/toggle-container';\nimport {\n  LaunchControlContainer\n} from '../../containers/ag-grid-containers/launch-control-container/launch-control-container';\nimport {ActionsContainer} from '../../containers/ag-grid-containers/actions-container/actions-container';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-bots-control',\n  imports: [\n    AgGridAngular,\n  ],\n  templateUrl: './ag-grid-bots-control.html',\n  styleUrl: './ag-grid-bots-control.scss'\n})\nexport class AgGridBotsControl {\n  @Input() rowData: any[] = [];\n\n  @Output() emitter = new EventEmitter<any>();\n\n  onAction(event: any, row: any) {\n    this.emitter.emit({ ...event, row });\n  }\n\n  colDefs: ColDef[] = [\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"id\",\n      headerName: 'ID',\n    },\n    {\n      field: \"gate\",\n      headerName: 'Gate',\n    },\n    {\n      field: \"maxTimeRequest\",\n      headerName: 'Max Time Request(ms)',\n    },\n    {\n      field: \"TimeRequest\",\n      headerName: 'Time Request(ms)',\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n    {\n      field: \"isSendData\",\n      headerName: 'Send Data',\n      cellRenderer: ToggleContainer,\n      cellRendererParams: {\n        onAction: this.onAction.bind(this),\n      },\n    },\n    {\n      field: \"isStart\",\n      headerName: 'Start/Stop',\n      cellRenderer: LaunchControlContainer,\n      cellRendererParams: {\n        onAction: this.onAction.bind(this),\n      },\n    },\n    {\n      field: \"actions\",\n      headerName: 'Actions',\n      cellRenderer: ActionsContainer,\n      cellRendererParams: {\n        onAction: this.onAction.bind(this),\n      },\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n    flex: 1\n  };\n}\n",
             "styleUrl": "./ag-grid-bots-control.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -3631,7 +3631,7 @@
         },
         {
             "name": "Toggle",
-            "id": "component-Toggle-5f4512c44a16bcb94820f071fb4c32b9d4b991f16bdf7f53ea6e73fa273202b36ffce52548d64951180af0edc7eb2a086cc453c919b0fb40ff68cc255720ca03",
+            "id": "component-Toggle-2573d95bd223a2ca34104161552f0032235a70bdb6f84108f893978848ca6ee9030f58613148427b28acf6084f23b9d1045cdd2c90ce8463f6a5750202d4782f",
             "file": "src/app/components/ag-grid-components/toggle/toggle.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -3734,7 +3734,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {MatSlideToggleModule} from '@angular/material/slide-toggle';\nimport {FormsModule} from '@angular/forms';\n\n@Component({\n  selector: 'app-toggle',\n  imports: [MatSlideToggleModule, FormsModule],\n  standalone: true,\n  templateUrl: './toggle.html',\n  styleUrl: './toggle.scss',\n})\n\nexport class Toggle {\n  @Input() isChecked: boolean = false;\n  @Input() description: string = '';\n  @Input() title: string = '';\n\n  @Output() emitter = new EventEmitter();\n\n  onToggle($event: boolean) {\n    console.log($event)\n    this.emitter.emit({\n      event: 'Toggle:TOGGLE_CLICKED',\n      data: $event\n    });\n  }\n}\n",
+            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {MatSlideToggleModule} from '@angular/material/slide-toggle';\nimport {FormsModule} from '@angular/forms';\n\n@Component({\n  selector: 'app-toggle',\n  imports: [MatSlideToggleModule, FormsModule],\n  standalone: true,\n  templateUrl: './toggle.html',\n  styleUrl: './toggle.scss',\n})\n\nexport class Toggle {\n  @Input() isChecked: boolean = false;\n  @Input() description: string = '';\n  @Input() title: string = '';\n\n  @Output() emitter = new EventEmitter();\n\n  onToggle($event: boolean) {\n    this.emitter.emit({\n      event: 'Toggle:TOGGLE_CLICKED',\n      data: $event\n    });\n  }\n}\n",
             "styleUrl": "./toggle.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -3744,7 +3744,7 @@
         },
         {
             "name": "ToggleContainer",
-            "id": "component-ToggleContainer-9c04d471885c07d42dc9188df6df132edd0e51e093378fc69141b0c8802731e979f3f0cb21ce915820665c30f9413867d6b92ed1bd2e61cdeceebda4eec2bd02",
+            "id": "component-ToggleContainer-7bf1dc0dd5b4c8de27fd06eaf4767f0b2eeaa6c56e0b7e9f20de7f0dfe7bfcbfa8503649909f3443daddf48c4d6e9cb57ed1765afbdeb5a25aa16965648c70b5",
             "file": "src/app/containers/ag-grid-containers/toggle-container/toggle-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -3782,7 +3782,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 16
+                    "line": 17
                 },
                 {
                     "name": "params",
@@ -3792,7 +3792,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 17
+                    "line": 16
                 }
             ],
             "methodsClass": [
@@ -3825,10 +3825,10 @@
                     ]
                 },
                 {
-                    "name": "events",
+                    "name": "onToggleChange",
                     "args": [
                         {
-                            "name": "event",
+                            "name": "$event",
                             "type": "any",
                             "deprecated": false,
                             "deprecationMessage": ""
@@ -3837,12 +3837,12 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 30,
+                    "line": 29,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
                         {
-                            "name": "event",
+                            "name": "$event",
                             "type": "any",
                             "deprecated": false,
                             "deprecationMessage": "",
@@ -3865,7 +3865,7 @@
                     "optional": false,
                     "returnType": "boolean",
                     "typeParameters": [],
-                    "line": 25,
+                    "line": 24,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -3894,7 +3894,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\nimport {ICellRendererAngularComp} from 'ag-grid-angular';\nimport {Toggle} from '../../../components/ag-grid-components/toggle/toggle';\n\n@Component({\n  selector: 'app-toggle-container',\n  imports: [\n    Toggle\n  ],\n  standalone: true,\n  templateUrl: './toggle-container.html',\n  styleUrl: './toggle-container.scss'\n})\nexport class ToggleContainer implements ICellRendererAngularComp {\n  description: string = '';\n  isChecked: boolean = false;\n  params: any;\n\n  agInit(params: any): void {\n    this.params = params;\n    this.description = params.description || '';\n    this.isChecked = params.value || false;\n  }\n\n  refresh(params: any): boolean {\n    this.agInit(params);\n    return true;\n  }\n\n  events(event: any) {\n    // Обновляем значение в AG Grid\n    if(event.event === 'Toggle:TOGGLE_CLICKED') {\n      if (this.params && this.params.node) {\n        this.params.node.setDataValue(this.params.colDef.field, event.event.data);\n      }\n      // this.store.dispatch(toggleSendData({data: event.data})); //передаем потом сюда не значение toggle а просто id для смены\n    }\n  }\n\n}\n",
+            "sourceCode": "import { Component } from '@angular/core';\nimport {ICellRendererAngularComp} from 'ag-grid-angular';\nimport {Toggle} from '../../../components/ag-grid-components/toggle/toggle';\n\n@Component({\n  selector: 'app-toggle-container',\n  imports: [\n    Toggle\n  ],\n  standalone: true,\n  templateUrl: './toggle-container.html',\n  styleUrl: './toggle-container.scss'\n})\nexport class ToggleContainer implements ICellRendererAngularComp {\n  description: string = '';\n  params: any;\n  isChecked: boolean = false;\n\n  agInit(params: any): void {\n    this.params = params;\n    this.isChecked = !!params.value;\n  }\n\n  refresh(params: any): boolean {\n    this.agInit(params);\n    return true;\n  }\n\n  onToggleChange($event: any) {\n    // this.isChecked = $event.data;\n\n    // if (this.params?.node && this.params?.colDef?.field) {\n    //   this.params.node.setDataValue(this.params.colDef.field, newValue);\n    // }\n\n    if (this.params?.onAction) {\n      this.params.onAction(\n        {\n          event: $event.event,\n          newValue: $event.data,\n        },\n        this.params.data\n      );\n    }\n  }\n}\n",
             "styleUrl": "./toggle-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -3903,7 +3903,7 @@
             "implements": [
                 "ICellRendererAngularComp"
             ],
-            "templateData": "<app-toggle\n  [isChecked]=\"isChecked\"\n  [description]=\"description\"\n  (emitter)=\"events($event)\"\n></app-toggle>\n"
+            "templateData": "<app-toggle\n  [isChecked]=\"isChecked\"\n  [description]=\"description\"\n  (emitter)=\"onToggleChange($event)\"\n></app-toggle>\n"
         },
         {
             "name": "Toolbar",

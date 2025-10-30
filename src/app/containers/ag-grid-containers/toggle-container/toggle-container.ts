@@ -13,13 +13,12 @@ import {Toggle} from '../../../components/ag-grid-components/toggle/toggle';
 })
 export class ToggleContainer implements ICellRendererAngularComp {
   description: string = '';
-  isChecked: boolean = false;
   params: any;
+  isChecked: boolean = false;
 
   agInit(params: any): void {
     this.params = params;
-    this.description = params.description || '';
-    this.isChecked = params.value || false;
+    this.isChecked = !!params.value;
   }
 
   refresh(params: any): boolean {
@@ -27,14 +26,15 @@ export class ToggleContainer implements ICellRendererAngularComp {
     return true;
   }
 
-  events(event: any) {
-    // Обновляем значение в AG Grid
-    if(event.event === 'Toggle:TOGGLE_CLICKED') {
-      if (this.params && this.params.node) {
-        this.params.node.setDataValue(this.params.colDef.field, event.event.data);
-      }
-      // this.store.dispatch(toggleSendData({data: event.data})); //передаем потом сюда не значение toggle а просто id для смены
+  onToggleChange($event: any) {
+    if (this.params?.onAction) {
+      this.params.onAction(
+        {
+          event: $event.event,
+          newValue: $event.data,
+        },
+        this.params.data
+      );
     }
   }
-
 }

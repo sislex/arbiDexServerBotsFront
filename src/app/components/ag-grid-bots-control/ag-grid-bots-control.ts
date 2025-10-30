@@ -66,6 +66,9 @@ export class AgGridBotsControl {
       field: "isSendData",
       headerName: 'Send Data',
       cellRenderer: ToggleContainer,
+      cellRendererParams: {
+        onAction: this.onAction.bind(this),
+      },
     },
     {
       field: "isStart",
