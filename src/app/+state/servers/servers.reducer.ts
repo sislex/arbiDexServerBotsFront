@@ -23,25 +23,29 @@ export interface IServerAuthData {
 
 export interface IEnvironmentData {
   isSidebarOpen: boolean;
+  activeTab: string;
+  ip: string;
+  tabList: string[];
+  serverList: IServer[];
 }
 
 // export interface IBotData {
-  //Статусы для каждого бота:
-  //действующий
-  //остановлен по предназначению (Остановлен или закончил или остановили принудительно)
-  //остановлен из-за ошибки
-  //статус ожидает ответ от сервера
-  //статус пауза
-  //Статус выполнения
-  // сколько всего ошибок с момента запуска и какие они были
-  // поиск ошибки от и до заданных
-  // path: 'server/:ip/tab/:tabId',
-  //actions для бота
-  //пауза/продолжить
-  //остановка/запуск
-  //перезапуск
-  //изменение настроек бота
-  //получить настройки бота
+//Статусы для каждого бота:
+//действующий
+//остановлен по предназначению (Остановлен или закончил или остановили принудительно)
+//остановлен из-за ошибки
+//статус ожидает ответ от сервера
+//статус пауза
+//Статус выполнения
+// сколько всего ошибок с момента запуска и какие они были
+// поиск ошибки от и до заданных
+// path: 'server/:ip/tab/:tabId',
+//actions для бота
+//пауза/продолжить
+//остановка/запуск
+//перезапуск
+//изменение настроек бота
+//получить настройки бота
 // }
 
 export interface IServerDataResponse { //то что приходит с докера = сервера
@@ -62,7 +66,7 @@ export interface IServerData {
 
 export interface IServer {
   ip: string;
-  port: string;
+  port?: string;
   name: string;
 }
 
@@ -95,6 +99,10 @@ export const initialState: ServersState = {
   serverListResponse: [],
   environmentData: {
     isSidebarOpen: true,
+    activeTab: 'bots',
+    ip: '192.169.0.1',
+    tabList: ['bots', 'gates', 'server data',],
+    serverList: [{name: 'serv1', ip: '192.169.0.0'}, {name: 'serv2', ip: '192.169.0.1'}]
   }
 };
 
@@ -105,6 +113,20 @@ export const serversReducer = createReducer(
     environmentData: {
       ...state.environmentData,
       isSidebarOpen: !state.environmentData.isSidebarOpen
+    }
+  })),
+  on(ServersActions.setActiveServer, (state, {ip}) => ({
+    ...state,
+    environmentData: {
+      ...state.environmentData,
+      ip: ip
+    }
+  })),
+  on(ServersActions.setActiveTab, (state, {tab}) => ({
+    ...state,
+    environmentData: {
+      ...state.environmentData,
+      activeTab: tab
     }
   })),
 );

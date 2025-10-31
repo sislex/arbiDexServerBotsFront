@@ -1,9 +1,15 @@
-app-sidebar {
+:host {
   display: flex;
-  height: 100%;
-  width: 100%;
+  flex: 1;
+  overflow: hidden;
 
-  app-tabs-container {
+  app-sidebar {
+    display: flex;
     height: 100%;
+    width: 100%;
+
+    app-tabs-container {
+      height: 100%;
+    }
   }
 }

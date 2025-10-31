@@ -1,6 +1,8 @@
 <app-sidebar
   [sidebarTitle]="(featureName$ | async)!"
   [isSidebarOpen]="(isSidebarOpen$ | async)!"
+  [list]="(serverList$ | async)!"
+  [activeItem]="(activeServer$ | async)!"
   (emitter)="events($event)"
 >
   <app-tabs-container main></app-tabs-container>

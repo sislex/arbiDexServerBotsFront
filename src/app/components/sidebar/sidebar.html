@@ -9,16 +9,26 @@
         <div class="button-group">
           <div class="header">
             <span class="title">{{ sidebarTitle | uppercase }}</span>
-            <button mat-icon-button (click)="togglePanel()" class="toggle-button side-button">
+            <button
+              mat-icon-button
+              (click)="togglePanel()"
+              class="toggle-button side-button"
+            >
               <mat-icon>arrow_left</mat-icon>
             </button>
           </div>
+
           <mat-divider></mat-divider>
+
           <div class="content">
-            <mat-button-toggle-group name="fontStyle" aria-label="Font Style" class="custom-toggle-group">
+            <mat-button-toggle-group
+              class="custom-toggle-group"
+              [value]="activeItem"
+              (change)="setActiveItem($event.value)"
+            >
               @for (item of list; track item) {
-                <mat-button-toggle value="{{item.name}}" (click)="setActiveItem(item)">
-                  {{item.name | titlecase}}
+                <mat-button-toggle [value]="item.ip">
+                  {{ item.name | titlecase }}
                 </mat-button-toggle>
               }
             </mat-button-toggle-group>

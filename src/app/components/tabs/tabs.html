@@ -1,12 +1,14 @@
-<mat-tab-group dynamicHeight class="vertical-tabs">
+<mat-tab-group dynamicHeight class="vertical-tabs"
+               [selectedIndex]="selectedIndex"
+               (selectedIndexChange)="onTabChange($event)">
   @for (item of list; track item) {
-    <mat-tab label="{{ item.name | titlecase }}">
-      <app-title-content-layout [title]="item.name">
-        @if (item.name === 'bots') {
+    <mat-tab label="{{ item | titlecase }}" >
+      <app-title-content-layout [title]="item">
+        @if (item === 'bots') {
           <app-ag-grid-bots-control-container></app-ag-grid-bots-control-container>
-        } @else if (item.name === 'gates') {
+        } @else if (item === 'gates') {
           <app-ag-grid-gate-list-container></app-ag-grid-gate-list-container>
-        } @else if (item.name === 'server data') {
+        } @else if (item === 'server data') {
           <app-ag-grid-server-data-container></app-ag-grid-server-data-container>
         }
       </app-title-content-layout>

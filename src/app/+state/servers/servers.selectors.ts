@@ -11,3 +11,19 @@ export const getIsSidebarOpen = createSelector(
   selectFeature,
   (state: ServersState) => state.environmentData.isSidebarOpen
 );
+export const getTabList = createSelector(
+  selectFeature,
+  (state: ServersState) => state.environmentData.tabList
+);
+export const getServerList = createSelector(
+  selectFeature,
+  (state: ServersState) => state.environmentData.serverList
+);
+export const getActiveServer = createSelector(
+  selectFeature,
+  (state: ServersState) => state.environmentData.ip
+);
+export const getActiveTab = createSelector(
+  selectFeature,
+  (state: ServersState) => state.environmentData.activeTab
+);

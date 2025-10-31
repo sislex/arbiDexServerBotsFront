@@ -1,1 +1,5 @@
-<app-tabs></app-tabs>
+<app-tabs
+  [list]="(tabList$ | async)!"
+  [tabName]="(activeTab$ | async)!"
+  (emitter)="events($event)"
+></app-tabs>

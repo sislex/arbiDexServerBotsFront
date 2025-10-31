@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {MatTabsModule} from '@angular/material/tabs';
 import {TitleCasePipe} from '@angular/common';
 import {TitleContentLayout} from '../title-content-layout/title-content-layout';
@@ -15,16 +15,25 @@ import {AgGridGateListContainer} from '../../containers/ag-grid-gate-list-contai
   templateUrl: './tabs.html',
   styleUrl: './tabs.scss'
 })
-export class Tabs {
-  @Input() list: any[] = [
-    {
-      name: 'bots'
-    },
-    {
-      name: 'gates',
-    },
-    {
-      name: 'server data'
+export class Tabs implements OnChanges {
+  @Input() list: string[] = [];
+  @Input() tabName: string = '';
+  selectedIndex = 0;
+
+  @Output() emitter = new EventEmitter();
+
+  ngOnChanges() {
+    if (this.list && this.tabName) {
+      this.selectedIndex = this.list.indexOf(this.tabName);
     }
-  ]
+  }
+
+  onTabChange(index: number) {
+    const selectedTab = this.list[index];
+
+    this.emitter.emit({
+      event: 'Tabs:TAB_CLICKED',
+      data: selectedTab
+    });
+  }
 }
