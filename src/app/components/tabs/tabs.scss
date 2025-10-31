@@ -1,0 +1,16 @@
+mat-tab-group {
+  height: 100%;
+
+  app-title-content-layout {
+    display: block;
+    height: 100%;
+  }
+}
+
+app-ag-grid-bots-control-container, app-ag-grid-gate-list-container, app-ag-grid-server-data-container {
+  flex-direction: column;
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
+

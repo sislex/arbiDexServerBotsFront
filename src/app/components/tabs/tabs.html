@@ -1,10 +1,15 @@
-<mat-tab-group class="vertical-tabs">
+<mat-tab-group dynamicHeight class="vertical-tabs">
   @for (item of list; track item) {
-    <mat-tab label="{{item.name | titlecase}}">
-      <h1>{{item.name | titlecase}}</h1>
-      @if (item.type == 'table') {
-      }
-      <h1>{{item.data}}</h1>
+    <mat-tab label="{{ item.name | titlecase }}">
+      <app-title-content-layout [title]="item.name">
+        @if (item.name === 'bots') {
+          <app-ag-grid-bots-control-container></app-ag-grid-bots-control-container>
+        } @else if (item.name === 'gates') {
+          <app-ag-grid-gate-list-container></app-ag-grid-gate-list-container>
+        } @else if (item.name === 'server data') {
+          <app-ag-grid-server-data-container></app-ag-grid-server-data-container>
+        }
+      </app-title-content-layout>
     </mat-tab>
   }
 </mat-tab-group>

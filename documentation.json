@@ -3,25 +3,180 @@
     "interfaces": [
         {
             "name": "IBotData",
-            "id": "interface-IBotData-1ce4bb1f2fdc258385df0e23a05e1486423020e8244ab794d57299e0fc371ee5aae38b23b93d11276317d9999f82148ae3a771b9dd7cdd5c70a6bc4439f52e1f",
+            "id": "interface-IBotData-a1b4ef543f8b85225b9ad4571018af0afef9c763ff7066045d7cebe82aa5913c0a4512e1f87cd00bcbd9d58f7abf384da6cdf03f2db5f60c30f9c48de80eec29",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n}\nexport interface IGateData {\n}\nexport interface IServerData {\n  serverName: string;\n  login: string;\n  password: string;\n  version: string;\n  timeToClose: Date;\n  timeAfterClose: Date;\n  status: boolean;\n  bots: IBotData[];\n  gates: IGateData[];\n}\nexport interface IEnvironmentData {\n  isSidebarOpen: boolean;\n}\n\nexport interface ServersState {\n  featureName: string;\n  serverListApi: string[];\n  serverListData: IServerData[];\n  environmentData: IEnvironmentData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'servers',\n  serverListApi: [],\n  serverListData: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.toggleSidebar, (state) => ({\n    ...state,\n    environmentData: {\n      ...state.environmentData,\n      isSidebarOpen: !state.environmentData.isSidebarOpen\n    }\n  })),\n);\n\n",
-            "properties": [],
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IBotData {\n  //Статусы для каждого бота:\n  //действующий\n  //остановлен по предназначению (Остановлен или закончил или остановили принудительно)\n  //остановлен из-за ошибки\n  //статус ожидает ответ от сервера\n  //статус пауза\n  //Статус выполнения\n  // сколько всего ошибок с момента запуска и какие они были\n  // поиск ошибки от и до заданных\n  path: 'server/:ip/tab/:tabId',\n  //actions для бота\n  //пауза/продолжить\n  //остановка/запуск\n  //перезапуск\n  //изменение настроек бота\n  //получить настройки бота\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // status: boolean;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n  // bots: IBotData[];\n}\n\n\n\nexport interface IServerData {\n  version: string;\n  status: boolean;\n  timestamp: Date;\n  bots: IBotData[];\n}\n\nexport interface IEnvironmentData {\n  isSidebarOpen: boolean;\n}\n\nexport interface IServer {\n  ip: string;\n  port: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  environmentData: IEnvironmentData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.0',\n        port: '8080',\n        name: 'testServer',\n      },\n    ],\n  },\n  serverListResponse: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.toggleSidebar, (state) => ({\n    ...state,\n    environmentData: {\n      ...state.environmentData,\n      isSidebarOpen: !state.environmentData.isSidebarOpen\n    }\n  })),\n);\n\n",
+            "properties": [
+                {
+                    "name": "description",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 10
+                },
+                {
+                    "name": "gate",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "any",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 11
+                },
+                {
+                    "name": "id",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 7
+                },
+                {
+                    "name": "isStarted",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 16
+                },
+                {
+                    "name": "maxTimeRequest",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 12
+                },
+                {
+                    "name": "name",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 8
+                },
+                {
+                    "name": "sendData",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 15
+                },
+                {
+                    "name": "status",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 14
+                },
+                {
+                    "name": "timeRequest",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 13
+                },
+                {
+                    "name": "type",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "any",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 9
+                }
+            ],
             "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "IBotData",
+            "id": "interface-IBotData-a1b4ef543f8b85225b9ad4571018af0afef9c763ff7066045d7cebe82aa5913c0a4512e1f87cd00bcbd9d58f7abf384da6cdf03f2db5f60c30f9c48de80eec29-1",
+            "file": "src/app/+state/servers/servers.reducer.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IBotData {\n  //Статусы для каждого бота:\n  //действующий\n  //остановлен по предназначению (Остановлен или закончил или остановили принудительно)\n  //остановлен из-за ошибки\n  //статус ожидает ответ от сервера\n  //статус пауза\n  //Статус выполнения\n  // сколько всего ошибок с момента запуска и какие они были\n  // поиск ошибки от и до заданных\n  path: 'server/:ip/tab/:tabId',\n  //actions для бота\n  //пауза/продолжить\n  //остановка/запуск\n  //перезапуск\n  //изменение настроек бота\n  //получить настройки бота\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // status: boolean;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n  // bots: IBotData[];\n}\n\n\n\nexport interface IServerData {\n  version: string;\n  status: boolean;\n  timestamp: Date;\n  bots: IBotData[];\n}\n\nexport interface IEnvironmentData {\n  isSidebarOpen: boolean;\n}\n\nexport interface IServer {\n  ip: string;\n  port: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  environmentData: IEnvironmentData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.0',\n        port: '8080',\n        name: 'testServer',\n      },\n    ],\n  },\n  serverListResponse: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.toggleSidebar, (state) => ({\n    ...state,\n    environmentData: {\n      ...state.environmentData,\n      isSidebarOpen: !state.environmentData.isSidebarOpen\n    }\n  })),\n);\n\n",
+            "properties": [
+                {
+                    "name": "path",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 34
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": [],
+            "isDuplicate": true,
+            "duplicateId": 1,
+            "duplicateName": "IBotData-1"
+        },
+        {
+            "name": "IConfig",
+            "id": "interface-IConfig-a1b4ef543f8b85225b9ad4571018af0afef9c763ff7066045d7cebe82aa5913c0a4512e1f87cd00bcbd9d58f7abf384da6cdf03f2db5f60c30f9c48de80eec29",
+            "file": "src/app/+state/servers/servers.reducer.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IBotData {\n  //Статусы для каждого бота:\n  //действующий\n  //остановлен по предназначению (Остановлен или закончил или остановили принудительно)\n  //остановлен из-за ошибки\n  //статус ожидает ответ от сервера\n  //статус пауза\n  //Статус выполнения\n  // сколько всего ошибок с момента запуска и какие они были\n  // поиск ошибки от и до заданных\n  path: 'server/:ip/tab/:tabId',\n  //actions для бота\n  //пауза/продолжить\n  //остановка/запуск\n  //перезапуск\n  //изменение настроек бота\n  //получить настройки бота\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // status: boolean;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n  // bots: IBotData[];\n}\n\n\n\nexport interface IServerData {\n  version: string;\n  status: boolean;\n  timestamp: Date;\n  bots: IBotData[];\n}\n\nexport interface IEnvironmentData {\n  isSidebarOpen: boolean;\n}\n\nexport interface IServer {\n  ip: string;\n  port: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  environmentData: IEnvironmentData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.0',\n        port: '8080',\n        name: 'testServer',\n      },\n    ],\n  },\n  serverListResponse: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.toggleSidebar, (state) => ({\n    ...state,\n    environmentData: {\n      ...state.environmentData,\n      isSidebarOpen: !state.environmentData.isSidebarOpen\n    }\n  })),\n);\n\n",
+            "properties": [
+                {
+                    "name": "serverList",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "IServer[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 72
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
             "methods": [],
             "extends": []
         },
         {
             "name": "IEnvironmentData",
-            "id": "interface-IEnvironmentData-1ce4bb1f2fdc258385df0e23a05e1486423020e8244ab794d57299e0fc371ee5aae38b23b93d11276317d9999f82148ae3a771b9dd7cdd5c70a6bc4439f52e1f",
+            "id": "interface-IEnvironmentData-a1b4ef543f8b85225b9ad4571018af0afef9c763ff7066045d7cebe82aa5913c0a4512e1f87cd00bcbd9d58f7abf384da6cdf03f2db5f60c30f9c48de80eec29",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n}\nexport interface IGateData {\n}\nexport interface IServerData {\n  serverName: string;\n  login: string;\n  password: string;\n  version: string;\n  timeToClose: Date;\n  timeAfterClose: Date;\n  status: boolean;\n  bots: IBotData[];\n  gates: IGateData[];\n}\nexport interface IEnvironmentData {\n  isSidebarOpen: boolean;\n}\n\nexport interface ServersState {\n  featureName: string;\n  serverListApi: string[];\n  serverListData: IServerData[];\n  environmentData: IEnvironmentData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'servers',\n  serverListApi: [],\n  serverListData: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.toggleSidebar, (state) => ({\n    ...state,\n    environmentData: {\n      ...state.environmentData,\n      isSidebarOpen: !state.environmentData.isSidebarOpen\n    }\n  })),\n);\n\n",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IBotData {\n  //Статусы для каждого бота:\n  //действующий\n  //остановлен по предназначению (Остановлен или закончил или остановили принудительно)\n  //остановлен из-за ошибки\n  //статус ожидает ответ от сервера\n  //статус пауза\n  //Статус выполнения\n  // сколько всего ошибок с момента запуска и какие они были\n  // поиск ошибки от и до заданных\n  path: 'server/:ip/tab/:tabId',\n  //actions для бота\n  //пауза/продолжить\n  //остановка/запуск\n  //перезапуск\n  //изменение настроек бота\n  //получить настройки бота\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // status: boolean;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n  // bots: IBotData[];\n}\n\n\n\nexport interface IServerData {\n  version: string;\n  status: boolean;\n  timestamp: Date;\n  bots: IBotData[];\n}\n\nexport interface IEnvironmentData {\n  isSidebarOpen: boolean;\n}\n\nexport interface IServer {\n  ip: string;\n  port: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  environmentData: IEnvironmentData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.0',\n        port: '8080',\n        name: 'testServer',\n      },\n    ],\n  },\n  serverListResponse: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.toggleSidebar, (state) => ({\n    ...state,\n    environmentData: {\n      ...state.environmentData,\n      isSidebarOpen: !state.environmentData.isSidebarOpen\n    }\n  })),\n);\n\n",
             "properties": [
                 {
                     "name": "isSidebarOpen",
@@ -31,7 +186,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 22
+                    "line": 62
                 }
             ],
             "indexSignatures": [],
@@ -40,47 +195,59 @@
             "extends": []
         },
         {
-            "name": "IGateData",
-            "id": "interface-IGateData-1ce4bb1f2fdc258385df0e23a05e1486423020e8244ab794d57299e0fc371ee5aae38b23b93d11276317d9999f82148ae3a771b9dd7cdd5c70a6bc4439f52e1f",
+            "name": "IServer",
+            "id": "interface-IServer-a1b4ef543f8b85225b9ad4571018af0afef9c763ff7066045d7cebe82aa5913c0a4512e1f87cd00bcbd9d58f7abf384da6cdf03f2db5f60c30f9c48de80eec29",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n}\nexport interface IGateData {\n}\nexport interface IServerData {\n  serverName: string;\n  login: string;\n  password: string;\n  version: string;\n  timeToClose: Date;\n  timeAfterClose: Date;\n  status: boolean;\n  bots: IBotData[];\n  gates: IGateData[];\n}\nexport interface IEnvironmentData {\n  isSidebarOpen: boolean;\n}\n\nexport interface ServersState {\n  featureName: string;\n  serverListApi: string[];\n  serverListData: IServerData[];\n  environmentData: IEnvironmentData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'servers',\n  serverListApi: [],\n  serverListData: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.toggleSidebar, (state) => ({\n    ...state,\n    environmentData: {\n      ...state.environmentData,\n      isSidebarOpen: !state.environmentData.isSidebarOpen\n    }\n  })),\n);\n\n",
-            "properties": [],
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IBotData {\n  //Статусы для каждого бота:\n  //действующий\n  //остановлен по предназначению (Остановлен или закончил или остановили принудительно)\n  //остановлен из-за ошибки\n  //статус ожидает ответ от сервера\n  //статус пауза\n  //Статус выполнения\n  // сколько всего ошибок с момента запуска и какие они были\n  // поиск ошибки от и до заданных\n  path: 'server/:ip/tab/:tabId',\n  //actions для бота\n  //пауза/продолжить\n  //остановка/запуск\n  //перезапуск\n  //изменение настроек бота\n  //получить настройки бота\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // status: boolean;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n  // bots: IBotData[];\n}\n\n\n\nexport interface IServerData {\n  version: string;\n  status: boolean;\n  timestamp: Date;\n  bots: IBotData[];\n}\n\nexport interface IEnvironmentData {\n  isSidebarOpen: boolean;\n}\n\nexport interface IServer {\n  ip: string;\n  port: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  environmentData: IEnvironmentData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.0',\n        port: '8080',\n        name: 'testServer',\n      },\n    ],\n  },\n  serverListResponse: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.toggleSidebar, (state) => ({\n    ...state,\n    environmentData: {\n      ...state.environmentData,\n      isSidebarOpen: !state.environmentData.isSidebarOpen\n    }\n  })),\n);\n\n",
+            "properties": [
+                {
+                    "name": "ip",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 66
+                },
+                {
+                    "name": "name",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 68
+                },
+                {
+                    "name": "port",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 67
+                }
+            ],
             "indexSignatures": [],
+            "kind": 172,
             "methods": [],
             "extends": []
         },
         {
-            "name": "IServerData",
-            "id": "interface-IServerData-1ce4bb1f2fdc258385df0e23a05e1486423020e8244ab794d57299e0fc371ee5aae38b23b93d11276317d9999f82148ae3a771b9dd7cdd5c70a6bc4439f52e1f",
+            "name": "IServerAuthData",
+            "id": "interface-IServerAuthData-a1b4ef543f8b85225b9ad4571018af0afef9c763ff7066045d7cebe82aa5913c0a4512e1f87cd00bcbd9d58f7abf384da6cdf03f2db5f60c30f9c48de80eec29",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n}\nexport interface IGateData {\n}\nexport interface IServerData {\n  serverName: string;\n  login: string;\n  password: string;\n  version: string;\n  timeToClose: Date;\n  timeAfterClose: Date;\n  status: boolean;\n  bots: IBotData[];\n  gates: IGateData[];\n}\nexport interface IEnvironmentData {\n  isSidebarOpen: boolean;\n}\n\nexport interface ServersState {\n  featureName: string;\n  serverListApi: string[];\n  serverListData: IServerData[];\n  environmentData: IEnvironmentData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'servers',\n  serverListApi: [],\n  serverListData: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.toggleSidebar, (state) => ({\n    ...state,\n    environmentData: {\n      ...state.environmentData,\n      isSidebarOpen: !state.environmentData.isSidebarOpen\n    }\n  })),\n);\n\n",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IBotData {\n  //Статусы для каждого бота:\n  //действующий\n  //остановлен по предназначению (Остановлен или закончил или остановили принудительно)\n  //остановлен из-за ошибки\n  //статус ожидает ответ от сервера\n  //статус пауза\n  //Статус выполнения\n  // сколько всего ошибок с момента запуска и какие они были\n  // поиск ошибки от и до заданных\n  path: 'server/:ip/tab/:tabId',\n  //actions для бота\n  //пауза/продолжить\n  //остановка/запуск\n  //перезапуск\n  //изменение настроек бота\n  //получить настройки бота\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // status: boolean;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n  // bots: IBotData[];\n}\n\n\n\nexport interface IServerData {\n  version: string;\n  status: boolean;\n  timestamp: Date;\n  bots: IBotData[];\n}\n\nexport interface IEnvironmentData {\n  isSidebarOpen: boolean;\n}\n\nexport interface IServer {\n  ip: string;\n  port: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  environmentData: IEnvironmentData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.0',\n        port: '8080',\n        name: 'testServer',\n      },\n    ],\n  },\n  serverListResponse: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.toggleSidebar, (state) => ({\n    ...state,\n    environmentData: {\n      ...state.environmentData,\n      isSidebarOpen: !state.environmentData.isSidebarOpen\n    }\n  })),\n);\n\n",
             "properties": [
-                {
-                    "name": "bots",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "IBotData[]",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 18
-                },
-                {
-                    "name": "gates",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "IGateData[]",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 19
-                },
                 {
                     "name": "login",
                     "deprecated": false,
@@ -89,7 +256,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 12
+                    "line": 20
                 },
                 {
                     "name": "password",
@@ -99,17 +266,32 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 13
-                },
+                    "line": 21
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "IServerData",
+            "id": "interface-IServerData-a1b4ef543f8b85225b9ad4571018af0afef9c763ff7066045d7cebe82aa5913c0a4512e1f87cd00bcbd9d58f7abf384da6cdf03f2db5f60c30f9c48de80eec29",
+            "file": "src/app/+state/servers/servers.reducer.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IBotData {\n  //Статусы для каждого бота:\n  //действующий\n  //остановлен по предназначению (Остановлен или закончил или остановили принудительно)\n  //остановлен из-за ошибки\n  //статус ожидает ответ от сервера\n  //статус пауза\n  //Статус выполнения\n  // сколько всего ошибок с момента запуска и какие они были\n  // поиск ошибки от и до заданных\n  path: 'server/:ip/tab/:tabId',\n  //actions для бота\n  //пауза/продолжить\n  //остановка/запуск\n  //перезапуск\n  //изменение настроек бота\n  //получить настройки бота\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // status: boolean;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n  // bots: IBotData[];\n}\n\n\n\nexport interface IServerData {\n  version: string;\n  status: boolean;\n  timestamp: Date;\n  bots: IBotData[];\n}\n\nexport interface IEnvironmentData {\n  isSidebarOpen: boolean;\n}\n\nexport interface IServer {\n  ip: string;\n  port: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  environmentData: IEnvironmentData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.0',\n        port: '8080',\n        name: 'testServer',\n      },\n    ],\n  },\n  serverListResponse: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.toggleSidebar, (state) => ({\n    ...state,\n    environmentData: {\n      ...state.environmentData,\n      isSidebarOpen: !state.environmentData.isSidebarOpen\n    }\n  })),\n);\n\n",
+            "properties": [
                 {
-                    "name": "serverName",
+                    "name": "bots",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "string",
+                    "type": "IBotData[]",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 11
+                    "line": 58
                 },
                 {
                     "name": "status",
@@ -119,27 +301,17 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 17
+                    "line": 56
                 },
                 {
-                    "name": "timeAfterClose",
+                    "name": "timestamp",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Date",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 16
-                },
-                {
-                    "name": "timeToClose",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Date",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 15
+                    "line": 57
                 },
                 {
                     "name": "version",
@@ -149,7 +321,52 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 14
+                    "line": 55
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "IServerDataResponse",
+            "id": "interface-IServerDataResponse-a1b4ef543f8b85225b9ad4571018af0afef9c763ff7066045d7cebe82aa5913c0a4512e1f87cd00bcbd9d58f7abf384da6cdf03f2db5f60c30f9c48de80eec29",
+            "file": "src/app/+state/servers/servers.reducer.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IBotData {\n  //Статусы для каждого бота:\n  //действующий\n  //остановлен по предназначению (Остановлен или закончил или остановили принудительно)\n  //остановлен из-за ошибки\n  //статус ожидает ответ от сервера\n  //статус пауза\n  //Статус выполнения\n  // сколько всего ошибок с момента запуска и какие они были\n  // поиск ошибки от и до заданных\n  path: 'server/:ip/tab/:tabId',\n  //actions для бота\n  //пауза/продолжить\n  //остановка/запуск\n  //перезапуск\n  //изменение настроек бота\n  //получить настройки бота\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // status: boolean;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n  // bots: IBotData[];\n}\n\n\n\nexport interface IServerData {\n  version: string;\n  status: boolean;\n  timestamp: Date;\n  bots: IBotData[];\n}\n\nexport interface IEnvironmentData {\n  isSidebarOpen: boolean;\n}\n\nexport interface IServer {\n  ip: string;\n  port: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  environmentData: IEnvironmentData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.0',\n        port: '8080',\n        name: 'testServer',\n      },\n    ],\n  },\n  serverListResponse: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.toggleSidebar, (state) => ({\n    ...state,\n    environmentData: {\n      ...state.environmentData,\n      isSidebarOpen: !state.environmentData.isSidebarOpen\n    }\n  })),\n);\n\n",
+            "properties": [
+                {
+                    "name": "botsList",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "IBotData[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 48
+                },
+                {
+                    "name": "startDate",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Date",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 45
+                },
+                {
+                    "name": "version",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 44
                 }
             ],
             "indexSignatures": [],
@@ -159,12 +376,12 @@
         },
         {
             "name": "ServersPartialState",
-            "id": "interface-ServersPartialState-1ce4bb1f2fdc258385df0e23a05e1486423020e8244ab794d57299e0fc371ee5aae38b23b93d11276317d9999f82148ae3a771b9dd7cdd5c70a6bc4439f52e1f",
+            "id": "interface-ServersPartialState-a1b4ef543f8b85225b9ad4571018af0afef9c763ff7066045d7cebe82aa5913c0a4512e1f87cd00bcbd9d58f7abf384da6cdf03f2db5f60c30f9c48de80eec29",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n}\nexport interface IGateData {\n}\nexport interface IServerData {\n  serverName: string;\n  login: string;\n  password: string;\n  version: string;\n  timeToClose: Date;\n  timeAfterClose: Date;\n  status: boolean;\n  bots: IBotData[];\n  gates: IGateData[];\n}\nexport interface IEnvironmentData {\n  isSidebarOpen: boolean;\n}\n\nexport interface ServersState {\n  featureName: string;\n  serverListApi: string[];\n  serverListData: IServerData[];\n  environmentData: IEnvironmentData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'servers',\n  serverListApi: [],\n  serverListData: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.toggleSidebar, (state) => ({\n    ...state,\n    environmentData: {\n      ...state.environmentData,\n      isSidebarOpen: !state.environmentData.isSidebarOpen\n    }\n  })),\n);\n\n",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IBotData {\n  //Статусы для каждого бота:\n  //действующий\n  //остановлен по предназначению (Остановлен или закончил или остановили принудительно)\n  //остановлен из-за ошибки\n  //статус ожидает ответ от сервера\n  //статус пауза\n  //Статус выполнения\n  // сколько всего ошибок с момента запуска и какие они были\n  // поиск ошибки от и до заданных\n  path: 'server/:ip/tab/:tabId',\n  //actions для бота\n  //пауза/продолжить\n  //остановка/запуск\n  //перезапуск\n  //изменение настроек бота\n  //получить настройки бота\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // status: boolean;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n  // bots: IBotData[];\n}\n\n\n\nexport interface IServerData {\n  version: string;\n  status: boolean;\n  timestamp: Date;\n  bots: IBotData[];\n}\n\nexport interface IEnvironmentData {\n  isSidebarOpen: boolean;\n}\n\nexport interface IServer {\n  ip: string;\n  port: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  environmentData: IEnvironmentData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.0',\n        port: '8080',\n        name: 'testServer',\n      },\n    ],\n  },\n  serverListResponse: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.toggleSidebar, (state) => ({\n    ...state,\n    environmentData: {\n      ...state.environmentData,\n      isSidebarOpen: !state.environmentData.isSidebarOpen\n    }\n  })),\n);\n\n",
             "properties": [
                 {
                     "name": "SERVERS_FEATURE_KEY",
@@ -174,7 +391,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 33,
+                    "line": 83,
                     "modifierKind": [
                         148
                     ]
@@ -187,13 +404,23 @@
         },
         {
             "name": "ServersState",
-            "id": "interface-ServersState-1ce4bb1f2fdc258385df0e23a05e1486423020e8244ab794d57299e0fc371ee5aae38b23b93d11276317d9999f82148ae3a771b9dd7cdd5c70a6bc4439f52e1f",
+            "id": "interface-ServersState-a1b4ef543f8b85225b9ad4571018af0afef9c763ff7066045d7cebe82aa5913c0a4512e1f87cd00bcbd9d58f7abf384da6cdf03f2db5f60c30f9c48de80eec29",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n}\nexport interface IGateData {\n}\nexport interface IServerData {\n  serverName: string;\n  login: string;\n  password: string;\n  version: string;\n  timeToClose: Date;\n  timeAfterClose: Date;\n  status: boolean;\n  bots: IBotData[];\n  gates: IGateData[];\n}\nexport interface IEnvironmentData {\n  isSidebarOpen: boolean;\n}\n\nexport interface ServersState {\n  featureName: string;\n  serverListApi: string[];\n  serverListData: IServerData[];\n  environmentData: IEnvironmentData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'servers',\n  serverListApi: [],\n  serverListData: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.toggleSidebar, (state) => ({\n    ...state,\n    environmentData: {\n      ...state.environmentData,\n      isSidebarOpen: !state.environmentData.isSidebarOpen\n    }\n  })),\n);\n\n",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IBotData {\n  //Статусы для каждого бота:\n  //действующий\n  //остановлен по предназначению (Остановлен или закончил или остановили принудительно)\n  //остановлен из-за ошибки\n  //статус ожидает ответ от сервера\n  //статус пауза\n  //Статус выполнения\n  // сколько всего ошибок с момента запуска и какие они были\n  // поиск ошибки от и до заданных\n  path: 'server/:ip/tab/:tabId',\n  //actions для бота\n  //пауза/продолжить\n  //остановка/запуск\n  //перезапуск\n  //изменение настроек бота\n  //получить настройки бота\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // status: boolean;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n  // bots: IBotData[];\n}\n\n\n\nexport interface IServerData {\n  version: string;\n  status: boolean;\n  timestamp: Date;\n  bots: IBotData[];\n}\n\nexport interface IEnvironmentData {\n  isSidebarOpen: boolean;\n}\n\nexport interface IServer {\n  ip: string;\n  port: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  environmentData: IEnvironmentData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.0',\n        port: '8080',\n        name: 'testServer',\n      },\n    ],\n  },\n  serverListResponse: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.toggleSidebar, (state) => ({\n    ...state,\n    environmentData: {\n      ...state.environmentData,\n      isSidebarOpen: !state.environmentData.isSidebarOpen\n    }\n  })),\n);\n\n",
             "properties": [
+                {
+                    "name": "config",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "IConfig",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 77
+                },
                 {
                     "name": "environmentData",
                     "deprecated": false,
@@ -202,7 +429,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 29
+                    "line": 79
                 },
                 {
                     "name": "featureName",
@@ -212,27 +439,17 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 26
+                    "line": 76
                 },
                 {
-                    "name": "serverListApi",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string[]",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 27
-                },
-                {
-                    "name": "serverListData",
+                    "name": "serverListResponse",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "IServerData[]",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 28
+                    "line": 78
                 }
             ],
             "indexSignatures": [],
@@ -1045,7 +1262,7 @@
         },
         {
             "name": "AgGridServerData",
-            "id": "component-AgGridServerData-5228ff63240004da4bb8eb722f90b1e7302715b2706341b69688e842fa138214889c0cb872c8547a1db04901fcf270bef999be9484c96e5a384ad75e8fe912dd",
+            "id": "component-AgGridServerData-43f9d53024322b8191c3d98bcee7ffd385949c551dfb6ef7e80b742d6783ec698ab4aba570b2d9234358214f1ed19021b9bed8f6d9d2c67ca5f014f95ab4db58",
             "file": "src/app/components/ag-grid-server-data/ag-grid-server-data.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1075,7 +1292,7 @@
             "propertiesClass": [
                 {
                     "name": "colDefs",
-                    "defaultValue": "[\n    {\n      field: 'id',\n      headerName: 'ID',\n      width: 80,\n    },\n    {\n      field: 'authorizationData',\n      headerName: 'Authorization Data',\n      flex: 1,\n\n    },\n    {\n      field: 'version',\n      headerName: 'Version',\n      flex: 1,\n    },\n    {\n      headerName: 'Time To Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestamp;\n        return ts > Date.now() ? ts : null;\n      },\n    },\n    {\n      headerName: 'Time After Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestamp;\n        return ts < Date.now() ? ts : null;\n      },\n    },\n    {\n      field: 'bots',\n      headerName: 'Bots',\n      flex: 1,\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n  ]",
+                    "defaultValue": "[\n    {\n      field: 'id',\n      headerName: 'ID',\n      width: 80,\n    },\n    {\n      field: 'authorizationData',\n      headerName: 'Authorization Data',\n      flex: 1,\n\n    },\n    {\n      field: 'version',\n      headerName: 'Version',\n      flex: 1,\n    },\n    {\n      headerName: 'Time To Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestamp;\n        return ts > Date.now() ? ts : null;\n      },\n    },\n    {\n      headerName: 'Time After Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestamp;\n        return ts < Date.now() ? ts : null;\n      },\n    },\n    {\n      field: 'bots',\n      headerName: 'Bots',\n      flex: 1,\n      valueGetter: (params) => {\n        const bots = params.data?.bots;\n\n        if (Array.isArray(bots)) {\n          return bots.length;\n        }\n\n        return 0;\n      },\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n  ]",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "ColDef[]",
@@ -1093,7 +1310,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 70
+                    "line": 79
                 }
             ],
             "methodsClass": [],
@@ -1110,7 +1327,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, Input} from '@angular/core';\nimport {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';\nimport {TimerContainer} from '../../containers/ag-grid-containers/timer-container/timer-container';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-server-data',\n  imports: [AgGridAngular],\n  standalone: true,\n  templateUrl: './ag-grid-server-data.html',\n  styleUrl: './ag-grid-server-data.scss'\n})\nexport class AgGridServerData {\n  @Input() rowData: any[] = [];\n\n  colDefs: ColDef[] = [\n    {\n      field: 'id',\n      headerName: 'ID',\n      width: 80,\n    },\n    {\n      field: 'authorizationData',\n      headerName: 'Authorization Data',\n      flex: 1,\n\n    },\n    {\n      field: 'version',\n      headerName: 'Version',\n      flex: 1,\n    },\n    {\n      headerName: 'Time To Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestamp;\n        return ts > Date.now() ? ts : null;\n      },\n    },\n    {\n      headerName: 'Time After Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestamp;\n        return ts < Date.now() ? ts : null;\n      },\n    },\n    {\n      field: 'bots',\n      headerName: 'Bots',\n      flex: 1,\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n  };\n}\n",
+            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, Input} from '@angular/core';\nimport {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';\nimport {TimerContainer} from '../../containers/ag-grid-containers/timer-container/timer-container';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-server-data',\n  imports: [AgGridAngular],\n  standalone: true,\n  templateUrl: './ag-grid-server-data.html',\n  styleUrl: './ag-grid-server-data.scss'\n})\nexport class AgGridServerData {\n  @Input() rowData: any[] = [];\n\n  colDefs: ColDef[] = [\n    {\n      field: 'id',\n      headerName: 'ID',\n      width: 80,\n    },\n    {\n      field: 'authorizationData',\n      headerName: 'Authorization Data',\n      flex: 1,\n\n    },\n    {\n      field: 'version',\n      headerName: 'Version',\n      flex: 1,\n    },\n    {\n      headerName: 'Time To Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestamp;\n        return ts > Date.now() ? ts : null;\n      },\n    },\n    {\n      headerName: 'Time After Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestamp;\n        return ts < Date.now() ? ts : null;\n      },\n    },\n    {\n      field: 'bots',\n      headerName: 'Bots',\n      flex: 1,\n      valueGetter: (params) => {\n        const bots = params.data?.bots;\n\n        if (Array.isArray(bots)) {\n          return bots.length;\n        }\n\n        return 0;\n      },\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n  };\n}\n",
             "styleUrl": "./ag-grid-server-data.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -1174,7 +1391,7 @@
         },
         {
             "name": "App",
-            "id": "component-App-91e1e5bfbe74184e96f3d5fa56277ac685de4c64c14b864813ceaf1daf811ef58397e2f00981ba982042bdc73ff0b332d140beac6b5d6436bf671e21e0ae3d72",
+            "id": "component-App-8f2f19aa7641671ca9d2498027a663d527732f4273ff0dee2c944c2cf7bc4d65e2ddd567f0dda3e8072df269b462783332d10a6100b0b5b8bb3c692a6fe7238a",
             "file": "src/app/app.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -1201,7 +1418,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 13,
+                    "line": 12,
                     "modifierKind": [
                         124,
                         148
@@ -1217,21 +1434,18 @@
             "imports": [
                 {
                     "name": "QuoteWatcher"
-                },
-                {
-                    "name": "AgGridBotsControlContainer"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, signal } from '@angular/core';\nimport {QuoteWatcher} from './containers/quote-watcher/quote-watcher';\nimport {AgGridBotsControlContainer} from './containers/ag-grid-bots-control-container/ag-grid-bots-control-container';\n\n@Component({\n  selector: 'app-root',\n  imports: [QuoteWatcher, AgGridBotsControlContainer],\n  standalone: true,\n  templateUrl: './app.html',\n  styleUrl: './app.scss'\n})\nexport class App {\n  protected readonly title = signal('new-project-bot');\n}\n",
+            "sourceCode": "import { Component, signal } from '@angular/core';\nimport {QuoteWatcher} from './containers/quote-watcher/quote-watcher';\n\n@Component({\n  selector: 'app-root',\n  imports: [QuoteWatcher],\n  standalone: true,\n  templateUrl: './app.html',\n  styleUrl: './app.scss'\n})\nexport class App {\n  protected readonly title = signal('new-project-bot');\n}\n",
             "styleUrl": "./app.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<!--<app-quote-watcher></app-quote-watcher>-->\n<app-ag-grid-bots-control-container style=\"height: 100%\"></app-ag-grid-bots-control-container>\n"
+            "templateData": "<app-quote-watcher></app-quote-watcher>\n"
         },
         {
             "name": "BotEditForm",
@@ -3630,6 +3844,44 @@
             "templateData": "<app-timer\n  [displayTime]=\"displayTime\"\n  [isPast]=\"isPast\"\n>\n</app-timer>\n"
         },
         {
+            "name": "TitleContentLayout",
+            "id": "component-TitleContentLayout-1d5208eb46584f4feec80ef81e04dba4a7d7f413c25a7be20eb17d4a231aa1e6049e80f9e872ad6cb94565acbbcb13b4f0c17fcd15bbff09ec5adf670733747e",
+            "file": "src/app/components/title-content-layout/title-content-layout.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-title-content-layout",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./title-content-layout.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\n\n@Component({\n  selector: 'app-title-content-layout',\n  imports: [],\n  standalone: true,\n  templateUrl: './title-content-layout.html',\n  styleUrl: './title-content-layout.scss'\n})\nexport class TitleContentLayout {\n\n}\n",
+            "styleUrl": "./title-content-layout.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": ""
+        },
+        {
             "name": "Toggle",
             "id": "component-Toggle-2573d95bd223a2ca34104161552f0032235a70bdb6f84108f893978848ca6ee9030f58613148427b28acf6084f23b9d1045cdd2c90ce8463f6a5750202d4782f",
             "file": "src/app/components/ag-grid-components/toggle/toggle.ts",
@@ -3744,7 +3996,7 @@
         },
         {
             "name": "ToggleContainer",
-            "id": "component-ToggleContainer-7bf1dc0dd5b4c8de27fd06eaf4767f0b2eeaa6c56e0b7e9f20de7f0dfe7bfcbfa8503649909f3443daddf48c4d6e9cb57ed1765afbdeb5a25aa16965648c70b5",
+            "id": "component-ToggleContainer-7b49be91c0bcdcd93fc1814e05ecdd8602b5fd26ba2f47ec54e6140d8371e6beedad499d72af95c88822acfcc16a9156d2e8dc8c14a2ec0c6d823f466228c54b",
             "file": "src/app/containers/ag-grid-containers/toggle-container/toggle-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -3894,7 +4146,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\nimport {ICellRendererAngularComp} from 'ag-grid-angular';\nimport {Toggle} from '../../../components/ag-grid-components/toggle/toggle';\n\n@Component({\n  selector: 'app-toggle-container',\n  imports: [\n    Toggle\n  ],\n  standalone: true,\n  templateUrl: './toggle-container.html',\n  styleUrl: './toggle-container.scss'\n})\nexport class ToggleContainer implements ICellRendererAngularComp {\n  description: string = '';\n  params: any;\n  isChecked: boolean = false;\n\n  agInit(params: any): void {\n    this.params = params;\n    this.isChecked = !!params.value;\n  }\n\n  refresh(params: any): boolean {\n    this.agInit(params);\n    return true;\n  }\n\n  onToggleChange($event: any) {\n    // this.isChecked = $event.data;\n\n    // if (this.params?.node && this.params?.colDef?.field) {\n    //   this.params.node.setDataValue(this.params.colDef.field, newValue);\n    // }\n\n    if (this.params?.onAction) {\n      this.params.onAction(\n        {\n          event: $event.event,\n          newValue: $event.data,\n        },\n        this.params.data\n      );\n    }\n  }\n}\n",
+            "sourceCode": "import { Component } from '@angular/core';\nimport {ICellRendererAngularComp} from 'ag-grid-angular';\nimport {Toggle} from '../../../components/ag-grid-components/toggle/toggle';\n\n@Component({\n  selector: 'app-toggle-container',\n  imports: [\n    Toggle\n  ],\n  standalone: true,\n  templateUrl: './toggle-container.html',\n  styleUrl: './toggle-container.scss'\n})\nexport class ToggleContainer implements ICellRendererAngularComp {\n  description: string = '';\n  params: any;\n  isChecked: boolean = false;\n\n  agInit(params: any): void {\n    this.params = params;\n    this.isChecked = !!params.value;\n  }\n\n  refresh(params: any): boolean {\n    this.agInit(params);\n    return true;\n  }\n\n  onToggleChange($event: any) {\n    if (this.params?.onAction) {\n      this.params.onAction(\n        {\n          event: $event.event,\n          newValue: $event.data,\n        },\n        this.params.data\n      );\n    }\n  }\n}\n",
             "styleUrl": "./toggle-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -4244,7 +4496,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "ServersState",
-                "defaultValue": "{\n  featureName: 'servers',\n  serverListApi: [],\n  serverListData: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n}"
+                "defaultValue": "{\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.0',\n        port: '8080',\n        name: 'testServer',\n      },\n    ],\n  },\n  serverListResponse: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n}"
             },
             {
                 "name": "routes",
@@ -4294,7 +4546,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\n  {\n    id: 1,\n    authorizationData: 'AuthToken_XYZ',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 3,\n    bots: 2,\n    status: 'active',\n  }\n]"
+                "defaultValue": "[\n  {\n    id: 1,\n    authorizationData: 'AuthToken_XYZ',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 3,\n    bots: [\n      {\n        id: 'bot-1-1',\n        name: 'Trading Bot Alpha',\n        type: 'crypto_trading',\n        description: 'Main trading algorithm for BTC/USD',\n        gate: 'binance',\n        maxTimeRequest: 5000,\n        timeRequest: 1500,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      },\n      {\n        id: 'bot-1-2',\n        name: 'Data Collector Beta',\n        type: 'market_data',\n        description: 'Collects market depth information',\n        gate: 'kraken',\n        maxTimeRequest: 3000,\n        timeRequest: 800,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      }\n    ],\n    status: 'active',\n  }\n]"
             },
             {
                 "name": "serverStabs_2",
@@ -4304,7 +4556,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\n  {\n    id: 1,\n    authorizationData: 'AuthToken_XYZ',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 3,\n    bots: 2,\n    status: 'active',\n  },\n  {\n    id: 2,\n    authorizationData: 'AuthToken_ABC',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 90,\n    bots: 4,\n    status: 'closed',\n  },\n  {\n    id: 3,\n    authorizationData: 'AuthToken_DEF',\n    version: 'v1.0.4',\n    timestamp: Date.now() + 1000 * 60 * 10,\n    bots: 1,\n    status: 'pending',\n  },\n  {\n    id: 4,\n    authorizationData: 'AuthToken_GHI',\n    version: 'v1.0.1',\n    timestamp: Date.now() - 1000 * 60 * 5,\n    bots: 3,\n    status: 'error',\n  },\n  {\n    id: 5,\n    authorizationData: 'AuthToken_JKL',\n    version: 'v1.0.5',\n    timestamp: Date.now() + 1000 * 60 * 30,\n    bots: 5,\n    status: 'active',\n  },\n  {\n    id: 6,\n    authorizationData: 'AuthToken_MNO',\n    version: 'v1.0.0',\n    timestamp: Date.now() - 1000 * 60 * 60,\n    bots: 0,\n    status: 'error',\n  },\n  {\n    id: 7,\n    authorizationData: 'AuthToken_PQR',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 2,\n    bots: 2,\n    status: 'pending',\n  },\n  {\n    id: 8,\n    authorizationData: 'AuthToken_STU',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 60 * 15,\n    bots: 1,\n    status: 'closed',\n  }\n]"
+                "defaultValue": "[\n  {\n    id: 1,\n    authorizationData: 'AuthToken_XYZ',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 3,\n    bots: [\n      {\n        id: 'bot-2-1',\n        name: 'Arbitrage Scanner',\n        type: 'arbitrage',\n        description: 'Finds cross-exchange arbitrage opportunities',\n        gate: 'multiple',\n        maxTimeRequest: 10000,\n        timeRequest: 2500,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      },\n      {\n        id: 'bot-2-2',\n        name: 'Price Monitor',\n        type: 'price_tracking',\n        description: 'Tracks price movements across pairs',\n        gate: 'coinbase',\n        maxTimeRequest: 2000,\n        timeRequest: 500,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      }\n    ],\n    status: 'active',\n  },\n  {\n    id: 2,\n    authorizationData: 'AuthToken_ABC',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 90,\n    bots: [\n      {\n        id: 'bot-2-3',\n        name: 'Forex Parser Pro',\n        type: 'forex_parsing',\n        description: 'Real-time forex data collection',\n        gate: 'oanda',\n        maxTimeRequest: 4000,\n        timeRequest: 1200,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-2-4',\n        name: 'Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates trading signals based on technical analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-2-5',\n        name: 'Risk Manager',\n        type: 'risk_management',\n        description: 'Monitors portfolio risk levels',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-2-6',\n        name: 'Backtest Engine',\n        type: 'backtesting',\n        description: 'Runs historical strategy tests',\n        gate: 'local',\n        maxTimeRequest: 15000,\n        timeRequest: 4500,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'closed',\n  },\n  {\n    id: 3,\n    authorizationData: 'AuthToken_DEF',\n    version: 'v1.0.4',\n    timestamp: Date.now() + 1000 * 60 * 10,\n    bots: [\n      {\n        id: 'bot-3-1',\n        name: 'Liquidity Watcher',\n        type: 'liquidity_monitoring',\n        description: 'Monitors market liquidity depth',\n        gate: 'bitfinex',\n        maxTimeRequest: 3500,\n        timeRequest: 1100,\n        status: 'pending',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'pending',\n  },\n  {\n    id: 4,\n    authorizationData: 'AuthToken_GHI',\n    version: 'v1.0.1',\n    timestamp: Date.now() - 1000 * 60 * 5,\n    bots: [\n      {\n        id: 'bot-4-1',\n        name: 'Market Maker Pro',\n        type: 'market_making',\n        description: 'Automated market making strategy',\n        gate: 'kraken',\n        maxTimeRequest: 8000,\n        timeRequest: 2200,\n        status: 'error',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-4-2',\n        name: 'Order Book Analyzer',\n        type: 'order_book_analysis',\n        description: 'Analyzes order book dynamics',\n        gate: 'binance',\n        maxTimeRequest: 5000,\n        timeRequest: 1600,\n        status: 'error',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-4-3',\n        name: 'Volume Scanner',\n        type: 'volume_analysis',\n        description: 'Scans for unusual volume patterns',\n        gate: 'coinbase',\n        maxTimeRequest: 3000,\n        timeRequest: 950,\n        status: 'error',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'error',\n  },\n  {\n    id: 5,\n    authorizationData: 'AuthToken_JKL',\n    version: 'v1.0.5',\n    timestamp: Date.now() + 1000 * 60 * 30,\n    bots: [\n      {\n        id: 'bot-5-1',\n        name: 'Cross Exchange Trader',\n        type: 'cross_exchange',\n        description: 'Executes trades across multiple exchanges',\n        gate: 'multiple',\n        maxTimeRequest: 12000,\n        timeRequest: 3000,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      },\n      {\n        id: 'bot-5-2',\n        name: 'Derivatives Monitor',\n        type: 'derivatives_tracking',\n        description: 'Tracks futures and options markets',\n        gate: 'deribit',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      },\n      {\n        id: 'bot-5-3',\n        name: 'Yield Optimizer',\n        type: 'yield_farming',\n        description: 'Automates yield farming strategies',\n        gate: 'uniswap',\n        maxTimeRequest: 9000,\n        timeRequest: 2400,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      },\n      {\n        id: 'bot-5-4',\n        name: 'Lending Assistant',\n        type: 'lending_monitoring',\n        description: 'Monitors lending rates and opportunities',\n        gate: 'aave',\n        maxTimeRequest: 4000,\n        timeRequest: 1300,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      },\n      {\n        id: 'bot-5-5',\n        name: 'Portfolio Tracker',\n        type: 'portfolio_management',\n        description: 'Tracks portfolio performance across platforms',\n        gate: 'internal',\n        maxTimeRequest: 7000,\n        timeRequest: 2000,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      }\n    ],\n    status: 'active',\n  },\n  {\n    id: 6,\n    authorizationData: 'AuthToken_MNO',\n    version: 'v1.0.0',\n    timestamp: Date.now() - 1000 * 60 * 60,\n    bots: [],\n    status: 'error',\n  },\n  {\n    id: 7,\n    authorizationData: 'AuthToken_PQR',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 2,\n    bots: [\n      {\n        id: 'bot-7-1',\n        name: 'Technical Analyzer',\n        type: 'technical_analysis',\n        description: 'Performs advanced technical analysis',\n        gate: 'tradingview',\n        maxTimeRequest: 5500,\n        timeRequest: 1700,\n        status: 'pending',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-7-2',\n        name: 'Sentiment Tracker',\n        type: 'sentiment_analysis',\n        description: 'Analyzes market sentiment from social media',\n        gate: 'twitter',\n        maxTimeRequest: 8000,\n        timeRequest: 2600,\n        status: 'pending',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'pending',\n  },\n  {\n    id: 8,\n    authorizationData: 'AuthToken_STU',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 60 * 15,\n    bots: [\n      {\n        id: 'bot-8-1',\n        name: 'News Aggregator',\n        type: 'news_aggregation',\n        description: 'Collects and analyzes financial news',\n        gate: 'rss',\n        maxTimeRequest: 3000,\n        timeRequest: 1000,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'closed',\n  }\n]"
             },
             {
                 "name": "serverStabs_3",
@@ -4314,7 +4566,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\n  {\n    id: 1,\n    authorizationData: 'AuthToken_XYZ123',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 3,\n    bots: 2,\n    status: 'active',\n    type: 'crypto_trading'\n  },\n  {\n    id: 2,\n    authorizationData: 'AuthToken_ABC456',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 90,\n    bots: 4,\n    status: 'closed',\n    type: 'forex_parsing'\n  },\n  {\n    id: 3,\n    authorizationData: 'AuthToken_DEF789',\n    version: 'v1.0.4',\n    timestamp: Date.now() + 1000 * 60 * 10,\n    bots: 1,\n    status: 'pending',\n    type: 'arbitrage_detection'\n  },\n  {\n    id: 4,\n    authorizationData: 'AuthToken_GHI012',\n    version: 'v1.0.1',\n    timestamp: Date.now() - 1000 * 60 * 5,\n    bots: 3,\n    status: 'error',\n    type: 'market_making'\n  },\n  {\n    id: 5,\n    authorizationData: 'AuthToken_JKL345',\n    version: 'v1.0.5',\n    timestamp: Date.now() + 1000 * 60 * 30,\n    bots: 5,\n    status: 'active',\n    type: 'liquidity_monitoring'\n  },\n  {\n    id: 6,\n    authorizationData: 'AuthToken_MNO678',\n    version: 'v1.0.0',\n    timestamp: Date.now() - 1000 * 60 * 60,\n    bots: 0,\n    status: 'error',\n    type: 'price_tracking'\n  },\n  {\n    id: 7,\n    authorizationData: 'AuthToken_PQR901',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 2,\n    bots: 2,\n    status: 'pending',\n    type: 'volume_analysis'\n  },\n  {\n    id: 8,\n    authorizationData: 'AuthToken_STU234',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 60 * 15,\n    bots: 1,\n    status: 'closed',\n    type: 'order_book_parsing'\n  },\n  {\n    id: 9,\n    authorizationData: 'AuthToken_VWX567',\n    version: 'v1.1.0',\n    timestamp: Date.now() + 1000 * 60 * 45,\n    bots: 6,\n    status: 'active',\n    type: 'derivatives_trading'\n  },\n  {\n    id: 10,\n    authorizationData: 'AuthToken_YZA890',\n    version: 'v1.0.8',\n    timestamp: Date.now() - 1000 * 60 * 25,\n    bots: 2,\n    status: 'pending',\n    type: 'yield_farming'\n  },\n  {\n    id: 11,\n    authorizationData: 'AuthToken_BCD123',\n    version: 'v1.0.6',\n    timestamp: Date.now() + 1000 * 60 * 8,\n    bots: 3,\n    status: 'active',\n    type: 'lending_monitoring'\n  },\n  {\n    id: 12,\n    authorizationData: 'AuthToken_EFG456',\n    version: 'v1.0.7',\n    timestamp: Date.now() - 1000 * 60 * 40,\n    bots: 1,\n    status: 'closed',\n    type: 'cross_exchange'\n  },\n  {\n    id: 13,\n    authorizationData: 'AuthToken_HIJ789',\n    version: 'v1.0.9',\n    timestamp: Date.now() + 1000 * 60 * 12,\n    bots: 4,\n    status: 'pending',\n    type: 'risk_management'\n  },\n  {\n    id: 14,\n    authorizationData: 'AuthToken_KLM012',\n    version: 'v1.1.2',\n    timestamp: Date.now() - 1000 * 60 * 8,\n    bots: 2,\n    status: 'error',\n    type: 'portfolio_tracking'\n  },\n  {\n    id: 15,\n    authorizationData: 'AuthToken_NOP345',\n    version: 'v1.0.4',\n    timestamp: Date.now() + 1000 * 60 * 20,\n    bots: 3,\n    status: 'active',\n    type: 'technical_analysis'\n  },\n  {\n    id: 16,\n    authorizationData: 'AuthToken_QRS678',\n    version: 'v1.1.1',\n    timestamp: Date.now() - 1000 * 60 * 35,\n    bots: 1,\n    status: 'closed',\n    type: 'sentiment_analysis'\n  },\n  {\n    id: 17,\n    authorizationData: 'AuthToken_TUV901',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 5,\n    bots: 5,\n    status: 'pending',\n    type: 'news_aggregation'\n  },\n  {\n    id: 18,\n    authorizationData: 'AuthToken_WXY234',\n    version: 'v1.0.5',\n    timestamp: Date.now() - 1000 * 60 * 50,\n    bots: 2,\n    status: 'active',\n    type: 'api_monitoring'\n  },\n  {\n    id: 19,\n    authorizationData: 'AuthToken_ZAB567',\n    version: 'v1.1.3',\n    timestamp: Date.now() + 1000 * 60 * 15,\n    bots: 4,\n    status: 'pending',\n    type: 'blockchain_analytics'\n  },\n  {\n    id: 20,\n    authorizationData: 'AuthToken_CDE890',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 60 * 28,\n    bots: 3,\n    status: 'closed',\n    type: 'compliance_checking'\n  }\n]"
+                "defaultValue": "[\n  {\n    id: 1,\n    authorizationData: 'AuthToken_XYZ123',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 3,\n    bots: [\n      {\n        id: 'bot-s3-1',\n        name: 'Crypto Trader Pro',\n        type: 'crypto_trading',\n        description: 'Advanced crypto trading algorithm',\n        gate: 'binance',\n        maxTimeRequest: 5000,\n        timeRequest: 1500,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      },\n      {\n        id: 'bot-s3-2',\n        name: 'Market Data Collector',\n        type: 'market_data',\n        description: 'High-frequency market data collection',\n        gate: 'coinbase',\n        maxTimeRequest: 3000,\n        timeRequest: 800,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      }\n    ],\n    status: 'active',\n    type: 'crypto_trading'\n  },\n  {\n    id: 2,\n    authorizationData: 'AuthToken_ABC456',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 90,\n    bots: [\n      {\n        id: 'bot-s3-3',\n        name: 'Forex Data Miner',\n        type: 'forex_parsing',\n        description: 'Real-time forex market data parsing',\n        gate: 'oanda',\n        maxTimeRequest: 4000,\n        timeRequest: 1200,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-6',\n        name: 'Risk Calculator',\n        type: 'risk_management',\n        description: 'Calculates position risk for forex',\n        gate: 'local',\n        maxTimeRequest: 15000,\n        timeRequest: 4500,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'closed',\n    type: 'forex_parsing'\n  },\n  {\n    id: 3,\n    authorizationData: 'AuthToken_DEF789',\n    version: 'v1.0.4',\n    timestamp: Date.now() + 1000 * 60 * 10,\n    bots: [\n      {\n        id: 'bot-s3-6',\n        name: 'Risk Calculator',\n        type: 'risk_management',\n        description: 'Calculates position risk for forex',\n        gate: 'local',\n        maxTimeRequest: 15000,\n        timeRequest: 4500,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n    ],\n    status: 'pending',\n    type: 'arbitrage_detection'\n  },\n  {\n    id: 4,\n    authorizationData: 'AuthToken_GHI012',\n    version: 'v1.0.1',\n    timestamp: Date.now() - 1000 * 60 * 5,\n    bots: [{\n      id: 'bot-s3-6',\n      name: 'Risk Calculator',\n      type: 'risk_management',\n      description: 'Calculates position risk for forex',\n      gate: 'local',\n      maxTimeRequest: 15000,\n      timeRequest: 4500,\n      status: 'closed',\n      sendData: false,\n      isStarted: false\n    },\n      {\n        id: 'bot-s3-6',\n        name: 'Risk Calculator',\n        type: 'risk_management',\n        description: 'Calculates position risk for forex',\n        gate: 'local',\n        maxTimeRequest: 15000,\n        timeRequest: 4500,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n    ],\n    status: 'error',\n    type: 'market_making'\n  },\n  {\n    id: 5,\n    authorizationData: 'AuthToken_JKL345',\n    version: 'v1.0.5',\n    timestamp: Date.now() + 1000 * 60 * 30,\n    bots: [],\n    status: 'active',\n    type: 'liquidity_monitoring'\n  },\n  {\n    id: 6,\n    authorizationData: 'AuthToken_MNO678',\n    version: 'v1.0.0',\n    timestamp: Date.now() - 1000 * 60 * 60,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'error',\n    type: 'price_tracking'\n  },\n  {\n    id: 7,\n    authorizationData: 'AuthToken_PQR901',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 2,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'pending',\n    type: 'volume_analysis'\n  },\n  {\n    id: 8,\n    authorizationData: 'AuthToken_STU234',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 60 * 15,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'closed',\n    type: 'order_book_parsing'\n  },\n  {\n    id: 9,\n    authorizationData: 'AuthToken_VWX567',\n    version: 'v1.1.0',\n    timestamp: Date.now() + 1000 * 60 * 45,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'active',\n    type: 'derivatives_trading'\n  },\n  {\n    id: 10,\n    authorizationData: 'AuthToken_YZA890',\n    version: 'v1.0.8',\n    timestamp: Date.now() - 1000 * 60 * 25,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'pending',\n    type: 'yield_farming'\n  },\n  {\n    id: 11,\n    authorizationData: 'AuthToken_BCD123',\n    version: 'v1.0.6',\n    timestamp: Date.now() + 1000 * 60 * 8,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'active',\n    type: 'lending_monitoring'\n  },\n  {\n    id: 12,\n    authorizationData: 'AuthToken_EFG456',\n    version: 'v1.0.7',\n    timestamp: Date.now() - 1000 * 60 * 40,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'closed',\n    type: 'cross_exchange'\n  },\n  {\n    id: 13,\n    authorizationData: 'AuthToken_HIJ789',\n    version: 'v1.0.9',\n    timestamp: Date.now() + 1000 * 60 * 12,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n    ],\n    status: 'pending',\n    type: 'risk_management'\n  },\n  {\n    id: 14,\n    authorizationData: 'AuthToken_KLM012',\n    version: 'v1.1.2',\n    timestamp: Date.now() - 1000 * 60 * 8,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n    ],\n    status: 'error',\n    type: 'portfolio_tracking'\n  },\n  {\n    id: 15,\n    authorizationData: 'AuthToken_NOP345',\n    version: 'v1.0.4',\n    timestamp: Date.now() + 1000 * 60 * 20,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n    ],\n    status: 'active',\n    type: 'technical_analysis'\n  },\n  {\n    id: 16,\n    authorizationData: 'AuthToken_QRS678',\n    version: 'v1.1.1',\n    timestamp: Date.now() - 1000 * 60 * 35,\n    bots: [\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n    ],\n    status: 'closed',\n    type: 'sentiment_analysis'\n  },\n  {\n    id: 17,\n    authorizationData: 'AuthToken_TUV901',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 5,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n    ],\n    status: 'pending',\n    type: 'news_aggregation'\n  },\n  {\n    id: 18,\n    authorizationData: 'AuthToken_WXY234',\n    version: 'v1.0.5',\n    timestamp: Date.now() - 1000 * 60 * 50,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'active',\n    type: 'api_monitoring'\n  },\n  {\n    id: 19,\n    authorizationData: 'AuthToken_ZAB567',\n    version: 'v1.1.3',\n    timestamp: Date.now() + 1000 * 60 * 15,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'pending',\n    type: 'blockchain_analytics'\n  },\n  {\n    id: 20,\n    authorizationData: 'AuthToken_CDE890',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 60 * 28,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'closed',\n    type: 'compliance_checking'\n  }\n]"
             },
             {
                 "name": "toggleSidebar",
@@ -4472,7 +4724,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "ServersState",
-                    "defaultValue": "{\n  featureName: 'servers',\n  serverListApi: [],\n  serverListData: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n}"
+                    "defaultValue": "{\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.0',\n        port: '8080',\n        name: 'testServer',\n      },\n    ],\n  },\n  serverListResponse: [],\n  environmentData: {\n    isSidebarOpen: true,\n  }\n}"
                 },
                 {
                     "name": "SERVERS_FEATURE_KEY",
@@ -4516,7 +4768,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\n  {\n    id: 1,\n    authorizationData: 'AuthToken_XYZ',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 3,\n    bots: 2,\n    status: 'active',\n  }\n]"
+                    "defaultValue": "[\n  {\n    id: 1,\n    authorizationData: 'AuthToken_XYZ',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 3,\n    bots: [\n      {\n        id: 'bot-1-1',\n        name: 'Trading Bot Alpha',\n        type: 'crypto_trading',\n        description: 'Main trading algorithm for BTC/USD',\n        gate: 'binance',\n        maxTimeRequest: 5000,\n        timeRequest: 1500,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      },\n      {\n        id: 'bot-1-2',\n        name: 'Data Collector Beta',\n        type: 'market_data',\n        description: 'Collects market depth information',\n        gate: 'kraken',\n        maxTimeRequest: 3000,\n        timeRequest: 800,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      }\n    ],\n    status: 'active',\n  }\n]"
                 },
                 {
                     "name": "serverStabs_2",
@@ -4526,7 +4778,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\n  {\n    id: 1,\n    authorizationData: 'AuthToken_XYZ',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 3,\n    bots: 2,\n    status: 'active',\n  },\n  {\n    id: 2,\n    authorizationData: 'AuthToken_ABC',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 90,\n    bots: 4,\n    status: 'closed',\n  },\n  {\n    id: 3,\n    authorizationData: 'AuthToken_DEF',\n    version: 'v1.0.4',\n    timestamp: Date.now() + 1000 * 60 * 10,\n    bots: 1,\n    status: 'pending',\n  },\n  {\n    id: 4,\n    authorizationData: 'AuthToken_GHI',\n    version: 'v1.0.1',\n    timestamp: Date.now() - 1000 * 60 * 5,\n    bots: 3,\n    status: 'error',\n  },\n  {\n    id: 5,\n    authorizationData: 'AuthToken_JKL',\n    version: 'v1.0.5',\n    timestamp: Date.now() + 1000 * 60 * 30,\n    bots: 5,\n    status: 'active',\n  },\n  {\n    id: 6,\n    authorizationData: 'AuthToken_MNO',\n    version: 'v1.0.0',\n    timestamp: Date.now() - 1000 * 60 * 60,\n    bots: 0,\n    status: 'error',\n  },\n  {\n    id: 7,\n    authorizationData: 'AuthToken_PQR',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 2,\n    bots: 2,\n    status: 'pending',\n  },\n  {\n    id: 8,\n    authorizationData: 'AuthToken_STU',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 60 * 15,\n    bots: 1,\n    status: 'closed',\n  }\n]"
+                    "defaultValue": "[\n  {\n    id: 1,\n    authorizationData: 'AuthToken_XYZ',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 3,\n    bots: [\n      {\n        id: 'bot-2-1',\n        name: 'Arbitrage Scanner',\n        type: 'arbitrage',\n        description: 'Finds cross-exchange arbitrage opportunities',\n        gate: 'multiple',\n        maxTimeRequest: 10000,\n        timeRequest: 2500,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      },\n      {\n        id: 'bot-2-2',\n        name: 'Price Monitor',\n        type: 'price_tracking',\n        description: 'Tracks price movements across pairs',\n        gate: 'coinbase',\n        maxTimeRequest: 2000,\n        timeRequest: 500,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      }\n    ],\n    status: 'active',\n  },\n  {\n    id: 2,\n    authorizationData: 'AuthToken_ABC',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 90,\n    bots: [\n      {\n        id: 'bot-2-3',\n        name: 'Forex Parser Pro',\n        type: 'forex_parsing',\n        description: 'Real-time forex data collection',\n        gate: 'oanda',\n        maxTimeRequest: 4000,\n        timeRequest: 1200,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-2-4',\n        name: 'Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates trading signals based on technical analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-2-5',\n        name: 'Risk Manager',\n        type: 'risk_management',\n        description: 'Monitors portfolio risk levels',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-2-6',\n        name: 'Backtest Engine',\n        type: 'backtesting',\n        description: 'Runs historical strategy tests',\n        gate: 'local',\n        maxTimeRequest: 15000,\n        timeRequest: 4500,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'closed',\n  },\n  {\n    id: 3,\n    authorizationData: 'AuthToken_DEF',\n    version: 'v1.0.4',\n    timestamp: Date.now() + 1000 * 60 * 10,\n    bots: [\n      {\n        id: 'bot-3-1',\n        name: 'Liquidity Watcher',\n        type: 'liquidity_monitoring',\n        description: 'Monitors market liquidity depth',\n        gate: 'bitfinex',\n        maxTimeRequest: 3500,\n        timeRequest: 1100,\n        status: 'pending',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'pending',\n  },\n  {\n    id: 4,\n    authorizationData: 'AuthToken_GHI',\n    version: 'v1.0.1',\n    timestamp: Date.now() - 1000 * 60 * 5,\n    bots: [\n      {\n        id: 'bot-4-1',\n        name: 'Market Maker Pro',\n        type: 'market_making',\n        description: 'Automated market making strategy',\n        gate: 'kraken',\n        maxTimeRequest: 8000,\n        timeRequest: 2200,\n        status: 'error',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-4-2',\n        name: 'Order Book Analyzer',\n        type: 'order_book_analysis',\n        description: 'Analyzes order book dynamics',\n        gate: 'binance',\n        maxTimeRequest: 5000,\n        timeRequest: 1600,\n        status: 'error',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-4-3',\n        name: 'Volume Scanner',\n        type: 'volume_analysis',\n        description: 'Scans for unusual volume patterns',\n        gate: 'coinbase',\n        maxTimeRequest: 3000,\n        timeRequest: 950,\n        status: 'error',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'error',\n  },\n  {\n    id: 5,\n    authorizationData: 'AuthToken_JKL',\n    version: 'v1.0.5',\n    timestamp: Date.now() + 1000 * 60 * 30,\n    bots: [\n      {\n        id: 'bot-5-1',\n        name: 'Cross Exchange Trader',\n        type: 'cross_exchange',\n        description: 'Executes trades across multiple exchanges',\n        gate: 'multiple',\n        maxTimeRequest: 12000,\n        timeRequest: 3000,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      },\n      {\n        id: 'bot-5-2',\n        name: 'Derivatives Monitor',\n        type: 'derivatives_tracking',\n        description: 'Tracks futures and options markets',\n        gate: 'deribit',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      },\n      {\n        id: 'bot-5-3',\n        name: 'Yield Optimizer',\n        type: 'yield_farming',\n        description: 'Automates yield farming strategies',\n        gate: 'uniswap',\n        maxTimeRequest: 9000,\n        timeRequest: 2400,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      },\n      {\n        id: 'bot-5-4',\n        name: 'Lending Assistant',\n        type: 'lending_monitoring',\n        description: 'Monitors lending rates and opportunities',\n        gate: 'aave',\n        maxTimeRequest: 4000,\n        timeRequest: 1300,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      },\n      {\n        id: 'bot-5-5',\n        name: 'Portfolio Tracker',\n        type: 'portfolio_management',\n        description: 'Tracks portfolio performance across platforms',\n        gate: 'internal',\n        maxTimeRequest: 7000,\n        timeRequest: 2000,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      }\n    ],\n    status: 'active',\n  },\n  {\n    id: 6,\n    authorizationData: 'AuthToken_MNO',\n    version: 'v1.0.0',\n    timestamp: Date.now() - 1000 * 60 * 60,\n    bots: [],\n    status: 'error',\n  },\n  {\n    id: 7,\n    authorizationData: 'AuthToken_PQR',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 2,\n    bots: [\n      {\n        id: 'bot-7-1',\n        name: 'Technical Analyzer',\n        type: 'technical_analysis',\n        description: 'Performs advanced technical analysis',\n        gate: 'tradingview',\n        maxTimeRequest: 5500,\n        timeRequest: 1700,\n        status: 'pending',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-7-2',\n        name: 'Sentiment Tracker',\n        type: 'sentiment_analysis',\n        description: 'Analyzes market sentiment from social media',\n        gate: 'twitter',\n        maxTimeRequest: 8000,\n        timeRequest: 2600,\n        status: 'pending',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'pending',\n  },\n  {\n    id: 8,\n    authorizationData: 'AuthToken_STU',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 60 * 15,\n    bots: [\n      {\n        id: 'bot-8-1',\n        name: 'News Aggregator',\n        type: 'news_aggregation',\n        description: 'Collects and analyzes financial news',\n        gate: 'rss',\n        maxTimeRequest: 3000,\n        timeRequest: 1000,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'closed',\n  }\n]"
                 },
                 {
                     "name": "serverStabs_3",
@@ -4536,7 +4788,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\n  {\n    id: 1,\n    authorizationData: 'AuthToken_XYZ123',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 3,\n    bots: 2,\n    status: 'active',\n    type: 'crypto_trading'\n  },\n  {\n    id: 2,\n    authorizationData: 'AuthToken_ABC456',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 90,\n    bots: 4,\n    status: 'closed',\n    type: 'forex_parsing'\n  },\n  {\n    id: 3,\n    authorizationData: 'AuthToken_DEF789',\n    version: 'v1.0.4',\n    timestamp: Date.now() + 1000 * 60 * 10,\n    bots: 1,\n    status: 'pending',\n    type: 'arbitrage_detection'\n  },\n  {\n    id: 4,\n    authorizationData: 'AuthToken_GHI012',\n    version: 'v1.0.1',\n    timestamp: Date.now() - 1000 * 60 * 5,\n    bots: 3,\n    status: 'error',\n    type: 'market_making'\n  },\n  {\n    id: 5,\n    authorizationData: 'AuthToken_JKL345',\n    version: 'v1.0.5',\n    timestamp: Date.now() + 1000 * 60 * 30,\n    bots: 5,\n    status: 'active',\n    type: 'liquidity_monitoring'\n  },\n  {\n    id: 6,\n    authorizationData: 'AuthToken_MNO678',\n    version: 'v1.0.0',\n    timestamp: Date.now() - 1000 * 60 * 60,\n    bots: 0,\n    status: 'error',\n    type: 'price_tracking'\n  },\n  {\n    id: 7,\n    authorizationData: 'AuthToken_PQR901',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 2,\n    bots: 2,\n    status: 'pending',\n    type: 'volume_analysis'\n  },\n  {\n    id: 8,\n    authorizationData: 'AuthToken_STU234',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 60 * 15,\n    bots: 1,\n    status: 'closed',\n    type: 'order_book_parsing'\n  },\n  {\n    id: 9,\n    authorizationData: 'AuthToken_VWX567',\n    version: 'v1.1.0',\n    timestamp: Date.now() + 1000 * 60 * 45,\n    bots: 6,\n    status: 'active',\n    type: 'derivatives_trading'\n  },\n  {\n    id: 10,\n    authorizationData: 'AuthToken_YZA890',\n    version: 'v1.0.8',\n    timestamp: Date.now() - 1000 * 60 * 25,\n    bots: 2,\n    status: 'pending',\n    type: 'yield_farming'\n  },\n  {\n    id: 11,\n    authorizationData: 'AuthToken_BCD123',\n    version: 'v1.0.6',\n    timestamp: Date.now() + 1000 * 60 * 8,\n    bots: 3,\n    status: 'active',\n    type: 'lending_monitoring'\n  },\n  {\n    id: 12,\n    authorizationData: 'AuthToken_EFG456',\n    version: 'v1.0.7',\n    timestamp: Date.now() - 1000 * 60 * 40,\n    bots: 1,\n    status: 'closed',\n    type: 'cross_exchange'\n  },\n  {\n    id: 13,\n    authorizationData: 'AuthToken_HIJ789',\n    version: 'v1.0.9',\n    timestamp: Date.now() + 1000 * 60 * 12,\n    bots: 4,\n    status: 'pending',\n    type: 'risk_management'\n  },\n  {\n    id: 14,\n    authorizationData: 'AuthToken_KLM012',\n    version: 'v1.1.2',\n    timestamp: Date.now() - 1000 * 60 * 8,\n    bots: 2,\n    status: 'error',\n    type: 'portfolio_tracking'\n  },\n  {\n    id: 15,\n    authorizationData: 'AuthToken_NOP345',\n    version: 'v1.0.4',\n    timestamp: Date.now() + 1000 * 60 * 20,\n    bots: 3,\n    status: 'active',\n    type: 'technical_analysis'\n  },\n  {\n    id: 16,\n    authorizationData: 'AuthToken_QRS678',\n    version: 'v1.1.1',\n    timestamp: Date.now() - 1000 * 60 * 35,\n    bots: 1,\n    status: 'closed',\n    type: 'sentiment_analysis'\n  },\n  {\n    id: 17,\n    authorizationData: 'AuthToken_TUV901',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 5,\n    bots: 5,\n    status: 'pending',\n    type: 'news_aggregation'\n  },\n  {\n    id: 18,\n    authorizationData: 'AuthToken_WXY234',\n    version: 'v1.0.5',\n    timestamp: Date.now() - 1000 * 60 * 50,\n    bots: 2,\n    status: 'active',\n    type: 'api_monitoring'\n  },\n  {\n    id: 19,\n    authorizationData: 'AuthToken_ZAB567',\n    version: 'v1.1.3',\n    timestamp: Date.now() + 1000 * 60 * 15,\n    bots: 4,\n    status: 'pending',\n    type: 'blockchain_analytics'\n  },\n  {\n    id: 20,\n    authorizationData: 'AuthToken_CDE890',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 60 * 28,\n    bots: 3,\n    status: 'closed',\n    type: 'compliance_checking'\n  }\n]"
+                    "defaultValue": "[\n  {\n    id: 1,\n    authorizationData: 'AuthToken_XYZ123',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 3,\n    bots: [\n      {\n        id: 'bot-s3-1',\n        name: 'Crypto Trader Pro',\n        type: 'crypto_trading',\n        description: 'Advanced crypto trading algorithm',\n        gate: 'binance',\n        maxTimeRequest: 5000,\n        timeRequest: 1500,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      },\n      {\n        id: 'bot-s3-2',\n        name: 'Market Data Collector',\n        type: 'market_data',\n        description: 'High-frequency market data collection',\n        gate: 'coinbase',\n        maxTimeRequest: 3000,\n        timeRequest: 800,\n        status: 'active',\n        sendData: true,\n        isStarted: true\n      }\n    ],\n    status: 'active',\n    type: 'crypto_trading'\n  },\n  {\n    id: 2,\n    authorizationData: 'AuthToken_ABC456',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 90,\n    bots: [\n      {\n        id: 'bot-s3-3',\n        name: 'Forex Data Miner',\n        type: 'forex_parsing',\n        description: 'Real-time forex market data parsing',\n        gate: 'oanda',\n        maxTimeRequest: 4000,\n        timeRequest: 1200,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-6',\n        name: 'Risk Calculator',\n        type: 'risk_management',\n        description: 'Calculates position risk for forex',\n        gate: 'local',\n        maxTimeRequest: 15000,\n        timeRequest: 4500,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'closed',\n    type: 'forex_parsing'\n  },\n  {\n    id: 3,\n    authorizationData: 'AuthToken_DEF789',\n    version: 'v1.0.4',\n    timestamp: Date.now() + 1000 * 60 * 10,\n    bots: [\n      {\n        id: 'bot-s3-6',\n        name: 'Risk Calculator',\n        type: 'risk_management',\n        description: 'Calculates position risk for forex',\n        gate: 'local',\n        maxTimeRequest: 15000,\n        timeRequest: 4500,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n    ],\n    status: 'pending',\n    type: 'arbitrage_detection'\n  },\n  {\n    id: 4,\n    authorizationData: 'AuthToken_GHI012',\n    version: 'v1.0.1',\n    timestamp: Date.now() - 1000 * 60 * 5,\n    bots: [{\n      id: 'bot-s3-6',\n      name: 'Risk Calculator',\n      type: 'risk_management',\n      description: 'Calculates position risk for forex',\n      gate: 'local',\n      maxTimeRequest: 15000,\n      timeRequest: 4500,\n      status: 'closed',\n      sendData: false,\n      isStarted: false\n    },\n      {\n        id: 'bot-s3-6',\n        name: 'Risk Calculator',\n        type: 'risk_management',\n        description: 'Calculates position risk for forex',\n        gate: 'local',\n        maxTimeRequest: 15000,\n        timeRequest: 4500,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n    ],\n    status: 'error',\n    type: 'market_making'\n  },\n  {\n    id: 5,\n    authorizationData: 'AuthToken_JKL345',\n    version: 'v1.0.5',\n    timestamp: Date.now() + 1000 * 60 * 30,\n    bots: [],\n    status: 'active',\n    type: 'liquidity_monitoring'\n  },\n  {\n    id: 6,\n    authorizationData: 'AuthToken_MNO678',\n    version: 'v1.0.0',\n    timestamp: Date.now() - 1000 * 60 * 60,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'error',\n    type: 'price_tracking'\n  },\n  {\n    id: 7,\n    authorizationData: 'AuthToken_PQR901',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 2,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'pending',\n    type: 'volume_analysis'\n  },\n  {\n    id: 8,\n    authorizationData: 'AuthToken_STU234',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 60 * 15,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'closed',\n    type: 'order_book_parsing'\n  },\n  {\n    id: 9,\n    authorizationData: 'AuthToken_VWX567',\n    version: 'v1.1.0',\n    timestamp: Date.now() + 1000 * 60 * 45,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'active',\n    type: 'derivatives_trading'\n  },\n  {\n    id: 10,\n    authorizationData: 'AuthToken_YZA890',\n    version: 'v1.0.8',\n    timestamp: Date.now() - 1000 * 60 * 25,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'pending',\n    type: 'yield_farming'\n  },\n  {\n    id: 11,\n    authorizationData: 'AuthToken_BCD123',\n    version: 'v1.0.6',\n    timestamp: Date.now() + 1000 * 60 * 8,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'active',\n    type: 'lending_monitoring'\n  },\n  {\n    id: 12,\n    authorizationData: 'AuthToken_EFG456',\n    version: 'v1.0.7',\n    timestamp: Date.now() - 1000 * 60 * 40,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'closed',\n    type: 'cross_exchange'\n  },\n  {\n    id: 13,\n    authorizationData: 'AuthToken_HIJ789',\n    version: 'v1.0.9',\n    timestamp: Date.now() + 1000 * 60 * 12,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n    ],\n    status: 'pending',\n    type: 'risk_management'\n  },\n  {\n    id: 14,\n    authorizationData: 'AuthToken_KLM012',\n    version: 'v1.1.2',\n    timestamp: Date.now() - 1000 * 60 * 8,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n    ],\n    status: 'error',\n    type: 'portfolio_tracking'\n  },\n  {\n    id: 15,\n    authorizationData: 'AuthToken_NOP345',\n    version: 'v1.0.4',\n    timestamp: Date.now() + 1000 * 60 * 20,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n    ],\n    status: 'active',\n    type: 'technical_analysis'\n  },\n  {\n    id: 16,\n    authorizationData: 'AuthToken_QRS678',\n    version: 'v1.1.1',\n    timestamp: Date.now() - 1000 * 60 * 35,\n    bots: [\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n    ],\n    status: 'closed',\n    type: 'sentiment_analysis'\n  },\n  {\n    id: 17,\n    authorizationData: 'AuthToken_TUV901',\n    version: 'v1.0.3',\n    timestamp: Date.now() + 1000 * 60 * 5,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n    ],\n    status: 'pending',\n    type: 'news_aggregation'\n  },\n  {\n    id: 18,\n    authorizationData: 'AuthToken_WXY234',\n    version: 'v1.0.5',\n    timestamp: Date.now() - 1000 * 60 * 50,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'active',\n    type: 'api_monitoring'\n  },\n  {\n    id: 19,\n    authorizationData: 'AuthToken_ZAB567',\n    version: 'v1.1.3',\n    timestamp: Date.now() + 1000 * 60 * 15,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'pending',\n    type: 'blockchain_analytics'\n  },\n  {\n    id: 20,\n    authorizationData: 'AuthToken_CDE890',\n    version: 'v1.0.2',\n    timestamp: Date.now() - 1000 * 60 * 28,\n    bots: [\n      {\n        id: 'bot-s3-4',\n        name: 'Currency Analyzer',\n        type: 'forex_analysis',\n        description: 'Advanced currency pair analysis',\n        gate: 'mt4',\n        maxTimeRequest: 6000,\n        timeRequest: 1800,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      },\n      {\n        id: 'bot-s3-5',\n        name: 'Forex Signal Generator',\n        type: 'signal_generation',\n        description: 'Generates forex trading signals',\n        gate: 'internal',\n        maxTimeRequest: 3000,\n        timeRequest: 900,\n        status: 'closed',\n        sendData: false,\n        isStarted: false\n      }\n    ],\n    status: 'closed',\n    type: 'compliance_checking'\n  }\n]"
                 }
             ],
             "src/app/+state/servers/servers.actions.ts": [
@@ -4590,7 +4842,25 @@
                 "linktype": "interface",
                 "name": "IBotData",
                 "coveragePercent": 0,
-                "coverageCount": "0/1",
+                "coverageCount": "0/11",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.reducer.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IBotData",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.reducer.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IConfig",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
                 "status": "low"
             },
             {
@@ -4606,9 +4876,18 @@
                 "filePath": "src/app/+state/servers/servers.reducer.ts",
                 "type": "interface",
                 "linktype": "interface",
-                "name": "IGateData",
+                "name": "IServer",
                 "coveragePercent": 0,
-                "coverageCount": "0/1",
+                "coverageCount": "0/4",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.reducer.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IServerAuthData",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
                 "status": "low"
             },
             {
@@ -4617,7 +4896,16 @@
                 "linktype": "interface",
                 "name": "IServerData",
                 "coveragePercent": 0,
-                "coverageCount": "0/10",
+                "coverageCount": "0/5",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.reducer.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IServerDataResponse",
+                "coveragePercent": 0,
+                "coverageCount": "0/4",
                 "status": "low"
             },
             {
@@ -5024,6 +5312,15 @@
                 "name": "Tabs",
                 "coveragePercent": 0,
                 "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/title-content-layout/title-content-layout.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "TitleContentLayout",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
                 "status": "low"
             },
             {

@@ -29,7 +29,9 @@ export class SidebarContainer {
     if ($event.event === 'Sidebar:TOGGLE_CLICKED') {
       this.store.dispatch(toggleSidebar())
     } else if ($event.event === 'Sidebar:SET_ACTIVE_ITEM_CLICKED') {
-      this.router.navigate([$event.data.name]).then(r => console.log('tyda', r));
+      const ip = $event.data.ip;
+      const tabId = 0;
+      this.router.navigate([`/server/${ip}/tab/${tabId}`]).then(ip => console.log('IP:', ip));
     }
   }
 }

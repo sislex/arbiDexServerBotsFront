@@ -1,13 +1,15 @@
-:host {
+.title-content-layout {
   display: flex;
   flex-direction: column;
   height: 100%;
 
-  app-sidebar-container {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
+  .title {
+    align-self: center;
   }
 
+  .content {
+    display: flex;
+    flex: 1;
+    overflow: auto;
+  }
 }
-

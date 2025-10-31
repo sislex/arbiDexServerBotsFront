@@ -1,4 +1,4 @@
-$panel-open-width: 40%;
+$panel-open-width: 25%;
 $panel-closed-width: 48px;
 $panel-min-width: 100px;
 $transition-duration: 0.3s;
@@ -127,6 +127,8 @@ $border-color: #e0e0e0;
 }
 
 .main-content {
+  display: flex;
+  flex-direction: column;
   flex: 1;
   padding: 24px;
   background-color: white;

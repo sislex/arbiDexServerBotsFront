@@ -73,9 +73,9 @@ html, body {
 }
 
 app-root {
+  display: block;
   height: 100%;
-  display: flex;
-  flex-direction: column;
+  min-height: 100vh;
 }
 
 html {
@@ -108,4 +108,11 @@ body, .toolbar, .panel, mat-button-toggle, mat-toolbar {
 
 .align-right .ag-header-cell-label {
   justify-content: flex-end;
+}
+
+//reset global styles from angular-material
+.mat-mdc-tab-body-wrapper {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-direction: column;
 }

@@ -41,23 +41,27 @@ export class AgGridBotsControl {
     {
       field: "id",
       headerName: 'ID',
+      flex: 1,
     },
     {
       field: "gate",
       headerName: 'Gate',
+      flex: 1,
     },
     {
       field: "maxTimeRequest",
       headerName: 'Max Time Request(ms)',
+      flex: 1,
     },
     {
       field: "TimeRequest",
       headerName: 'Time Request(ms)',
+      flex: 1,
     },
     {
       field: 'status',
-      width: 80,
       headerName: 'Status',
+      width: 80,
       cellRenderer: IndicatorContainer,
       cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },
       headerClass: 'align-center little-width',
@@ -65,6 +69,8 @@ export class AgGridBotsControl {
     {
       field: "isSendData",
       headerName: 'Send Data',
+      minWidth: 80,
+      flex: 1,
       cellRenderer: ToggleContainer,
       cellRendererParams: {
         onAction: this.onAction.bind(this),
@@ -73,6 +79,7 @@ export class AgGridBotsControl {
     {
       field: "isStart",
       headerName: 'Start/Stop',
+      flex: 1,
       cellRenderer: LaunchControlContainer,
       cellRendererParams: {
         onAction: this.onAction.bind(this),
@@ -81,6 +88,7 @@ export class AgGridBotsControl {
     {
       field: "actions",
       headerName: 'Actions',
+      width: 125,
       cellRenderer: ActionsContainer,
       cellRendererParams: {
         onAction: this.onAction.bind(this),
@@ -94,6 +102,5 @@ export class AgGridBotsControl {
     headerClass: 'align-center',
     resizable: false,
     suppressMovable: true,
-    flex: 1
   };
 }

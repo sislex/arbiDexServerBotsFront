@@ -56,6 +56,15 @@ export class AgGridServerData {
       field: 'bots',
       headerName: 'Bots',
       flex: 1,
+      valueGetter: (params) => {
+        const bots = params.data?.bots;
+
+        if (Array.isArray(bots)) {
+          return bots.length;
+        }
+
+        return 0;
+      },
     },
     {
       field: 'status',
