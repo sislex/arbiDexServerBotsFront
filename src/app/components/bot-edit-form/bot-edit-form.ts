@@ -30,6 +30,17 @@ export class BotEditForm {
       },
     ]
   };
+  data2 = {
+    title: 'type',
+    list: [
+      {
+        label: '1type',
+      },
+      {
+        label: '2type',
+      },
+    ]
+  };
 
   events(event: any) {
     if (event.event === 'InputField:INPUT_CHANGED') {
