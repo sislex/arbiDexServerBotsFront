@@ -1,3 +1,7 @@
+:host {
+  height: 100%;
+}
+
 mat-toolbar{
   display: flex;
 }
@@ -6,8 +10,8 @@ mat-toolbar{
   display: flex;
   flex-direction: column;
   background: var(--main-back);
-  width: 500px;
-  height: 500px;
+  width: 100%;
+  height: 100%;
 
   .mat-mdc-button-touch-target {
     height: 24px !important;
@@ -35,9 +39,4 @@ mat-toolbar{
       }
     }
   }
-
 }
-
-
-
-

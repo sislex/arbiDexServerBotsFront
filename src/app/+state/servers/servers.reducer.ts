@@ -14,6 +14,11 @@ export interface IBotData {
   status: string;
   sendData: boolean;
   isStarted: boolean;
+
+  botJSON: string,
+  actionJSON: string,
+  actionTypeSelect: string,
+  botTypeSelect: string,
 }
 
 export interface IServerAuthData {
@@ -57,7 +62,7 @@ export interface IServerDataResponse { //то что приходит с док�
   // bots: IBotData[];
 }
 
-export interface IServerData {
+export interface IServerData { //то что отображаем
   version: string;
   status: boolean;
   timestamp: Date;
@@ -74,11 +79,20 @@ export interface IConfig {
   serverList: IServer[];
 }
 
+export interface ITypesList {
+  label: string;
+  type: string;
+  description: string;
+}
+
 export interface ServersState {
   featureName: string;
   config: IConfig;
   serverListResponse: IServerData[];
   environmentData: IEnvironmentData;
+  botTypesList: ITypesList[];
+  actionTypesList: ITypesList[];
+  activeBotData: IBotData[];
 }
 
 export interface ServersPartialState {
@@ -103,7 +117,10 @@ export const initialState: ServersState = {
     ip: '192.169.0.1',
     tabList: ['bots', 'gates', 'server data',],
     serverList: [{name: 'serv1', ip: '192.169.0.0'}, {name: 'serv2', ip: '192.169.0.1'}]
-  }
+  },
+  botTypesList: [],
+  actionTypesList: [],
+  activeBotData: [],
 };
 
 export const serversReducer = createReducer(

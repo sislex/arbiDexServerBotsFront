@@ -1,67 +1,31 @@
 <div class="row">
   <app-select-field
-    [menuData]="data"
-    [selected]=""
-    (emitter)="events($event)"
+    [menuData]="botList"
+    [selected]="formData.botTypeSelect"
+    (emitter)="events($event, 'botSelect')"
   ></app-select-field>
   <app-input-text-area
-    [title]="''"
+    [title]="botTitle"
     [label]="'Bot parameters'"
     [placeholder]="'Enter bot parameters JSON'"
-    [inputValue]="''"
-    (emitter)="events($event)"
+    [inputValue]="formData.botJSON"
+    (emitter)="events($event, 'botTextArea')"
   >
   </app-input-text-area>
 </div>
 
 <div class="row">
   <app-select-field
-    [menuData]="data2"
-    [selected]=""
-    (emitter)="events($event)"
+    [menuData]="actionList"
+    [selected]="formData.actionTypeSelect"
+    (emitter)="events($event, 'actionSelect')"
   ></app-select-field>
   <app-input-text-area
-    [title]="''"
+    [title]="actionTitle"
     [label]="'Action parameters'"
     [placeholder]="'Enter action parameters JSON'"
-    [inputValue]="''"
-    (emitter)="events($event)"
+    [inputValue]="formData.actionJSON"
+    (emitter)="events($event, 'actionTextArea')"
   >
   </app-input-text-area>
 </div>
-
-<!--<mat-divider></mat-divider>-->
-
-<!--<div class="row">-->
-<!--  <app-input-field-->
-<!--    [title]="'Max request time (ms)'"-->
-<!--    [label]="''"-->
-<!--    [placeholder]="''"-->
-<!--    [inputValue]="''"-->
-<!--    (emitter)="events($event)"-->
-<!--  >-->
-<!--  </app-input-field>-->
-<!--  <app-toggle-->
-<!--    [title]="'Send data'"-->
-<!--    [isChecked]="false"-->
-<!--    [description]="''"-->
-<!--    (emitter)="events($event)"-->
-<!--  ></app-toggle>-->
-<!--  <app-input-field-->
-<!--    [title]="'Answer API'"-->
-<!--    [label]="''"-->
-<!--    [placeholder]="''"-->
-<!--    [inputValue]="''"-->
-<!--    (emitter)="events($event)"-->
-<!--  >-->
-<!--  </app-input-field>-->
-<!--  <app-input-field-->
-<!--    [title]="'Max saved errors'"-->
-<!--    [label]="''"-->
-<!--    [placeholder]="''"-->
-<!--    [inputValue]="''"-->
-<!--    (emitter)="events($event)"-->
-<!--  >-->
-<!--  </app-input-field>-->
-<!--</div>-->
-

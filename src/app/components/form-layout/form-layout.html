@@ -6,9 +6,9 @@
       <mat-icon>close</mat-icon>
     </button>
   </mat-toolbar>
-
-  <ng-content class="form-settings" select="[form]"></ng-content>
-
+  <div class="form-settings">
+    <ng-content select="[form]"></ng-content>
+  </div>
   <div class="footer">
     <mat-toolbar>
       <span class="example-spacer"></span>

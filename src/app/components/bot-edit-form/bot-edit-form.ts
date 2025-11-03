@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {InputTextArea} from '../input-text-area/input-text-area';
 import {SelectField} from '../select-field/select-field';
 import {InputField} from '../input-field/input-field';
@@ -18,39 +18,57 @@ import {MatDividerModule} from '@angular/material/divider';
   templateUrl: './bot-edit-form.html',
   styleUrl: './bot-edit-form.scss'
 })
-export class BotEditForm {
-  data = {
-    title: 'type',
-    list: [
-      {
-        label: '1type',
-      },
-      {
-        label: '2type',
-      },
-    ]
-  };
-  data2 = {
-    title: 'type',
-    list: [
-      {
-        label: '1type',
-      },
-      {
-        label: '2type',
-      },
-    ]
+export class BotEditForm implements OnInit {
+  @Input() botList: any = {};
+  @Input() botTitle: string = '';
+
+  @Input() actionList: any = {};
+  @Input() actionTitle: string = '';
+
+  @Input() data: any = {};
+
+  @Output() emitter = new EventEmitter();
+
+  formData: any = {};
+
+  ngOnInit() {
+    this.formData = { ...this.data };
   };
 
-  events(event: any) {
+  events(event: any, note: string) {
     if (event.event === 'InputField:INPUT_CHANGED') {
       console.log(event.event, event.data);
     } else if (event.event === 'SelectField:ITEM_SELECTED') {
-      console.log(event.event, event.data);
+      if (note === 'botSelect') {
+        this.formData = {
+          ...this.formData,
+          botSelect: event.data.label
+        }
+      } else if (note === 'actionSelect') {
+        this.formData = {
+          ...this.formData,
+          actionSelect: event.data.label
+        }
+      }
     } else if (event.event === 'InputTextArea:INPUT_CHANGED') {
-      console.log(event.event, event.data);
+      if (note === 'botTextArea') {
+        this.formData = {
+          ...this.formData,
+          botJSON: event.data
+        }
+      } else if (note === 'actionTextArea') {
+        this.formData = {
+          ...this.formData,
+          actionJSON: event.data
+        }
+      }
     } else if (event.event === 'Toggle:TOGGLE_CHANGED') {
       console.log(event.event, event.data);
     }
+
+    this.emitter.emit({
+      event: 'BotEditForm:CHANGE_DATA',
+      data: this.formData
+    });
   }
 }

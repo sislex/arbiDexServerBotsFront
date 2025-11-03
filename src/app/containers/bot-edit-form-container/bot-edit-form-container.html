@@ -1,0 +1,15 @@
+<app-form-layout
+  [title]="data.title"
+  [itemData]="data.botData"
+  (emitter)="events($event)"
+>
+  <app-bot-edit-form
+    [botList]="data.botTypesList"
+    [actionList]="data.actionTypesList"
+    [data]="data.botData"
+
+    (emitter)="setData($event)"
+    form
+  >
+  </app-bot-edit-form>
+</app-form-layout>
