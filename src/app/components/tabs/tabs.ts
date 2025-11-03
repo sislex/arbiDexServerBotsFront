@@ -7,10 +7,12 @@ import {
 } from '../../containers/ag-grid-bots-control-container/ag-grid-bots-control-container';
 import {AgGridServerDataContainer} from '../../containers/ag-grid-server-data-container/ag-grid-server-data-container';
 import {AgGridGateListContainer} from '../../containers/ag-grid-gate-list-container/ag-grid-gate-list-container';
+import {AgGridBotListContainer} from '../../containers/ag-grid-bot-list-container/ag-grid-bot-list-container';
+import {AgGridActionListContainer} from '../../containers/ag-grid-action-list-container/ag-grid-action-list-container';
 
 @Component({
   selector: 'app-tabs',
-  imports: [MatTabsModule, TitleCasePipe, TitleContentLayout, AgGridBotsControlContainer, AgGridServerDataContainer, AgGridGateListContainer],
+  imports: [MatTabsModule, TitleCasePipe, TitleContentLayout, AgGridBotsControlContainer, AgGridServerDataContainer, AgGridGateListContainer, AgGridBotListContainer, AgGridActionListContainer],
   standalone: true,
   templateUrl: './tabs.html',
   styleUrl: './tabs.scss'

@@ -7,10 +7,14 @@ mat-tab-group {
   }
 }
 
-app-ag-grid-bots-control-container, app-ag-grid-gate-list-container, app-ag-grid-server-data-container {
+app-ag-grid-bots-control-container, app-ag-grid-gate-list-container {
   flex-direction: column;
   display: flex;
   flex: 1;
   width: 100%;
 }
 
+.server-page {
+  height: 100%;
+  width: 100%;
+}

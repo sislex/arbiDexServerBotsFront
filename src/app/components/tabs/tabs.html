@@ -9,7 +9,12 @@
         } @else if (item === 'gates') {
           <app-ag-grid-gate-list-container></app-ag-grid-gate-list-container>
         } @else if (item === 'server data') {
-          <app-ag-grid-server-data-container></app-ag-grid-server-data-container>
+          <div class="server-page">
+            <app-ag-grid-server-data-container></app-ag-grid-server-data-container>
+            <app-ag-grid-bot-list-container></app-ag-grid-bot-list-container>
+            <app-ag-grid-action-list-container></app-ag-grid-action-list-container>
+          </div>
+
         }
       </app-title-content-layout>
     </mat-tab>

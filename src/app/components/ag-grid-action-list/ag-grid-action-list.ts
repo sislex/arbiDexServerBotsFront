@@ -1,18 +1,17 @@
-import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
-import type { ColDef } from 'ag-grid-community';
-import { AgGridAngular } from 'ag-grid-angular';
 import {Component, Input} from '@angular/core';
-
-ModuleRegistry.registerModules([AllCommunityModule]);
+import type {ColDef} from 'ag-grid-community';
+import {AgGridAngular} from 'ag-grid-angular';
 
 @Component({
-  selector: 'app-ag-grid-bot-list',
-  imports: [AgGridAngular],
+  selector: 'app-ag-grid-action-list',
+  imports: [
+    AgGridAngular
+  ],
   standalone: true,
-  templateUrl: './ag-grid-bot-list.html',
-  styleUrl: './ag-grid-bot-list.scss'
+  templateUrl: './ag-grid-action-list.html',
+  styleUrl: './ag-grid-action-list.scss'
 })
-export class AgGridBotList {
+export class AgGridActionList {
   @Input() rowData: any[] = [];
 
   colDefs: ColDef[] = [
