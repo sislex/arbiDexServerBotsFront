@@ -34,7 +34,7 @@ export class ServersEffects {
           }
 
           // Вместо /server/info
-          const responseServerData = [{
+          const responseServerData = {
             ip: server.ip,
             port: server.port,
             version: server.version,
@@ -42,7 +42,7 @@ export class ServersEffects {
             timestampStart: server.timestampStart,
             status: server.status,
             botsControl: server.botsControl,
-          }];
+          };
           this.store.dispatch(setActiveServerData({ response: responseServerData }));
 
           // Вместо /server/types

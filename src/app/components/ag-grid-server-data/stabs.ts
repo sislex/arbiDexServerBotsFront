@@ -42,163 +42,164 @@ export const serverStabs_1 = {
 };
 
 export const serverStabs_2 = [
-  {
-    ip: '192.168.0.11',
+{
+  ip: '192.168.0.11',
     port: '6061',
-    version: '1.0.0',
-    status: 'active',
-    timestampFinish: 1902103200,
-    timestampStart: 1759494600,
-    botControl: [
-      {
-        id: 'bot-001',
-        name: 'Collector Bot',
-        type: 'collector',
-        description: 'Collects system data and metrics.',
-        gate: 'gate_alpha',
-        maxTimeRequest: 2500,
-        timeRequest: 1800,
-        status: 'active',
-        sendData: true,
-        isStarted: true,
-        botJSON: '{ "botName": "Collector" }',
-        actionJSON: '{ "action": "fetchData" }',
-        actionTypeSelect: 'fetch',
-        botTypeSelect: 'collector'
-      }
-    ]
-  },
+  version: '1.0.0',
+  status: 'active',
+  timestampFinish: 1902103200,
+  timestampStart: 1759494600,
+  botControl: [
   {
-    ip: '192.168.0.12',
-    port: '6062',
-    version: '1.2.1',
+    id: 'bot-001',
+    name: 'Collector Bot',
+    type: 'collector',
+    description: 'Collects system data and metrics.',
+    gate: 'gate_alpha',
+    maxTimeRequest: 2500,
+    timeRequest: 1800,
     status: 'active',
-    timestampFinish: 190220320,
-    timestampStart: 1759594600,
-    botControl: [
-      {
-        id: 'bot-002',
-        name: 'Monitor Bot',
-        type: 'monitor',
-        description: 'Monitors system performance.',
-        gate: 'gate_beta',
-        maxTimeRequest: 3000,
-        timeRequest: 2100,
-        status: 'inactive',
-        sendData: false,
-        isStarted: false,
-        botJSON: '{ "botName": "Monitor" }',
-        actionJSON: '{ "action": "checkStatus" }',
-        actionTypeSelect: 'status_check',
-        botTypeSelect: 'monitor'
-      }
-    ]
-  },
-  {
-    ip: '192.168.0.13',
-    port: '6063',
-    version: '2.0.0',
-    status: 'active',
-    timestampFinish: 1902303200,
-    timestampStart: 1759694600,
-    botControl: [
-      {
-        id: 'bot-003',
-        name: 'Analyzer Bot',
-        type: 'analyzer',
-        description: 'Analyzes collected metrics for anomalies.',
-        gate: 'gate_gamma',
-        maxTimeRequest: 2800,
-        timeRequest: 2200,
-        status: 'active',
-        sendData: true,
-        isStarted: true,
-        botJSON: '{ "botName": "Analyzer" }',
-        actionJSON: '{ "action": "analyzeData" }',
-        actionTypeSelect: 'analyze',
-        botTypeSelect: 'analyzer'
-      }
-    ]
-  },
-  {
-    ip: '192.168.0.14',
-    port: '6064',
-    version: '2.1.4',
-    status: 'active',
-    timestampFinish: 1902403200,
-    timestampStart: 1759794600,
-    botControl: [
-      {
-        id: 'bot-004',
-        name: 'Backup Bot',
-        type: 'backup',
-        description: 'Performs scheduled data backups.',
-        gate: 'gate_delta',
-        maxTimeRequest: 3500,
-        timeRequest: 2900,
-        status: 'active',
-        sendData: false,
-        isStarted: true,
-        botJSON: '{ "botName": "Backup" }',
-        actionJSON: '{ "action": "createBackup" }',
-        actionTypeSelect: 'backup',
-        botTypeSelect: 'backup'
-      }
-    ]
-  },
-  {
-    ip: '192.168.0.15',
-    port: '6065',
-    version: '3.0.0',
-    status: 'active',
-    timestampFinish: 1902503200,
-    timestampStart: 1759894600,
-    botControl: [
-      {
-        id: 'bot-005',
-        name: 'Notifier Bot',
-        type: 'notifier',
-        description: 'Sends alerts and notifications.',
-        gate: 'gate_epsilon',
-        maxTimeRequest: 2700,
-        timeRequest: 2000,
-        status: 'maintenance',
-        sendData: true,
-        isStarted: false,
-        botJSON: '{ "botName": "Notifier" }',
-        actionJSON: '{ "action": "sendAlert" }',
-        actionTypeSelect: 'alert',
-        botTypeSelect: 'notifier'
-      }
-    ]
-  },
-  {
-    ip: '192.168.0.15',
-    port: '6065',
-    version: '3.0.0',
-    status: 'active',
-    timestampFinish: 1902503200,
-    timestampStart: 1759894600,
-    botControl: [
-      {
-        id: 'bot-005',
-        name: 'Notifier Bot',
-        type: 'notifier',
-        description: 'Sends alerts and notifications.',
-        gate: 'gate_epsilon',
-        maxTimeRequest: 2700,
-        timeRequest: 2000,
-        status: 'maintenance',
-        sendData: true,
-        isStarted: false,
-        botJSON: '{ "botName": "Notifier" }',
-        actionJSON: '{ "action": "sendAlert" }',
-        actionTypeSelect: 'alert',
-        botTypeSelect: 'notifier'
-      }
-    ]
+    sendData: true,
+    isStarted: true,
+    botJSON: '{ "botName": "Collector" }',
+    actionJSON: '{ "action": "fetchData" }',
+    actionTypeSelect: 'fetch',
+    botTypeSelect: 'collector'
   }
-];
+]
+},
+{
+  ip: '192.168.0.12',
+    port: '6062',
+  version: '1.2.1',
+  status: 'active',
+  timestampFinish: 190220320,
+  timestampStart: 1759594600,
+  botControl: [
+  {
+    id: 'bot-002',
+    name: 'Monitor Bot',
+    type: 'monitor',
+    description: 'Monitors system performance.',
+    gate: 'gate_beta',
+    maxTimeRequest: 3000,
+    timeRequest: 2100,
+    status: 'inactive',
+    sendData: false,
+    isStarted: false,
+    botJSON: '{ "botName": "Monitor" }',
+    actionJSON: '{ "action": "checkStatus" }',
+    actionTypeSelect: 'status_check',
+    botTypeSelect: 'monitor'
+  }
+]
+},
+{
+  ip: '192.168.0.13',
+    port: '6063',
+  version: '2.0.0',
+  status: 'active',
+  timestampFinish: 1902303200,
+  timestampStart: 1759694600,
+  botControl: [
+  {
+    id: 'bot-003',
+    name: 'Analyzer Bot',
+    type: 'analyzer',
+    description: 'Analyzes collected metrics for anomalies.',
+    gate: 'gate_gamma',
+    maxTimeRequest: 2800,
+    timeRequest: 2200,
+    status: 'active',
+    sendData: true,
+    isStarted: true,
+    botJSON: '{ "botName": "Analyzer" }',
+    actionJSON: '{ "action": "analyzeData" }',
+    actionTypeSelect: 'analyze',
+    botTypeSelect: 'analyzer'
+  }
+]
+},
+{
+  ip: '192.168.0.14',
+    port: '6064',
+  version: '2.1.4',
+  status: 'active',
+  timestampFinish: 1902403200,
+  timestampStart: 1759794600,
+  botControl: [
+  {
+    id: 'bot-004',
+    name: 'Backup Bot',
+    type: 'backup',
+    description: 'Performs scheduled data backups.',
+    gate: 'gate_delta',
+    maxTimeRequest: 3500,
+    timeRequest: 2900,
+    status: 'active',
+    sendData: false,
+    isStarted: true,
+    botJSON: '{ "botName": "Backup" }',
+    actionJSON: '{ "action": "createBackup" }',
+    actionTypeSelect: 'backup',
+    botTypeSelect: 'backup'
+  }
+]
+},
+{
+  ip: '192.168.0.15',
+    port: '6065',
+  version: '3.0.0',
+  status: 'active',
+  timestampFinish: 1902503200,
+  timestampStart: 1759894600,
+  botControl: [
+  {
+    id: 'bot-005',
+    name: 'Notifier Bot',
+    type: 'notifier',
+    description: 'Sends alerts and notifications.',
+    gate: 'gate_epsilon',
+    maxTimeRequest: 2700,
+    timeRequest: 2000,
+    status: 'maintenance',
+    sendData: true,
+    isStarted: false,
+    botJSON: '{ "botName": "Notifier" }',
+    actionJSON: '{ "action": "sendAlert" }',
+    actionTypeSelect: 'alert',
+    botTypeSelect: 'notifier'
+  }
+]
+},
+{
+  ip: '192.168.0.15',
+    port: '6065',
+  version: '3.0.0',
+  status: 'active',
+  timestampFinish: 1902503200,
+  timestampStart: 1759894600,
+  botControl: [
+  {
+    id: 'bot-005',
+    name: 'Notifier Bot',
+    type: 'notifier',
+    description: 'Sends alerts and notifications.',
+    gate: 'gate_epsilon',
+    maxTimeRequest: 2700,
+    timeRequest: 2000,
+    status: 'maintenance',
+    sendData: true,
+    isStarted: false,
+    botJSON: '{ "botName": "Notifier" }',
+    actionJSON: '{ "action": "sendAlert" }',
+    actionTypeSelect: 'alert',
+    botTypeSelect: 'notifier'
+  }
+]
+}
+]
+
 
 export const serverStabs_3 = {
   ip: '192.168.0.10',

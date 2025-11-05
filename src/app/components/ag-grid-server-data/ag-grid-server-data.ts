@@ -4,6 +4,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 import {Component, Input} from '@angular/core';
 import {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';
 import {TimerContainer} from '../../containers/ag-grid-containers/timer-container/timer-container';
+import {IServerData} from '../../+state/servers/servers.reducer';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -15,19 +16,21 @@ ModuleRegistry.registerModules([AllCommunityModule]);
   styleUrl: './ag-grid-server-data.scss'
 })
 export class AgGridServerData {
-  @Input() rowData: any[] = [];
+  @Input() rowData: IServerData[] = [];
 
   colDefs: ColDef[] = [
     {
-      field: 'id',
-      headerName: 'ID',
-      width: 80,
+      field: 'ip',
+      headerName: 'IP',
+      flex: 1,
     },
     {
-      field: 'authorizationData',
       headerName: 'Authorization Data',
       flex: 1,
-
+      valueGetter:(params) => {
+        const authorizationData = params.data?.authorizationData;
+        return authorizationData || "-";
+      }
     },
     {
       field: 'version',
@@ -39,7 +42,7 @@ export class AgGridServerData {
       cellRenderer: TimerContainer,
       flex: 1,
       valueGetter: (params) => {
-        const ts = params.data?.timestamp;
+        const ts = params.data?.timestampFinish;
         return ts > Date.now() ? ts : null;
       },
     },
@@ -48,7 +51,7 @@ export class AgGridServerData {
       cellRenderer: TimerContainer,
       flex: 1,
       valueGetter: (params) => {
-        const ts = params.data?.timestamp;
+        const ts = params.data?.timestampFinish;
         return ts < Date.now() ? ts : null;
       },
     },
@@ -57,7 +60,7 @@ export class AgGridServerData {
       headerName: 'Bots',
       flex: 1,
       valueGetter: (params) => {
-        const bots = params.data?.bots;
+        const bots = params.data?.botControl;
 
         if (Array.isArray(bots)) {
           return bots.length;

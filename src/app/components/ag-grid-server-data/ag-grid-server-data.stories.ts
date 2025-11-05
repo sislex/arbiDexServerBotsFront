@@ -30,7 +30,7 @@ export const Base: Story = {};
 
 export const OneServer: Story = {
   args: {
-    rowData: serverStabs_1
+    rowData: [serverStabs_1],
   },
 };
 
@@ -42,6 +42,6 @@ export const ServersList: Story = {
 
 export const BigDataServersList: Story = {
   args: {
-    rowData: serverStabs_3,
+    rowData: [serverStabs_3],
   },
 };

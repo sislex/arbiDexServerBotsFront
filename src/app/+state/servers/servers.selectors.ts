@@ -46,5 +46,5 @@ export const getActionTypesList = createSelector(
 );
 export const getServerData = createSelector(
   selectFeature,
-  (state: ServersState) => [state.activeElementData.serverData]
+  (state: ServersState) => state.activeElementData?.serverData ? [state.activeElementData.serverData] : []
 );

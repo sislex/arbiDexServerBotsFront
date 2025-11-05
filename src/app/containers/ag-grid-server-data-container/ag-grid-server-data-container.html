@@ -1,3 +1,3 @@
-<app-ag-grid-server-data
-  [rowData]="serverData"
-></app-ag-grid-server-data>
+@if (serverData$ | async; as data) {
+  <app-ag-grid-server-data [rowData]="data"></app-ag-grid-server-data>
+}
