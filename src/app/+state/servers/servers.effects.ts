@@ -10,10 +10,12 @@ import {
   setGateList
 } from './servers.actions';
 import {serversStabs} from './stabs';
+import {ServerDataService} from '../../services/server-data.service';
 
 @Injectable()
 export class ServersEffects {
   private actions$ = inject(Actions);
+  private serverDataService = inject(ServerDataService);
   private store = inject(Store);
 
   setSelectedPlayerList$ = createEffect(
@@ -21,7 +23,18 @@ export class ServersEffects {
       this.actions$.pipe(
         ofType(setActiveServer),
         tap(({ ip, port }) => {
-          console.log('Активный сервер:', ip, port);
+          // console.log('Активный сервер:', ip, port);
+
+          this.serverDataService.getServerData().subscribe({
+            next: (response) => {
+              console.log('response', response)
+              // this.store.dispatch(getGameTypesSuccess({data: response.gameTypes}))
+            },
+            error: (error) => {
+              console.error('Error creating game:', error);
+              // this.store.dispatch(loadGameDataFailure({ error }));
+            }
+          });
 
           // Находим сервер из stab-данных
           const server = serversStabs.find(
@@ -56,11 +69,11 @@ export class ServersEffects {
           const responseGateList = server.gateList;
           this.store.dispatch(setGateList({ response: responseGateList }));
 
-          console.log('server', server)
-          console.log('responseServerData', responseServerData)
-          console.log('responseBotTypesList', responseBotTypesList)
-          console.log('responseActionTypesList', responseActionTypesList)
-          console.log('responseGateList', responseGateList)
+          // console.log('server', server)
+          // console.log('responseServerData', responseServerData)
+          // console.log('responseBotTypesList', responseBotTypesList)
+          // console.log('responseActionTypesList', responseActionTypesList)
+          // console.log('responseGateList', responseGateList)
         })
       ),
     { dispatch: false }

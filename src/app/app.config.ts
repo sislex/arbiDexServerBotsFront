@@ -17,10 +17,12 @@ import {ServersEffects} from './+state/servers/servers.effects';
 import {AgGridModule} from 'ag-grid-angular';
 import {ViewEffects} from './+state/view/view.effects';
 import {VIEW_FEATURE_KEY, viewReducer} from './+state/view/view.reducer';
+import {provideHttpClient} from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideHttpClient(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideState(SERVERS_FEATURE_KEY, serversReducer),
