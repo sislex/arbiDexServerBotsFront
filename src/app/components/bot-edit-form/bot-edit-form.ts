@@ -1,8 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {InputTextArea} from '../input-text-area/input-text-area';
 import {SelectField} from '../select-field/select-field';
-import {InputField} from '../input-field/input-field';
-import {Toggle} from '../ag-grid-components/toggle/toggle';
 import {MatDividerModule} from '@angular/material/divider';
 
 @Component({
@@ -10,8 +8,6 @@ import {MatDividerModule} from '@angular/material/divider';
   imports: [
     InputTextArea,
     SelectField,
-    InputField,
-    Toggle,
     MatDividerModule
   ],
   standalone: true,

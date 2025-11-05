@@ -1,7 +1,7 @@
 @if (menuData) {
   <button mat-button [matMenuTriggerFor]="menu">{{ menuData.title }}</button>
   <mat-menu #menu="matMenu">
-    @for (item of menuData?.list ?? []; track item) {
+    @for (item of menuData.list; track item) {
       <button mat-menu-item (click)="click(item)">{{ item.label }}</button>
     }
   </mat-menu>

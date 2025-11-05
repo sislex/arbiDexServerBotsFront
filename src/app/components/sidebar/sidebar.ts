@@ -39,10 +39,12 @@ export class Sidebar {
     });
   }
 
-  setActiveItem(ip: string) {
+  setActiveItem(value: any) {
+    const ipPort = value.ip + ':' + value.port
+
     this.emitter.emit({
       event: 'Sidebar:SET_ACTIVE_ITEM_CLICKED',
-      data: { ip },
+      data: { ipPort },
     });
   }
 

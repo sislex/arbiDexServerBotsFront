@@ -17,11 +17,20 @@ export const getTabList = createSelector(
 );
 export const getServerList = createSelector(
   selectFeature,
-  (state: ServersState) => state.environmentData.serverList
+  (state: ServersState) => state.config.serverList
 );
-export const getActiveServer = createSelector(
+export const getActiveServerIp = createSelector(
   selectFeature,
-  (state: ServersState) => state.environmentData.ip
+  (state: ServersState) => state.activeElementData.serverData.ip
+);
+export const getActiveServerPort = createSelector(
+  selectFeature,
+  (state: ServersState) => state.activeElementData.serverData.port
+);
+export const getActiveServerIpPort = createSelector(
+  getActiveServerIp,
+  getActiveServerPort,
+  (ip, port) => `${ip}:${port}`
 );
 export const getActiveTab = createSelector(
   selectFeature,
@@ -29,9 +38,13 @@ export const getActiveTab = createSelector(
 );
 export const getBotTypesList = createSelector(
   selectFeature,
-  (state: ServersState) => state.botTypesList
+  (state: ServersState) => state.activeElementData.botTypesList
 );
 export const getActionTypesList = createSelector(
   selectFeature,
-  (state: ServersState) => state.actionTypesList
+  (state: ServersState) => state.activeElementData.actionTypesList
+);
+export const getServerData = createSelector(
+  selectFeature,
+  (state: ServersState) => [state.activeElementData.serverData]
 );

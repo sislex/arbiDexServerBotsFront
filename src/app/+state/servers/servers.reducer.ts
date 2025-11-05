@@ -34,39 +34,21 @@ export interface IEnvironmentData {
   serverList: IServer[];
 }
 
-// export interface IBotData {
-//Статусы для каждого бота:
-//действующий
-//остановлен по предназначению (Остановлен или закончил или остановили принудительно)
-//остановлен из-за ошибки
-//статус ожидает ответ от сервера
-//статус пауза
-//Статус выполнения
-// сколько всего ошибок с момента запуска и какие они были
-// поиск ошибки от и до заданных
-// path: 'server/:ip/tab/:tabId',
-//actions для бота
-//пауза/продолжить
-//остановка/запуск
-//перезапуск
-//изменение настроек бота
-//получить настройки бота
-// }
-
 export interface IServerDataResponse { //то что приходит с докера = сервера
   version: string;
   startDate: Date;
-  // status: boolean;
   // timestamp: Date; //выносим в машинный интерфейс.
   botsList: IBotData[];
-  // bots: IBotData[];
 }
 
 export interface IServerData { //то что отображаем
+  ip: string;
+  port: string;
   version: string;
-  status: boolean;
-  timestamp: Date;
-  bots: IBotData[];
+  status: string;
+  timestampFinish: number;
+  timestampStart: number;
+  botControl: IBotData[];
 }
 
 export interface IServer {
@@ -80,9 +62,22 @@ export interface IConfig {
 }
 
 export interface ITypesList {
+  id: string;
   label: string;
   type: string;
   description: string;
+}
+
+export interface GateItem {
+  ip: string;
+  name: string;
+}
+
+export interface IActiveElementData {
+  serverData: IServerData;
+  botTypesList: ITypesList[];
+  actionTypesList: ITypesList[];
+  gateList: GateItem[];
 }
 
 export interface ServersState {
@@ -90,9 +85,8 @@ export interface ServersState {
   config: IConfig;
   serverListResponse: IServerData[];
   environmentData: IEnvironmentData;
-  botTypesList: ITypesList[];
-  actionTypesList: ITypesList[];
   activeBotData: IBotData[];
+  activeElementData: IActiveElementData;
 }
 
 export interface ServersPartialState {
@@ -105,8 +99,18 @@ export const initialState: ServersState = {
     serverList: [
       {
         ip: '192.169.0.0',
-        port: '8080',
-        name: 'testServer',
+        port: '6060',
+        name: 'test_Server_1',
+      },
+      {
+        ip: '192.169.0.1',
+        port: '6060',
+        name: 'test_Server_2',
+      },
+      {
+        ip: '192.169.0.3',
+        port: '6060',
+        name: 'test_Server_3',
       },
     ],
   },
@@ -118,9 +122,21 @@ export const initialState: ServersState = {
     tabList: ['bots', 'gates', 'server data',],
     serverList: [{name: 'serv1', ip: '192.169.0.0'}, {name: 'serv2', ip: '192.169.0.1'}]
   },
-  botTypesList: [],
-  actionTypesList: [],
   activeBotData: [],
+  activeElementData: {
+    serverData: {
+      ip: '',
+      port: '',
+      version: '',
+      status: 'active',
+      timestampFinish: 0,
+      timestampStart: 0,
+      botControl: []
+    },
+    botTypesList: [],
+    actionTypesList: [],
+    gateList: [],
+  },
 };
 
 export const serversReducer = createReducer(
@@ -144,6 +160,34 @@ export const serversReducer = createReducer(
     environmentData: {
       ...state.environmentData,
       activeTab: tab
+    }
+  })),
+  on(ServersActions.setActiveServerData, (state, {response}) => ({
+    ...state,
+    activeElementData: {
+      ...state.activeElementData,
+      serverData: response
+    }
+  })),
+  on(ServersActions.setBotTypesList, (state, {response}) => ({
+    ...state,
+    activeElementData: {
+      ...state.activeElementData,
+      botTypesList: response
+    }
+  })),
+  on(ServersActions.setActionTypesList, (state, {response}) => ({
+    ...state,
+    activeElementData: {
+      ...state.activeElementData,
+      actionTypesList: response
+    }
+  })),
+  on(ServersActions.setGateList, (state, {response}) => ({
+    ...state,
+    activeElementData: {
+      ...state.activeElementData,
+      gateList: response
     }
   })),
 );

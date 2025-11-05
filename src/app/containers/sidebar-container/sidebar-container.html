@@ -2,7 +2,7 @@
   [sidebarTitle]="(featureName$ | async)!"
   [isSidebarOpen]="(isSidebarOpen$ | async)!"
   [list]="(serverList$ | async)!"
-  [activeItem]="(activeServer$ | async)!"
+  [activeItem]="(ipPort$ | async)!"
   (emitter)="events($event)"
 >
   <app-tabs-container main></app-tabs-container>
