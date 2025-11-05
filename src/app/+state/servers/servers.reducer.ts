@@ -31,7 +31,6 @@ export interface IEnvironmentData {
   activeTab: string;
   ip: string;
   tabList: string[];
-  serverList: IServer[];
 }
 
 export interface IServerDataResponse { //то что приходит с докера = сервера
@@ -48,7 +47,7 @@ export interface IServerData { //то что отображаем
   status: string;
   timestampFinish: number;
   timestampStart: number;
-  botControl: IBotData[];
+  botsCount: number;
 }
 
 export interface IServer {
@@ -112,6 +111,11 @@ export const initialState: ServersState = {
         port: '6060',
         name: 'test_Server_3',
       },
+      {
+        ip: '45.135.182.251',
+        port: '1001',
+        name: 'FIRST_REAL_SERVER',
+      },
     ],
   },
   serverListResponse: [],
@@ -120,7 +124,6 @@ export const initialState: ServersState = {
     activeTab: 'bots',
     ip: '192.169.0.1',
     tabList: ['bots', 'gates', 'server data',],
-    serverList: [{name: 'serv1', ip: '192.169.0.0'}, {name: 'serv2', ip: '192.169.0.1'}]
   },
   activeBotData: [],
   activeElementData: {
@@ -131,7 +134,7 @@ export const initialState: ServersState = {
       status: 'active',
       timestampFinish: 0,
       timestampStart: 0,
-      botControl: []
+      botsCount: 0
     },
     botTypesList: [],
     actionTypesList: [],
