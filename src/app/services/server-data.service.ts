@@ -12,5 +12,11 @@ export class ServerDataService {
   getServerData(): Observable<any> {
     return this.http.get(`/api/info`);
   }
+  getBotTypesList(): Observable<any> {
+    return this.http.get(`/api/info/bots-types-list`);
+  }
+  getActionTypesList(): Observable<any> {
+    return this.http.get(`/api/info/bots-actions-list`);
+  }
 }
 

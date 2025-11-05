@@ -43,8 +43,8 @@ export class SidebarContainer implements OnInit {
 
       if (ipPort && tabId !== null) {
         const [ip, port] = ipPort.split(':');
-        this.store.dispatch(setActiveServer({ ip, port }));
         this.store.dispatch(setActiveTab({ tab: tabId }));
+        this.store.dispatch(setActiveServer({ ip, port }));
       }
     });
   }
