@@ -5,11 +5,10 @@ import { AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import {
   getActiveServerIpPort,
-  getActiveTab,
-  getTabList
 } from '../../+state/servers/servers.selectors';
-import { setActiveTab } from '../../+state/servers/servers.actions';
 import {take} from 'rxjs';
+import {getActiveTab, getTabList} from '../../+state/view/view.selectors';
+import {setActiveTab} from '../../+state/view/view.actions';
 
 @Component({
   selector: 'app-tabs-container',
@@ -24,8 +23,6 @@ export class TabsContainer {
 
   activeTab$ = this.store.select(getActiveTab);
   tabList$ = this.store.select(getTabList);
-  // ip$ = this.store.select(getActiveServerIp);
-  // port$ = this.store.select(getActiveServerPort);
   ipPort$ = this.store.select(getActiveServerIpPort);
 
   events($event: any) {
@@ -33,14 +30,6 @@ export class TabsContainer {
       const tab = $event.data;
 
       this.store.dispatch(setActiveTab({ tab }));
-
-      // combineLatest([this.ip$, this.port$])
-      //   .pipe(take(1))
-      //   .subscribe(([ip, port]) => {
-      //     if (ip && port) {
-      //       this.router.navigate([`/server/${ip}:${port}/tab/${tab}`]);
-      //     }
-      //   });
 
       this.ipPort$.pipe(take(1)).subscribe(ipPort => {
         if (ipPort) {

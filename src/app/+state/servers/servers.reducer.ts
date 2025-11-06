@@ -26,13 +26,6 @@ export interface IServerAuthData {
   password: string;
 }
 
-export interface IEnvironmentData {
-  isSidebarOpen: boolean;
-  activeTab: string;
-  ip: string;
-  tabList: string[];
-}
-
 export interface IServerDataResponse { //то что приходит с докера = сервера
   version: string;
   startDate: Date;
@@ -101,7 +94,6 @@ export interface ServersState {
   featureName: string;
   config: IConfig;
   serverListResponse: IServerData[];
-  environmentData: IEnvironmentData;
   activeBotData: IBotData[];
   activeElementData: IActiveElementData;
 }
@@ -115,19 +107,9 @@ export const initialState: ServersState = {
   config: {
     serverList: [
       {
-        ip: '192.169.0.0',
-        port: '6060',
-        name: 'test_Server_1',
-      },
-      {
-        ip: '192.169.0.1',
-        port: '6060',
-        name: 'test_Server_2',
-      },
-      {
         ip: '192.169.0.3',
         port: '6060',
-        name: 'test_Server_3',
+        name: 'UNREAL_SERVER',
       },
       {
         ip: '45.135.182.251',
@@ -137,12 +119,6 @@ export const initialState: ServersState = {
     ],
   },
   serverListResponse: [],
-  environmentData: {
-    isSidebarOpen: true,
-    activeTab: 'bots',
-    ip: '192.169.0.1',
-    tabList: ['bots', 'gates', 'server data',],
-  },
   activeBotData: [],
   activeElementData: {
     serverData: {
@@ -163,27 +139,6 @@ export const initialState: ServersState = {
 
 export const serversReducer = createReducer(
   initialState,
-  on(ServersActions.toggleSidebar, (state) => ({
-    ...state,
-    environmentData: {
-      ...state.environmentData,
-      isSidebarOpen: !state.environmentData.isSidebarOpen
-    }
-  })),
-  on(ServersActions.setActiveServer, (state, {ip}) => ({
-    ...state,
-    environmentData: {
-      ...state.environmentData,
-      ip: ip
-    }
-  })),
-  on(ServersActions.setActiveTab, (state, {tab}) => ({
-    ...state,
-    environmentData: {
-      ...state.environmentData,
-      activeTab: tab
-    }
-  })),
   on(ServersActions.setActiveServerData, (state, {response}) => ({
     ...state,
     activeElementData: {

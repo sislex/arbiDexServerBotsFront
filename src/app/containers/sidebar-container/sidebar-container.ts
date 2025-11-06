@@ -3,16 +3,16 @@ import {Sidebar} from '../../components/sidebar/sidebar';
 import {Store} from '@ngrx/store';
 import {
   getActiveServerIpPort,
-  getActiveTab,
   getFeatureName,
-  getIsSidebarOpen,
   getServerList
 } from '../../+state/servers/servers.selectors';
 import {AsyncPipe} from '@angular/common';
 import {TabsContainer} from '../tabs-container/tabs-container';
-import {setActiveServer, setActiveTab, toggleSidebar} from '../../+state/servers/servers.actions';
+import {setActiveServer} from '../../+state/servers/servers.actions';
 import {ActivatedRoute, Router} from '@angular/router';
 import {take} from 'rxjs';
+import {getActiveTab, getIsSidebarOpen} from '../../+state/view/view.selectors';
+import {setActiveTab, toggleSidebar} from '../../+state/view/view.actions';
 
 @Component({
   selector: 'app-sidebar-container',

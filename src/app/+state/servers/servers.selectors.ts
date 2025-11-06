@@ -7,14 +7,6 @@ export const getFeatureName = createSelector(
   selectFeature,
   (state: ServersState) => state.featureName
 );
-export const getIsSidebarOpen = createSelector(
-  selectFeature,
-  (state: ServersState) => state.environmentData.isSidebarOpen
-);
-export const getTabList = createSelector(
-  selectFeature,
-  (state: ServersState) => state.environmentData.tabList
-);
 export const getServerList = createSelector(
   selectFeature,
   (state: ServersState) => state.config.serverList
@@ -31,10 +23,6 @@ export const getActiveServerIpPort = createSelector(
   getActiveServerIp,
   getActiveServerPort,
   (ip, port) => `${ip}:${port}`
-);
-export const getActiveTab = createSelector(
-  selectFeature,
-  (state: ServersState) => state.environmentData.activeTab
 );
 export const getBotsControlList = createSelector(
   selectFeature,

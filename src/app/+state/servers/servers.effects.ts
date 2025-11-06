@@ -9,7 +9,7 @@ import {
   setBotTypesList,
 } from './servers.actions';
 import {ServerDataService} from '../../services/server-data.service';
-import {getActiveTab} from './servers.selectors';
+import {getActiveTab} from '../view/view.selectors';
 
 @Injectable()
 export class ServersEffects {
@@ -39,7 +39,7 @@ export class ServersEffects {
                 this.store.dispatch(setActiveServerData({ response: responseServerData }));
               },
               error: (error) => {
-                console.error('Error creating game:', error);
+                console.error('Error loading server data:', error);
               }
             });
 
@@ -75,11 +75,11 @@ export class ServersEffects {
 
                   this.store.dispatch(setActionTypesList({ response: responseActionTypesList }));
                 } else {
-                  console.warn('getBotTypesList: expected an array, but it arrived:', response);
+                  console.warn('getActionTypesList: expected an array, but it arrived:', response);
                 }
               },
               error: (error) => {
-                console.error('Error creating game:', error);
+                console.error('Error loading action types:', error);
               }
             });
           } else if (activeTab === 'bots') {
@@ -101,11 +101,11 @@ export class ServersEffects {
 
                   this.store.dispatch(setBotControlList({ response: responseBotControlList }));
                 } else {
-                  console.warn('getBotTypesList: expected an array, but it arrived:', response);
+                  console.warn('getBotsControl: expected an array, but it arrived:', response);
                 }
               },
               error: (error) => {
-                console.error('Error creating game:', error);
+                console.error('Error loading bot control list:', error);
               }
             });
 
