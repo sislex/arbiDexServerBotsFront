@@ -9,5 +9,5 @@ import {QuoteWatcher} from './containers/quote-watcher/quote-watcher';
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('new-project-bot');
+  protected readonly title = signal('arbi-dex-server-bots-front');
 }

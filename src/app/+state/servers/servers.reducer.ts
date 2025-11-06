@@ -174,5 +174,16 @@ export const serversReducer = createReducer(
       botControlList: response
     }
   })),
+  // on(ServersActions.setActiveServer, (state, {ip, port}) => ({
+  //   ...state,
+  //   activeElementData: {
+  //     ...state.activeElementData,
+  //     serverData: {
+  //       ...state.activeElementData.serverData,
+  //       ip: ip,
+  //       port: port,
+  //     }
+  //   }
+  // })),
 );
 

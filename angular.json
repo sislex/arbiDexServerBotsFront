@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "new-project-bot": {
+    "arbi-dex-server-bots-front": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {

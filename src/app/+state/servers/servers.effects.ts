@@ -36,6 +36,7 @@ export class ServersEffects {
                   status: 'active',
                   botsCount: response.botsCount,
                 };
+                console.log('вызов')
                 this.store.dispatch(setActiveServerData({ response: responseServerData }));
               },
               error: (error) => {
