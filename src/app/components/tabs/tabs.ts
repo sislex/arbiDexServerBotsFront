@@ -9,10 +9,11 @@ import {AgGridServerDataContainer} from '../../containers/ag-grid-server-data-co
 import {AgGridGateListContainer} from '../../containers/ag-grid-gate-list-container/ag-grid-gate-list-container';
 import {AgGridBotListContainer} from '../../containers/ag-grid-bot-list-container/ag-grid-bot-list-container';
 import {AgGridActionListContainer} from '../../containers/ag-grid-action-list-container/ag-grid-action-list-container';
+import {TitleTableLayout} from '../title-table-layout/title-table-layout';
 
 @Component({
   selector: 'app-tabs',
-  imports: [MatTabsModule, TitleCasePipe, TitleContentLayout, AgGridBotsControlContainer, AgGridServerDataContainer, AgGridGateListContainer, AgGridBotListContainer, AgGridActionListContainer],
+  imports: [MatTabsModule, TitleCasePipe, TitleContentLayout, AgGridBotsControlContainer, AgGridServerDataContainer, AgGridGateListContainer, AgGridBotListContainer, AgGridActionListContainer, TitleTableLayout],
   standalone: true,
   templateUrl: './tabs.html',
   styleUrl: './tabs.scss'

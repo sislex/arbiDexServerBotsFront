@@ -10,9 +10,15 @@
           <app-ag-grid-gate-list-container></app-ag-grid-gate-list-container>
         } @else if (item === 'server data') {
           <div class="server-page">
-            <app-ag-grid-server-data-container></app-ag-grid-server-data-container>
-            <app-ag-grid-bot-list-container></app-ag-grid-bot-list-container>
-            <app-ag-grid-action-list-container></app-ag-grid-action-list-container>
+            <app-title-table-layout [title]="'Server data'">
+              <app-ag-grid-server-data-container></app-ag-grid-server-data-container>
+            </app-title-table-layout>
+            <app-title-table-layout  [title]="'Types of bots'">
+              <app-ag-grid-bot-list-container></app-ag-grid-bot-list-container>
+            </app-title-table-layout>
+            <app-title-table-layout  [title]="'Types of bots actions'">
+              <app-ag-grid-action-list-container></app-ag-grid-action-list-container>
+            </app-title-table-layout>
           </div>
 
         }

@@ -1,22 +1,49 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import {environment} from '../../environments/environment';
+import { Observable, map, switchMap, startWith } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { Store } from '@ngrx/store';
+import { getActiveServerIpPort } from '../+state/servers/servers.selectors';
 
 @Injectable({ providedIn: 'root' })
 export class ServerDataService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+  private store = inject(Store);
 
-  private apiUrl =  `${environment.hostUrl}/api/auth`;
+  //Универсальный url
+  private baseUrl$ = this.store.select(getActiveServerIpPort).pipe(
+    map(ipPort => {
+      if (!ipPort || ipPort.includes('undefined') || ipPort === ':' || ipPort.trim() === '') {
+        return environment.hostUrl;
+      }
+      return `http://${ipPort}`;
+    }),
+    startWith(environment.hostUrl)
+  );
 
+  private get<T>(endpoint: string): Observable<T> {
+    return this.baseUrl$.pipe(
+      switchMap(baseUrl => this.http.get<T>(`${baseUrl}${endpoint}`))
+    );
+  }
+
+  // Получить основную информацию о сервере
   getServerData(): Observable<any> {
-    return this.http.get(`/api/info`);
+    return this.get('/info');
   }
+
+  // Получить список типов ботов
   getBotTypesList(): Observable<any> {
-    return this.http.get(`/api/info/bots-types-list`);
+    return this.get('/info/bots-types-list');
   }
+
+  // Получить список типов action ботов
   getActionTypesList(): Observable<any> {
-    return this.http.get(`/api/info/bots-actions-list`);
+    return this.get('/info/bots-actions-list');
+  }
+
+  // Получить список ботов и их состояния
+  getBotsControl(): Observable<any> {
+    return this.get('/bots/get-all');
   }
 }
-
