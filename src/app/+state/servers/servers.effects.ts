@@ -5,7 +5,7 @@ import {Store} from '@ngrx/store';
 import {
   setActionTypesList,
   setActiveServer,
-  setActiveServerData,
+  setActiveServerData, setBotControlList,
   setBotTypesList,
 } from './servers.actions';
 import {ServerDataService} from '../../services/server-data.service';
@@ -82,6 +82,33 @@ export class ServersEffects {
                 console.error('Error creating game:', error);
               }
             });
+          } else if (activeTab === 'bots') {
+
+            this.serverDataService.getBotsControl().subscribe({
+              next: (response) => {
+                if (Array.isArray(response)) {
+                  console.log(response)
+                  const responseBotControlList = response.map(item => ({
+                    id: item.id,
+                    createdAt: item.createdAt,
+                    actionCount: item.actionCount,
+                    errorCount: item.errorCount,
+                    lastActionTimeStart: item.lastActionTimeStart,
+                    status: 'warn',
+                    isSendData: false,
+                    running: item.running,
+                  }));
+
+                  this.store.dispatch(setBotControlList({ response: responseBotControlList }));
+                } else {
+                  console.warn('getBotTypesList: expected an array, but it arrived:', response);
+                }
+              },
+              error: (error) => {
+                console.error('Error creating game:', error);
+              }
+            });
+
           }
 
 

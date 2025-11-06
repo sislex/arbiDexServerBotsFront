@@ -23,6 +23,10 @@ export const setGateList = createAction(
   '[Servers] setGateList',
   props<{ response: any }>()
 );
+export const setBotControlList = createAction(
+  '[Servers] setBotControlList',
+  props<{ response: any }>()
+);
 export const setActiveTab = createAction(
   '[Servers] setActiveTab',
   props<{ tab: string }>()

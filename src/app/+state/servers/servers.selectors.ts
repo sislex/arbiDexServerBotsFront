@@ -36,6 +36,10 @@ export const getActiveTab = createSelector(
   selectFeature,
   (state: ServersState) => state.environmentData.activeTab
 );
+export const getBotsControlList = createSelector(
+  selectFeature,
+  (state: ServersState) => state.activeElementData.botControlList
+);
 export const getBotTypesList = createSelector(
   selectFeature,
   (state: ServersState) => state.activeElementData.botTypesList

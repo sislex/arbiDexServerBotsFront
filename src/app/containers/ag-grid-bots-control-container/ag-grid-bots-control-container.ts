@@ -1,17 +1,19 @@
 import {Component, inject} from '@angular/core';
 import {AgGridBotsControl} from '../../components/ag-grid-bots-control/ag-grid-bots-control';
-import {botsControlStabs_1} from '../../components/ag-grid-bots-control/stabs';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmationPopUpContainer} from '../confirmation-pop-up-container/confirmation-pop-up-container';
 import {Store} from '@ngrx/store';
 import {deletingBot, isSendData, setIsStartedBot, updateBot} from '../../+state/servers/servers.actions';
 import {BotEditFormContainer} from '../bot-edit-form-container/bot-edit-form-container';
 import {actionTypesList, botData, botTypesList} from './stabs';
+import {getBotsControlList} from '../../+state/servers/servers.selectors';
+import {AsyncPipe} from '@angular/common';
 
 @Component({
   selector: 'app-ag-grid-bots-control-container',
   imports: [
-    AgGridBotsControl
+    AgGridBotsControl,
+    AsyncPipe
   ],
   standalone: true,
   templateUrl: './ag-grid-bots-control-container.html',
@@ -21,7 +23,8 @@ export class AgGridBotsControlContainer {
   readonly dialog = inject(MatDialog);
   readonly store = inject(Store);
 
-  data = botsControlStabs_1
+  botsControlList$ = this.store.select(getBotsControlList)
+
   events($event: any) {
     if ($event.event === 'Actions:ACTION_CLICKED') {
       if ($event.actionType === 'delete') {

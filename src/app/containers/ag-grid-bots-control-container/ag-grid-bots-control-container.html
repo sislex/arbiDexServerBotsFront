@@ -1,5 +1,7 @@
-<div class="table-title">Bots control panel</div>
-<app-ag-grid-bots-control
-  [rowData]="data"
-  (emitter)="events($event)"
-></app-ag-grid-bots-control>
+@if (botsControlList$ | async; as list) {
+  <div class="table-title">Bots control panel</div>
+  <app-ag-grid-bots-control
+    [rowData]="list"
+    (emitter)="events($event)"
+  ></app-ag-grid-bots-control>
+}

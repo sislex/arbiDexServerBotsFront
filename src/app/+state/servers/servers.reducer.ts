@@ -67,16 +67,34 @@ export interface ITypesList {
   description: string;
 }
 
-export interface GateItem {
+export interface IGateItem {
   ip: string;
   name: string;
+}
+
+export interface ILastActionResult {
+  ok: boolean;
+  amountOut: string;
+}
+
+export interface IBotControl {
+  id: string;
+  running: boolean;
+  createdAt: string;
+  actionCount: number;
+  errorCount: number;
+  lastActionTimeStart: string;
+  lastActionTimeFinish: string;
+  lastLatency: number;
+  lastActionResult: ILastActionResult;
 }
 
 export interface IActiveElementData {
   serverData: IServerData;
   botTypesList: ITypesList[];
   actionTypesList: ITypesList[];
-  gateList: GateItem[];
+  gateList: IGateItem[];
+  botControlList: IBotControl[];
 }
 
 export interface ServersState {
@@ -139,6 +157,7 @@ export const initialState: ServersState = {
     botTypesList: [],
     actionTypesList: [],
     gateList: [],
+    botControlList: [],
   },
 };
 
@@ -191,6 +210,13 @@ export const serversReducer = createReducer(
     activeElementData: {
       ...state.activeElementData,
       gateList: response
+    }
+  })),
+  on(ServersActions.setBotControlList, (state, {response}) => ({
+    ...state,
+    activeElementData: {
+      ...state.activeElementData,
+      botControlList: response
     }
   })),
 );
