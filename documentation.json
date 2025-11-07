@@ -3,12 +3,12 @@
     "interfaces": [
         {
             "name": "IActiveElementData",
-            "id": "interface-IActiveElementData-b6ee07517b8346a61aebd480d57b97816095e4a2596897a1497be26bbb225fb3d7be04b4ea566a37dc7611695a7769e63c0f7cee17b16a2e236f929b19f6a1be",
+            "id": "interface-IActiveElementData-129bd01a5025b1615bf003d1112ec6bba7c0fbcd04b6a0cf8249135405b3b07e693d60739d75010dba0ee36cb60bf98731f3518b667c7d29548f735e63051387",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n);\n\n",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n  // on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n  //   ...state,\n  //   activeElementData: {\n  //     ...state.activeElementData,\n  //     serverData: {\n  //       ...state.activeElementData.serverData,\n  //       ip: ip,\n  //       port: port,\n  //     }\n  //   }\n  // })),\n);\n\n",
             "properties": [
                 {
                     "name": "actionTypesList",
@@ -103,12 +103,12 @@
         },
         {
             "name": "IBotControl",
-            "id": "interface-IBotControl-b6ee07517b8346a61aebd480d57b97816095e4a2596897a1497be26bbb225fb3d7be04b4ea566a37dc7611695a7769e63c0f7cee17b16a2e236f929b19f6a1be",
+            "id": "interface-IBotControl-129bd01a5025b1615bf003d1112ec6bba7c0fbcd04b6a0cf8249135405b3b07e693d60739d75010dba0ee36cb60bf98731f3518b667c7d29548f735e63051387",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n);\n\n",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n  // on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n  //   ...state,\n  //   activeElementData: {\n  //     ...state.activeElementData,\n  //     serverData: {\n  //       ...state.activeElementData.serverData,\n  //       ip: ip,\n  //       port: port,\n  //     }\n  //   }\n  // })),\n);\n\n",
             "properties": [
                 {
                     "name": "actionCount",
@@ -208,12 +208,12 @@
         },
         {
             "name": "IBotData",
-            "id": "interface-IBotData-b6ee07517b8346a61aebd480d57b97816095e4a2596897a1497be26bbb225fb3d7be04b4ea566a37dc7611695a7769e63c0f7cee17b16a2e236f929b19f6a1be",
+            "id": "interface-IBotData-129bd01a5025b1615bf003d1112ec6bba7c0fbcd04b6a0cf8249135405b3b07e693d60739d75010dba0ee36cb60bf98731f3518b667c7d29548f735e63051387",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n);\n\n",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n  // on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n  //   ...state,\n  //   activeElementData: {\n  //     ...state.activeElementData,\n  //     serverData: {\n  //       ...state.activeElementData.serverData,\n  //       ip: ip,\n  //       port: port,\n  //     }\n  //   }\n  // })),\n);\n\n",
             "properties": [
                 {
                     "name": "actionJSON",
@@ -526,12 +526,12 @@
         },
         {
             "name": "IConfig",
-            "id": "interface-IConfig-b6ee07517b8346a61aebd480d57b97816095e4a2596897a1497be26bbb225fb3d7be04b4ea566a37dc7611695a7769e63c0f7cee17b16a2e236f929b19f6a1be",
+            "id": "interface-IConfig-129bd01a5025b1615bf003d1112ec6bba7c0fbcd04b6a0cf8249135405b3b07e693d60739d75010dba0ee36cb60bf98731f3518b667c7d29548f735e63051387",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n);\n\n",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n  // on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n  //   ...state,\n  //   activeElementData: {\n  //     ...state.activeElementData,\n  //     serverData: {\n  //       ...state.activeElementData.serverData,\n  //       ip: ip,\n  //       port: port,\n  //     }\n  //   }\n  // })),\n);\n\n",
             "properties": [
                 {
                     "name": "serverList",
@@ -606,12 +606,12 @@
         },
         {
             "name": "IGateItem",
-            "id": "interface-IGateItem-b6ee07517b8346a61aebd480d57b97816095e4a2596897a1497be26bbb225fb3d7be04b4ea566a37dc7611695a7769e63c0f7cee17b16a2e236f929b19f6a1be",
+            "id": "interface-IGateItem-129bd01a5025b1615bf003d1112ec6bba7c0fbcd04b6a0cf8249135405b3b07e693d60739d75010dba0ee36cb60bf98731f3518b667c7d29548f735e63051387",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n);\n\n",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n  // on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n  //   ...state,\n  //   activeElementData: {\n  //     ...state.activeElementData,\n  //     serverData: {\n  //       ...state.activeElementData.serverData,\n  //       ip: ip,\n  //       port: port,\n  //     }\n  //   }\n  // })),\n);\n\n",
             "properties": [
                 {
                     "name": "ip",
@@ -654,12 +654,12 @@
         },
         {
             "name": "ILastActionResult",
-            "id": "interface-ILastActionResult-b6ee07517b8346a61aebd480d57b97816095e4a2596897a1497be26bbb225fb3d7be04b4ea566a37dc7611695a7769e63c0f7cee17b16a2e236f929b19f6a1be",
+            "id": "interface-ILastActionResult-129bd01a5025b1615bf003d1112ec6bba7c0fbcd04b6a0cf8249135405b3b07e693d60739d75010dba0ee36cb60bf98731f3518b667c7d29548f735e63051387",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n);\n\n",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n  // on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n  //   ...state,\n  //   activeElementData: {\n  //     ...state.activeElementData,\n  //     serverData: {\n  //       ...state.activeElementData.serverData,\n  //       ip: ip,\n  //       port: port,\n  //     }\n  //   }\n  // })),\n);\n\n",
             "properties": [
                 {
                     "name": "amountOut",
@@ -689,12 +689,12 @@
         },
         {
             "name": "IServer",
-            "id": "interface-IServer-b6ee07517b8346a61aebd480d57b97816095e4a2596897a1497be26bbb225fb3d7be04b4ea566a37dc7611695a7769e63c0f7cee17b16a2e236f929b19f6a1be",
+            "id": "interface-IServer-129bd01a5025b1615bf003d1112ec6bba7c0fbcd04b6a0cf8249135405b3b07e693d60739d75010dba0ee36cb60bf98731f3518b667c7d29548f735e63051387",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n);\n\n",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n  // on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n  //   ...state,\n  //   activeElementData: {\n  //     ...state.activeElementData,\n  //     serverData: {\n  //       ...state.activeElementData.serverData,\n  //       ip: ip,\n  //       port: port,\n  //     }\n  //   }\n  // })),\n);\n\n",
             "properties": [
                 {
                     "name": "ip",
@@ -842,12 +842,12 @@
         },
         {
             "name": "IServerAuthData",
-            "id": "interface-IServerAuthData-b6ee07517b8346a61aebd480d57b97816095e4a2596897a1497be26bbb225fb3d7be04b4ea566a37dc7611695a7769e63c0f7cee17b16a2e236f929b19f6a1be",
+            "id": "interface-IServerAuthData-129bd01a5025b1615bf003d1112ec6bba7c0fbcd04b6a0cf8249135405b3b07e693d60739d75010dba0ee36cb60bf98731f3518b667c7d29548f735e63051387",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n);\n\n",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n  // on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n  //   ...state,\n  //   activeElementData: {\n  //     ...state.activeElementData,\n  //     serverData: {\n  //       ...state.activeElementData.serverData,\n  //       ip: ip,\n  //       port: port,\n  //     }\n  //   }\n  // })),\n);\n\n",
             "properties": [
                 {
                     "name": "login",
@@ -877,12 +877,12 @@
         },
         {
             "name": "IServerData",
-            "id": "interface-IServerData-b6ee07517b8346a61aebd480d57b97816095e4a2596897a1497be26bbb225fb3d7be04b4ea566a37dc7611695a7769e63c0f7cee17b16a2e236f929b19f6a1be",
+            "id": "interface-IServerData-129bd01a5025b1615bf003d1112ec6bba7c0fbcd04b6a0cf8249135405b3b07e693d60739d75010dba0ee36cb60bf98731f3518b667c7d29548f735e63051387",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n);\n\n",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n  // on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n  //   ...state,\n  //   activeElementData: {\n  //     ...state.activeElementData,\n  //     serverData: {\n  //       ...state.activeElementData.serverData,\n  //       ip: ip,\n  //       port: port,\n  //     }\n  //   }\n  // })),\n);\n\n",
             "properties": [
                 {
                     "name": "botsCount",
@@ -962,12 +962,12 @@
         },
         {
             "name": "IServerDataResponse",
-            "id": "interface-IServerDataResponse-b6ee07517b8346a61aebd480d57b97816095e4a2596897a1497be26bbb225fb3d7be04b4ea566a37dc7611695a7769e63c0f7cee17b16a2e236f929b19f6a1be",
+            "id": "interface-IServerDataResponse-129bd01a5025b1615bf003d1112ec6bba7c0fbcd04b6a0cf8249135405b3b07e693d60739d75010dba0ee36cb60bf98731f3518b667c7d29548f735e63051387",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n);\n\n",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n  // on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n  //   ...state,\n  //   activeElementData: {\n  //     ...state.activeElementData,\n  //     serverData: {\n  //       ...state.activeElementData.serverData,\n  //       ip: ip,\n  //       port: port,\n  //     }\n  //   }\n  // })),\n);\n\n",
             "properties": [
                 {
                     "name": "botsList",
@@ -1052,12 +1052,12 @@
         },
         {
             "name": "ITypesList",
-            "id": "interface-ITypesList-b6ee07517b8346a61aebd480d57b97816095e4a2596897a1497be26bbb225fb3d7be04b4ea566a37dc7611695a7769e63c0f7cee17b16a2e236f929b19f6a1be",
+            "id": "interface-ITypesList-129bd01a5025b1615bf003d1112ec6bba7c0fbcd04b6a0cf8249135405b3b07e693d60739d75010dba0ee36cb60bf98731f3518b667c7d29548f735e63051387",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n);\n\n",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n  // on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n  //   ...state,\n  //   activeElementData: {\n  //     ...state.activeElementData,\n  //     serverData: {\n  //       ...state.activeElementData.serverData,\n  //       ip: ip,\n  //       port: port,\n  //     }\n  //   }\n  // })),\n);\n\n",
             "properties": [
                 {
                     "name": "description",
@@ -1107,12 +1107,12 @@
         },
         {
             "name": "ServersPartialState",
-            "id": "interface-ServersPartialState-b6ee07517b8346a61aebd480d57b97816095e4a2596897a1497be26bbb225fb3d7be04b4ea566a37dc7611695a7769e63c0f7cee17b16a2e236f929b19f6a1be",
+            "id": "interface-ServersPartialState-129bd01a5025b1615bf003d1112ec6bba7c0fbcd04b6a0cf8249135405b3b07e693d60739d75010dba0ee36cb60bf98731f3518b667c7d29548f735e63051387",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n);\n\n",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n  // on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n  //   ...state,\n  //   activeElementData: {\n  //     ...state.activeElementData,\n  //     serverData: {\n  //       ...state.activeElementData.serverData,\n  //       ip: ip,\n  //       port: port,\n  //     }\n  //   }\n  // })),\n);\n\n",
             "properties": [
                 {
                     "name": "SERVERS_FEATURE_KEY",
@@ -1135,12 +1135,12 @@
         },
         {
             "name": "ServersState",
-            "id": "interface-ServersState-b6ee07517b8346a61aebd480d57b97816095e4a2596897a1497be26bbb225fb3d7be04b4ea566a37dc7611695a7769e63c0f7cee17b16a2e236f929b19f6a1be",
+            "id": "interface-ServersState-129bd01a5025b1615bf003d1112ec6bba7c0fbcd04b6a0cf8249135405b3b07e693d60739d75010dba0ee36cb60bf98731f3518b667c7d29548f735e63051387",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n);\n\n",
+            "sourceCode": "import {createReducer, on} from '@ngrx/store';\nimport * as ServersActions from './servers.actions';\n\nexport const SERVERS_FEATURE_KEY = 'servers';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string,\n  actionJSON: string,\n  actionTypeSelect: string,\n  botTypeSelect: string,\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse { //то что приходит с докера = сервера\n  version: string;\n  startDate: Date;\n  // timestamp: Date; //выносим в машинный интерфейс.\n  botsList: IBotData[];\n}\n\nexport interface IServerData { //то что отображаем\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n}\n\nexport interface IActiveElementData {\n  serverData: IServerData;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n\nexport interface ServersState {\n  featureName: string;\n  config: IConfig;\n  serverListResponse: IServerData[];\n  activeBotData: IBotData[];\n  activeElementData: IActiveElementData;\n}\n\nexport interface ServersPartialState {\n  readonly [SERVERS_FEATURE_KEY]: ServersState;\n}\n\nexport const initialState: ServersState = {\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n};\n\nexport const serversReducer = createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n  // on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n  //   ...state,\n  //   activeElementData: {\n  //     ...state.activeElementData,\n  //     serverData: {\n  //       ...state.activeElementData.serverData,\n  //       ip: ip,\n  //       port: port,\n  //     }\n  //   }\n  // })),\n);\n\n",
             "properties": [
                 {
                     "name": "activeBotData",
@@ -1308,7 +1308,7 @@
                     "defaultValue": "this.store.select(getActiveServerIpPort).pipe(\n    map(ipPort => {\n      if (!ipPort || ipPort.includes('undefined') || ipPort === ':' || ipPort.trim() === '') {\n        return environment.hostUrl;\n      }\n      return `http://${ipPort}`;\n    }),\n    startWith(environment.hostUrl)\n  )",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -1322,7 +1322,7 @@
                     "defaultValue": "inject(HttpClient)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -1336,7 +1336,7 @@
                     "defaultValue": "inject(Store)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -1431,7 +1431,7 @@
         },
         {
             "name": "ServersEffects",
-            "id": "injectable-ServersEffects-6ed00e5d984f8e7ac37517dc31e211e41994c46d441626838cd41fa914584d080e5a6b2aa8e0c9e27893c8b5f6e4ca4dcbeab55fe3b944c04964f061040bede0",
+            "id": "injectable-ServersEffects-ad5cb3126784bc6f7eaae8d598c323ce43e8c490e463c109f6ef3efb83a5c4c5c59411936bbd67aa79b39459d54ba6c6592ffb5110333e469e12b9f22a8ca4f0",
             "file": "src/app/+state/servers/servers.effects.ts",
             "properties": [
                 {
@@ -1439,7 +1439,7 @@
                     "defaultValue": "inject(Actions)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -1453,7 +1453,7 @@
                     "defaultValue": "inject(ServerDataService)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -1464,10 +1464,10 @@
                 },
                 {
                     "name": "setSelectedPlayerList$",
-                    "defaultValue": "createEffect(() =>\n      this.actions$.pipe(\n        ofType(setActiveServer),\n        withLatestFrom(this.store.select(getActiveTab)),\n        tap(([action, activeTab]) => {\n          const { ip, port } = action;\n\n          if (activeTab === 'server data') {\n            this.serverDataService.getServerData().subscribe({\n              next: (response) => {\n                const responseServerData = {\n                  ip: ip,\n                  port: port,\n                  version: response.appVersion,\n                  timestampFinish: response.timestampFinish,\n                  timestampStart: 0,\n                  status: 'active',\n                  botsCount: response.botsCount,\n                };\n                this.store.dispatch(setActiveServerData({ response: responseServerData }));\n              },\n              error: (error) => {\n                console.error('Error loading server data:', error);\n              }\n            });\n\n            this.serverDataService.getBotTypesList().subscribe({\n              next: (response) => {\n                if (Array.isArray(response)) {\n                  const responseBotTypesList = response.map(item => ({\n                    id: item.id ?? \"-\",\n                    label: item.label ?? \"-\",\n                    type: item.type ?? \"-\",\n                    description: item.description ?? \"-\",\n                  }));\n\n                  this.store.dispatch(setBotTypesList({ response: responseBotTypesList }));\n                } else {\n                  console.warn('getBotTypesList: expected an array, but it arrived:', response);\n                }\n              },\n              error: (error) => {\n                console.error('Error loading bot types:', error);\n              }\n            });\n\n            this.serverDataService.getActionTypesList().subscribe({\n              next: (response) => {\n                if (Array.isArray(response)) {\n                  const responseActionTypesList = response.map(item => ({\n                    id: item.id ?? \"-\",\n                    label: item.label ?? \"-\",\n                    type: item.type ?? \"-\",\n                    description: item.description ?? \"-\",\n                  }));\n\n                  this.store.dispatch(setActionTypesList({ response: responseActionTypesList }));\n                } else {\n                  console.warn('getActionTypesList: expected an array, but it arrived:', response);\n                }\n              },\n              error: (error) => {\n                console.error('Error loading action types:', error);\n              }\n            });\n          } else if (activeTab === 'bots') {\n\n            this.serverDataService.getBotsControl().subscribe({\n              next: (response) => {\n                if (Array.isArray(response)) {\n                  console.log(response)\n                  const responseBotControlList = response.map(item => ({\n                    id: item.id,\n                    createdAt: item.createdAt,\n                    actionCount: item.actionCount,\n                    errorCount: item.errorCount,\n                    lastActionTimeStart: item.lastActionTimeStart,\n                    status: 'warn',\n                    isSendData: false,\n                    running: item.running,\n                  }));\n\n                  this.store.dispatch(setBotControlList({ response: responseBotControlList }));\n                } else {\n                  console.warn('getBotsControl: expected an array, but it arrived:', response);\n                }\n              },\n              error: (error) => {\n                console.error('Error loading bot control list:', error);\n              }\n            });\n\n          }\n\n\n          // Находим сервер из stab-данных\n          // const server = serversStabs.find(\n          //   (s) => s.ip === ip && s.port === port\n          // );\n          //\n          // if (!server) {\n          //   console.warn('Сервер не найден в stabs.ts');\n          //   return;\n          // }\n\n          // Вместо /server/info\n          // const responseServerData = {\n          //   ip: server.ip,\n          //   port: server.port,\n          //   version: server.version,\n          //   timestampFinish: server.timestampFinish,\n          //   timestampStart: server.timestampStart,\n          //   status: server.status,\n          //   botsControl: server.botsControl,\n          // };\n          // this.store.dispatch(setActiveServerData({ response: responseServerData }));\n\n          // Вместо /server/types\n          // const responseBotTypesList = server.botTypesList;\n          // this.store.dispatch(setBotTypesList({ response: responseBotTypesList }));\n          //\n          // const responseActionTypesList = server.actionTypesList;\n          // this.store.dispatch(setActionTypesList({ response: responseActionTypesList }));\n          //\n          // // Вместо /gates/list\n          // const responseGateList = server.gateList;\n          // this.store.dispatch(setGateList({ response: responseGateList }));\n\n        })\n      ),\n    { dispatch: false }\n  )",
+                    "defaultValue": "createEffect(() =>\n      this.actions$.pipe(\n        ofType(setActiveServer),\n        withLatestFrom(this.store.select(getActiveTab)),\n        tap(([action, activeTab]) => {\n          const { ip, port } = action;\n\n          if (activeTab === 'server data') {\n            this.serverDataService.getServerData().subscribe({\n              next: (response) => {\n                const responseServerData = {\n                  ip: ip,\n                  port: port,\n                  version: response.appVersion,\n                  timestampFinish: response.timestampFinish,\n                  timestampStart: 0,\n                  status: 'active',\n                  botsCount: response.botsCount,\n                };\n                console.log('вызов')\n                this.store.dispatch(setActiveServerData({ response: responseServerData }));\n              },\n              error: (error) => {\n                console.error('Error loading server data:', error);\n              }\n            });\n\n            this.serverDataService.getBotTypesList().subscribe({\n              next: (response) => {\n                if (Array.isArray(response)) {\n                  const responseBotTypesList = response.map(item => ({\n                    id: item.id ?? \"-\",\n                    label: item.label ?? \"-\",\n                    type: item.type ?? \"-\",\n                    description: item.description ?? \"-\",\n                  }));\n\n                  this.store.dispatch(setBotTypesList({ response: responseBotTypesList }));\n                } else {\n                  console.warn('getBotTypesList: expected an array, but it arrived:', response);\n                }\n              },\n              error: (error) => {\n                console.error('Error loading bot types:', error);\n              }\n            });\n\n            this.serverDataService.getActionTypesList().subscribe({\n              next: (response) => {\n                if (Array.isArray(response)) {\n                  const responseActionTypesList = response.map(item => ({\n                    id: item.id ?? \"-\",\n                    label: item.label ?? \"-\",\n                    type: item.type ?? \"-\",\n                    description: item.description ?? \"-\",\n                  }));\n\n                  this.store.dispatch(setActionTypesList({ response: responseActionTypesList }));\n                } else {\n                  console.warn('getActionTypesList: expected an array, but it arrived:', response);\n                }\n              },\n              error: (error) => {\n                console.error('Error loading action types:', error);\n              }\n            });\n          } else if (activeTab === 'bots') {\n\n            this.serverDataService.getBotsControl().subscribe({\n              next: (response) => {\n                if (Array.isArray(response)) {\n                  console.log(response)\n                  const responseBotControlList = response.map(item => ({\n                    id: item.id,\n                    createdAt: item.createdAt,\n                    actionCount: item.actionCount,\n                    errorCount: item.errorCount,\n                    lastActionTimeStart: item.lastActionTimeStart,\n                    status: 'warn',\n                    isSendData: false,\n                    running: item.running,\n                  }));\n\n                  this.store.dispatch(setBotControlList({ response: responseBotControlList }));\n                } else {\n                  console.warn('getBotsControl: expected an array, but it arrived:', response);\n                }\n              },\n              error: (error) => {\n                console.error('Error loading bot control list:', error);\n              }\n            });\n\n          }\n\n\n          // Находим сервер из stab-данных\n          // const server = serversStabs.find(\n          //   (s) => s.ip === ip && s.port === port\n          // );\n          //\n          // if (!server) {\n          //   console.warn('Сервер не найден в stabs.ts');\n          //   return;\n          // }\n\n          // Вместо /server/info\n          // const responseServerData = {\n          //   ip: server.ip,\n          //   port: server.port,\n          //   version: server.version,\n          //   timestampFinish: server.timestampFinish,\n          //   timestampStart: server.timestampStart,\n          //   status: server.status,\n          //   botsControl: server.botsControl,\n          // };\n          // this.store.dispatch(setActiveServerData({ response: responseServerData }));\n\n          // Вместо /server/types\n          // const responseBotTypesList = server.botTypesList;\n          // this.store.dispatch(setBotTypesList({ response: responseBotTypesList }));\n          //\n          // const responseActionTypesList = server.actionTypesList;\n          // this.store.dispatch(setActionTypesList({ response: responseActionTypesList }));\n          //\n          // // Вместо /gates/list\n          // const responseGateList = server.gateList;\n          // this.store.dispatch(setGateList({ response: responseGateList }));\n\n        })\n      ),\n    { dispatch: false }\n  )",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -1478,7 +1478,7 @@
                     "defaultValue": "inject(Store)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -1493,7 +1493,7 @@
             "deprecationMessage": "",
             "description": "",
             "rawdescription": "\n",
-            "sourceCode": "import {inject, Injectable} from '@angular/core';\nimport {Actions, createEffect, ofType} from '@ngrx/effects';\nimport {tap, withLatestFrom} from 'rxjs';\nimport {Store} from '@ngrx/store';\nimport {\n  setActionTypesList,\n  setActiveServer,\n  setActiveServerData, setBotControlList,\n  setBotTypesList,\n} from './servers.actions';\nimport {ServerDataService} from '../../services/server-data.service';\nimport {getActiveTab} from '../view/view.selectors';\n\n@Injectable()\nexport class ServersEffects {\n  private actions$ = inject(Actions);\n  private serverDataService = inject(ServerDataService);\n  private store = inject(Store);\n\n  setSelectedPlayerList$ = createEffect(() =>\n      this.actions$.pipe(\n        ofType(setActiveServer),\n        withLatestFrom(this.store.select(getActiveTab)),\n        tap(([action, activeTab]) => {\n          const { ip, port } = action;\n\n          if (activeTab === 'server data') {\n            this.serverDataService.getServerData().subscribe({\n              next: (response) => {\n                const responseServerData = {\n                  ip: ip,\n                  port: port,\n                  version: response.appVersion,\n                  timestampFinish: response.timestampFinish,\n                  timestampStart: 0,\n                  status: 'active',\n                  botsCount: response.botsCount,\n                };\n                this.store.dispatch(setActiveServerData({ response: responseServerData }));\n              },\n              error: (error) => {\n                console.error('Error loading server data:', error);\n              }\n            });\n\n            this.serverDataService.getBotTypesList().subscribe({\n              next: (response) => {\n                if (Array.isArray(response)) {\n                  const responseBotTypesList = response.map(item => ({\n                    id: item.id ?? \"-\",\n                    label: item.label ?? \"-\",\n                    type: item.type ?? \"-\",\n                    description: item.description ?? \"-\",\n                  }));\n\n                  this.store.dispatch(setBotTypesList({ response: responseBotTypesList }));\n                } else {\n                  console.warn('getBotTypesList: expected an array, but it arrived:', response);\n                }\n              },\n              error: (error) => {\n                console.error('Error loading bot types:', error);\n              }\n            });\n\n            this.serverDataService.getActionTypesList().subscribe({\n              next: (response) => {\n                if (Array.isArray(response)) {\n                  const responseActionTypesList = response.map(item => ({\n                    id: item.id ?? \"-\",\n                    label: item.label ?? \"-\",\n                    type: item.type ?? \"-\",\n                    description: item.description ?? \"-\",\n                  }));\n\n                  this.store.dispatch(setActionTypesList({ response: responseActionTypesList }));\n                } else {\n                  console.warn('getActionTypesList: expected an array, but it arrived:', response);\n                }\n              },\n              error: (error) => {\n                console.error('Error loading action types:', error);\n              }\n            });\n          } else if (activeTab === 'bots') {\n\n            this.serverDataService.getBotsControl().subscribe({\n              next: (response) => {\n                if (Array.isArray(response)) {\n                  console.log(response)\n                  const responseBotControlList = response.map(item => ({\n                    id: item.id,\n                    createdAt: item.createdAt,\n                    actionCount: item.actionCount,\n                    errorCount: item.errorCount,\n                    lastActionTimeStart: item.lastActionTimeStart,\n                    status: 'warn',\n                    isSendData: false,\n                    running: item.running,\n                  }));\n\n                  this.store.dispatch(setBotControlList({ response: responseBotControlList }));\n                } else {\n                  console.warn('getBotsControl: expected an array, but it arrived:', response);\n                }\n              },\n              error: (error) => {\n                console.error('Error loading bot control list:', error);\n              }\n            });\n\n          }\n\n\n          // Находим сервер из stab-данных\n          // const server = serversStabs.find(\n          //   (s) => s.ip === ip && s.port === port\n          // );\n          //\n          // if (!server) {\n          //   console.warn('Сервер не найден в stabs.ts');\n          //   return;\n          // }\n\n          // Вместо /server/info\n          // const responseServerData = {\n          //   ip: server.ip,\n          //   port: server.port,\n          //   version: server.version,\n          //   timestampFinish: server.timestampFinish,\n          //   timestampStart: server.timestampStart,\n          //   status: server.status,\n          //   botsControl: server.botsControl,\n          // };\n          // this.store.dispatch(setActiveServerData({ response: responseServerData }));\n\n          // Вместо /server/types\n          // const responseBotTypesList = server.botTypesList;\n          // this.store.dispatch(setBotTypesList({ response: responseBotTypesList }));\n          //\n          // const responseActionTypesList = server.actionTypesList;\n          // this.store.dispatch(setActionTypesList({ response: responseActionTypesList }));\n          //\n          // // Вместо /gates/list\n          // const responseGateList = server.gateList;\n          // this.store.dispatch(setGateList({ response: responseGateList }));\n\n        })\n      ),\n    { dispatch: false }\n  );\n\n}\n",
+            "sourceCode": "import {inject, Injectable} from '@angular/core';\nimport {Actions, createEffect, ofType} from '@ngrx/effects';\nimport {tap, withLatestFrom} from 'rxjs';\nimport {Store} from '@ngrx/store';\nimport {\n  setActionTypesList,\n  setActiveServer,\n  setActiveServerData, setBotControlList,\n  setBotTypesList,\n} from './servers.actions';\nimport {ServerDataService} from '../../services/server-data.service';\nimport {getActiveTab} from '../view/view.selectors';\n\n@Injectable()\nexport class ServersEffects {\n  private actions$ = inject(Actions);\n  private serverDataService = inject(ServerDataService);\n  private store = inject(Store);\n\n  setSelectedPlayerList$ = createEffect(() =>\n      this.actions$.pipe(\n        ofType(setActiveServer),\n        withLatestFrom(this.store.select(getActiveTab)),\n        tap(([action, activeTab]) => {\n          const { ip, port } = action;\n\n          if (activeTab === 'server data') {\n            this.serverDataService.getServerData().subscribe({\n              next: (response) => {\n                const responseServerData = {\n                  ip: ip,\n                  port: port,\n                  version: response.appVersion,\n                  timestampFinish: response.timestampFinish,\n                  timestampStart: 0,\n                  status: 'active',\n                  botsCount: response.botsCount,\n                };\n                console.log('вызов')\n                this.store.dispatch(setActiveServerData({ response: responseServerData }));\n              },\n              error: (error) => {\n                console.error('Error loading server data:', error);\n              }\n            });\n\n            this.serverDataService.getBotTypesList().subscribe({\n              next: (response) => {\n                if (Array.isArray(response)) {\n                  const responseBotTypesList = response.map(item => ({\n                    id: item.id ?? \"-\",\n                    label: item.label ?? \"-\",\n                    type: item.type ?? \"-\",\n                    description: item.description ?? \"-\",\n                  }));\n\n                  this.store.dispatch(setBotTypesList({ response: responseBotTypesList }));\n                } else {\n                  console.warn('getBotTypesList: expected an array, but it arrived:', response);\n                }\n              },\n              error: (error) => {\n                console.error('Error loading bot types:', error);\n              }\n            });\n\n            this.serverDataService.getActionTypesList().subscribe({\n              next: (response) => {\n                if (Array.isArray(response)) {\n                  const responseActionTypesList = response.map(item => ({\n                    id: item.id ?? \"-\",\n                    label: item.label ?? \"-\",\n                    type: item.type ?? \"-\",\n                    description: item.description ?? \"-\",\n                  }));\n\n                  this.store.dispatch(setActionTypesList({ response: responseActionTypesList }));\n                } else {\n                  console.warn('getActionTypesList: expected an array, but it arrived:', response);\n                }\n              },\n              error: (error) => {\n                console.error('Error loading action types:', error);\n              }\n            });\n          } else if (activeTab === 'bots') {\n\n            this.serverDataService.getBotsControl().subscribe({\n              next: (response) => {\n                if (Array.isArray(response)) {\n                  console.log(response)\n                  const responseBotControlList = response.map(item => ({\n                    id: item.id,\n                    createdAt: item.createdAt,\n                    actionCount: item.actionCount,\n                    errorCount: item.errorCount,\n                    lastActionTimeStart: item.lastActionTimeStart,\n                    status: 'warn',\n                    isSendData: false,\n                    running: item.running,\n                  }));\n\n                  this.store.dispatch(setBotControlList({ response: responseBotControlList }));\n                } else {\n                  console.warn('getBotsControl: expected an array, but it arrived:', response);\n                }\n              },\n              error: (error) => {\n                console.error('Error loading bot control list:', error);\n              }\n            });\n\n          }\n\n\n          // Находим сервер из stab-данных\n          // const server = serversStabs.find(\n          //   (s) => s.ip === ip && s.port === port\n          // );\n          //\n          // if (!server) {\n          //   console.warn('Сервер не найден в stabs.ts');\n          //   return;\n          // }\n\n          // Вместо /server/info\n          // const responseServerData = {\n          //   ip: server.ip,\n          //   port: server.port,\n          //   version: server.version,\n          //   timestampFinish: server.timestampFinish,\n          //   timestampStart: server.timestampStart,\n          //   status: server.status,\n          //   botsControl: server.botsControl,\n          // };\n          // this.store.dispatch(setActiveServerData({ response: responseServerData }));\n\n          // Вместо /server/types\n          // const responseBotTypesList = server.botTypesList;\n          // this.store.dispatch(setBotTypesList({ response: responseBotTypesList }));\n          //\n          // const responseActionTypesList = server.actionTypesList;\n          // this.store.dispatch(setActionTypesList({ response: responseActionTypesList }));\n          //\n          // // Вместо /gates/list\n          // const responseGateList = server.gateList;\n          // this.store.dispatch(setGateList({ response: responseGateList }));\n\n        })\n      ),\n    { dispatch: false }\n  );\n\n}\n",
             "extends": [],
             "type": "injectable"
         },
@@ -1927,7 +1927,7 @@
                     "defaultValue": "inject(Store)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -2063,7 +2063,7 @@
                     "defaultValue": "this.store.select(getBotTypesList)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -2074,7 +2074,7 @@
                     "defaultValue": "inject(Store)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -2263,7 +2263,7 @@
                     "defaultValue": "this.store.select(getBotsControlList)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -2274,7 +2274,7 @@
                     "defaultValue": "inject(MatDialog)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -2288,7 +2288,7 @@
                     "defaultValue": "inject(Store)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -2818,7 +2818,7 @@
                     "defaultValue": "inject(Store)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -2856,7 +2856,7 @@
         },
         {
             "name": "App",
-            "id": "component-App-8f2f19aa7641671ca9d2498027a663d527732f4273ff0dee2c944c2cf7bc4d65e2ddd567f0dda3e8072df269b462783332d10a6100b0b5b8bb3c692a6fe7238a",
+            "id": "component-App-1469960af11eddc863adc6b2f52622c5a9881f42f440799aa3ab812371223358fb69c8ce2f20899ce9449bfe63811cba360c5468e4cc7f889b7b4ca25e0e60c2",
             "file": "src/app/app.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2876,10 +2876,10 @@
             "propertiesClass": [
                 {
                     "name": "title",
-                    "defaultValue": "signal('new-project-bot')",
+                    "defaultValue": "signal('arbi-dex-server-bots-front')",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -2904,7 +2904,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, signal } from '@angular/core';\nimport {QuoteWatcher} from './containers/quote-watcher/quote-watcher';\n\n@Component({\n  selector: 'app-root',\n  imports: [QuoteWatcher],\n  standalone: true,\n  templateUrl: './app.html',\n  styleUrl: './app.scss'\n})\nexport class App {\n  protected readonly title = signal('new-project-bot');\n}\n",
+            "sourceCode": "import { Component, signal } from '@angular/core';\nimport {QuoteWatcher} from './containers/quote-watcher/quote-watcher';\n\n@Component({\n  selector: 'app-root',\n  imports: [QuoteWatcher],\n  standalone: true,\n  templateUrl: './app.html',\n  styleUrl: './app.scss'\n})\nexport class App {\n  protected readonly title = signal('arbi-dex-server-bots-front');\n}\n",
             "styleUrl": "./app.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -3110,7 +3110,7 @@
                     "defaultValue": "inject(MAT_DIALOG_DATA) as {\n    title: string\n    botData: any,\n    botTypesList: string[],\n    actionTypesList: string[],\n  }",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -3124,7 +3124,7 @@
                     "defaultValue": "inject(MatDialogRef<BotEditFormContainer>)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -3554,7 +3554,7 @@
                     "defaultValue": "inject(MAT_DIALOG_DATA) as {\n    title: string;\n    message: string;\n    buttons: string[];\n  }",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -3568,7 +3568,7 @@
                     "defaultValue": "inject(MatDialogRef<ConfirmationPopUpContainer>)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -3764,7 +3764,7 @@
                     "defaultValue": "signal(false)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -3822,7 +3822,7 @@
                     "defaultValue": "signal(false)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -5158,7 +5158,7 @@
                     "defaultValue": "this.store.select(getActiveTab)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -5169,7 +5169,7 @@
                     "defaultValue": "this.store.select(getFeatureName)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -5180,7 +5180,7 @@
                     "defaultValue": "this.store.select(getActiveServerIpPort)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -5191,7 +5191,7 @@
                     "defaultValue": "this.store.select(getIsSidebarOpen)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -5202,7 +5202,7 @@
                     "defaultValue": "inject(ActivatedRoute)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -5216,7 +5216,7 @@
                     "defaultValue": "inject(Router)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -5230,7 +5230,7 @@
                     "defaultValue": "this.store.select(getServerList)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -5241,7 +5241,7 @@
                     "defaultValue": "inject(Store)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -5497,7 +5497,7 @@
                     "defaultValue": "this.store.select(getActiveTab)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -5508,7 +5508,7 @@
                     "defaultValue": "this.store.select(getActiveServerIpPort)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -5519,7 +5519,7 @@
                     "defaultValue": "inject(Router)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -5533,7 +5533,7 @@
                     "defaultValue": "inject(Store)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -5547,7 +5547,7 @@
                     "defaultValue": "this.store.select(getTabList)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -5721,7 +5721,7 @@
                     "defaultValue": "false",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -6361,7 +6361,7 @@
                     "defaultValue": "this.store.select(getFeatureName)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -6372,7 +6372,7 @@
                     "defaultValue": "inject(Store)",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
@@ -6508,7 +6508,7 @@
                 "file": "src/app/+state/servers/stabs-for-api.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "[] | ",
+                "type": "[] | unknown",
                 "defaultValue": "[]"
             },
             {
@@ -6568,7 +6568,7 @@
                 "file": "src/app/+state/servers/servers.actions.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createAction(\n  '[Servers] deletingBot',\n  props<{ id: string }>()\n)"
             },
             {
@@ -6658,7 +6658,7 @@
                 "file": "src/app/+state/servers/stabs-for-api.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "[] | ",
+                "type": "[] | unknown",
                 "defaultValue": "[]"
             },
             {
@@ -6668,7 +6668,7 @@
                 "file": "src/app/+state/servers/servers.selectors.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.activeElementData.actionTypesList\n)"
             },
             {
@@ -6678,7 +6678,7 @@
                 "file": "src/app/+state/servers/servers.selectors.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.activeElementData.serverData.ip\n)"
             },
             {
@@ -6688,7 +6688,7 @@
                 "file": "src/app/+state/servers/servers.selectors.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createSelector(\n  getActiveServerIp,\n  getActiveServerPort,\n  (ip, port) => `${ip}:${port}`\n)"
             },
             {
@@ -6698,7 +6698,7 @@
                 "file": "src/app/+state/servers/servers.selectors.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.activeElementData.serverData.port\n)"
             },
             {
@@ -6708,7 +6708,7 @@
                 "file": "src/app/+state/view/view.selectors.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createSelector(\n  selectFeature,\n  (state: ViewState) => state.activeTab\n)"
             },
             {
@@ -6718,7 +6718,7 @@
                 "file": "src/app/+state/servers/servers.selectors.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.activeElementData.botControlList\n)"
             },
             {
@@ -6728,7 +6728,7 @@
                 "file": "src/app/+state/servers/servers.selectors.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.activeElementData.botTypesList\n)"
             },
             {
@@ -6738,7 +6738,7 @@
                 "file": "src/app/+state/servers/servers.selectors.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.featureName\n)"
             },
             {
@@ -6748,7 +6748,7 @@
                 "file": "src/app/+state/view/view.selectors.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createSelector(\n  selectFeature,\n  (state: ViewState) => state.isSidebarOpen\n)"
             },
             {
@@ -6758,7 +6758,7 @@
                 "file": "src/app/+state/servers/servers.selectors.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.activeElementData?.serverData ? [state.activeElementData.serverData] : []\n)"
             },
             {
@@ -6768,7 +6768,7 @@
                 "file": "src/app/+state/servers/servers.selectors.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.config.serverList\n)"
             },
             {
@@ -6778,7 +6778,7 @@
                 "file": "src/app/+state/view/view.selectors.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createSelector(\n  selectFeature,\n  (state: ViewState) => state.tabList\n)"
             },
             {
@@ -6795,21 +6795,21 @@
                 "name": "initialState",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/app/+state/view/view.reducer.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "ViewState",
-                "defaultValue": "{\n  isSidebarOpen: true,\n  activeTab: 'bots',\n  tabList: ['bots', 'gates', 'server data'],\n}"
-            },
-            {
-                "name": "initialState",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/app/+state/servers/servers.reducer.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "ServersState",
                 "defaultValue": "{\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '192.169.0.3',\n        port: '6060',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n}"
+            },
+            {
+                "name": "initialState",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/+state/view/view.reducer.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "ViewState",
+                "defaultValue": "{\n  isSidebarOpen: true,\n  activeTab: 'bots',\n  tabList: ['bots', 'gates', 'server data'],\n}"
             },
             {
                 "name": "isSendData",
@@ -6818,7 +6818,7 @@
                 "file": "src/app/+state/servers/servers.actions.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createAction(\n  '[Servers] isSendData',\n  props<{ isSendData: boolean, id: string }>()\n)"
             },
             {
@@ -6845,21 +6845,21 @@
                 "name": "selectFeature",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/app/+state/view/view.selectors.ts",
+                "file": "src/app/+state/servers/servers.selectors.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
-                "defaultValue": "createFeatureSelector<ViewState>(VIEW_FEATURE_KEY)"
+                "type": "unknown",
+                "defaultValue": "createFeatureSelector<ServersState>(SERVERS_FEATURE_KEY)"
             },
             {
                 "name": "selectFeature",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/app/+state/servers/servers.selectors.ts",
+                "file": "src/app/+state/view/view.selectors.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
-                "defaultValue": "createFeatureSelector<ServersState>(SERVERS_FEATURE_KEY)"
+                "type": "unknown",
+                "defaultValue": "createFeatureSelector<ViewState>(VIEW_FEATURE_KEY)"
             },
             {
                 "name": "serverDataAPI",
@@ -6888,8 +6888,8 @@
                 "file": "src/app/+state/servers/servers.reducer.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
-                "defaultValue": "createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n)"
+                "type": "unknown",
+                "defaultValue": "createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n  // on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n  //   ...state,\n  //   activeElementData: {\n  //     ...state.activeElementData,\n  //     serverData: {\n  //       ...state.activeElementData.serverData,\n  //       ip: ip,\n  //       port: port,\n  //     }\n  //   }\n  // })),\n)"
             },
             {
                 "name": "serversStabs",
@@ -6938,7 +6938,7 @@
                 "file": "src/app/+state/servers/servers.actions.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createAction(\n  '[Servers] setActionTypesList',\n  props<{ response: any }>()\n)"
             },
             {
@@ -6948,7 +6948,7 @@
                 "file": "src/app/+state/servers/servers.actions.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createAction(\n  '[Servers] setActiveServer',\n  props<{ ip: string, port: string }>()\n)"
             },
             {
@@ -6958,7 +6958,7 @@
                 "file": "src/app/+state/servers/servers.actions.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createAction(\n  '[Servers] setActiveServerData',\n  props<{ response: any }>()\n)"
             },
             {
@@ -6968,7 +6968,7 @@
                 "file": "src/app/+state/view/view.actions.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createAction(\n  '[View] setActiveTab',\n  props<{ tab: string }>()\n)"
             },
             {
@@ -6978,7 +6978,7 @@
                 "file": "src/app/+state/servers/servers.actions.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createAction(\n  '[Servers] setBotControlList',\n  props<{ response: any }>()\n)"
             },
             {
@@ -6988,7 +6988,7 @@
                 "file": "src/app/+state/servers/servers.actions.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createAction(\n  '[Servers] setBotTypesList',\n  props<{ response: any }>()\n)"
             },
             {
@@ -6998,7 +6998,7 @@
                 "file": "src/app/+state/servers/servers.actions.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createAction(\n  '[Servers] setGateList',\n  props<{ response: any }>()\n)"
             },
             {
@@ -7008,7 +7008,7 @@
                 "file": "src/app/+state/servers/servers.actions.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createAction(\n  '[Servers] setIsStartedBot',\n  props<{ isStarted: boolean, id: string }>()\n)"
             },
             {
@@ -7018,7 +7018,7 @@
                 "file": "src/app/+state/servers/servers.actions.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createAction('[Servers] setServerList')"
             },
             {
@@ -7028,7 +7028,7 @@
                 "file": "src/app/+state/view/view.actions.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createAction('[View] toggleSidebar')"
             },
             {
@@ -7038,7 +7038,7 @@
                 "file": "src/app/+state/servers/servers.actions.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createAction(\n  '[Servers] updateBot',\n  props<{ isSendData: boolean, id: string }>()\n)"
             },
             {
@@ -7058,7 +7058,7 @@
                 "file": "src/app/+state/view/view.reducer.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "",
+                "type": "unknown",
                 "defaultValue": "createReducer(\n  initialState,\n  on(ViewActions.toggleSidebar, (state) => ({\n    ...state,\n    isSidebarOpen: !state.isSidebarOpen\n  })),\n  on(ViewActions.setActiveTab, (state, {tab}) => ({\n    ...state,\n    activeTab: tab\n  })),\n)"
             }
         ],
@@ -7150,7 +7150,7 @@
                     "file": "src/app/+state/servers/stabs-for-api.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "[] | ",
+                    "type": "[] | unknown",
                     "defaultValue": "[]"
                 },
                 {
@@ -7160,7 +7160,7 @@
                     "file": "src/app/+state/servers/stabs-for-api.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "[] | ",
+                    "type": "[] | unknown",
                     "defaultValue": "[]"
                 },
                 {
@@ -7226,7 +7226,7 @@
                     "file": "src/app/+state/servers/servers.actions.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createAction(\n  '[Servers] deletingBot',\n  props<{ id: string }>()\n)"
                 },
                 {
@@ -7236,7 +7236,7 @@
                     "file": "src/app/+state/servers/servers.actions.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createAction(\n  '[Servers] isSendData',\n  props<{ isSendData: boolean, id: string }>()\n)"
                 },
                 {
@@ -7246,7 +7246,7 @@
                     "file": "src/app/+state/servers/servers.actions.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createAction(\n  '[Servers] setActionTypesList',\n  props<{ response: any }>()\n)"
                 },
                 {
@@ -7256,7 +7256,7 @@
                     "file": "src/app/+state/servers/servers.actions.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createAction(\n  '[Servers] setActiveServer',\n  props<{ ip: string, port: string }>()\n)"
                 },
                 {
@@ -7266,7 +7266,7 @@
                     "file": "src/app/+state/servers/servers.actions.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createAction(\n  '[Servers] setActiveServerData',\n  props<{ response: any }>()\n)"
                 },
                 {
@@ -7276,7 +7276,7 @@
                     "file": "src/app/+state/servers/servers.actions.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createAction(\n  '[Servers] setBotControlList',\n  props<{ response: any }>()\n)"
                 },
                 {
@@ -7286,7 +7286,7 @@
                     "file": "src/app/+state/servers/servers.actions.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createAction(\n  '[Servers] setBotTypesList',\n  props<{ response: any }>()\n)"
                 },
                 {
@@ -7296,7 +7296,7 @@
                     "file": "src/app/+state/servers/servers.actions.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createAction(\n  '[Servers] setGateList',\n  props<{ response: any }>()\n)"
                 },
                 {
@@ -7306,7 +7306,7 @@
                     "file": "src/app/+state/servers/servers.actions.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createAction(\n  '[Servers] setIsStartedBot',\n  props<{ isStarted: boolean, id: string }>()\n)"
                 },
                 {
@@ -7316,7 +7316,7 @@
                     "file": "src/app/+state/servers/servers.actions.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createAction('[Servers] setServerList')"
                 },
                 {
@@ -7326,7 +7326,7 @@
                     "file": "src/app/+state/servers/servers.actions.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createAction(\n  '[Servers] updateBot',\n  props<{ isSendData: boolean, id: string }>()\n)"
                 }
             ],
@@ -7426,7 +7426,7 @@
                     "file": "src/app/+state/servers/servers.selectors.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.activeElementData.actionTypesList\n)"
                 },
                 {
@@ -7436,7 +7436,7 @@
                     "file": "src/app/+state/servers/servers.selectors.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.activeElementData.serverData.ip\n)"
                 },
                 {
@@ -7446,7 +7446,7 @@
                     "file": "src/app/+state/servers/servers.selectors.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createSelector(\n  getActiveServerIp,\n  getActiveServerPort,\n  (ip, port) => `${ip}:${port}`\n)"
                 },
                 {
@@ -7456,7 +7456,7 @@
                     "file": "src/app/+state/servers/servers.selectors.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.activeElementData.serverData.port\n)"
                 },
                 {
@@ -7466,7 +7466,7 @@
                     "file": "src/app/+state/servers/servers.selectors.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.activeElementData.botControlList\n)"
                 },
                 {
@@ -7476,7 +7476,7 @@
                     "file": "src/app/+state/servers/servers.selectors.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.activeElementData.botTypesList\n)"
                 },
                 {
@@ -7486,7 +7486,7 @@
                     "file": "src/app/+state/servers/servers.selectors.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.featureName\n)"
                 },
                 {
@@ -7496,7 +7496,7 @@
                     "file": "src/app/+state/servers/servers.selectors.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.activeElementData?.serverData ? [state.activeElementData.serverData] : []\n)"
                 },
                 {
@@ -7506,7 +7506,7 @@
                     "file": "src/app/+state/servers/servers.selectors.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.config.serverList\n)"
                 },
                 {
@@ -7516,7 +7516,7 @@
                     "file": "src/app/+state/servers/servers.selectors.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createFeatureSelector<ServersState>(SERVERS_FEATURE_KEY)"
                 }
             ],
@@ -7528,7 +7528,7 @@
                     "file": "src/app/+state/view/view.selectors.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createSelector(\n  selectFeature,\n  (state: ViewState) => state.activeTab\n)"
                 },
                 {
@@ -7538,7 +7538,7 @@
                     "file": "src/app/+state/view/view.selectors.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createSelector(\n  selectFeature,\n  (state: ViewState) => state.isSidebarOpen\n)"
                 },
                 {
@@ -7548,7 +7548,7 @@
                     "file": "src/app/+state/view/view.selectors.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createSelector(\n  selectFeature,\n  (state: ViewState) => state.tabList\n)"
                 },
                 {
@@ -7558,7 +7558,7 @@
                     "file": "src/app/+state/view/view.selectors.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createFeatureSelector<ViewState>(VIEW_FEATURE_KEY)"
                 }
             ],
@@ -7572,38 +7572,6 @@
                     "deprecationMessage": "",
                     "type": "[]",
                     "defaultValue": "[\n  { make: \"Tesla\", model: \"Model Y\", price: 64950, electric: true },\n  { make: \"Ford\", model: \"F-Series\", price: 33850, electric: false },\n  { make: \"Toyota\", model: \"Corolla\", price: 29600, electric: false },\n  { make: \"Toyota\", model: \"Corolla\", price: 29600, electric: false },\n]"
-                }
-            ],
-            "src/app/+state/view/view.reducer.ts": [
-                {
-                    "name": "initialState",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/+state/view/view.reducer.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "ViewState",
-                    "defaultValue": "{\n  isSidebarOpen: true,\n  activeTab: 'bots',\n  tabList: ['bots', 'gates', 'server data'],\n}"
-                },
-                {
-                    "name": "VIEW_FEATURE_KEY",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/+state/view/view.reducer.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "defaultValue": "'view'"
-                },
-                {
-                    "name": "viewReducer",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/+state/view/view.reducer.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "defaultValue": "createReducer(\n  initialState,\n  on(ViewActions.toggleSidebar, (state) => ({\n    ...state,\n    isSidebarOpen: !state.isSidebarOpen\n  })),\n  on(ViewActions.setActiveTab, (state, {tab}) => ({\n    ...state,\n    activeTab: tab\n  })),\n)"
                 }
             ],
             "src/app/+state/servers/servers.reducer.ts": [
@@ -7634,8 +7602,40 @@
                     "file": "src/app/+state/servers/servers.reducer.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
-                    "defaultValue": "createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n)"
+                    "type": "unknown",
+                    "defaultValue": "createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n  // on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n  //   ...state,\n  //   activeElementData: {\n  //     ...state.activeElementData,\n  //     serverData: {\n  //       ...state.activeElementData.serverData,\n  //       ip: ip,\n  //       port: port,\n  //     }\n  //   }\n  // })),\n)"
+                }
+            ],
+            "src/app/+state/view/view.reducer.ts": [
+                {
+                    "name": "initialState",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/view/view.reducer.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ViewState",
+                    "defaultValue": "{\n  isSidebarOpen: true,\n  activeTab: 'bots',\n  tabList: ['bots', 'gates', 'server data'],\n}"
+                },
+                {
+                    "name": "VIEW_FEATURE_KEY",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/view/view.reducer.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "defaultValue": "'view'"
+                },
+                {
+                    "name": "viewReducer",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/view/view.reducer.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "unknown",
+                    "defaultValue": "createReducer(\n  initialState,\n  on(ViewActions.toggleSidebar, (state) => ({\n    ...state,\n    isSidebarOpen: !state.isSidebarOpen\n  })),\n  on(ViewActions.setActiveTab, (state, {tab}) => ({\n    ...state,\n    activeTab: tab\n  })),\n)"
                 }
             ],
             "src/app/+state/servers/stabs.ts": [
@@ -7712,7 +7712,7 @@
                     "file": "src/app/+state/view/view.actions.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createAction(\n  '[View] setActiveTab',\n  props<{ tab: string }>()\n)"
                 },
                 {
@@ -7722,7 +7722,7 @@
                     "file": "src/app/+state/view/view.actions.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "",
+                    "type": "unknown",
                     "defaultValue": "createAction('[View] toggleSidebar')"
                 }
             ]

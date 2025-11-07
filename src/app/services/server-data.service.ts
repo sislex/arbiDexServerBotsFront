@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, switchMap, startWith } from 'rxjs';
-import { environment } from '../../environments/environment';
+import {Observable, map, switchMap, take} from 'rxjs';
 import { Store } from '@ngrx/store';
 import { getActiveServerIpPort } from '../+state/servers/servers.selectors';
 
@@ -14,15 +13,16 @@ export class ServerDataService {
   private baseUrl$ = this.store.select(getActiveServerIpPort).pipe(
     map(ipPort => {
       if (!ipPort || ipPort.includes('undefined') || ipPort === ':' || ipPort.trim() === '') {
-        return environment.hostUrl;
+        return null;
       }
       return `http://${ipPort}`;
     }),
-    startWith(environment.hostUrl)
+    // startWith(environment.hostUrl)
   );
 
   private get<T>(endpoint: string): Observable<T> {
     return this.baseUrl$.pipe(
+      take(1),
       switchMap(baseUrl => this.http.get<T>(`${baseUrl}${endpoint}`))
     );
   }

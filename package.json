@@ -7,8 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "storybook": "ng run new-project-bot:storybook",
-    "build-storybook": "ng run new-project-bot:build-storybook"
+    "storybook": "ng run arbi-dex-server-bots-front:storybook",
+    "build-storybook": "ng run arbi-dex-server-bots-front:build-storybook"
   },
   "prettier": {
     "printWidth": 100,

@@ -8,7 +8,7 @@ import {
 } from '../../+state/servers/servers.selectors';
 import {AsyncPipe} from '@angular/common';
 import {TabsContainer} from '../tabs-container/tabs-container';
-import {setActiveServer} from '../../+state/servers/servers.actions';
+import {clearActiveElementData, setActiveServer} from '../../+state/servers/servers.actions';
 import {ActivatedRoute, Router} from '@angular/router';
 import {take} from 'rxjs';
 import {getActiveTab, getIsSidebarOpen} from '../../+state/view/view.selectors';
@@ -44,6 +44,7 @@ export class SidebarContainer implements OnInit {
       if (ipPort && tabId !== null) {
         const [ip, port] = ipPort.split(':');
         this.store.dispatch(setActiveTab({ tab: tabId }));
+        this.store.dispatch(clearActiveElementData());
         this.store.dispatch(setActiveServer({ ip, port }));
       }
     });
@@ -54,13 +55,15 @@ export class SidebarContainer implements OnInit {
       this.store.dispatch(toggleSidebar())
     } else if ($event.event === 'Sidebar:SET_ACTIVE_ITEM_CLICKED') {
       const ipPort = $event.data.ipPort;
-      const [ip, port] = ipPort.split(':');
+      if (ipPort) {
+        const [ip, port] = ipPort.split(':');
 
-      this.activeTab$.pipe(take(1)).subscribe(activeTab => {
-        if (activeTab) {
-          this.router.navigate([`/server/${ip}:${port}/tab/${activeTab}`]);
-        }
-      });
+        this.activeTab$.pipe(take(1)).subscribe(activeTab => {
+          if (activeTab) {
+            this.router.navigate([`/server/${ip}:${port}/tab/${activeTab}`]);
+          }
+        });
+      }
     }
   }
 }

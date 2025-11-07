@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 
 export const setServerList = createAction('[Servers] setServerList');
+export const clearActiveElementData = createAction('[Servers] clearActiveElementData');
 
 export const setActiveServer = createAction(
   '[Servers] setActiveServer',
@@ -51,3 +52,4 @@ export const updateBot = createAction(
   '[Servers] updateBot',
   props<{ isSendData: boolean, id: string }>()
 );
+

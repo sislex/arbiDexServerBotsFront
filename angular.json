@@ -62,14 +62,14 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "proxyConfig": "proxy.conf.json"
+            "buildTarget": "arbi-dex-server-bots-front:build:development"
           },
           "configurations": {
             "production": {
-              "buildTarget": "new-project-bot:build:production"
+              "buildTarget": "arbi-dex-server-bots-front:build:production"
             },
             "development": {
-              "buildTarget": "new-project-bot:build:development"
+              "buildTarget": "arbi-dex-server-bots-front:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -102,7 +102,7 @@
           "builder": "@storybook/angular:start-storybook",
           "options": {
             "configDir": ".storybook",
-            "browserTarget": "new-project-bot:build",
+            "browserTarget": "arbi-dex-server-bots-front:build",
             "compodoc": true,
             "compodocArgs": [
               "-e",
@@ -117,7 +117,7 @@
           "builder": "@storybook/angular:build-storybook",
           "options": {
             "configDir": ".storybook",
-            "browserTarget": "new-project-bot:build",
+            "browserTarget": "arbi-dex-server-bots-front:build",
             "compodoc": true,
             "compodocArgs": [
               "-e",

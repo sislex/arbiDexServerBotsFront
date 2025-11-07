@@ -1,15 +1,16 @@
-import {inject, Injectable} from '@angular/core';
-import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {tap, withLatestFrom} from 'rxjs';
-import {Store} from '@ngrx/store';
+import { inject, Injectable } from '@angular/core';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { catchError, filter, forkJoin, map, of, switchMap, tap, withLatestFrom } from 'rxjs';
+import { Store } from '@ngrx/store';
 import {
   setActionTypesList,
   setActiveServer,
-  setActiveServerData, setBotControlList,
+  setActiveServerData,
+  setBotControlList,
   setBotTypesList,
 } from './servers.actions';
-import {ServerDataService} from '../../services/server-data.service';
-import {getActiveTab} from '../view/view.selectors';
+import { ServerDataService } from '../../services/server-data.service';
+import { getActiveTab } from '../view/view.selectors';
 
 @Injectable()
 export class ServersEffects {
@@ -17,138 +18,105 @@ export class ServersEffects {
   private serverDataService = inject(ServerDataService);
   private store = inject(Store);
 
-  setSelectedPlayerList$ = createEffect(() =>
+  loadServerData$ = createEffect(() =>
       this.actions$.pipe(
         ofType(setActiveServer),
         withLatestFrom(this.store.select(getActiveTab)),
-        tap(([action, activeTab]) => {
-          const { ip, port } = action;
+        filter(([_, tab]) => tab === 'server data'),
+        switchMap(([action]) => {
+          return forkJoin({
+            info: this.serverDataService.getServerData().pipe(
+              catchError(err => {
+                console.error('info error', err);
+                return of(null);
+              })
+            ),
+            botTypes: this.serverDataService.getBotTypesList().pipe(
+              catchError(err => {
+                console.error('botTypes error', err);
+                return of([]);
+              })
+            ),
+            actions: this.serverDataService.getActionTypesList().pipe(
+              catchError(err => {
+                console.error('actions error', err);
+                return of([]);
+              })
+            ),
+          }).pipe(
+            tap(({ info, botTypes, actions }) => {
 
-          if (activeTab === 'server data') {
-            this.serverDataService.getServerData().subscribe({
-              next: (response) => {
-                const responseServerData = {
-                  ip: ip,
-                  port: port,
-                  version: response.appVersion,
-                  timestampFinish: response.timestampFinish,
-                  timestampStart: 0,
-                  status: 'active',
-                  botsCount: response.botsCount,
-                };
-                console.log('вызов')
-                this.store.dispatch(setActiveServerData({ response: responseServerData }));
-              },
-              error: (error) => {
-                console.error('Error loading server data:', error);
-              }
-            });
+              const responseServerData = {
+                ip: action.ip,
+                port: action.port,
+                version: info?.appVersion ?? '-',
+                timestampFinish: info?.timestampFinish ?? 0,
+                timestampStart: 0,
+                status: info ? 'active' : 'unknown',
+                botsCount: info?.botsCount ?? 0,
+              };
 
-            this.serverDataService.getBotTypesList().subscribe({
-              next: (response) => {
-                if (Array.isArray(response)) {
-                  const responseBotTypesList = response.map(item => ({
-                    id: item.id ?? "-",
-                    label: item.label ?? "-",
-                    type: item.type ?? "-",
-                    description: item.description ?? "-",
-                  }));
+              const responseBotTypesList = (botTypes || []).map((item: any) => ({
+                id: item.id ?? '-',
+                label: item.label ?? '-',
+                type: item.type ?? '-',
+                description: item.description ?? '-',
+              }));
 
-                  this.store.dispatch(setBotTypesList({ response: responseBotTypesList }));
-                } else {
-                  console.warn('getBotTypesList: expected an array, but it arrived:', response);
-                }
-              },
-              error: (error) => {
-                console.error('Error loading bot types:', error);
-              }
-            });
+              const responseActionTypesList = (actions || []).map((item: any) => ({
+                id: item.id ?? '-',
+                label: item.label ?? '-',
+                type: item.type ?? '-',
+                description: item.description ?? '-',
+              }));
 
-            this.serverDataService.getActionTypesList().subscribe({
-              next: (response) => {
-                if (Array.isArray(response)) {
-                  const responseActionTypesList = response.map(item => ({
-                    id: item.id ?? "-",
-                    label: item.label ?? "-",
-                    type: item.type ?? "-",
-                    description: item.description ?? "-",
-                  }));
-
-                  this.store.dispatch(setActionTypesList({ response: responseActionTypesList }));
-                } else {
-                  console.warn('getActionTypesList: expected an array, but it arrived:', response);
-                }
-              },
-              error: (error) => {
-                console.error('Error loading action types:', error);
-              }
-            });
-          } else if (activeTab === 'bots') {
-
-            this.serverDataService.getBotsControl().subscribe({
-              next: (response) => {
-                if (Array.isArray(response)) {
-                  console.log(response)
-                  const responseBotControlList = response.map(item => ({
-                    id: item.id,
-                    createdAt: item.createdAt,
-                    actionCount: item.actionCount,
-                    errorCount: item.errorCount,
-                    lastActionTimeStart: item.lastActionTimeStart,
-                    status: 'warn',
-                    isSendData: false,
-                    running: item.running,
-                  }));
-
-                  this.store.dispatch(setBotControlList({ response: responseBotControlList }));
-                } else {
-                  console.warn('getBotsControl: expected an array, but it arrived:', response);
-                }
-              },
-              error: (error) => {
-                console.error('Error loading bot control list:', error);
-              }
-            });
-
-          }
-
-
-          // Находим сервер из stab-данных
-          // const server = serversStabs.find(
-          //   (s) => s.ip === ip && s.port === port
-          // );
-          //
-          // if (!server) {
-          //   console.warn('Сервер не найден в stabs.ts');
-          //   return;
-          // }
-
-          // Вместо /server/info
-          // const responseServerData = {
-          //   ip: server.ip,
-          //   port: server.port,
-          //   version: server.version,
-          //   timestampFinish: server.timestampFinish,
-          //   timestampStart: server.timestampStart,
-          //   status: server.status,
-          //   botsControl: server.botsControl,
-          // };
-          // this.store.dispatch(setActiveServerData({ response: responseServerData }));
-
-          // Вместо /server/types
-          // const responseBotTypesList = server.botTypesList;
-          // this.store.dispatch(setBotTypesList({ response: responseBotTypesList }));
-          //
-          // const responseActionTypesList = server.actionTypesList;
-          // this.store.dispatch(setActionTypesList({ response: responseActionTypesList }));
-          //
-          // // Вместо /gates/list
-          // const responseGateList = server.gateList;
-          // this.store.dispatch(setGateList({ response: responseGateList }));
-
+              this.store.dispatch(setActiveServerData({ response: responseServerData }));
+              this.store.dispatch(setBotTypesList({ response: responseBotTypesList }));
+              this.store.dispatch(setActionTypesList({ response: responseActionTypesList }));
+            }),
+            map(() => ({ done: true }))
+          );
         })
       ),
     { dispatch: false }
   );
 
+  loadBotsControl$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(setActiveServer),
+        withLatestFrom(this.store.select(getActiveTab)),
+        filter(([_, tab]) => tab === 'bots'),
+        switchMap(([action]) => {
+
+          return this.serverDataService.getBotsControl().pipe(
+            tap((response: any[]) => {
+
+              if (!Array.isArray(response)) {
+                console.warn('Expected array but got:', response);
+                return;
+              }
+
+              const responseBotControlList = response.map(item => ({
+                id: item.id ?? '-',
+                createdAt: item.createdAt ?? '-',
+                actionCount: item.actionCount ?? 0,
+                errorCount: item.errorCount ?? 0,
+                lastActionTimeStart: item.lastActionTimeStart ?? 0,
+                status: 'warn',
+                isSendData: false,
+                running: item.running ?? false,
+              }));
+
+              this.store.dispatch(setBotControlList({ response: responseBotControlList }));
+            }),
+            catchError(err => {
+              console.error('botsControl error', err);
+              return of([]);
+            }),
+            map(() => ({ done: true }))
+          );
+        })
+      ),
+    { dispatch: false }
+  );
 }
