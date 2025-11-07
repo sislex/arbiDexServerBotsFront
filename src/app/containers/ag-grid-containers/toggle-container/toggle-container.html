@@ -1,5 +1,6 @@
 <app-toggle
   [isChecked]="isChecked"
   [description]="description"
+  (click)="$event.stopPropagation()"
   (emitter)="onToggleChange($event)"
 ></app-toggle>

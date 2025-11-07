@@ -28,6 +28,13 @@ export class AgGridBotsControl {
     this.emitter.emit({ ...event, row });
   }
 
+  onRowClicked($event: any) {
+    this.emitter.emit({
+      event: 'AgGridBotsControl:CLICKED_ROW',
+      row: $event
+    });
+  }
+
   colDefs: ColDef[] = [
     {
       field: "#",

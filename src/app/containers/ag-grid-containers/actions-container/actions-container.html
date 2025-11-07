@@ -2,11 +2,13 @@
   <app-actions
     [icon]="'edit'"
     [type]="'default'"
+    (click)="$event.stopPropagation()"
     (emitter)="onAction($event, 'edit')"
   ></app-actions>
   <app-actions
     [icon]="'delete'"
     [type]="'red'"
+    (click)="$event.stopPropagation()"
     (emitter)="onAction($event, 'delete')"
   ></app-actions>
 </div>
