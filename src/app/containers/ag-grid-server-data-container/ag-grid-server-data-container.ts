@@ -4,7 +4,7 @@ import {Store} from '@ngrx/store';
 import {getServerData} from '../../+state/servers/servers.selectors';
 import {AsyncPipe} from '@angular/common';
 import {Observable} from 'rxjs';
-import {IServerData} from '../../+state/servers/servers.reducer';
+import {IServerData} from '../../models/servers';
 
 @Component({
   selector: 'app-ag-grid-server-data-container',

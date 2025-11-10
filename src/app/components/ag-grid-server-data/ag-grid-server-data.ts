@@ -4,7 +4,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 import {Component, Input} from '@angular/core';
 import {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';
 import {TimerContainer} from '../../containers/ag-grid-containers/timer-container/timer-container';
-import {IServerData} from '../../+state/servers/servers.reducer';
+import {IServerData} from '../../models/servers';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

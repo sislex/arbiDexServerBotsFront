@@ -1,4 +1,5 @@
 import { createAction, props } from '@ngrx/store';
+import {IServerData} from '../../models/servers';
 
 export const setServerList = createAction('[Servers] setServerList');
 export const clearActiveElementData = createAction('[Servers] clearActiveElementData');
@@ -53,3 +54,14 @@ export const updateBot = createAction(
   props<{ isSendData: boolean, id: string }>()
 );
 
+export const loadServerList = createAction('[Servers] loadServerList');
+
+export const loadServerListSuccess = createAction(
+  '[Servers] loadServerListSuccess',
+  props<{ response: IServerData }>()
+);
+
+export const loadServerListFailure = createAction(
+  '[Servers] loadServerListFailure',
+  props<{ error: string }>()
+);

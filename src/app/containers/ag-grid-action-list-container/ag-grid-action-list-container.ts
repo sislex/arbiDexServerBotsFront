@@ -4,7 +4,7 @@ import {Store} from '@ngrx/store';
 import {getActionTypesList} from '../../+state/servers/servers.selectors';
 import {AsyncPipe} from '@angular/common';
 import {Observable} from 'rxjs';
-import {ITypesList} from '../../+state/servers/servers.reducer';
+import {ITypesList} from '../../models/servers';
 
 @Component({
   selector: 'app-ag-grid-action-list-container',
