@@ -1,5 +1,12 @@
 <app-tabs
   [list]="(tabList$ | async)!"
   [tabName]="(activeTab$ | async)!"
+
+  [allServerDataIsLoading]="(allServerDataIsLoading$ | async)!"
+  [allServerDataIsLoaded]="(allServerDataIsLoaded$ | async)!"
+  [loadServerDataError]="(loadServerDataError$ | async)!"
+  [loadBotTypesError]="(loadBotTypesError$ | async)!"
+  [loadActionTypesError]="(loadActionTypesError$ | async)!"
+
   (emitter)="events($event)"
 ></app-tabs>

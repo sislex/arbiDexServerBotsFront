@@ -4,6 +4,15 @@ mat-tab-group {
   app-title-content-layout {
     display: block;
     height: 100%;
+
+    app-loader-container {
+      width: 100%;
+    }
+
+    .server-page {
+      height: 100%;
+      width: 100%;
+    }
   }
 }
 
@@ -11,10 +20,5 @@ app-ag-grid-bots-control-container, app-ag-grid-gate-list-container {
   flex-direction: column;
   display: flex;
   flex: 1;
-  width: 100%;
-}
-
-.server-page {
-  height: 100%;
   width: 100%;
 }

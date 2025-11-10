@@ -5,6 +5,10 @@ import { AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import {
   getActiveServerIpPort,
+  getAllServerDataIsLoaded,
+  getAllServerDataIsLoading, getLoadActionTypesError,
+  getLoadBotTypesError,
+  getLoadServerDataError,
 } from '../../+state/servers/servers.selectors';
 import {take} from 'rxjs';
 import {getActiveTab, getTabList} from '../../+state/view/view.selectors';
@@ -24,6 +28,12 @@ export class TabsContainer {
   activeTab$ = this.store.select(getActiveTab);
   tabList$ = this.store.select(getTabList);
   ipPort$ = this.store.select(getActiveServerIpPort);
+
+  allServerDataIsLoading$ = this.store.select(getAllServerDataIsLoading);
+  allServerDataIsLoaded$ = this.store.select(getAllServerDataIsLoaded);
+  loadServerDataError$ = this.store.select(getLoadServerDataError);
+  loadBotTypesError$ = this.store.select(getLoadBotTypesError);
+  loadActionTypesError$ = this.store.select(getLoadActionTypesError);
 
   events($event: any) {
     if ($event.event === 'Tabs:TAB_CLICKED') {

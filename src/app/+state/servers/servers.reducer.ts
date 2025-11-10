@@ -1,103 +1,8 @@
 import {createReducer, on} from '@ngrx/store';
 import * as ServersActions from './servers.actions';
+import {IConfig, IServerData, IBotData, IActiveElementData} from '../../models/servers';
 
 export const SERVERS_FEATURE_KEY = 'servers';
-
-export interface IBotData {
-  id: string;
-  name: string;
-  type: any;
-  description: string;
-  gate: any;
-  maxTimeRequest: number;
-  timeRequest: number;
-  status: string;
-  sendData: boolean;
-  isStarted: boolean;
-
-  botJSON: string,
-  actionJSON: string,
-  actionTypeSelect: string,
-  botTypeSelect: string,
-}
-
-export interface IServerAuthData {
-  login: string;
-  password: string;
-}
-
-export interface IServerDataResponse { //то что приходит с докера = сервера
-  version: string;
-  startDate: Date;
-  // timestamp: Date; //выносим в машинный интерфейс.
-  botsList: IBotData[];
-}
-
-export interface IServerData { //то что отображаем
-  ip: string;
-  port: string;
-  version: string;
-  status: string;
-  timestampFinish: number;
-  timestampStart: number;
-  botsCount: number;
-}
-
-export interface IServer {
-  ip: string;
-  port?: string;
-  name: string;
-}
-
-export interface IConfig {
-  serverList: IServer[];
-}
-
-export interface ITypesList {
-  id: string;
-  label: string;
-  type: string;
-  description: string;
-}
-
-export interface IGateItem {
-  ip: string;
-  name: string;
-}
-
-export interface ILastActionResult {
-  ok: boolean;
-  amountOut: string;
-}
-
-export interface IBotControl {
-  id: string;
-  running: boolean;
-  createdAt: string;
-  actionCount: number;
-  errorCount: number;
-  lastActionTimeStart: string;
-  lastActionTimeFinish: string;
-  lastLatency: number;
-  lastActionResult: ILastActionResult;
-
-  botErrorList: IBotError[];
-}
-
-export interface IActiveElementData {
-  serverData: IServerData;
-  botTypesList: ITypesList[];
-  actionTypesList: ITypesList[];
-  gateList: IGateItem[];
-  botControlList: IBotControl[];
-}
-
-export interface IBotError {
-  id: string;
-  time: string;
-  status: string;
-  message: string;
-}
 
 export interface ServersState {
   featureName: string;
@@ -131,16 +36,34 @@ export const initialState: ServersState = {
   activeBotData: [],
   activeElementData: {
     serverData: {
-      ip: '',
-      port: '',
-      version: '',
-      status: 'active',
-      timestampFinish: 0,
-      timestampStart: 0,
-      botsCount: 0
+      startTime: null,
+      loadingTime: null,
+      isLoading: false,
+      isLoaded: false,
+      response: {
+        ip: '',
+        port: '',
+        version: '',
+        status: 'active',
+        timestampFinish: 0,
+        timestampStart: 0,
+        botsCount: 0
+      }
     },
-    botTypesList: [],
-    actionTypesList: [],
+    botTypesList: {
+      startTime: null,
+      loadingTime: null,
+      isLoading: false,
+      isLoaded: false,
+      response: []
+    },
+    actionTypesList: {
+      startTime: null,
+      loadingTime: null,
+      isLoading: false,
+      isLoaded: false,
+      response: []
+    },
     gateList: [],
     botControlList: [],
   },
@@ -148,18 +71,119 @@ export const initialState: ServersState = {
 
 export const serversReducer = createReducer(
   initialState,
-  on(ServersActions.setActiveServerData, (state, {response}) => ({
+  on(ServersActions.loadServerList, (state) => ({
     ...state,
     activeElementData: {
       ...state.activeElementData,
-      serverData: response
+      serverData: {
+        ...state.activeElementData.serverData,
+        startTime:  Date.now(),
+        isLoading: true,
+        isLoaded: false,
+      }
     }
   })),
-  on(ServersActions.setBotTypesList, (state, {response}) => ({
+  on(ServersActions.loadServerListSuccess, (state, {response}) => ({
     ...state,
     activeElementData: {
       ...state.activeElementData,
-      botTypesList: response
+      serverData: {
+        ...state.activeElementData.serverData,
+        loadingTime: Date.now() - state.activeElementData.serverData.startTime!,
+        isLoading: false,
+        isLoaded: true,
+        response
+      }
+    }
+  })),
+  on(ServersActions.loadServerListFailure, (state, {error}) => ({
+    ...state,
+    activeElementData: {
+      ...state.activeElementData,
+      serverData: {
+        ...state.activeElementData.serverData,
+        loadingTime: Date.now() - state.activeElementData.serverData.startTime!,
+        isLoading: false,
+        isLoaded: true,
+        error
+      }
+    }
+  })),
+
+  on(ServersActions.loadBotTypesList, (state) => ({
+    ...state,
+    activeElementData: {
+      ...state.activeElementData,
+      botTypesList: {
+        ...state.activeElementData.botTypesList,
+        startTime:  Date.now(),
+        isLoading: true,
+        isLoaded: false,
+      }
+    }
+  })),
+  on(ServersActions.loadBotTypesListSuccess, (state, {response}) => ({
+    ...state,
+    activeElementData: {
+      ...state.activeElementData,
+      botTypesList: {
+        ...state.activeElementData.botTypesList,
+        loadingTime: Date.now() - state.activeElementData.botTypesList.startTime!,
+        isLoading: false,
+        isLoaded: true,
+        response
+      }
+    }
+  })),
+  on(ServersActions.loadBotTypesListFailure, (state, {error}) => ({
+    ...state,
+    activeElementData: {
+      ...state.activeElementData,
+      botTypesList: {
+        ...state.activeElementData.botTypesList,
+        loadingTime: Date.now() - state.activeElementData.botTypesList.startTime!,
+        isLoading: false,
+        isLoaded: true,
+        error
+      }
+    }
+  })),
+  on(ServersActions.loadActionTypesList, (state) => ({
+    ...state,
+    activeElementData: {
+      ...state.activeElementData,
+      actionTypesList: {
+        ...state.activeElementData.actionTypesList,
+        startTime:  Date.now(),
+        isLoading: true,
+        isLoaded: false,
+      }
+    }
+  })),
+  on(ServersActions.loadActionTypesListSuccess, (state, {response}) => ({
+    ...state,
+    activeElementData: {
+      ...state.activeElementData,
+      actionTypesList: {
+        ...state.activeElementData.actionTypesList,
+        loadingTime: Date.now() - state.activeElementData.actionTypesList.startTime!,
+        isLoading: false,
+        isLoaded: true,
+        response
+      }
+    }
+  })),
+  on(ServersActions.loadActionTypesListFailure, (state, {error}) => ({
+    ...state,
+    activeElementData: {
+      ...state.activeElementData,
+      actionTypesList: {
+        ...state.activeElementData.actionTypesList,
+        loadingTime: Date.now() - state.activeElementData.actionTypesList.startTime!,
+        isLoading: false,
+        isLoaded: true,
+        error
+      }
     }
   })),
   on(ServersActions.setActionTypesList, (state, {response}) => ({
@@ -189,8 +213,11 @@ export const serversReducer = createReducer(
       ...state.activeElementData,
       serverData: {
         ...state.activeElementData.serverData,
-        ip: ip,
-        port: port,
+        response: {
+          ...state.activeElementData.serverData.response,
+          ip,
+          port
+        }
       }
     }
   })),

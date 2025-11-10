@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {Loader} from '../../components/loader/loader.component';
+import {Loader} from '../../components/loader/loader';
 
 @Component({
   selector: 'app-loader-container',
