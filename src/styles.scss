@@ -10,6 +10,7 @@ $none-color: #000000;
 $neutral-color: #808080FF;
 $white-color: #fff;
 $main-back: linear-gradient(to right, #D2B585, #FFFFFF);
+$toolbar-gradient: linear-gradient(to right, #8E2D23, #DC5229);
 
 :root {
   --true-color:#{$true-color};
@@ -19,6 +20,7 @@ $main-back: linear-gradient(to right, #D2B585, #FFFFFF);
   --neutral-color: #{$neutral-color};
   --white-color: #{$white-color};
   --main-back: #{$main-back};
+  --toolbar-gradient: #{$toolbar-gradient};
 }
 
 :root {
@@ -50,7 +52,7 @@ $main-back: linear-gradient(to right, #D2B585, #FFFFFF);
   @include mat.toolbar-overrides((
     standard-height: 36px,
     title-text-size: 16px,
-    container-background-color: linear-gradient(to right, #8E2D23, #DC5229),
+    container-background-color: var(--toolbar-gradient),
     container-text-color: #ffff,
   ));
 

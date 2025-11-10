@@ -28,9 +28,9 @@ export class AgGridBotsControl {
     this.emitter.emit({ ...event, row });
   }
 
-  onRowClicked($event: any) {
+  onRowDoubleClicked($event: any) {
     this.emitter.emit({
-      event: 'AgGridBotsControl:CLICKED_ROW',
+      event: 'AgGridBotsControl:DOUBLE_CLICKED_ROW',
       row: $event
     });
   }

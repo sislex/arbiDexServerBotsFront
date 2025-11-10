@@ -80,6 +80,8 @@ export interface IBotControl {
   lastActionTimeFinish: string;
   lastLatency: number;
   lastActionResult: ILastActionResult;
+
+  botErrorList: IBotError[];
 }
 
 export interface IActiveElementData {
@@ -88,6 +90,13 @@ export interface IActiveElementData {
   actionTypesList: ITypesList[];
   gateList: IGateItem[];
   botControlList: IBotControl[];
+}
+
+export interface IBotError {
+  id: string;
+  time: string;
+  status: string;
+  message: string;
 }
 
 export interface ServersState {
@@ -107,8 +116,8 @@ export const initialState: ServersState = {
   config: {
     serverList: [
       {
-        ip: '192.169.0.3',
-        port: '6060',
+        ip: '45.135.182.251',
+        port: '1005',
         name: 'UNREAL_SERVER',
       },
       {

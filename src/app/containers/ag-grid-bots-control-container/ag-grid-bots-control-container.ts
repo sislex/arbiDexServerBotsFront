@@ -40,8 +40,9 @@ export class AgGridBotsControlContainer {
       }
     } else if ($event.event === 'Toggle:TOGGLE_CLICKED') {
       this.store.dispatch(isSendData({isSendData: $event.newValue, id: $event.row.id}))
-    } else if ($event.event === 'AgGridBotsControl:CLICKED_ROW') {
-      console.log($event)
+    } else if ($event.event === 'AgGridBotsControl:DOUBLE_CLICKED_ROW') {
+      console.log('кликнул по строке:', $event.row.data)
+      console.log('теперь беру ip, port из стэйта и id из строки и делаю API на ошибку')
     }
   }
 

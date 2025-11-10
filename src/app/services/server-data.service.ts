@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {Observable, map, switchMap, take} from 'rxjs';
+import {Observable, map, switchMap, take, filter} from 'rxjs';
 import { Store } from '@ngrx/store';
 import { getActiveServerIpPort } from '../+state/servers/servers.selectors';
 
@@ -17,6 +17,7 @@ export class ServerDataService {
       }
       return `http://${ipPort}`;
     }),
+    filter((item: string | null) => !!item)
     // startWith(environment.hostUrl)
   );
 
@@ -45,5 +46,10 @@ export class ServerDataService {
   // Получить список ботов и их состояния
   getBotsControl(): Observable<any> {
     return this.get('/bots/get-all');
+  }
+
+  // Получить список ошибок по конкретному боту
+  getBotErrorsById(id: string): Observable<any> {
+    return this.get(`/bots/errors/${id}`);
   }
 }

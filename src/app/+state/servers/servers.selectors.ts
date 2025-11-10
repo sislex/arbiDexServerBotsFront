@@ -40,3 +40,11 @@ export const getServerData = createSelector(
   selectFeature,
   (state: ServersState) => state.activeElementData?.serverData ? [state.activeElementData.serverData] : []
 );
+
+// export const selectBotData = createSelector(
+//   selectFeature,
+//   (state: ServersState) => state.activeElementData.botControlList
+// );
+
+//вопрос: как же сохранять ошибки для этого бота?
+//и как их получать?
