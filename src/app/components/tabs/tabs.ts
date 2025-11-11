@@ -13,7 +13,17 @@ import {TitleTableLayout} from '../title-table-layout/title-table-layout';
 
 @Component({
   selector: 'app-tabs',
-  imports: [MatTabsModule, TitleCasePipe, TitleContentLayout, AgGridBotsControlContainer, AgGridServerDataContainer, AgGridGateListContainer, AgGridBotListContainer, AgGridActionListContainer, TitleTableLayout],
+  imports: [
+    MatTabsModule,
+    TitleCasePipe,
+    TitleContentLayout,
+    AgGridBotsControlContainer,
+    AgGridServerDataContainer,
+    AgGridGateListContainer,
+    AgGridBotListContainer,
+    AgGridActionListContainer,
+    TitleTableLayout
+  ],
   standalone: true,
   templateUrl: './tabs.html',
   styleUrl: './tabs.scss'
@@ -21,9 +31,10 @@ import {TitleTableLayout} from '../title-table-layout/title-table-layout';
 export class Tabs implements OnChanges {
   @Input() list: string[] = [];
   @Input() tabName: string = '';
-  selectedIndex = 0;
 
   @Output() emitter = new EventEmitter();
+
+  selectedIndex = 0;
 
   ngOnChanges() {
     if (this.list && this.tabName) {
