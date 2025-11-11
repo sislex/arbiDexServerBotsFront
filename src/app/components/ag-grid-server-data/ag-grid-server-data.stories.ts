@@ -34,13 +34,13 @@ export const OneServer: Story = {
   },
 };
 
-export const ServersList: Story = {
+export const ServersListBigData: Story = {
   args: {
     rowData: serverStabs_2,
   },
 };
 
-export const BigDataServersList: Story = {
+export const ServerError: Story = {
   args: {
     rowData: [serverStabs_3],
   },
