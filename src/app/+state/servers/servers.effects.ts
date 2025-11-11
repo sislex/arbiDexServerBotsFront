@@ -3,11 +3,18 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, filter, forkJoin, map, of, switchMap, tap, withLatestFrom } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
-  setActionTypesList,
+  loadActionTypesList,
+  loadActionTypesListFailure,
+  loadActionTypesListSuccess, loadBotControlList,
+  loadBotControlListFailure,
+  loadBotControlListSuccess,
+  loadBotTypesList,
+  loadBotTypesListFailure,
+  loadBotTypesListSuccess,
+  loadServerList,
+  loadServerListFailure,
+  loadServerListSuccess,
   setActiveServer,
-  setActiveServerData,
-  setBotControlList,
-  setBotTypesList,
 } from './servers.actions';
 import { ServerDataService } from '../../services/server-data.service';
 import { getActiveTab } from '../view/view.selectors';
@@ -24,22 +31,25 @@ export class ServersEffects {
         withLatestFrom(this.store.select(getActiveTab)),
         filter(([_, tab]) => tab === 'server data'),
         switchMap(([action]) => {
+          this.store.dispatch(loadServerList());
+          this.store.dispatch(loadBotTypesList());
+          this.store.dispatch(loadActionTypesList());
           return forkJoin({
             info: this.serverDataService.getServerData().pipe(
               catchError(err => {
-                console.error('info error', err);
+                this.store.dispatch(loadServerListFailure({error: err}));
                 return of(null);
               })
             ),
             botTypes: this.serverDataService.getBotTypesList().pipe(
               catchError(err => {
-                console.error('botTypes error', err);
+                this.store.dispatch(loadBotTypesListFailure({error: err}));
                 return of([]);
               })
             ),
             actions: this.serverDataService.getActionTypesList().pipe(
               catchError(err => {
-                console.error('actions error', err);
+                this.store.dispatch(loadActionTypesListFailure({error: err}));
                 return of([]);
               })
             ),
@@ -70,9 +80,9 @@ export class ServersEffects {
                 description: item.description ?? '-',
               }));
 
-              this.store.dispatch(setActiveServerData({ response: responseServerData }));
-              this.store.dispatch(setBotTypesList({ response: responseBotTypesList }));
-              this.store.dispatch(setActionTypesList({ response: responseActionTypesList }));
+              this.store.dispatch(loadServerListSuccess({ response: responseServerData }));
+              this.store.dispatch(loadBotTypesListSuccess({ response: responseBotTypesList }));
+              this.store.dispatch(loadActionTypesListSuccess({ response: responseActionTypesList }));
             }),
             map(() => ({ done: true }))
           );
@@ -81,12 +91,13 @@ export class ServersEffects {
     { dispatch: false }
   );
 
-  loadBotsControl$ = createEffect(() =>
-      this.actions$.pipe(
+  loadBotsControl$ = createEffect(() => {
+      return this.actions$.pipe(
         ofType(setActiveServer),
         withLatestFrom(this.store.select(getActiveTab)),
         filter(([_, tab]) => tab === 'bots'),
         switchMap(([action]) => {
+          this.store.dispatch(loadBotControlList());
 
           return this.serverDataService.getBotsControl().pipe(
             tap((response: any[]) => {
@@ -107,16 +118,17 @@ export class ServersEffects {
                 running: item.running ?? false,
               }));
 
-              this.store.dispatch(setBotControlList({ response: responseBotControlList }));
+              this.store.dispatch(loadBotControlListSuccess({response: responseBotControlList}));
             }),
             catchError(err => {
-              console.error('botsControl error', err);
+              this.store.dispatch(loadBotControlListFailure({error: err}));
               return of([]);
             }),
-            map(() => ({ done: true }))
+            map(() => ({done: true}))
           );
         })
-      ),
+      );
+    },
     { dispatch: false }
   );
 }
