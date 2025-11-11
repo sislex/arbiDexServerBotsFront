@@ -2,8 +2,148 @@
     "pipes": [],
     "interfaces": [
         {
+            "name": "API",
+            "id": "interface-API-2aec4b43f48bfb0877cdfbc6fffb62a5d0b0b2b52a6cda09a16878569a9ba025bec7b660d0ef8a37270cf35e86ace06b4a3b357c6e78f68ef20d1315782e9afc",
+            "file": "src/app/models/api.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "export interface API {\n  startTime: number | null;\n  loadingTime: number | null;\n  isLoading: boolean;\n  isLoaded: boolean;\n  error?: any;\n  response?: any;\n}\n",
+            "properties": [
+                {
+                    "name": "error",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "any",
+                    "indexKey": "",
+                    "optional": true,
+                    "description": "",
+                    "line": 6
+                },
+                {
+                    "name": "isLoaded",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 5
+                },
+                {
+                    "name": "isLoading",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 4
+                },
+                {
+                    "name": "loadingTime",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number | null",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 3
+                },
+                {
+                    "name": "response",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "any",
+                    "indexKey": "",
+                    "optional": true,
+                    "description": "",
+                    "line": 7
+                },
+                {
+                    "name": "startTime",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number | null",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 2
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": []
+        },
+        {
             "name": "IActiveElementData",
-            "id": "interface-IActiveElementData-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75",
+            "id": "interface-IActiveElementData-ff75fe7ba19c5620d76bf97a2b1254fa5aca382339f91d26e9f999d60ad9e81f590538d53189d86f0323e597f60c33cece62a3ae4b7ec07be59cd9ebffa34e5e",
+            "file": "src/app/models/servers.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { API } from './api';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string;\n  actionJSON: string;\n  actionTypeSelect: string;\n  botTypeSelect: string;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse {\n  version: string;\n  startDate: Date;\n  botsList: IBotData[];\n}\n\nexport interface IServerData {\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServerDataAPI extends API {\n  response: IServerData;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotError {\n  id: string;\n  time: string;\n  status: string;\n  message: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n  botErrorList: IBotError[];\n}\n\nexport interface IActiveElementData {\n  serverData: IServerDataAPI;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n",
+            "properties": [
+                {
+                    "name": "actionTypesList",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ITypesList[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 96
+                },
+                {
+                    "name": "botControlList",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "IBotControl[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 98
+                },
+                {
+                    "name": "botTypesList",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ITypesList[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 95
+                },
+                {
+                    "name": "gateList",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "IGateItem[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 97
+                },
+                {
+                    "name": "serverData",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "IServerDataAPI",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 94
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "IActiveElementData",
+            "id": "interface-IActiveElementData-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75-1",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
@@ -64,7 +204,10 @@
             "indexSignatures": [],
             "kind": 172,
             "methods": [],
-            "extends": []
+            "extends": [],
+            "isDuplicate": true,
+            "duplicateId": 1,
+            "duplicateName": "IActiveElementData-1"
         },
         {
             "name": "IAuthData",
@@ -103,7 +246,122 @@
         },
         {
             "name": "IBotControl",
-            "id": "interface-IBotControl-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75",
+            "id": "interface-IBotControl-ff75fe7ba19c5620d76bf97a2b1254fa5aca382339f91d26e9f999d60ad9e81f590538d53189d86f0323e597f60c33cece62a3ae4b7ec07be59cd9ebffa34e5e",
+            "file": "src/app/models/servers.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { API } from './api';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string;\n  actionJSON: string;\n  actionTypeSelect: string;\n  botTypeSelect: string;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse {\n  version: string;\n  startDate: Date;\n  botsList: IBotData[];\n}\n\nexport interface IServerData {\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServerDataAPI extends API {\n  response: IServerData;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotError {\n  id: string;\n  time: string;\n  status: string;\n  message: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n  botErrorList: IBotError[];\n}\n\nexport interface IActiveElementData {\n  serverData: IServerDataAPI;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n",
+            "properties": [
+                {
+                    "name": "actionCount",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 84
+                },
+                {
+                    "name": "botErrorList",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "IBotError[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 90
+                },
+                {
+                    "name": "createdAt",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 83
+                },
+                {
+                    "name": "errorCount",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 85
+                },
+                {
+                    "name": "id",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 81
+                },
+                {
+                    "name": "lastActionResult",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ILastActionResult",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 89
+                },
+                {
+                    "name": "lastActionTimeFinish",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 87
+                },
+                {
+                    "name": "lastActionTimeStart",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 86
+                },
+                {
+                    "name": "lastLatency",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 88
+                },
+                {
+                    "name": "running",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 82
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "IBotControl",
+            "id": "interface-IBotControl-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75-1",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
@@ -214,11 +472,169 @@
             "indexSignatures": [],
             "kind": 172,
             "methods": [],
+            "extends": [],
+            "isDuplicate": true,
+            "duplicateId": 1,
+            "duplicateName": "IBotControl-1"
+        },
+        {
+            "name": "IBotData",
+            "id": "interface-IBotData-ff75fe7ba19c5620d76bf97a2b1254fa5aca382339f91d26e9f999d60ad9e81f590538d53189d86f0323e597f60c33cece62a3ae4b7ec07be59cd9ebffa34e5e",
+            "file": "src/app/models/servers.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { API } from './api';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string;\n  actionJSON: string;\n  actionTypeSelect: string;\n  botTypeSelect: string;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse {\n  version: string;\n  startDate: Date;\n  botsList: IBotData[];\n}\n\nexport interface IServerData {\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServerDataAPI extends API {\n  response: IServerData;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotError {\n  id: string;\n  time: string;\n  status: string;\n  message: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n  botErrorList: IBotError[];\n}\n\nexport interface IActiveElementData {\n  serverData: IServerDataAPI;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n",
+            "properties": [
+                {
+                    "name": "actionJSON",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 16
+                },
+                {
+                    "name": "actionTypeSelect",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 17
+                },
+                {
+                    "name": "botJSON",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 15
+                },
+                {
+                    "name": "botTypeSelect",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 18
+                },
+                {
+                    "name": "description",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 7
+                },
+                {
+                    "name": "gate",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "any",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 8
+                },
+                {
+                    "name": "id",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 4
+                },
+                {
+                    "name": "isStarted",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 13
+                },
+                {
+                    "name": "maxTimeRequest",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 9
+                },
+                {
+                    "name": "name",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 5
+                },
+                {
+                    "name": "sendData",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 12
+                },
+                {
+                    "name": "status",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 11
+                },
+                {
+                    "name": "timeRequest",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 10
+                },
+                {
+                    "name": "type",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "any",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 6
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
             "extends": []
         },
         {
             "name": "IBotData",
-            "id": "interface-IBotData-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75",
+            "id": "interface-IBotData-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75-1",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
@@ -369,11 +785,14 @@
             "indexSignatures": [],
             "kind": 172,
             "methods": [],
-            "extends": []
+            "extends": [],
+            "isDuplicate": true,
+            "duplicateId": 1,
+            "duplicateName": "IBotData-1"
         },
         {
             "name": "IBotData",
-            "id": "interface-IBotData-ac2c5b895f56de8bbed55e6a319a3ab8738a5c50eace24df26919014dab141540fd66a1ca9b6df9a0fe729419ce610f1bdb1fa0a5bc841e23905550fd2a25651-1",
+            "id": "interface-IBotData-ac2c5b895f56de8bbed55e6a319a3ab8738a5c50eace24df26919014dab141540fd66a1ca9b6df9a0fe729419ce610f1bdb1fa0a5bc841e23905550fd2a25651-2",
             "file": "src/app/+state/servers/stabs-for-api.ts",
             "deprecated": false,
             "deprecationMessage": "",
@@ -476,12 +895,67 @@
             "methods": [],
             "extends": [],
             "isDuplicate": true,
-            "duplicateId": 1,
-            "duplicateName": "IBotData-1"
+            "duplicateId": 2,
+            "duplicateName": "IBotData-2"
         },
         {
             "name": "IBotError",
-            "id": "interface-IBotError-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75",
+            "id": "interface-IBotError-ff75fe7ba19c5620d76bf97a2b1254fa5aca382339f91d26e9f999d60ad9e81f590538d53189d86f0323e597f60c33cece62a3ae4b7ec07be59cd9ebffa34e5e",
+            "file": "src/app/models/servers.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { API } from './api';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string;\n  actionJSON: string;\n  actionTypeSelect: string;\n  botTypeSelect: string;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse {\n  version: string;\n  startDate: Date;\n  botsList: IBotData[];\n}\n\nexport interface IServerData {\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServerDataAPI extends API {\n  response: IServerData;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotError {\n  id: string;\n  time: string;\n  status: string;\n  message: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n  botErrorList: IBotError[];\n}\n\nexport interface IActiveElementData {\n  serverData: IServerDataAPI;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n",
+            "properties": [
+                {
+                    "name": "id",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 74
+                },
+                {
+                    "name": "message",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 77
+                },
+                {
+                    "name": "status",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 76
+                },
+                {
+                    "name": "time",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 75
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "IBotError",
+            "id": "interface-IBotError-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75-1",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
@@ -532,7 +1006,10 @@
             "indexSignatures": [],
             "kind": 172,
             "methods": [],
-            "extends": []
+            "extends": [],
+            "isDuplicate": true,
+            "duplicateId": 1,
+            "duplicateName": "IBotError-1"
         },
         {
             "name": "IBotGatesData",
@@ -591,7 +1068,32 @@
         },
         {
             "name": "IConfig",
-            "id": "interface-IConfig-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75",
+            "id": "interface-IConfig-ff75fe7ba19c5620d76bf97a2b1254fa5aca382339f91d26e9f999d60ad9e81f590538d53189d86f0323e597f60c33cece62a3ae4b7ec07be59cd9ebffa34e5e",
+            "file": "src/app/models/servers.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { API } from './api';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string;\n  actionJSON: string;\n  actionTypeSelect: string;\n  botTypeSelect: string;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse {\n  version: string;\n  startDate: Date;\n  botsList: IBotData[];\n}\n\nexport interface IServerData {\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServerDataAPI extends API {\n  response: IServerData;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotError {\n  id: string;\n  time: string;\n  status: string;\n  message: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n  botErrorList: IBotError[];\n}\n\nexport interface IActiveElementData {\n  serverData: IServerDataAPI;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n",
+            "properties": [
+                {
+                    "name": "serverList",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "IServer[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 53
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "IConfig",
+            "id": "interface-IConfig-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75-1",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
@@ -612,7 +1114,10 @@
             "indexSignatures": [],
             "kind": 172,
             "methods": [],
-            "extends": []
+            "extends": [],
+            "isDuplicate": true,
+            "duplicateId": 1,
+            "duplicateName": "IConfig-1"
         },
         {
             "name": "IErrors",
@@ -696,7 +1201,42 @@
         },
         {
             "name": "IGateItem",
-            "id": "interface-IGateItem-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75",
+            "id": "interface-IGateItem-ff75fe7ba19c5620d76bf97a2b1254fa5aca382339f91d26e9f999d60ad9e81f590538d53189d86f0323e597f60c33cece62a3ae4b7ec07be59cd9ebffa34e5e",
+            "file": "src/app/models/servers.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { API } from './api';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string;\n  actionJSON: string;\n  actionTypeSelect: string;\n  botTypeSelect: string;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse {\n  version: string;\n  startDate: Date;\n  botsList: IBotData[];\n}\n\nexport interface IServerData {\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServerDataAPI extends API {\n  response: IServerData;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotError {\n  id: string;\n  time: string;\n  status: string;\n  message: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n  botErrorList: IBotError[];\n}\n\nexport interface IActiveElementData {\n  serverData: IServerDataAPI;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n",
+            "properties": [
+                {
+                    "name": "ip",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 64
+                },
+                {
+                    "name": "name",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 65
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "IGateItem",
+            "id": "interface-IGateItem-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75-1",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
@@ -727,7 +1267,10 @@
             "indexSignatures": [],
             "kind": 172,
             "methods": [],
-            "extends": []
+            "extends": [],
+            "isDuplicate": true,
+            "duplicateId": 1,
+            "duplicateName": "IGateItem-1"
         },
         {
             "name": "IGateSetting",
@@ -744,7 +1287,42 @@
         },
         {
             "name": "ILastActionResult",
-            "id": "interface-ILastActionResult-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75",
+            "id": "interface-ILastActionResult-ff75fe7ba19c5620d76bf97a2b1254fa5aca382339f91d26e9f999d60ad9e81f590538d53189d86f0323e597f60c33cece62a3ae4b7ec07be59cd9ebffa34e5e",
+            "file": "src/app/models/servers.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { API } from './api';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string;\n  actionJSON: string;\n  actionTypeSelect: string;\n  botTypeSelect: string;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse {\n  version: string;\n  startDate: Date;\n  botsList: IBotData[];\n}\n\nexport interface IServerData {\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServerDataAPI extends API {\n  response: IServerData;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotError {\n  id: string;\n  time: string;\n  status: string;\n  message: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n  botErrorList: IBotError[];\n}\n\nexport interface IActiveElementData {\n  serverData: IServerDataAPI;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n",
+            "properties": [
+                {
+                    "name": "amountOut",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 70
+                },
+                {
+                    "name": "ok",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 69
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "ILastActionResult",
+            "id": "interface-ILastActionResult-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75-1",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
@@ -775,11 +1353,59 @@
             "indexSignatures": [],
             "kind": 172,
             "methods": [],
+            "extends": [],
+            "isDuplicate": true,
+            "duplicateId": 1,
+            "duplicateName": "ILastActionResult-1"
+        },
+        {
+            "name": "IServer",
+            "id": "interface-IServer-ff75fe7ba19c5620d76bf97a2b1254fa5aca382339f91d26e9f999d60ad9e81f590538d53189d86f0323e597f60c33cece62a3ae4b7ec07be59cd9ebffa34e5e",
+            "file": "src/app/models/servers.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { API } from './api';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string;\n  actionJSON: string;\n  actionTypeSelect: string;\n  botTypeSelect: string;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse {\n  version: string;\n  startDate: Date;\n  botsList: IBotData[];\n}\n\nexport interface IServerData {\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServerDataAPI extends API {\n  response: IServerData;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotError {\n  id: string;\n  time: string;\n  status: string;\n  message: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n  botErrorList: IBotError[];\n}\n\nexport interface IActiveElementData {\n  serverData: IServerDataAPI;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n",
+            "properties": [
+                {
+                    "name": "ip",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 47
+                },
+                {
+                    "name": "name",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 49
+                },
+                {
+                    "name": "port",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": true,
+                    "description": "",
+                    "line": 48
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
             "extends": []
         },
         {
             "name": "IServer",
-            "id": "interface-IServer-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75",
+            "id": "interface-IServer-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75-1",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
@@ -820,11 +1446,14 @@
             "indexSignatures": [],
             "kind": 172,
             "methods": [],
-            "extends": []
+            "extends": [],
+            "isDuplicate": true,
+            "duplicateId": 1,
+            "duplicateName": "IServer-1"
         },
         {
             "name": "IServer",
-            "id": "interface-IServer-ac2c5b895f56de8bbed55e6a319a3ab8738a5c50eace24df26919014dab141540fd66a1ca9b6df9a0fe729419ce610f1bdb1fa0a5bc841e23905550fd2a25651-1",
+            "id": "interface-IServer-ac2c5b895f56de8bbed55e6a319a3ab8738a5c50eace24df26919014dab141540fd66a1ca9b6df9a0fe729419ce610f1bdb1fa0a5bc841e23905550fd2a25651-2",
             "file": "src/app/+state/servers/stabs-for-api.ts",
             "deprecated": false,
             "deprecationMessage": "",
@@ -927,12 +1556,47 @@
             "methods": [],
             "extends": [],
             "isDuplicate": true,
-            "duplicateId": 1,
-            "duplicateName": "IServer-1"
+            "duplicateId": 2,
+            "duplicateName": "IServer-2"
         },
         {
             "name": "IServerAuthData",
-            "id": "interface-IServerAuthData-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75",
+            "id": "interface-IServerAuthData-ff75fe7ba19c5620d76bf97a2b1254fa5aca382339f91d26e9f999d60ad9e81f590538d53189d86f0323e597f60c33cece62a3ae4b7ec07be59cd9ebffa34e5e",
+            "file": "src/app/models/servers.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { API } from './api';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string;\n  actionJSON: string;\n  actionTypeSelect: string;\n  botTypeSelect: string;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse {\n  version: string;\n  startDate: Date;\n  botsList: IBotData[];\n}\n\nexport interface IServerData {\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServerDataAPI extends API {\n  response: IServerData;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotError {\n  id: string;\n  time: string;\n  status: string;\n  message: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n  botErrorList: IBotError[];\n}\n\nexport interface IActiveElementData {\n  serverData: IServerDataAPI;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n",
+            "properties": [
+                {
+                    "name": "login",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 22
+                },
+                {
+                    "name": "password",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 23
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "IServerAuthData",
+            "id": "interface-IServerAuthData-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75-1",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
@@ -963,11 +1627,99 @@
             "indexSignatures": [],
             "kind": 172,
             "methods": [],
+            "extends": [],
+            "isDuplicate": true,
+            "duplicateId": 1,
+            "duplicateName": "IServerAuthData-1"
+        },
+        {
+            "name": "IServerData",
+            "id": "interface-IServerData-ff75fe7ba19c5620d76bf97a2b1254fa5aca382339f91d26e9f999d60ad9e81f590538d53189d86f0323e597f60c33cece62a3ae4b7ec07be59cd9ebffa34e5e",
+            "file": "src/app/models/servers.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { API } from './api';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string;\n  actionJSON: string;\n  actionTypeSelect: string;\n  botTypeSelect: string;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse {\n  version: string;\n  startDate: Date;\n  botsList: IBotData[];\n}\n\nexport interface IServerData {\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServerDataAPI extends API {\n  response: IServerData;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotError {\n  id: string;\n  time: string;\n  status: string;\n  message: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n  botErrorList: IBotError[];\n}\n\nexport interface IActiveElementData {\n  serverData: IServerDataAPI;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n",
+            "properties": [
+                {
+                    "name": "botsCount",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 39
+                },
+                {
+                    "name": "ip",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 33
+                },
+                {
+                    "name": "port",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 34
+                },
+                {
+                    "name": "status",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 36
+                },
+                {
+                    "name": "timestampFinish",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 37
+                },
+                {
+                    "name": "timestampStart",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 38
+                },
+                {
+                    "name": "version",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 35
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
             "extends": []
         },
         {
             "name": "IServerData",
-            "id": "interface-IServerData-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75",
+            "id": "interface-IServerData-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75-1",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
@@ -1048,11 +1800,86 @@
             "indexSignatures": [],
             "kind": 172,
             "methods": [],
+            "extends": [],
+            "isDuplicate": true,
+            "duplicateId": 1,
+            "duplicateName": "IServerData-1"
+        },
+        {
+            "name": "IServerDataAPI",
+            "id": "interface-IServerDataAPI-ff75fe7ba19c5620d76bf97a2b1254fa5aca382339f91d26e9f999d60ad9e81f590538d53189d86f0323e597f60c33cece62a3ae4b7ec07be59cd9ebffa34e5e",
+            "file": "src/app/models/servers.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { API } from './api';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string;\n  actionJSON: string;\n  actionTypeSelect: string;\n  botTypeSelect: string;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse {\n  version: string;\n  startDate: Date;\n  botsList: IBotData[];\n}\n\nexport interface IServerData {\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServerDataAPI extends API {\n  response: IServerData;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotError {\n  id: string;\n  time: string;\n  status: string;\n  message: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n  botErrorList: IBotError[];\n}\n\nexport interface IActiveElementData {\n  serverData: IServerDataAPI;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n",
+            "properties": [
+                {
+                    "name": "response",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "IServerData",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 43
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": [
+                "API"
+            ]
+        },
+        {
+            "name": "IServerDataResponse",
+            "id": "interface-IServerDataResponse-ff75fe7ba19c5620d76bf97a2b1254fa5aca382339f91d26e9f999d60ad9e81f590538d53189d86f0323e597f60c33cece62a3ae4b7ec07be59cd9ebffa34e5e",
+            "file": "src/app/models/servers.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { API } from './api';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string;\n  actionJSON: string;\n  actionTypeSelect: string;\n  botTypeSelect: string;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse {\n  version: string;\n  startDate: Date;\n  botsList: IBotData[];\n}\n\nexport interface IServerData {\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServerDataAPI extends API {\n  response: IServerData;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotError {\n  id: string;\n  time: string;\n  status: string;\n  message: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n  botErrorList: IBotError[];\n}\n\nexport interface IActiveElementData {\n  serverData: IServerDataAPI;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n",
+            "properties": [
+                {
+                    "name": "botsList",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "IBotData[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 29
+                },
+                {
+                    "name": "startDate",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Date",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 28
+                },
+                {
+                    "name": "version",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 27
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
             "extends": []
         },
         {
             "name": "IServerDataResponse",
-            "id": "interface-IServerDataResponse-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75",
+            "id": "interface-IServerDataResponse-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75-1",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
@@ -1093,7 +1920,10 @@
             "indexSignatures": [],
             "kind": 172,
             "methods": [],
-            "extends": []
+            "extends": [],
+            "isDuplicate": true,
+            "duplicateId": 1,
+            "duplicateName": "IServerDataResponse-1"
         },
         {
             "name": "IType",
@@ -1142,7 +1972,62 @@
         },
         {
             "name": "ITypesList",
-            "id": "interface-ITypesList-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75",
+            "id": "interface-ITypesList-ff75fe7ba19c5620d76bf97a2b1254fa5aca382339f91d26e9f999d60ad9e81f590538d53189d86f0323e597f60c33cece62a3ae4b7ec07be59cd9ebffa34e5e",
+            "file": "src/app/models/servers.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { API } from './api';\n\nexport interface IBotData {\n  id: string;\n  name: string;\n  type: any;\n  description: string;\n  gate: any;\n  maxTimeRequest: number;\n  timeRequest: number;\n  status: string;\n  sendData: boolean;\n  isStarted: boolean;\n\n  botJSON: string;\n  actionJSON: string;\n  actionTypeSelect: string;\n  botTypeSelect: string;\n}\n\nexport interface IServerAuthData {\n  login: string;\n  password: string;\n}\n\nexport interface IServerDataResponse {\n  version: string;\n  startDate: Date;\n  botsList: IBotData[];\n}\n\nexport interface IServerData {\n  ip: string;\n  port: string;\n  version: string;\n  status: string;\n  timestampFinish: number;\n  timestampStart: number;\n  botsCount: number;\n}\n\nexport interface IServerDataAPI extends API {\n  response: IServerData;\n}\n\nexport interface IServer {\n  ip: string;\n  port?: string;\n  name: string;\n}\n\nexport interface IConfig {\n  serverList: IServer[];\n}\n\nexport interface ITypesList {\n  id: string;\n  label: string;\n  type: string;\n  description: string;\n}\n\nexport interface IGateItem {\n  ip: string;\n  name: string;\n}\n\nexport interface ILastActionResult {\n  ok: boolean;\n  amountOut: string;\n}\n\nexport interface IBotError {\n  id: string;\n  time: string;\n  status: string;\n  message: string;\n}\n\nexport interface IBotControl {\n  id: string;\n  running: boolean;\n  createdAt: string;\n  actionCount: number;\n  errorCount: number;\n  lastActionTimeStart: string;\n  lastActionTimeFinish: string;\n  lastLatency: number;\n  lastActionResult: ILastActionResult;\n  botErrorList: IBotError[];\n}\n\nexport interface IActiveElementData {\n  serverData: IServerDataAPI;\n  botTypesList: ITypesList[];\n  actionTypesList: ITypesList[];\n  gateList: IGateItem[];\n  botControlList: IBotControl[];\n}\n",
+            "properties": [
+                {
+                    "name": "description",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 60
+                },
+                {
+                    "name": "id",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 57
+                },
+                {
+                    "name": "label",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 58
+                },
+                {
+                    "name": "type",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 59
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "ITypesList",
+            "id": "interface-ITypesList-24cb09673e17d08ba66d7fc559769bb3eb73465a9d8bd857ebf40c95168b0e4e843a654836aa5d2af84e2fa933f379491ffbf3984e6626c0db396b4920bf8e75-1",
             "file": "src/app/+state/servers/servers.reducer.ts",
             "deprecated": false,
             "deprecationMessage": "",
@@ -1193,7 +2078,10 @@
             "indexSignatures": [],
             "kind": 172,
             "methods": [],
-            "extends": []
+            "extends": [],
+            "isDuplicate": true,
+            "duplicateId": 1,
+            "duplicateName": "ITypesList-1"
         },
         {
             "name": "ServersPartialState",
@@ -1868,7 +2756,7 @@
             "implements": [
                 "ICellRendererAngularComp"
             ],
-            "templateData": "<div class=\"action-buttons\">\n  <app-actions\n    [icon]=\"'edit'\"\n    [type]=\"'default'\"\n    (click)=\"$event.stopPropagation()\"\n    (emitter)=\"onAction($event, 'edit')\"\n  ></app-actions>\n  <app-actions\n    [icon]=\"'delete'\"\n    [type]=\"'red'\"\n    (click)=\"$event.stopPropagation()\"\n    (emitter)=\"onAction($event, 'delete')\"\n  ></app-actions>\n</div>\n"
+            "templateData": "<div class=\"action-buttons\">\n  <app-actions\n    [icon]=\"'edit'\"\n    [type]=\"'default'\"\n    (emitter)=\"onAction($event, 'edit')\"\n  ></app-actions>\n  <app-actions\n    [icon]=\"'delete'\"\n    [type]=\"'red'\"\n    (emitter)=\"onAction($event, 'delete')\"\n  ></app-actions>\n</div>\n"
         },
         {
             "name": "AgGrid",
@@ -2022,7 +2910,7 @@
         },
         {
             "name": "AgGridActionListContainer",
-            "id": "component-AgGridActionListContainer-28753f56011012e6bcc03424e0947f14bc592d0cdd464f7b65ef60ef6d6e9ad5d43e47ee12cc92e3a6e3a204eaa8dd841221b2caf806334a7535af98813b6c32",
+            "id": "component-AgGridActionListContainer-9322c5911a67aec3fd5dd2708de06b53714da09d8bad484802c44a7d1f0cfd62a2dd7eaea87121fa2ce03296e85d776081a0867d781cf814fc5093d69a62c92b",
             "file": "src/app/containers/ag-grid-action-list-container/ag-grid-action-list-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2084,7 +2972,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {AgGridActionList} from '../../components/ag-grid-action-list/ag-grid-action-list';\nimport {Store} from '@ngrx/store';\nimport {getActionTypesList} from '../../+state/servers/servers.selectors';\nimport {AsyncPipe} from '@angular/common';\nimport {Observable} from 'rxjs';\nimport {ITypesList} from '../../+state/servers/servers.reducer';\n\n@Component({\n  selector: 'app-ag-grid-action-list-container',\n  imports: [\n    AgGridActionList,\n    AsyncPipe\n  ],\n  standalone: true,\n  templateUrl: './ag-grid-action-list-container.html',\n  styleUrl: './ag-grid-action-list-container.scss'\n})\nexport class AgGridActionListContainer {\n  private store = inject(Store);\n  actionTypesList$: Observable<ITypesList[]> = this.store.select(getActionTypesList);\n}\n",
+            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {AgGridActionList} from '../../components/ag-grid-action-list/ag-grid-action-list';\nimport {Store} from '@ngrx/store';\nimport {getActionTypesList} from '../../+state/servers/servers.selectors';\nimport {AsyncPipe} from '@angular/common';\nimport {Observable} from 'rxjs';\nimport {ITypesList} from '../../models/servers';\n\n@Component({\n  selector: 'app-ag-grid-action-list-container',\n  imports: [\n    AgGridActionList,\n    AsyncPipe\n  ],\n  standalone: true,\n  templateUrl: './ag-grid-action-list-container.html',\n  styleUrl: './ag-grid-action-list-container.scss'\n})\nexport class AgGridActionListContainer {\n  private store = inject(Store);\n  actionTypesList$: Observable<ITypesList[]> = this.store.select(getActionTypesList);\n}\n",
             "styleUrl": "./ag-grid-action-list-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -2241,7 +3129,7 @@
         },
         {
             "name": "AgGridBotsControl",
-            "id": "component-AgGridBotsControl-05aea5b0f72f25f3dfbe7da90f698e552136bdeac395ff61650178214e65d3b81fd98a72fb9bb907588db5d2a78fbd57aa0f542fe32f4bfd4774a5e50d90d436",
+            "id": "component-AgGridBotsControl-d0cfcfb6ba36794b08ac8e459a9cad9faf5bf69343b453292737edfb6cc5595931ec02a1b15d5f3eea6df5bb2b2295b8e8080b3c436ee2184e189b4c553637eb",
             "file": "src/app/components/ag-grid-bots-control/ag-grid-bots-control.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2346,7 +3234,7 @@
                     ]
                 },
                 {
-                    "name": "onRowClicked",
+                    "name": "onRowDoubleClicked",
                     "args": [
                         {
                             "name": "$event",
@@ -2387,17 +3275,17 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';\nimport {ToggleContainer} from '../../containers/ag-grid-containers/toggle-container/toggle-container';\nimport {\n  LaunchControlContainer\n} from '../../containers/ag-grid-containers/launch-control-container/launch-control-container';\nimport {ActionsContainer} from '../../containers/ag-grid-containers/actions-container/actions-container';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-bots-control',\n  imports: [\n    AgGridAngular,\n  ],\n  templateUrl: './ag-grid-bots-control.html',\n  styleUrl: './ag-grid-bots-control.scss'\n})\nexport class AgGridBotsControl {\n  @Input() rowData: any[] = [];\n\n  @Output() emitter = new EventEmitter<any>();\n\n  onAction(event: any, row: any) {\n    this.emitter.emit({ ...event, row });\n  }\n\n  onRowClicked($event: any) {\n    this.emitter.emit({\n      event: 'AgGridBotsControl:CLICKED_ROW',\n      row: $event\n    });\n  }\n\n  colDefs: ColDef[] = [\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"id\",\n      headerName: 'ID',\n      width: 80,\n    },\n    {\n      field: \"createdAt\",\n      headerName: 'Created',\n      flex: 1,\n      valueFormatter: params => {\n        if (!params.value) return '';\n        const date = new Date(params.value);\n        return date.toLocaleString('ru-RU', {\n          timeZone: 'Europe/Moscow' // или Asia/Bangkok\n        });\n      },\n    },\n    {\n      field: \"actionCount\",\n      headerName: 'Actions',\n      width: 100,\n    },\n    {\n      field: \"errorCount\",\n      headerName: 'Errors',\n      width: 100,\n    },\n    {\n      field: \"TimeRequest\",\n      headerName: 'Time Request',\n      flex: 1,\n      valueFormatter: params => {\n        if (!params.data?.lastActionTimeStart) return '';\n\n        const startTime = new Date(params.data.lastActionTimeStart).getTime(); // UTC timestamp\n        const now = Date.now();\n        const diff = now - startTime; // миллисекунды\n\n        // Переводим в часы, минуты, секунды\n        const totalSeconds = Math.floor(diff / 1000);\n        const hours = Math.floor(totalSeconds / 3600);\n        const minutes = Math.floor((totalSeconds % 3600) / 60);\n        const seconds = totalSeconds % 60;\n\n        // Форматируем как hh:mm:ss\n        const formattedTime: string = [\n          hours.toString().padStart(2, '0'),\n          minutes.toString().padStart(2, '0'),\n          seconds.toString().padStart(2, '0')\n        ].join(':');\n\n        return formattedTime;\n      },\n    },\n    {\n      field: 'status',\n      headerName: 'Status',\n      width: 80,\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n    {\n      field: \"isSendData\",\n      headerName: 'Send Data',\n      width: 80,\n      cellRenderer: ToggleContainer,\n      cellRendererParams: {\n        onAction: this.onAction.bind(this),\n      },\n    },\n    {\n      field: \"running\",\n      headerName: 'Start/Stop',\n      width: 80,\n      cellRenderer: LaunchControlContainer,\n      cellRendererParams: {\n        onAction: this.onAction.bind(this),\n      },\n    },\n    {\n      field: \"actions\",\n      headerName: 'Actions',\n      width: 125,\n      cellRenderer: ActionsContainer,\n      cellRendererParams: {\n        onAction: this.onAction.bind(this),\n      },\n    },\n  ];\n  //\n  // colDefs: ColDef[] = [\n  //   {\n  //     field: \"#\",\n  //     headerName: '#',\n  //     width: 50,\n  //     valueGetter: params => {\n  //       if (!params.node || params.node.rowIndex == null) return '';\n  //       return params.node.rowIndex + 1;\n  //     },\n  //   },\n  //   {\n  //     field: \"id\",\n  //     headerName: 'ID',\n  //     flex: 1,\n  //   },\n  //   {\n  //     field: \"gate\",\n  //     headerName: 'Gate',\n  //     flex: 1,\n  //   },\n  //   {\n  //     field: \"maxTimeRequest\",\n  //     headerName: 'Max Time Request(ms)',\n  //     flex: 1,\n  //   },\n  //   {\n  //     field: \"TimeRequest\",\n  //     headerName: 'Time Request(ms)',\n  //     flex: 1,\n  //   },\n  //   {\n  //     field: 'status',\n  //     headerName: 'Status',\n  //     width: 80,\n  //     cellRenderer: IndicatorContainer,\n  //     cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n  //     headerClass: 'align-center little-width',\n  //   },\n  //   {\n  //     field: \"isSendData\",\n  //     headerName: 'Send Data',\n  //     minWidth: 80,\n  //     flex: 1,\n  //     cellRenderer: ToggleContainer,\n  //     cellRendererParams: {\n  //       onAction: this.onAction.bind(this),\n  //     },\n  //   },\n  //   {\n  //     field: \"isStart\",\n  //     headerName: 'Start/Stop',\n  //     flex: 1,\n  //     cellRenderer: LaunchControlContainer,\n  //     cellRendererParams: {\n  //       onAction: this.onAction.bind(this),\n  //     },\n  //   },\n  //   {\n  //     field: \"actions\",\n  //     headerName: 'Actions',\n  //     width: 125,\n  //     cellRenderer: ActionsContainer,\n  //     cellRendererParams: {\n  //       onAction: this.onAction.bind(this),\n  //     },\n  //   },\n  // ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n  };\n}\n",
+            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';\nimport {ToggleContainer} from '../../containers/ag-grid-containers/toggle-container/toggle-container';\nimport {\n  LaunchControlContainer\n} from '../../containers/ag-grid-containers/launch-control-container/launch-control-container';\nimport {ActionsContainer} from '../../containers/ag-grid-containers/actions-container/actions-container';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-bots-control',\n  imports: [\n    AgGridAngular,\n  ],\n  templateUrl: './ag-grid-bots-control.html',\n  styleUrl: './ag-grid-bots-control.scss'\n})\nexport class AgGridBotsControl {\n  @Input() rowData: any[] = [];\n\n  @Output() emitter = new EventEmitter<any>();\n\n  onAction(event: any, row: any) {\n    this.emitter.emit({ ...event, row });\n  }\n\n  onRowDoubleClicked($event: any) {\n    this.emitter.emit({\n      event: 'AgGridBotsControl:DOUBLE_CLICKED_ROW',\n      row: $event\n    });\n  }\n\n  colDefs: ColDef[] = [\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"id\",\n      headerName: 'ID',\n      width: 80,\n    },\n    {\n      field: \"createdAt\",\n      headerName: 'Created',\n      flex: 1,\n      valueFormatter: params => {\n        if (!params.value) return '';\n        const date = new Date(params.value);\n        return date.toLocaleString('ru-RU', {\n          timeZone: 'Europe/Moscow' // или Asia/Bangkok\n        });\n      },\n    },\n    {\n      field: \"actionCount\",\n      headerName: 'Actions',\n      width: 100,\n    },\n    {\n      field: \"errorCount\",\n      headerName: 'Errors',\n      width: 100,\n    },\n    {\n      field: \"TimeRequest\",\n      headerName: 'Time Request',\n      flex: 1,\n      valueFormatter: params => {\n        if (!params.data?.lastActionTimeStart) return '';\n\n        const startTime = new Date(params.data.lastActionTimeStart).getTime(); // UTC timestamp\n        const now = Date.now();\n        const diff = now - startTime; // миллисекунды\n\n        // Переводим в часы, минуты, секунды\n        const totalSeconds = Math.floor(diff / 1000);\n        const hours = Math.floor(totalSeconds / 3600);\n        const minutes = Math.floor((totalSeconds % 3600) / 60);\n        const seconds = totalSeconds % 60;\n\n        // Форматируем как hh:mm:ss\n        const formattedTime: string = [\n          hours.toString().padStart(2, '0'),\n          minutes.toString().padStart(2, '0'),\n          seconds.toString().padStart(2, '0')\n        ].join(':');\n\n        return formattedTime;\n      },\n    },\n    {\n      field: 'status',\n      headerName: 'Status',\n      width: 80,\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n    {\n      field: \"isSendData\",\n      headerName: 'Send Data',\n      width: 80,\n      cellRenderer: ToggleContainer,\n      cellRendererParams: {\n        onAction: this.onAction.bind(this),\n      },\n    },\n    {\n      field: \"running\",\n      headerName: 'Start/Stop',\n      width: 80,\n      cellRenderer: LaunchControlContainer,\n      cellRendererParams: {\n        onAction: this.onAction.bind(this),\n      },\n    },\n    {\n      field: \"actions\",\n      headerName: 'Actions',\n      width: 125,\n      cellRenderer: ActionsContainer,\n      cellRendererParams: {\n        onAction: this.onAction.bind(this),\n      },\n    },\n  ];\n  //\n  // colDefs: ColDef[] = [\n  //   {\n  //     field: \"#\",\n  //     headerName: '#',\n  //     width: 50,\n  //     valueGetter: params => {\n  //       if (!params.node || params.node.rowIndex == null) return '';\n  //       return params.node.rowIndex + 1;\n  //     },\n  //   },\n  //   {\n  //     field: \"id\",\n  //     headerName: 'ID',\n  //     flex: 1,\n  //   },\n  //   {\n  //     field: \"gate\",\n  //     headerName: 'Gate',\n  //     flex: 1,\n  //   },\n  //   {\n  //     field: \"maxTimeRequest\",\n  //     headerName: 'Max Time Request(ms)',\n  //     flex: 1,\n  //   },\n  //   {\n  //     field: \"TimeRequest\",\n  //     headerName: 'Time Request(ms)',\n  //     flex: 1,\n  //   },\n  //   {\n  //     field: 'status',\n  //     headerName: 'Status',\n  //     width: 80,\n  //     cellRenderer: IndicatorContainer,\n  //     cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n  //     headerClass: 'align-center little-width',\n  //   },\n  //   {\n  //     field: \"isSendData\",\n  //     headerName: 'Send Data',\n  //     minWidth: 80,\n  //     flex: 1,\n  //     cellRenderer: ToggleContainer,\n  //     cellRendererParams: {\n  //       onAction: this.onAction.bind(this),\n  //     },\n  //   },\n  //   {\n  //     field: \"isStart\",\n  //     headerName: 'Start/Stop',\n  //     flex: 1,\n  //     cellRenderer: LaunchControlContainer,\n  //     cellRendererParams: {\n  //       onAction: this.onAction.bind(this),\n  //     },\n  //   },\n  //   {\n  //     field: \"actions\",\n  //     headerName: 'Actions',\n  //     width: 125,\n  //     cellRenderer: ActionsContainer,\n  //     cellRendererParams: {\n  //       onAction: this.onAction.bind(this),\n  //     },\n  //   },\n  // ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n  };\n}\n",
             "styleUrl": "./ag-grid-bots-control.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<ag-grid-angular\n  [rowData]=\"rowData\"\n  [columnDefs]=\"colDefs\"\n  [defaultColDef]=\"defaultColDef\"\n  (rowClicked)=\"onRowClicked($event)\"\n  domLayout=\"autoHeight\"\n>\n</ag-grid-angular>\n"
+            "templateData": "<ag-grid-angular\n  [rowData]=\"rowData\"\n  [columnDefs]=\"colDefs\"\n  [defaultColDef]=\"defaultColDef\"\n  (rowDoubleClicked)=\"onRowDoubleClicked($event)\"\n  domLayout=\"autoHeight\"\n>\n</ag-grid-angular>\n"
         },
         {
             "name": "AgGridBotsControlContainer",
-            "id": "component-AgGridBotsControlContainer-a7f10a6133a1a48424d9b4042169aec8d593d2ddd2bd0750eb53667ca9c6b5650a4388ff5ec9fb196d1c4861d5e8576fc22dd5e679bf12e7701178a7acea0fac",
+            "id": "component-AgGridBotsControlContainer-94d61fd1c7eedb17809f05b8e52b210ebcef483f48f6a0c3120f613740429a11a5fd3c4a3551e3a4c455a12b5e01b4a21297c7780ef351294d02c276ca9f0634",
             "file": "src/app/containers/ag-grid-bots-control-container/ag-grid-bots-control-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2568,7 +3456,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {AgGridBotsControl} from '../../components/ag-grid-bots-control/ag-grid-bots-control';\nimport {MatDialog} from '@angular/material/dialog';\nimport {ConfirmationPopUpContainer} from '../confirmation-pop-up-container/confirmation-pop-up-container';\nimport {Store} from '@ngrx/store';\nimport {deletingBot, isSendData, setIsStartedBot, updateBot} from '../../+state/servers/servers.actions';\nimport {BotEditFormContainer} from '../bot-edit-form-container/bot-edit-form-container';\nimport {actionTypesList, botData, botTypesList} from './stabs';\nimport {getBotsControlList} from '../../+state/servers/servers.selectors';\nimport {AsyncPipe} from '@angular/common';\n\n@Component({\n  selector: 'app-ag-grid-bots-control-container',\n  imports: [\n    AgGridBotsControl,\n    AsyncPipe\n  ],\n  standalone: true,\n  templateUrl: './ag-grid-bots-control-container.html',\n  styleUrl: './ag-grid-bots-control-container.scss'\n})\nexport class AgGridBotsControlContainer {\n  readonly dialog = inject(MatDialog);\n  readonly store = inject(Store);\n\n  botsControlList$ = this.store.select(getBotsControlList)\n\n  events($event: any) {\n    if ($event.event === 'Actions:ACTION_CLICKED') {\n      if ($event.actionType === 'delete') {\n        this.openDeleteDialog($event.row);\n      } else if ($event.actionType === 'edit') {\n        this.openEditDialog($event.row);\n      } else if ($event.actionType === 'start') {\n        this.store.dispatch(setIsStartedBot({isStarted: true, id: $event.row.id}))\n      } else if ($event.actionType === 'stop') {\n        this.store.dispatch(setIsStartedBot({isStarted: false, id: $event.row.id}))\n      } else if ($event.actionType === 'add') {\n        this.openAddDialog();\n      }\n    } else if ($event.event === 'Toggle:TOGGLE_CLICKED') {\n      this.store.dispatch(isSendData({isSendData: $event.newValue, id: $event.row.id}))\n    } else if ($event.event === 'AgGridBotsControl:CLICKED_ROW') {\n      console.log('кликнул по строке:', $event.row.data)\n      console.log('теперь беру ip, port из стэйта и id из строки и делаю API на ошибку')\n    }\n  }\n\n  openDeleteDialog(rowData: any) {\n    const dialogRef = this.dialog.open(ConfirmationPopUpContainer, {\n      width: '400px',\n      height: '300px',\n      data: {\n        title: 'Delete bot',\n        message: `Are you sure you want to delete \"${rowData?.name}\"?`,\n        buttons: ['yes', 'no']\n      }\n    });\n\n    dialogRef.afterClosed().subscribe((result) => {\n      if (result) {\n        if (result.data === 'yes') {\n          this.store.dispatch(deletingBot({id: rowData.id}))\n        } else {\n        }\n      } else {\n        console.log('Deletion cancelled');\n      }\n    });\n  }\n\n  openEditDialog(rowData: any) {\n    const dialogRef = this.dialog.open(BotEditFormContainer, {\n      width: '800px',\n      height: '500px',\n      data: {\n        title: 'Change bot settings',\n        botData: botData,\n        botTypesList: botTypesList,\n        actionTypesList: actionTypesList,\n      }\n    });\n\n    dialogRef.afterClosed().subscribe((result) => {\n      if (result) {\n        if (result.$event.data === 'save') {\n          this.store.dispatch(updateBot({isSendData: result.data, id: rowData.id}))\n        } else {\n        }\n      } else {\n        console.log('Deletion cancelled');\n      }\n    });\n  }\n\n  openAddDialog() {\n\n  }\n\n}\n",
+            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {AgGridBotsControl} from '../../components/ag-grid-bots-control/ag-grid-bots-control';\nimport {MatDialog} from '@angular/material/dialog';\nimport {ConfirmationPopUpContainer} from '../confirmation-pop-up-container/confirmation-pop-up-container';\nimport {Store} from '@ngrx/store';\nimport {deletingBot, isSendData, setIsStartedBot, updateBot} from '../../+state/servers/servers.actions';\nimport {BotEditFormContainer} from '../bot-edit-form-container/bot-edit-form-container';\nimport {actionTypesList, botData, botTypesList} from './stabs';\nimport {getBotsControlList} from '../../+state/servers/servers.selectors';\nimport {AsyncPipe} from '@angular/common';\n\n@Component({\n  selector: 'app-ag-grid-bots-control-container',\n  imports: [\n    AgGridBotsControl,\n    AsyncPipe\n  ],\n  standalone: true,\n  templateUrl: './ag-grid-bots-control-container.html',\n  styleUrl: './ag-grid-bots-control-container.scss'\n})\nexport class AgGridBotsControlContainer {\n  readonly dialog = inject(MatDialog);\n  readonly store = inject(Store);\n\n  botsControlList$ = this.store.select(getBotsControlList)\n\n  events($event: any) {\n    if ($event.event === 'Actions:ACTION_CLICKED') {\n      if ($event.actionType === 'delete') {\n        this.openDeleteDialog($event.row);\n      } else if ($event.actionType === 'edit') {\n        this.openEditDialog($event.row);\n      } else if ($event.actionType === 'start') {\n        this.store.dispatch(setIsStartedBot({isStarted: true, id: $event.row.id}))\n      } else if ($event.actionType === 'stop') {\n        this.store.dispatch(setIsStartedBot({isStarted: false, id: $event.row.id}))\n      } else if ($event.actionType === 'add') {\n        this.openAddDialog();\n      }\n    } else if ($event.event === 'Toggle:TOGGLE_CLICKED') {\n      this.store.dispatch(isSendData({isSendData: $event.newValue, id: $event.row.id}))\n    } else if ($event.event === 'AgGridBotsControl:DOUBLE_CLICKED_ROW') {\n      console.log('кликнул по строке:', $event.row.data)\n      console.log('теперь беру ip, port из стэйта и id из строки и делаю API на ошибку')\n    }\n  }\n\n  openDeleteDialog(rowData: any) {\n    const dialogRef = this.dialog.open(ConfirmationPopUpContainer, {\n      width: '400px',\n      height: '300px',\n      data: {\n        title: 'Delete bot',\n        message: `Are you sure you want to delete \"${rowData?.name}\"?`,\n        buttons: ['yes', 'no']\n      }\n    });\n\n    dialogRef.afterClosed().subscribe((result) => {\n      if (result) {\n        if (result.data === 'yes') {\n          this.store.dispatch(deletingBot({id: rowData.id}))\n        } else {\n        }\n      } else {\n        console.log('Deletion cancelled');\n      }\n    });\n  }\n\n  openEditDialog(rowData: any) {\n    const dialogRef = this.dialog.open(BotEditFormContainer, {\n      width: '800px',\n      height: '500px',\n      data: {\n        title: 'Change bot settings',\n        botData: botData,\n        botTypesList: botTypesList,\n        actionTypesList: actionTypesList,\n      }\n    });\n\n    dialogRef.afterClosed().subscribe((result) => {\n      if (result) {\n        if (result.$event.data === 'save') {\n          this.store.dispatch(updateBot({isSendData: result.data, id: rowData.id}))\n        } else {\n        }\n      } else {\n        console.log('Deletion cancelled');\n      }\n    });\n  }\n\n  openAddDialog() {\n\n  }\n\n}\n",
             "styleUrl": "./ag-grid-bots-control-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -2866,7 +3754,7 @@
         },
         {
             "name": "AgGridServerData",
-            "id": "component-AgGridServerData-9b7fb2396480c19b29201fce9ba92ec8ba2a9229d2ff16dae60c432d0cfa4adf2aa12d7795a11ac07fb9568551f32f341824351325d3ac56e8b008ffc8687f38",
+            "id": "component-AgGridServerData-a107eaafc2c74a723b5bdb6b3cb0dbd6d8da981156b020531f2b1b3f0cf6b309a44da1cf2278d1369144db3f48689d617468fc250ecfdb5c9066c27560dc3e65",
             "file": "src/app/components/ag-grid-server-data/ag-grid-server-data.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -2931,7 +3819,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, Input} from '@angular/core';\nimport {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';\nimport {TimerContainer} from '../../containers/ag-grid-containers/timer-container/timer-container';\nimport {IServerData} from '../../+state/servers/servers.reducer';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-server-data',\n  imports: [AgGridAngular],\n  standalone: true,\n  templateUrl: './ag-grid-server-data.html',\n  styleUrl: './ag-grid-server-data.scss'\n})\nexport class AgGridServerData {\n  @Input() rowData: IServerData[] = [];\n\n  colDefs: ColDef[] = [\n    {\n      field: 'ip',\n      headerName: 'IP',\n      flex: 1,\n    },\n    {\n      headerName: 'Authorization Data',\n      flex: 1,\n      valueGetter:(params) => {\n        const authorizationData = params.data?.authorizationData;\n        return authorizationData || \"-\";\n      }\n    },\n    {\n      field: 'version',\n      headerName: 'Version',\n      flex: 1,\n    },\n    {\n      headerName: 'Time To Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestampFinish;\n        return ts > Date.now() ? ts : null;\n      },\n    },\n    {\n      headerName: 'Time After Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestampFinish;\n        return ts < Date.now() ? ts : null;\n      },\n    },\n    {\n      field: 'botsCount',\n      headerName: 'Bots',\n      flex: 1,\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n  };\n}\n",
+            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, Input} from '@angular/core';\nimport {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';\nimport {TimerContainer} from '../../containers/ag-grid-containers/timer-container/timer-container';\nimport {IServerData} from '../../models/servers';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-server-data',\n  imports: [AgGridAngular],\n  standalone: true,\n  templateUrl: './ag-grid-server-data.html',\n  styleUrl: './ag-grid-server-data.scss'\n})\nexport class AgGridServerData {\n  @Input() rowData: IServerData[] = [];\n\n  colDefs: ColDef[] = [\n    {\n      field: 'ip',\n      headerName: 'IP',\n      flex: 1,\n    },\n    {\n      headerName: 'Authorization Data',\n      flex: 1,\n      valueGetter:(params) => {\n        const authorizationData = params.data?.authorizationData;\n        return authorizationData || \"-\";\n      }\n    },\n    {\n      field: 'version',\n      headerName: 'Version',\n      flex: 1,\n    },\n    {\n      headerName: 'Time To Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestampFinish;\n        return ts > Date.now() ? ts : null;\n      },\n    },\n    {\n      headerName: 'Time After Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const ts = params.data?.timestampFinish;\n        return ts < Date.now() ? ts : null;\n      },\n    },\n    {\n      field: 'botsCount',\n      headerName: 'Bots',\n      flex: 1,\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    resizable: false,\n    suppressMovable: true,\n  };\n}\n",
             "styleUrl": "./ag-grid-server-data.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -2941,7 +3829,7 @@
         },
         {
             "name": "AgGridServerDataContainer",
-            "id": "component-AgGridServerDataContainer-99750619827e71003cb3a0077b5a2657ca67c8ee8e693b618931c6dac97cf36d150bd76ceb8d0f4767947cf0b4350193ac80fba6b0a4dfd6c62cff034bd6a10e",
+            "id": "component-AgGridServerDataContainer-70ef2ce4692d0613f7564629ca9344b8cdbbec1691ca9929bbad9fb344ae98fa1a5b33c0fe2e69fbe8b3c31b6dc4d0aa6673070302a3f37bca8be1451046f7b3",
             "file": "src/app/containers/ag-grid-server-data-container/ag-grid-server-data-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -3003,7 +3891,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {AgGridServerData} from '../../components/ag-grid-server-data/ag-grid-server-data';\nimport {Store} from '@ngrx/store';\nimport {getServerData} from '../../+state/servers/servers.selectors';\nimport {AsyncPipe} from '@angular/common';\nimport {Observable} from 'rxjs';\nimport {IServerData} from '../../+state/servers/servers.reducer';\n\n@Component({\n  selector: 'app-ag-grid-server-data-container',\n  imports: [\n    AgGridServerData,\n    AsyncPipe\n  ],\n  standalone: true,\n  templateUrl: './ag-grid-server-data-container.html',\n  styleUrl: './ag-grid-server-data-container.scss'\n})\nexport class AgGridServerDataContainer {\n  private store = inject(Store);\n  serverData$: Observable<IServerData[]> = this.store.select(getServerData);\n}\n",
+            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {AgGridServerData} from '../../components/ag-grid-server-data/ag-grid-server-data';\nimport {Store} from '@ngrx/store';\nimport {getServerData} from '../../+state/servers/servers.selectors';\nimport {AsyncPipe} from '@angular/common';\nimport {Observable} from 'rxjs';\nimport {IServerData} from '../../models/servers';\n\n@Component({\n  selector: 'app-ag-grid-server-data-container',\n  imports: [\n    AgGridServerData,\n    AsyncPipe\n  ],\n  standalone: true,\n  templateUrl: './ag-grid-server-data-container.html',\n  styleUrl: './ag-grid-server-data-container.scss'\n})\nexport class AgGridServerDataContainer {\n  private store = inject(Store);\n  serverData$: Observable<IServerData[]> = this.store.select(getServerData);\n}\n",
             "styleUrl": "./ag-grid-server-data-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -4978,7 +5866,7 @@
             "implements": [
                 "ICellRendererAngularComp"
             ],
-            "templateData": "@if (!isStarted) {\n  <app-actions\n    [icon]=\"'play_arrow'\"\n    [type]=\"'green'\"\n    (click)=\"$event.stopPropagation()\"\n    (emitter)=\"onAction($event, 'start')\"\n  ></app-actions>\n} @else {\n  <app-actions\n    [icon]=\"'stop'\"\n    [type]=\"'red'\"\n    (click)=\"$event.stopPropagation()\"\n    (emitter)=\"onAction($event, 'stop')\"\n  ></app-actions>\n}\n"
+            "templateData": "@if (!isStarted) {\n  <app-actions\n    [icon]=\"'play_arrow'\"\n    [type]=\"'green'\"\n    (emitter)=\"onAction($event, 'start')\"\n  ></app-actions>\n} @else {\n  <app-actions\n    [icon]=\"'stop'\"\n    [type]=\"'red'\"\n    (emitter)=\"onAction($event, 'stop')\"\n  ></app-actions>\n}\n"
         },
         {
             "name": "Loader",
@@ -5030,7 +5918,49 @@
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<div class=\"overlay-background\"></div>\n<span class=\"custom-title\">{{ title }}</span>\n<mat-icon class=\"custom-icon\">autorenew</mat-icon>\n"
+            "templateData": "<div class=\"loader\">\n  <div class=\"overlay-background\">\n    <mat-icon class=\"custom-icon\">autorenew</mat-icon>\n  </div>\n</div>\n\n"
+        },
+        {
+            "name": "LoaderContainer",
+            "id": "component-LoaderContainer-1e243cb415621dc6d4217792a6cc2dc2e41a8d6bfe88296dc45e7e6afab1d6ffd836c14bcc25f2ae431ba778b2504ee85743c0f8b2901cdad735b93b47027a1f",
+            "file": "src/app/containers/loader-container/loader-container.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-loader-container",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./loader-container.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "Loader"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\nimport {Loader} from '../../components/loader/loader.component';\n\n@Component({\n  selector: 'app-loader-container',\n  imports: [\n    Loader\n  ],\n  standalone: true,\n  templateUrl: './loader-container.html',\n  styleUrl: './loader-container.scss',\n})\nexport class LoaderContainer {\n\n}\n",
+            "styleUrl": "./loader-container.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<app-loader></app-loader>\n"
         },
         {
             "name": "PageComponent",
@@ -5276,7 +6206,7 @@
         },
         {
             "name": "Sidebar",
-            "id": "component-Sidebar-d54361a5634978aab0fe9eed8e0b07f661f0e8292aa37f3352d80763eb894b91af1c2f04578b1c953fceef70e8ad5dac9379960e6ba048c948b782ddcd534e71",
+            "id": "component-Sidebar-67fc96fd546b4f9bae9feb3bc16e6ae9efffeb71457ebc829b54ced0088e61effb97e5ceaac9b5322a3a116c7724138cb26b04c779cbc48df8c8ce0c35a4254b",
             "file": "src/app/components/sidebar/sidebar.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -5345,8 +6275,8 @@
                     "name": "setActiveItem",
                     "args": [
                         {
-                            "name": "value",
-                            "type": "any",
+                            "name": "ipPort",
+                            "type": "string",
                             "deprecated": false,
                             "deprecationMessage": ""
                         }
@@ -5359,8 +6289,8 @@
                     "deprecationMessage": "",
                     "jsdoctags": [
                         {
-                            "name": "value",
-                            "type": "any",
+                            "name": "ipPort",
+                            "type": "string",
                             "deprecated": false,
                             "deprecationMessage": "",
                             "tagName": {
@@ -5426,13 +6356,13 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {MatButtonModule} from '@angular/material/button';\nimport {MatSelectModule} from '@angular/material/select';\nimport {MatFormFieldModule} from '@angular/material/form-field';\nimport {MatSidenavModule} from '@angular/material/sidenav';\nimport {MatIconModule} from '@angular/material/icon';\nimport {MatDividerModule} from '@angular/material/divider';\nimport {TitleCasePipe, UpperCasePipe} from '@angular/common';\nimport {MatButtonToggleModule} from '@angular/material/button-toggle';\n\n@Component({\n  selector: 'app-sidebar',\n  imports: [\n    MatSidenavModule,\n    MatFormFieldModule,\n    MatSelectModule,\n    MatButtonModule,\n    MatIconModule,\n    MatDividerModule,\n    UpperCasePipe,\n    MatButtonToggleModule,\n    TitleCasePipe,\n  ],\n  standalone: true,\n  templateUrl: './sidebar.html',\n  styleUrl: './sidebar.scss'\n})\nexport class Sidebar {\n  @Input() sidebarTitle: string = '';\n  @Input() isSidebarOpen: boolean = true;\n  @Input() list: any[] = [];\n  @Input() activeItem: string = '';\n\n  @Output() emitter = new EventEmitter();\n\n  togglePanel() {\n    this.emitter.emit({\n      event: 'Sidebar:TOGGLE_CLICKED',\n    });\n  }\n\n  setActiveItem(value: any) {\n    const ipPort = value.ip + ':' + value.port\n\n    this.emitter.emit({\n      event: 'Sidebar:SET_ACTIVE_ITEM_CLICKED',\n      data: { ipPort },\n    });\n  }\n\n}\n",
+            "sourceCode": "import {Component, EventEmitter, Input, Output} from '@angular/core';\nimport {MatButtonModule} from '@angular/material/button';\nimport {MatSelectModule} from '@angular/material/select';\nimport {MatFormFieldModule} from '@angular/material/form-field';\nimport {MatSidenavModule} from '@angular/material/sidenav';\nimport {MatIconModule} from '@angular/material/icon';\nimport {MatDividerModule} from '@angular/material/divider';\nimport {TitleCasePipe, UpperCasePipe} from '@angular/common';\nimport {MatButtonToggleModule} from '@angular/material/button-toggle';\n\n@Component({\n  selector: 'app-sidebar',\n  imports: [\n    MatSidenavModule,\n    MatFormFieldModule,\n    MatSelectModule,\n    MatButtonModule,\n    MatIconModule,\n    MatDividerModule,\n    UpperCasePipe,\n    MatButtonToggleModule,\n    TitleCasePipe,\n  ],\n  standalone: true,\n  templateUrl: './sidebar.html',\n  styleUrl: './sidebar.scss'\n})\nexport class Sidebar {\n  @Input() sidebarTitle: string = '';\n  @Input() isSidebarOpen: boolean = true;\n  @Input() list: any[] = [];\n  @Input() activeItem: string = '';\n\n  @Output() emitter = new EventEmitter();\n\n  togglePanel() {\n    this.emitter.emit({\n      event: 'Sidebar:TOGGLE_CLICKED',\n    });\n  }\n\n  setActiveItem(ipPort: string) {\n    this.emitter.emit({\n      event: 'Sidebar:SET_ACTIVE_ITEM_CLICKED',\n      data: { ipPort },\n    });\n  }\n\n}\n",
             "styleUrl": "./sidebar.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<div class=\"container\">\n  <div\n    class=\"panel\"\n    [class.panel-open]=\"isSidebarOpen\"\n    [class.panel-closed]=\"!isSidebarOpen\"\n  >\n    @if (isSidebarOpen) {\n      <div class=\"panel-content-open\">\n        <div class=\"button-group\">\n          <div class=\"header\">\n            <span class=\"title\">{{ sidebarTitle | uppercase }}</span>\n            <button\n              mat-icon-button\n              (click)=\"togglePanel()\"\n              class=\"toggle-button side-button\"\n            >\n              <mat-icon>arrow_left</mat-icon>\n            </button>\n          </div>\n\n          <mat-divider></mat-divider>\n\n          <div class=\"content\">\n            <mat-button-toggle-group\n              class=\"custom-toggle-group\"\n              [value]=\"activeItem\"\n              (change)=\"setActiveItem($event.value)\"\n            >\n              @for (item of list; track item) {\n                <mat-button-toggle [value]=\"item\">\n                  {{ item.name | titlecase }}\n                </mat-button-toggle>\n              }\n            </mat-button-toggle-group>\n          </div>\n        </div>\n      </div>\n    } @else {\n      <div class=\"panel-content-closed\">\n        <div class=\"closed-content\">\n          <button mat-icon-button (click)=\"togglePanel()\" class=\"toggle-button\">\n            <mat-icon>arrow_right</mat-icon>\n          </button>\n        </div>\n      </div>\n    }\n  </div>\n\n  <div class=\"main-content\">\n    <ng-content select=\"[main]\"></ng-content>\n  </div>\n</div>\n"
+            "templateData": "<div class=\"container\">\n  <div\n    class=\"panel\"\n    [class.panel-open]=\"isSidebarOpen\"\n    [class.panel-closed]=\"!isSidebarOpen\"\n  >\n    @if (isSidebarOpen) {\n      <div class=\"panel-content-open\">\n        <div class=\"button-group\">\n          <div class=\"header\">\n            <span class=\"title\">{{ sidebarTitle | uppercase }}</span>\n            <button\n              mat-icon-button\n              (click)=\"togglePanel()\"\n              class=\"toggle-button side-button\"\n            >\n              <mat-icon>arrow_left</mat-icon>\n            </button>\n          </div>\n\n          <mat-divider></mat-divider>\n\n          <div class=\"content\">\n            <mat-button-toggle-group\n              class=\"custom-toggle-group\"\n              [value]=\"activeItem\"\n              (change)=\"setActiveItem($event.value)\"\n            >\n              @for (item of list; track item) {\n                <mat-button-toggle [value]=\"item.ip + ':' + item.port\">\n                  {{ item.name | titlecase }}\n                </mat-button-toggle>\n              }\n            </mat-button-toggle-group>\n          </div>\n        </div>\n      </div>\n    } @else {\n      <div class=\"panel-content-closed\">\n        <div class=\"closed-content\">\n          <button mat-icon-button (click)=\"togglePanel()\" class=\"toggle-button\">\n            <mat-icon>arrow_right</mat-icon>\n          </button>\n        </div>\n      </div>\n    }\n  </div>\n\n  <div class=\"main-content\">\n    <ng-content select=\"[main]\"></ng-content>\n  </div>\n</div>\n"
         },
         {
             "name": "SidebarContainer",
@@ -6519,7 +7449,7 @@
             "implements": [
                 "ICellRendererAngularComp"
             ],
-            "templateData": "<app-toggle\n  [isChecked]=\"isChecked\"\n  [description]=\"description\"\n  (click)=\"$event.stopPropagation()\"\n  (emitter)=\"onToggleChange($event)\"\n></app-toggle>\n"
+            "templateData": "<app-toggle\n  [isChecked]=\"isChecked\"\n  [description]=\"description\"\n  (emitter)=\"onToggleChange($event)\"\n></app-toggle>\n"
         },
         {
             "name": "Toolbar",
@@ -7106,21 +8036,21 @@
                 "name": "initialState",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/app/+state/servers/servers.reducer.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "ServersState",
-                "defaultValue": "{\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '45.135.182.251',\n        port: '1005',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n}"
-            },
-            {
-                "name": "initialState",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/app/+state/view/view.reducer.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "ViewState",
                 "defaultValue": "{\n  isSidebarOpen: true,\n  activeTab: 'bots',\n  tabList: ['bots', 'gates', 'server data'],\n}"
+            },
+            {
+                "name": "initialState",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/+state/servers/servers.reducer.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "ServersState",
+                "defaultValue": "{\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '45.135.182.251',\n        port: '1005',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n}"
             },
             {
                 "name": "isSendData",
@@ -7131,6 +8061,36 @@
                 "deprecationMessage": "",
                 "type": "unknown",
                 "defaultValue": "createAction(\n  '[Servers] isSendData',\n  props<{ isSendData: boolean, id: string }>()\n)"
+            },
+            {
+                "name": "loadServerList",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/+state/servers/servers.actions.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "unknown",
+                "defaultValue": "createAction('[Servers] loadServerList')"
+            },
+            {
+                "name": "loadServerListFailure",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/+state/servers/servers.actions.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "unknown",
+                "defaultValue": "createAction(\n  '[Servers] loadServerListFailure',\n  props<{ error: string }>()\n)"
+            },
+            {
+                "name": "loadServerListSuccess",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/+state/servers/servers.actions.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "unknown",
+                "defaultValue": "createAction(\n  '[Servers] loadServerListSuccess',\n  props<{ response: IServerData }>()\n)"
             },
             {
                 "name": "mainStabsServers",
@@ -7150,17 +8110,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Routes",
-                "defaultValue": "[\n  {\n    path: '',\n    pathMatch: 'full',\n    redirectTo: 'server/192.169.0.1:6060/tab/gates',\n  },\n  {\n    path: 'server/:ipPort/tab/:tabId',\n    component: SidebarContainer,\n  },\n  {\n    path: '**',\n    redirectTo: 'server/192.169.0.1:6060/tab/gates',\n  },\n]"
-            },
-            {
-                "name": "selectFeature",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
-                "file": "src/app/+state/servers/servers.selectors.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "unknown",
-                "defaultValue": "createFeatureSelector<ServersState>(SERVERS_FEATURE_KEY)"
+                "defaultValue": "[\n  {\n    path: '',\n    pathMatch: 'full',\n    redirectTo: 'server/45.135.182.251:1005/tab/gates',\n  },\n  {\n    path: 'server/:ipPort/tab/:tabId',\n    component: SidebarContainer,\n  },\n  {\n    path: '**',\n    redirectTo: 'server/45.135.182.251:1005/tab/gates',\n  },\n]"
             },
             {
                 "name": "selectFeature",
@@ -7171,6 +8121,16 @@
                 "deprecationMessage": "",
                 "type": "unknown",
                 "defaultValue": "createFeatureSelector<ViewState>(VIEW_FEATURE_KEY)"
+            },
+            {
+                "name": "selectFeature",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/+state/servers/servers.selectors.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "unknown",
+                "defaultValue": "createFeatureSelector<ServersState>(SERVERS_FEATURE_KEY)"
             },
             {
                 "name": "serverDataAPI",
@@ -7561,6 +8521,36 @@
                     "defaultValue": "createAction(\n  '[Servers] isSendData',\n  props<{ isSendData: boolean, id: string }>()\n)"
                 },
                 {
+                    "name": "loadServerList",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/servers/servers.actions.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "unknown",
+                    "defaultValue": "createAction('[Servers] loadServerList')"
+                },
+                {
+                    "name": "loadServerListFailure",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/servers/servers.actions.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "unknown",
+                    "defaultValue": "createAction(\n  '[Servers] loadServerListFailure',\n  props<{ error: string }>()\n)"
+                },
+                {
+                    "name": "loadServerListSuccess",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/servers/servers.actions.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "unknown",
+                    "defaultValue": "createAction(\n  '[Servers] loadServerListSuccess',\n  props<{ response: IServerData }>()\n)"
+                },
+                {
                     "name": "setActionTypesList",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
@@ -7895,38 +8885,6 @@
                     "defaultValue": "[\n  { make: \"Tesla\", model: \"Model Y\", price: 64950, electric: true },\n  { make: \"Ford\", model: \"F-Series\", price: 33850, electric: false },\n  { make: \"Toyota\", model: \"Corolla\", price: 29600, electric: false },\n  { make: \"Toyota\", model: \"Corolla\", price: 29600, electric: false },\n]"
                 }
             ],
-            "src/app/+state/servers/servers.reducer.ts": [
-                {
-                    "name": "initialState",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/+state/servers/servers.reducer.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "ServersState",
-                    "defaultValue": "{\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '45.135.182.251',\n        port: '1005',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n}"
-                },
-                {
-                    "name": "SERVERS_FEATURE_KEY",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/+state/servers/servers.reducer.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "defaultValue": "'servers'"
-                },
-                {
-                    "name": "serversReducer",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/+state/servers/servers.reducer.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "defaultValue": "createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n  on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: {\n        ...state.activeElementData.serverData,\n        ip: ip,\n        port: port,\n      }\n    }\n  })),\n  on(ServersActions.clearActiveElementData, (state,) => ({\n    ...state,\n    activeElementData: initialState.activeElementData\n  })),\n)"
-                }
-            ],
             "src/app/+state/view/view.reducer.ts": [
                 {
                     "name": "initialState",
@@ -7957,6 +8915,38 @@
                     "deprecationMessage": "",
                     "type": "unknown",
                     "defaultValue": "createReducer(\n  initialState,\n  on(ViewActions.toggleSidebar, (state) => ({\n    ...state,\n    isSidebarOpen: !state.isSidebarOpen\n  })),\n  on(ViewActions.setActiveTab, (state, {tab}) => ({\n    ...state,\n    activeTab: tab\n  })),\n)"
+                }
+            ],
+            "src/app/+state/servers/servers.reducer.ts": [
+                {
+                    "name": "initialState",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/servers/servers.reducer.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ServersState",
+                    "defaultValue": "{\n  featureName: 'server manager', //Временно до внедрения в основное приложение.\n  config: {\n    serverList: [\n      {\n        ip: '45.135.182.251',\n        port: '1005',\n        name: 'UNREAL_SERVER',\n      },\n      {\n        ip: '45.135.182.251',\n        port: '1001',\n        name: 'FIRST_REAL_SERVER',\n      },\n    ],\n  },\n  serverListResponse: [],\n  activeBotData: [],\n  activeElementData: {\n    serverData: {\n      ip: '',\n      port: '',\n      version: '',\n      status: 'active',\n      timestampFinish: 0,\n      timestampStart: 0,\n      botsCount: 0\n    },\n    botTypesList: [],\n    actionTypesList: [],\n    gateList: [],\n    botControlList: [],\n  },\n}"
+                },
+                {
+                    "name": "SERVERS_FEATURE_KEY",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/servers/servers.reducer.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "defaultValue": "'servers'"
+                },
+                {
+                    "name": "serversReducer",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/servers/servers.reducer.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "unknown",
+                    "defaultValue": "createReducer(\n  initialState,\n  on(ServersActions.setActiveServerData, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: response\n    }\n  })),\n  on(ServersActions.setBotTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: response\n    }\n  })),\n  on(ServersActions.setActionTypesList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      actionTypesList: response\n    }\n  })),\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setBotControlList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botControlList: response\n    }\n  })),\n  on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: {\n        ...state.activeElementData.serverData,\n        ip: ip,\n        port: port,\n      }\n    }\n  })),\n  on(ServersActions.clearActiveElementData, (state,) => ({\n    ...state,\n    activeElementData: initialState.activeElementData\n  })),\n)"
                 }
             ],
             "src/app/+state/servers/stabs.ts": [
@@ -7990,7 +8980,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Routes",
-                    "defaultValue": "[\n  {\n    path: '',\n    pathMatch: 'full',\n    redirectTo: 'server/192.169.0.1:6060/tab/gates',\n  },\n  {\n    path: 'server/:ipPort/tab/:tabId',\n    component: SidebarContainer,\n  },\n  {\n    path: '**',\n    redirectTo: 'server/192.169.0.1:6060/tab/gates',\n  },\n]"
+                    "defaultValue": "[\n  {\n    path: '',\n    pathMatch: 'full',\n    redirectTo: 'server/45.135.182.251:1005/tab/gates',\n  },\n  {\n    path: 'server/:ipPort/tab/:tabId',\n    component: SidebarContainer,\n  },\n  {\n    path: '**',\n    redirectTo: 'server/45.135.182.251:1005/tab/gates',\n  },\n]"
                 }
             ],
             "src/app/components/ag-grid-server-data/stabs.ts": [
@@ -8067,12 +9057,12 @@
                 "filename": "src/app/app.routes.ts"
             },
             {
-                "name": "server/192\\.169.0.1:6060/tab/gates",
+                "name": "server/45\\.135.182.251:1005/tab/gates",
                 "kind": "route-redirect",
                 "filename": "src/app/app.routes.ts"
             },
             {
-                "name": "server/192\\.169.0.1:6060/tab/gates",
+                "name": "server/45\\.135.182.251:1005/tab/gates",
                 "kind": "route-redirect",
                 "filename": "src/app/app.routes.ts"
             }
@@ -8108,6 +9098,36 @@
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
                 "name": "isSendData",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.actions.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "loadServerList",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.actions.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "loadServerListFailure",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.actions.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "loadServerListSuccess",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
@@ -9296,6 +10316,15 @@
                 "status": "low"
             },
             {
+                "filePath": "src/app/containers/loader-container/loader-container.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "LoaderContainer",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
                 "filePath": "src/app/containers/quote-watcher/quote-watcher.ts",
                 "type": "component",
                 "linktype": "component",
@@ -9329,6 +10358,132 @@
                 "name": "ToolbarContainer",
                 "coveragePercent": 0,
                 "coverageCount": "0/4",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/models/api.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "API",
+                "coveragePercent": 0,
+                "coverageCount": "0/7",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/models/servers.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IActiveElementData",
+                "coveragePercent": 0,
+                "coverageCount": "0/6",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/models/servers.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IBotControl",
+                "coveragePercent": 0,
+                "coverageCount": "0/11",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/models/servers.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IBotData",
+                "coveragePercent": 0,
+                "coverageCount": "0/15",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/models/servers.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IBotError",
+                "coveragePercent": 0,
+                "coverageCount": "0/5",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/models/servers.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IConfig",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/models/servers.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IGateItem",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/models/servers.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "ILastActionResult",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/models/servers.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IServer",
+                "coveragePercent": 0,
+                "coverageCount": "0/4",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/models/servers.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IServerAuthData",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/models/servers.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IServerData",
+                "coveragePercent": 0,
+                "coverageCount": "0/8",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/models/servers.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IServerDataAPI",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/models/servers.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "IServerDataResponse",
+                "coveragePercent": 0,
+                "coverageCount": "0/4",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/models/servers.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "ITypesList",
+                "coveragePercent": 0,
+                "coverageCount": "0/5",
                 "status": "low"
             },
             {
