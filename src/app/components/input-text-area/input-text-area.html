@@ -1,12 +1,13 @@
 <div class="input-component">
   @if (title) {
-    <span class="title">{{ title }}</span>
+    <div class="title">{{ title }}</div>
   }
   <mat-form-field class="example-full-width">
     @if (label) {
       <mat-label>{{label}}</mat-label>
     }
-    <textarea matInput placeholder="{{ placeholder }}"
+    <textarea matInput
+              placeholder="{{ placeholder }}"
               [(ngModel)]="inputValue"
               (ngModelChange)="onInputChange($event)">
   </textarea>

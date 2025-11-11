@@ -10,6 +10,16 @@ const meta: Meta<Sidebar> = {
       declarations: [],
       providers: [],
     }),
+    (story) => ({
+      ...story(),
+      template: `
+       <div style="border: 2px solid black; height: 400px; width: 700px">
+          <app-sidebar [isSidebarOpen]="isSidebarOpen" [sidebarTitle]="sidebarTitle" (emitter)="onClicked($event)">
+            <div main>CONTENT</div>
+          </app-sidebar>
+        </div>
+    `,
+    }),
   ],
   args: {
     emitter: fn(),
@@ -21,7 +31,7 @@ type Story = StoryObj<Sidebar>;
 
 export const Base: Story = {};
 
-export const WithCustomProvider: Story = {
+export const SidebarOpen: Story = {
   decorators: [
     moduleMetadata({
       imports: [],
@@ -31,5 +41,13 @@ export const WithCustomProvider: Story = {
     }),
   ],
   args: {
+    sidebarTitle: 'sidebar title',
+    isSidebarOpen: true,
+  },
+};
+
+export const SidebarClose: Story = {
+  args: {
+    isSidebarOpen: false,
   },
 };

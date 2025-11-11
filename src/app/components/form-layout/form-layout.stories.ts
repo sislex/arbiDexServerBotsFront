@@ -14,7 +14,7 @@ const meta: Meta<FormLayout> = {
     (story) => ({
       ...story(),
       template: `
-        <div style="width: 100%; height: 900px; background-color: green">
+        <div style="width: 600px; height: 400px; background-color: green">
             <app-form-layout [title]="title" [itemData]="itemData" (emitter)="emitter($event)">
               <div form class="form-settings" >
                   it's a form
@@ -22,7 +22,6 @@ const meta: Meta<FormLayout> = {
             </app-form-layout>
         </div>
     `,
-
     }),
   ],
   args: {

@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
+import {IMenuData} from '../../models/view';
 
 @Component({
   selector: 'app-drop-menu',
@@ -10,17 +11,9 @@ import {MatMenuModule} from '@angular/material/menu';
   styleUrl: './drop-menu.scss'
 })
 export class DropMenu {
-  @Input() menuData: {
-    title: string;
-    list: { label: string; }[];
-  } = {title: '',
-    list: [{
-      label: ''
-    }]
-  }; //TODO: сделать интерфейс в стэйте
+  @Input() menuData!: IMenuData;
 
   @Output() emitter = new EventEmitter();
-
 
   click(data: any) {
     this.emitter.emit({

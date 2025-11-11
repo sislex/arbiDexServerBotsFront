@@ -1,6 +1,7 @@
 import {Meta, moduleMetadata, StoryObj} from '@storybook/angular';
 import {DropMenu} from './drop-menu';
 import {fn} from 'storybook/test';
+import {dropMenuStabs_1, dropMenuStabs_2} from './stabs';
 
 const meta: Meta<DropMenu> = {
   component: DropMenu,
@@ -26,20 +27,14 @@ const meta: Meta<DropMenu> = {
 export default meta;
 type Story = StoryObj<DropMenu>;
 
-export const Base: Story = {};
-
-export const WithCustomProvider: Story = {
+export const OneElement: Story = {
   args: {
-    menuData: {
-      title: 'type',
-      list: [
-        {
-          label: '1type',
-        },
-        {
-          label: '2type',
-        },
-      ]
-    }
+    menuData: dropMenuStabs_1
+  },
+};
+
+export const ManyElements: Story = {
+  args: {
+    menuData: dropMenuStabs_2
   },
 };

@@ -45,8 +45,8 @@ export const initialState: ServersState = {
         port: '',
         version: '',
         status: 'active',
-        timestampFinish: 0,
-        timestampStart: 0,
+        timestampFinish: '',
+        timestampStart: '',
         botsCount: 0
       }
     },

@@ -13,9 +13,9 @@ const meta: Meta<TitleContentLayout> = {
     (story) => ({
       ...story(),
       template: `
-        <div style="width: 100%; height: 900px; background-color: green">
+        <div style="width: 800px; height: 400px; background-color: green">
             <app-title-content-layout [title]="title" style="background-color: green">
-              <div class="content" style="background-color: #1ea7fd">
+              <div class="content" style="background-color: #1ea7fd; width: 100%">
               content
               </div>
             </app-title-content-layout>
@@ -25,16 +25,18 @@ const meta: Meta<TitleContentLayout> = {
     }),
   ],
   args: {
-    title: 'Title',
+    title: '',
   },
 };
 export default meta;
 type Story = StoryObj<TitleContentLayout>;
 
-export const Base: Story = {};
-
-export const WithoutData: Story = {
+export const WithTitle: Story = {
   args: {
     title: 'Tab Name Title',
+  },
+};
+export const WithoutTitle: Story = {
+  args: {
   },
 };

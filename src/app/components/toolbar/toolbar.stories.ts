@@ -14,6 +14,16 @@ const meta: Meta<Toolbar> = {
   args: {
     emitter: fn(),
     header: 'Header',
+  },
+};
+export default meta;
+type Story = StoryObj<Toolbar>;
+
+export const Base: Story = {};
+
+export const WithCustomProvider: Story = {
+  args: {
+    header: 'Header TOOlBAR ex',
     menuItemList: [
       {
         title: 'firstItem',
@@ -28,23 +38,5 @@ const meta: Meta<Toolbar> = {
         url: '/thirdUrl'
       },
     ]
-  },
-};
-export default meta;
-type Story = StoryObj<Toolbar>;
-
-export const Base: Story = {};
-
-export const WithCustomProvider: Story = {
-  decorators: [
-    moduleMetadata({
-      imports: [],
-      declarations: [],
-      providers: [
-      ],
-    }),
-  ],
-  args: {
-    header: '33',
   },
 };

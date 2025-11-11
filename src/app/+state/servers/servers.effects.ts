@@ -60,8 +60,8 @@ export class ServersEffects {
                 ip: action.ip,
                 port: action.port,
                 version: info?.appVersion ?? '-',
-                timestampFinish: info?.timestampFinish ?? 0,
-                timestampStart: 0,
+                timestampFinish: info?.timestampFinish ?? '',
+                timestampStart: '',
                 status: info ? 'active' : 'unknown',
                 botsCount: info?.botsCount ?? 0,
               };

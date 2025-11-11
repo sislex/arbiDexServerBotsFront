@@ -14,12 +14,11 @@
       <mat-icon>menu</mat-icon>
     </button>
   }
-
 </mat-toolbar>
+  <mat-menu #menu="matMenu">
+    @for (item of menuItemList; track item) {
+      <button mat-menu-item (click)="menuClick(item.url)" > {{item.title}} </button>
+    }
+  </mat-menu>
 
-<mat-menu #menu="matMenu">
-  @for (item of menuItemList; track item) {
-    <button mat-menu-item (click)="menuClick(item.url)" > {{item.title}} </button>
-  }
-</mat-menu>
 

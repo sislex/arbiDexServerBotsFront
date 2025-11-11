@@ -9,26 +9,32 @@ const meta: Meta<Tabs> = {
       declarations: [],
       providers: [],
     }),
+    (story) => ({
+      ...story(),
+      template: `
+        <div style="width: 100%; height: 500px; background-color: bisque">
+          ${story().template}
+        </div>
+      `,
+    }),
   ],
   args: {
-    // TabsTitle: 'TabsTitle',
   },
 };
 export default meta;
 type Story = StoryObj<Tabs>;
 
-export const Base: Story = {};
 
-export const WithCustomProvider: Story = {
-  decorators: [
-    moduleMetadata({
-      imports: [],
-      declarations: [],
-      providers: [
-      ],
-    }),
-  ],
+export const TabsEx: Story = {
   args: {
-    // header: '33',
+    list: ['Tab_1', 'Tab_2', 'Tab_3', 'Tab_4', ]
+  },
+};
+
+
+export const ActiveTab_3: Story = {
+  args: {
+    list: ['Tab_1', 'Tab_2', 'Tab_3', 'Tab_4', ],
+    tabName: 'Tab_3'
   },
 };

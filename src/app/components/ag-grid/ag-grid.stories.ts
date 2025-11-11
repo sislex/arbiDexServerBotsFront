@@ -26,9 +26,9 @@ const meta: Meta<AgGrid> = {
 export default meta;
 type Story = StoryObj<AgGrid>;
 
-export const Base: Story = {};
+export const Empty: Story = {};
 
-export const OneRow: Story = {
+export const BasicRows: Story = {
   args: {
     rowData: gridStabs_1
   },

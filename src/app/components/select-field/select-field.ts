@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {IMenuData} from '../../models/view';
 
 @Component({
   selector: 'app-select-field',
@@ -11,14 +12,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   styleUrl: './select-field.scss'
 })
 export class SelectField {
-  @Input() menuData: {
-    title: string;
-    list: { label: string; }[];
-  } = {title: '',
-    list: [{
-      label: ''
-    }]
-  }; //TODO: сделать интерфейс в стэйте
+  @Input() menuData: IMenuData = { title: '', list: [{label: ''}] };
   @Input() selected: any;
 
   @Output() emitter = new EventEmitter();

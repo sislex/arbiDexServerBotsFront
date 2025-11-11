@@ -42,8 +42,11 @@ export class AgGridServerData {
       cellRenderer: TimerContainer,
       flex: 1,
       valueGetter: (params) => {
-        const ts = params.data?.timestampFinish;
-        return ts > Date.now() ? ts : null;
+        const time = params.data?.timestampFinish;
+        if (!time) return null;
+
+        const finishUTC = Date.parse(time);
+        return finishUTC > Date.now() ? time : null;
       },
     },
     {
@@ -51,8 +54,11 @@ export class AgGridServerData {
       cellRenderer: TimerContainer,
       flex: 1,
       valueGetter: (params) => {
-        const ts = params.data?.timestampFinish;
-        return ts < Date.now() ? ts : null;
+        const time = params.data?.timestampFinish;
+        if (!time) return null;
+
+        const finishUTC = Date.parse(time);
+        return finishUTC < Date.now() ? time : null;
       },
     },
     {
