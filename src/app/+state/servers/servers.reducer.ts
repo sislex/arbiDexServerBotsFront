@@ -1,5 +1,6 @@
 import {createReducer, on} from '@ngrx/store';
 import * as ServersActions from './servers.actions';
+import {IServerData} from '../../models/servers';
 
 export const SERVERS_FEATURE_KEY = 'servers';
 
@@ -33,15 +34,15 @@ export interface IServerDataResponse { //то что приходит с док�
   botsList: IBotData[];
 }
 
-export interface IServerData { //то что отображаем
-  ip: string;
-  port: string;
-  version: string;
-  status: string;
-  timestampFinish: number;
-  timestampStart: number;
-  botsCount: number;
-}
+// export interface IServerData { //то что отображаем
+//   ip: string;
+//   port: string;
+//   version: string;
+//   status: string;
+//   timestampFinish: number;
+//   timestampStart: number;
+//   botsCount: number;
+// }
 
 export interface IServer {
   ip: string;
@@ -135,8 +136,8 @@ export const initialState: ServersState = {
       port: '',
       version: '',
       status: 'active',
-      timestampFinish: 0,
-      timestampStart: 0,
+      timestampFinish: '',
+      timestampStart: '',
       botsCount: 0
     },
     botTypesList: [],

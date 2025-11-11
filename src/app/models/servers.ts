@@ -34,8 +34,8 @@ export interface IServerData {
   port: string;
   version: string;
   status: string;
-  timestampFinish: number;
-  timestampStart: number;
+  timestampFinish: string;
+  timestampStart: string;
   botsCount: number;
 }
 

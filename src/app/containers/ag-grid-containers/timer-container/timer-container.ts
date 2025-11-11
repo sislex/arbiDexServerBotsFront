@@ -4,26 +4,25 @@ import {ICellRendererAngularComp} from 'ag-grid-angular';
 
 @Component({
   selector: 'app-timer-container',
-  imports: [
-    Timer
-  ],
+  imports: [Timer],
   standalone: true,
   templateUrl: './timer-container.html',
   styleUrl: './timer-container.scss'
 })
 export class TimerContainer implements ICellRendererAngularComp, OnDestroy {
   private intervalId: any;
-  private timestamp: number = 0;
+  private timestampUTC = 0;
   displayTime = '--:--';
   isPast = false;
 
   agInit(params: any): void {
-    if (!params.value) {
-      this.displayTime = '—';
+    const value = params.value;
+    if (!value) {
+      this.displayTime = '-';
       return;
     }
 
-    this.timestamp = Number(params.value);
+    this.timestampUTC = Date.parse(value);
     this.updateDisplay();
     this.startTimer();
   }
@@ -42,7 +41,7 @@ export class TimerContainer implements ICellRendererAngularComp, OnDestroy {
 
   private updateDisplay(): void {
     const now = Date.now();
-    const diff = this.timestamp - now;
+    const diff = this.timestampUTC - now;
 
     this.isPast = diff < 0;
 
