@@ -43,6 +43,10 @@ export interface IServerDataAPI extends API {
   response: IServerData;
 }
 
+export interface ITypesListAPI extends API {
+  response: ITypesList[];
+}
+
 export interface IServer {
   ip: string;
   port?: string;
@@ -77,6 +81,10 @@ export interface IBotError {
   message: string;
 }
 
+export interface IBotControlAPI extends API {
+  response: IBotControl[];
+}
+
 export interface IBotControl {
   id: string;
   running: boolean;
@@ -92,8 +100,8 @@ export interface IBotControl {
 
 export interface IActiveElementData {
   serverData: IServerDataAPI;
-  botTypesList: ITypesList[];
-  actionTypesList: ITypesList[];
+  botTypesList: ITypesListAPI;
+  actionTypesList: ITypesListAPI;
   gateList: IGateItem[];
-  botControlList: IBotControl[];
+  botControlList: IBotControlAPI;
 }

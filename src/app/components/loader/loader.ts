@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatIcon} from '@angular/material/icon';
 
 @Component({
@@ -7,9 +7,8 @@ import {MatIcon} from '@angular/material/icon';
   imports: [
     MatIcon
   ],
-  templateUrl: './loader.component.html',
-  styleUrl: './loader.component.scss'
+  templateUrl: './loader.html',
+  styleUrl: './loader.scss'
 })
 export class Loader {
-  @Input() title: string = '';
 }

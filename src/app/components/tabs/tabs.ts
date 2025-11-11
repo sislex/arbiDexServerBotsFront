@@ -10,6 +10,7 @@ import {AgGridGateListContainer} from '../../containers/ag-grid-gate-list-contai
 import {AgGridBotListContainer} from '../../containers/ag-grid-bot-list-container/ag-grid-bot-list-container';
 import {AgGridActionListContainer} from '../../containers/ag-grid-action-list-container/ag-grid-action-list-container';
 import {TitleTableLayout} from '../title-table-layout/title-table-layout';
+import {LoaderContainer} from '../../containers/loader-container/loader-container';
 
 @Component({
   selector: 'app-tabs',
@@ -22,7 +23,8 @@ import {TitleTableLayout} from '../title-table-layout/title-table-layout';
     AgGridGateListContainer,
     AgGridBotListContainer,
     AgGridActionListContainer,
-    TitleTableLayout
+    TitleTableLayout,
+    LoaderContainer
   ],
   standalone: true,
   templateUrl: './tabs.html',
@@ -31,6 +33,15 @@ import {TitleTableLayout} from '../title-table-layout/title-table-layout';
 export class Tabs implements OnChanges {
   @Input() list: string[] = [];
   @Input() tabName: string = '';
+
+  @Input() loadBotControlListError!: boolean;
+  @Input() botControlListIsLoading!: boolean;
+  @Input() botControlListIsLoaded!: boolean;
+  @Input() allServerDataIsLoading!: boolean;
+  @Input() allServerDataIsLoaded!: boolean;
+  @Input() loadServerDataError!: boolean;
+  @Input() loadBotTypesError!: boolean;
+  @Input() loadActionTypesError!: boolean;
 
   @Output() emitter = new EventEmitter();
 

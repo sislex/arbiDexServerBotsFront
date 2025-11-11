@@ -27,7 +27,7 @@
               (change)="setActiveItem($event.value)"
             >
               @for (item of list; track item) {
-                <mat-button-toggle [value]="item">
+                <mat-button-toggle [value]="item.ip + ':' + item.port">
                   {{ item.name | titlecase }}
                 </mat-button-toggle>
               }
