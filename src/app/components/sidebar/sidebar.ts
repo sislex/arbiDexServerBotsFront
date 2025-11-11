@@ -39,9 +39,7 @@ export class Sidebar {
     });
   }
 
-  setActiveItem(value: any) {
-    const ipPort = value.ip + ':' + value.port
-
+  setActiveItem(ipPort: string) {
     this.emitter.emit({
       event: 'Sidebar:SET_ACTIVE_ITEM_CLICKED',
       data: { ipPort },
