@@ -6,7 +6,11 @@ import { Router } from '@angular/router';
 import {
   getActiveServerIpPort,
   getAllServerDataIsLoaded,
-  getAllServerDataIsLoading, getLoadActionTypesError,
+  getAllServerDataIsLoading,
+  getBotControlListError,
+  getBotControlListIsLoaded,
+  getBotControlListIsLoading,
+  getLoadActionTypesError,
   getLoadBotTypesError,
   getLoadServerDataError,
 } from '../../+state/servers/servers.selectors';
@@ -29,6 +33,9 @@ export class TabsContainer {
   tabList$ = this.store.select(getTabList);
   ipPort$ = this.store.select(getActiveServerIpPort);
 
+  getBotControlListIsLoading$ = this.store.select(getBotControlListIsLoading);
+  botControlListIsLoaded$ = this.store.select(getBotControlListIsLoaded);
+  botControlListError$ = this.store.select(getBotControlListError);
   allServerDataIsLoading$ = this.store.select(getAllServerDataIsLoading);
   allServerDataIsLoaded$ = this.store.select(getAllServerDataIsLoaded);
   loadServerDataError$ = this.store.select(getLoadServerDataError);

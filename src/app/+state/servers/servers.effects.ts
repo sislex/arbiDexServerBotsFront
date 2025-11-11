@@ -4,12 +4,17 @@ import { catchError, filter, forkJoin, map, of, switchMap, tap, withLatestFrom }
 import { Store } from '@ngrx/store';
 import {
   loadActionTypesList,
-  loadActionTypesListFailure, loadActionTypesListSuccess,
-  loadBotTypesList, loadBotTypesListFailure,
+  loadActionTypesListFailure,
+  loadActionTypesListSuccess, loadBotControlList,
+  loadBotControlListFailure,
+  loadBotControlListSuccess,
+  loadBotTypesList,
+  loadBotTypesListFailure,
   loadBotTypesListSuccess,
-  loadServerList, loadServerListFailure, loadServerListSuccess,
+  loadServerList,
+  loadServerListFailure,
+  loadServerListSuccess,
   setActiveServer,
-  setBotControlList,
 } from './servers.actions';
 import { ServerDataService } from '../../services/server-data.service';
 import { getActiveTab } from '../view/view.selectors';
@@ -86,12 +91,13 @@ export class ServersEffects {
     { dispatch: false }
   );
 
-  loadBotsControl$ = createEffect(() =>
-      this.actions$.pipe(
+  loadBotsControl$ = createEffect(() => {
+      return this.actions$.pipe(
         ofType(setActiveServer),
         withLatestFrom(this.store.select(getActiveTab)),
         filter(([_, tab]) => tab === 'bots'),
         switchMap(([action]) => {
+          this.store.dispatch(loadBotControlList());
 
           return this.serverDataService.getBotsControl().pipe(
             tap((response: any[]) => {
@@ -112,16 +118,17 @@ export class ServersEffects {
                 running: item.running ?? false,
               }));
 
-              this.store.dispatch(setBotControlList({ response: responseBotControlList }));
+              this.store.dispatch(loadBotControlListSuccess({response: responseBotControlList}));
             }),
             catchError(err => {
-              console.error('botsControl error', err);
+              this.store.dispatch(loadBotControlListFailure({error: err}));
               return of([]);
             }),
-            map(() => ({ done: true }))
+            map(() => ({done: true}))
           );
         })
-      ),
+      );
+    },
     { dispatch: false }
   );
 }

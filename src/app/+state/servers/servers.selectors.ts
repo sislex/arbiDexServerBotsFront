@@ -26,7 +26,7 @@ export const getActiveServerIpPort = createSelector(
 );
 export const getBotsControlList = createSelector(
   selectFeature,
-  (state: ServersState) => state.activeElementData.botControlList
+  (state: ServersState) => state.activeElementData.botControlList.response
 );
 export const getBotTypesList = createSelector(
   selectFeature,
@@ -93,6 +93,23 @@ export const getLoadActionTypesError = createSelector(
   selectFeature,
   (state: ServersState) =>  !!state.activeElementData.actionTypesList.error
 );
+
+export const getBotControlListIsLoading = createSelector(
+  selectFeature,
+  (state: ServersState) => state.activeElementData.botControlList.isLoading
+);
+export const getBotControlListIsLoaded = createSelector(
+  selectFeature,
+  (state: ServersState) => state.activeElementData.botControlList.isLoaded
+);
+export const getBotControlListError = createSelector(
+  selectFeature,
+  (state: ServersState) => !!state.activeElementData.botControlList.error
+);
+
+
+
+
 
 // export const selectBotData = createSelector(
 //   selectFeature,

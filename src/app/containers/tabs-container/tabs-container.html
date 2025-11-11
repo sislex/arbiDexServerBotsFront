@@ -2,6 +2,9 @@
   [list]="(tabList$ | async)!"
   [tabName]="(activeTab$ | async)!"
 
+  [botControlListIsLoading]="(getBotControlListIsLoading$ | async)!"
+  [botControlListIsLoaded]="(botControlListIsLoaded$ | async)!"
+  [loadBotControlListError]="(botControlListError$ | async)!"
   [allServerDataIsLoading]="(allServerDataIsLoading$ | async)!"
   [allServerDataIsLoaded]="(allServerDataIsLoaded$ | async)!"
   [loadServerDataError]="(loadServerDataError$ | async)!"

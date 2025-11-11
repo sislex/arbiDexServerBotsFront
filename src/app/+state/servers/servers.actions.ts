@@ -19,11 +19,6 @@ export const setGateList = createAction(
   props<{ response: any }>()
 );
 
-export const setBotControlList = createAction(
-  '[Servers] setBotControlList',
-  props<{ response: any }>()
-);
-
 export const setIsStartedBot = createAction(
   '[Servers] setIsStartedBot',
   props<{ isStarted: boolean, id: string }>()
@@ -71,5 +66,15 @@ export const loadActionTypesListSuccess = createAction(
 );
 export const loadActionTypesListFailure = createAction(
   '[Servers] loadActionTypesListFailure',
+  props<{ error: string }>()
+);
+
+export const loadBotControlList = createAction('[Servers] loadBotControlList');
+export const loadBotControlListSuccess = createAction(
+  '[Servers] loadBotControlListSuccess',
+  props<{ response: any }>()
+);
+export const loadBotControlListFailure = createAction(
+  '[Servers] loadBotControlListFailure',
   props<{ error: string }>()
 );

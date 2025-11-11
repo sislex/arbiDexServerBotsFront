@@ -81,6 +81,10 @@ export interface IBotError {
   message: string;
 }
 
+export interface IBotControlAPI extends API {
+  response: IBotControl[];
+}
+
 export interface IBotControl {
   id: string;
   running: boolean;
@@ -99,5 +103,5 @@ export interface IActiveElementData {
   botTypesList: ITypesListAPI;
   actionTypesList: ITypesListAPI;
   gateList: IGateItem[];
-  botControlList: IBotControl[];
+  botControlList: IBotControlAPI;
 }

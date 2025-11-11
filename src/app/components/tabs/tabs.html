@@ -5,7 +5,20 @@
     <mat-tab label="{{ item | titlecase }}" >
       <app-title-content-layout [title]="item">
         @if (item === 'bots') {
-          <app-ag-grid-bots-control-container></app-ag-grid-bots-control-container>
+          @if (!botControlListIsLoading && botControlListIsLoaded) {
+            @if (!loadBotControlListError) {
+              <div class="server-page">
+                <app-title-table-layout [title]="'Bots control panel'">
+                  <app-ag-grid-bots-control-container></app-ag-grid-bots-control-container>
+                </app-title-table-layout>
+              </div>
+            } @else {
+              ошибка по API сервера ИЛИ страница с ошибкой в адресе бота или сервера
+            }
+          } @else {
+            <app-loader-container></app-loader-container>
+          }
+
         } @else if (item === 'gates') {
           <app-ag-grid-gate-list-container></app-ag-grid-gate-list-container>
         } @else if (item === 'server data') {

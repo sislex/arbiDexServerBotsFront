@@ -65,7 +65,13 @@ export const initialState: ServersState = {
       response: []
     },
     gateList: [],
-    botControlList: [],
+    botControlList: {
+      startTime: null,
+      loadingTime: null,
+      isLoading: false,
+      isLoaded: false,
+      response: [],
+    },
   },
 };
 
@@ -148,6 +154,7 @@ export const serversReducer = createReducer(
       }
     }
   })),
+
   on(ServersActions.loadActionTypesList, (state) => ({
     ...state,
     activeElementData: {
@@ -186,11 +193,43 @@ export const serversReducer = createReducer(
       }
     }
   })),
-  on(ServersActions.setActionTypesList, (state, {response}) => ({
+
+  on(ServersActions.loadBotControlList, (state) => ({
     ...state,
     activeElementData: {
       ...state.activeElementData,
-      actionTypesList: response
+      botControlList: {
+        ...state.activeElementData.botControlList,
+        startTime:  Date.now(),
+        isLoading: true,
+        isLoaded: false,
+      }
+    }
+  })),
+  on(ServersActions.loadBotControlListSuccess, (state, {response}) => ({
+    ...state,
+    activeElementData: {
+      ...state.activeElementData,
+      botControlList: {
+        ...state.activeElementData.botControlList,
+        loadingTime: Date.now() - state.activeElementData.botControlList.startTime!,
+        isLoading: false,
+        isLoaded: true,
+        response
+      }
+    }
+  })),
+  on(ServersActions.loadBotControlListFailure, (state, {error}) => ({
+    ...state,
+    activeElementData: {
+      ...state.activeElementData,
+      botControlList: {
+        ...state.activeElementData.botControlList,
+        loadingTime: Date.now() - state.activeElementData.botControlList.startTime!,
+        isLoading: false,
+        isLoaded: true,
+        error
+      }
     }
   })),
   on(ServersActions.setGateList, (state, {response}) => ({
@@ -198,13 +237,6 @@ export const serversReducer = createReducer(
     activeElementData: {
       ...state.activeElementData,
       gateList: response
-    }
-  })),
-  on(ServersActions.setBotControlList, (state, {response}) => ({
-    ...state,
-    activeElementData: {
-      ...state.activeElementData,
-      botControlList: response
     }
   })),
   on(ServersActions.setActiveServer, (state, {ip, port}) => ({

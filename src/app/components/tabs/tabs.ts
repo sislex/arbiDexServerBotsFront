@@ -34,6 +34,9 @@ export class Tabs implements OnChanges {
   @Input() list: string[] = [];
   @Input() tabName: string = '';
 
+  @Input() loadBotControlListError!: boolean;
+  @Input() botControlListIsLoading!: boolean;
+  @Input() botControlListIsLoaded!: boolean;
   @Input() allServerDataIsLoading!: boolean;
   @Input() allServerDataIsLoaded!: boolean;
   @Input() loadServerDataError!: boolean;
