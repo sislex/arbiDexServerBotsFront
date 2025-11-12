@@ -9,7 +9,7 @@
             @if (!loadBotControlListError) {
               <div class="server-page">
                 <app-title-table-layout [title]="'Bots control panel'">
-                  <app-ag-grid-bots-control-container></app-ag-grid-bots-control-container>
+                  <app-ag-grid-bots-control-container content></app-ag-grid-bots-control-container>
                 </app-title-table-layout>
               </div>
             } @else {
@@ -29,21 +29,21 @@
               <div class="server-page">
                 @if (!loadServerDataError) {
                   <app-title-table-layout [title]="'Server data'">
-                    <app-ag-grid-server-data-container></app-ag-grid-server-data-container>
+                    <app-ag-grid-server-data-container content></app-ag-grid-server-data-container>
                   </app-title-table-layout>
                 } @else {
                   ошибка по API сервера
                 }
                 @if (!loadBotTypesError) {
                   <app-title-table-layout  [title]="'Types of bots'">
-                    <app-ag-grid-bot-list-container></app-ag-grid-bot-list-container>
+                    <app-ag-grid-bot-list-container content></app-ag-grid-bot-list-container>
                   </app-title-table-layout>
                 } @else {
                   ошибка по API типов ботов
                 }
                 @if (!loadActionTypesError) {
                   <app-title-table-layout  [title]="'Types of bots actions'">
-                    <app-ag-grid-action-list-container></app-ag-grid-action-list-container>
+                    <app-ag-grid-action-list-container content></app-ag-grid-action-list-container>
                   </app-title-table-layout>
                 } @else {
                   ошибка по API типов экшенов

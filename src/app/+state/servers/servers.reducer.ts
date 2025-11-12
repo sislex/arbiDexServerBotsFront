@@ -37,6 +37,141 @@ export const initialState: ServersState = {
         endpoint: '...post/endpoint/api',
         description: 'This is the API description where the request parameters are described.'
       },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
     ]
   },
   serverListResponse: [],

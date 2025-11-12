@@ -15,6 +15,8 @@ import {getActiveTab, getIsSidebarOpen} from '../../+state/view/view.selectors';
 import {setActiveTab, toggleSidebar} from '../../+state/view/view.actions';
 import {Actions} from '../../components/ag-grid-components/actions/actions';
 import {ApiInfoPanel} from '../../components/api-info-panel/api-info-panel';
+import {MatDialog} from '@angular/material/dialog';
+import {ApiListContainer} from '../api-list-container/api-list-container';
 
 @Component({
   selector: 'app-sidebar-container',
@@ -33,6 +35,7 @@ export class SidebarContainer implements OnInit {
   private store = inject(Store);
   private router = inject(Router);
   private route=inject(ActivatedRoute);
+  readonly dialog = inject(MatDialog);
 
   featureName$ = this.store.select(getFeatureName);
   isSidebarOpen$ = this.store.select(getIsSidebarOpen);
@@ -74,8 +77,32 @@ export class SidebarContainer implements OnInit {
   onAction($event: any, note: string) {
     if ($event.event === 'Actions:ACTION_CLICKED') {
       if (note === 'info' ) {
+        this.openEditDialog()
         console.log('info')
       }
     }
   }
+
+  openEditDialog() {
+    const dialogRef = this.dialog.open(ApiListContainer, {
+      width: '90vw',
+      maxWidth: '100vw',
+      minWidth: '800px',
+      height: '600px',
+      minHeight: '600px',
+      maxHeight: '100vh',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        if (result.$event?.data === 'save') {
+          // this.store.dispatch(updateBot({isSendData: result.data, id: rowData.id}));
+        }
+      } else {
+        console.log('Deletion cancelled');
+      }
+    });
+  }
+
 }
