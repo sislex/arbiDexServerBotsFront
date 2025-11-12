@@ -18,7 +18,6 @@ import {UpperCasePipe} from '@angular/common';
 })
 export class ConfirmationPopUp {
   @Input() title: string = '';
-  @Input() message: string = '';
   @Input() buttons: string[] = [];
 
   @Output() emitter = new EventEmitter();

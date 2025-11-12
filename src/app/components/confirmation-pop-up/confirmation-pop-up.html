@@ -4,20 +4,13 @@
       <span>{{title}}</span>
     }
     <span class="example-spacer"></span>
-    <!--    <app-actions-->
-    <!--      [icon]="'close'"-->
-    <!--      [type]="'red'"-->
-    <!--      (emitter)="event('close')"-->
-    <!--    ></app-actions>-->
     <button matIconButton class="example-icon" (click)="event('close')">
       <mat-icon>close</mat-icon>
     </button>
   </mat-toolbar>
-
   <div class="main-message">
-    {{message}}
+  <ng-content select="[popupContent]"></ng-content>
   </div>
-
   @if (buttons.length) {
     <div class="footer">
       <mat-toolbar>

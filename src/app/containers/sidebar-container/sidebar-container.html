@@ -6,4 +6,16 @@
   (emitter)="events($event)"
 >
   <app-tabs-container main></app-tabs-container>
+  <app-actions
+    footerSidebarClose
+    [icon]="'info'"
+    [type]="'default'"
+    (emitter)="onAction($event, 'info')"
+  ></app-actions>
+  <app-api-info-panel
+    footerSidebarOpen
+    [title]="'API info'"
+    [icon]="'info'"
+    (emitter)="onAction($event, 'info')"
+  ></app-api-info-panel>
 </app-sidebar>

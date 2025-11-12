@@ -1,0 +1,11 @@
+<app-confirmation-pop-up
+  [title]="'API List'"
+  (emitter)="events($event)"
+>
+  <app-title-table-layout
+    popupContent
+    [title]="'API'"
+  >
+    <app-ag-grid-api-list-container content></app-ag-grid-api-list-container>
+  </app-title-table-layout>
+</app-confirmation-pop-up>

@@ -5,10 +5,11 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import {ConfirmationPopUp} from '../../components/confirmation-pop-up/confirmation-pop-up';
+import {MessageText} from '../../components/message-text/message-text';
 
 @Component({
   selector: 'app-confirmation-pop-up-container',
-  imports: [MatButtonModule, ConfirmationPopUp],
+  imports: [MatButtonModule, ConfirmationPopUp, MessageText],
   standalone: true,
   templateUrl: './confirmation-pop-up-container.html',
   styleUrl: './confirmation-pop-up-container.scss'

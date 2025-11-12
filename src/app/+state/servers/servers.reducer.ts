@@ -31,6 +31,43 @@ export const initialState: ServersState = {
         name: 'FIRST_REAL_SERVER',
       },
     ],
+    apiList: [
+      {
+        type: 'GET',
+        endpoint: '.../bots/get-all',
+        description: 'Это данные на управление, надо определится с описанием'
+      },
+      {
+        type: 'GET',
+        endpoint: '.../info',
+        description: 'Get server info'
+      },
+      {
+        type: 'GET',
+        endpoint: '.../info/bots-types-list',
+        description: 'Get bot types list'
+      },
+      {
+        type: 'GET',
+        endpoint: '.../info/bots-actions-list',
+        description: 'Get action types list'
+      },
+      {
+        type: 'GET',
+        endpoint: '.../bot/:id/settings',
+        description: 'Get bot rules'
+      },
+      {
+        type: 'PUT',
+        endpoint: '.../bot/:id/settings',
+        description: 'Edit bot rules'
+      },
+      {
+        type: 'add????',
+        endpoint: '.../:ipPort/',
+        description: 'Do need to add imports to your API methods?'
+      },
+    ]
   },
   serverListResponse: [],
   activeBotData: [],

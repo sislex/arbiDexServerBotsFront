@@ -31,7 +31,6 @@ export const Base: Story = {};
 export const Primary: Story = {
   args: {
     title: 'Standard title',
-    message: 'This is a standard message for confirmation pop up',
     buttons: ['yes', 'no'],
   },
 };
@@ -39,6 +38,5 @@ export const Primary: Story = {
 export const WithoutButtons: Story = {
   args: {
     title: 'Standard title',
-    message: 'This is a standard message for confirmation pop up Without Buttons',
   },
 };
