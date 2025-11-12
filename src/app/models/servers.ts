@@ -53,8 +53,15 @@ export interface IServer {
   name: string;
 }
 
+export interface IApiList {
+  type: string;
+  endpoint: string;
+  description: string;
+}
+
 export interface IConfig {
   serverList: IServer[];
+  apiList: IApiList[];
 }
 
 export interface ITypesList {

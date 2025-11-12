@@ -31,6 +31,13 @@ export const initialState: ServersState = {
         name: 'FIRST_REAL_SERVER',
       },
     ],
+    apiList: [
+      {
+        type: 'GET',
+        endpoint: '...post/endpoint/api',
+        description: 'This is the API description where the request parameters are described.'
+      },
+    ]
   },
   serverListResponse: [],
   activeBotData: [],

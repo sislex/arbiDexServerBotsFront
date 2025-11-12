@@ -34,6 +34,9 @@
             </mat-button-toggle-group>
           </div>
         </div>
+        <div class="footer">
+          <ng-content select="[footerSidebarOpen]"></ng-content>
+        </div>
       </div>
     } @else {
       <div class="panel-content-closed">
@@ -41,6 +44,10 @@
           <button mat-icon-button (click)="togglePanel()" class="toggle-button">
             <mat-icon>arrow_right</mat-icon>
           </button>
+        </div>
+
+        <div class="footer">
+          <ng-content select="[footerSidebarClose]"></ng-content>
         </div>
       </div>
     }

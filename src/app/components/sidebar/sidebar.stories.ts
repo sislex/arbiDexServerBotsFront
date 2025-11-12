@@ -43,6 +43,13 @@ export const SidebarOpen: Story = {
   args: {
     sidebarTitle: 'sidebar title',
     isSidebarOpen: true,
+    list: [
+      {
+        ip: '45.135.182.251',
+        port: '1005',
+        name: 'UNREAL_SERVER',
+      },
+    ]
   },
 };
 

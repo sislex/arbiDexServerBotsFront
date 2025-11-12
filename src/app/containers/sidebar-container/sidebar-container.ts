@@ -13,6 +13,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {take} from 'rxjs';
 import {getActiveTab, getIsSidebarOpen} from '../../+state/view/view.selectors';
 import {setActiveTab, toggleSidebar} from '../../+state/view/view.actions';
+import {Actions} from '../../components/ag-grid-components/actions/actions';
+import {ApiInfoPanel} from '../../components/api-info-panel/api-info-panel';
 
 @Component({
   selector: 'app-sidebar-container',
@@ -20,6 +22,8 @@ import {setActiveTab, toggleSidebar} from '../../+state/view/view.actions';
     Sidebar,
     AsyncPipe,
     TabsContainer,
+    Actions,
+    ApiInfoPanel,
   ],
   standalone: true,
   templateUrl: './sidebar-container.html',
@@ -63,6 +67,14 @@ export class SidebarContainer implements OnInit {
             this.router.navigate([`/server/${ip}:${port}/tab/${activeTab}`]);
           }
         });
+      }
+    }
+  }
+
+  onAction($event: any, note: string) {
+    if ($event.event === 'Actions:ACTION_CLICKED') {
+      if (note === 'info' ) {
+        console.log('info')
       }
     }
   }
