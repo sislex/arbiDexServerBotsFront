@@ -78,7 +78,6 @@ export class SidebarContainer implements OnInit {
     if ($event.event === 'Actions:ACTION_CLICKED') {
       if (note === 'info' ) {
         this.openEditDialog()
-        console.log('info')
       }
     }
   }
@@ -100,7 +99,7 @@ export class SidebarContainer implements OnInit {
           // this.store.dispatch(updateBot({isSendData: result.data, id: rowData.id}));
         }
       } else {
-        console.log('Deletion cancelled');
+        console.log('Info Closed');
       }
     });
   }
