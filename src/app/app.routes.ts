@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import {SidebarContainer} from './containers/sidebar-container/sidebar-container';
-import {BotInfoPageContainer} from './containers/bot-errors-page-container/bot-info-page-container';
+import {BotInfoPageContainer} from './containers/bot-info-page-container/bot-info-page-container';
 
 export const routes: Routes = [
   {

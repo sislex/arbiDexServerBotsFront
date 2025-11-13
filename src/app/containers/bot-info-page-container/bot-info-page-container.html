@@ -1,0 +1,26 @@
+<div class="bot-info-container">
+  @if (dataActiveBot$ | async; as list) {
+    <!--    @if (list.botInfo.id !== '') {-->
+    <app-title-table-layout [title]="'param_bots'">
+      <app-ag-grid-bots-control
+        content
+        [rowData]="[list.botInfo]"
+        (emitter)="events($event)"
+      ></app-ag-grid-bots-control>
+    </app-title-table-layout>
+    <app-title-table-layout [title]="'Params'">
+      <app-ag-grid-bot-data-list
+        content
+        [rowData]="list.botResultList"
+      ></app-ag-grid-bot-data-list>
+    </app-title-table-layout>
+
+    <app-title-table-layout [title]="'Errors'">
+      <app-ag-grid-error-list
+        content
+        [rowData]="list.botErrorList"
+      ></app-ag-grid-error-list>
+    </app-title-table-layout>
+    <!--    }-->
+  }
+</div>

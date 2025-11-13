@@ -5,10 +5,10 @@ import {AgGridErrorList} from '../../components/ag-grid-error-list/ag-grid-error
 import {TitleTableLayout} from '../../components/title-table-layout/title-table-layout';
 import {AgGridBotDataList} from '../../components/ag-grid-bot-data-list/ag-grid-bot-data-list';
 import {AsyncPipe} from '@angular/common';
-import {getBotsControlList} from '../../+state/servers/servers.selectors';
+import {getDataActiveBot} from '../../+state/servers/servers.selectors';
 
 @Component({
-  selector: 'app-bot-errors-page-container',
+  selector: 'app-bot-info-page-container',
   imports: [
     AgGridBotsControl,
     AgGridErrorList,
@@ -27,9 +27,13 @@ export class BotInfoPageContainer implements OnInit {
     params: []
   };
 
-  botsControlList$ = this.store.select(getBotsControlList)
+  dataActiveBot$ = this.store.select(getDataActiveBot)
+
   ngOnInit() {
-    console.log('тут вызвать диспатч на запуск апишки получения errors по ip, port, id-бота')
+    console.log('тут вызвать диспатч - делаем следующее:')
+
+    console.log('сохраняю id в стейт')
+    console.log('в эффекте делаю запросы на данные о боте, его ответы, его ошибки по ip, port и id из стэйта')
   }
 
   events($event: any) {
