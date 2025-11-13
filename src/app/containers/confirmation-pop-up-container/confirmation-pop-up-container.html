@@ -1,6 +1,11 @@
 <app-confirmation-pop-up
   [title]="data.title"
-  [message]="data.message"
   [buttons]="data.buttons"
   (emitter)="events($event)"
-></app-confirmation-pop-up>
+>
+  <app-message-text
+    [message]="data.message"
+    popupContent
+  >
+  </app-message-text>
+</app-confirmation-pop-up>

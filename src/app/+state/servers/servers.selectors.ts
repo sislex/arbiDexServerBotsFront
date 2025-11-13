@@ -106,9 +106,10 @@ export const getBotControlListError = createSelector(
   selectFeature,
   (state: ServersState) => !!state.activeElementData.botControlList.error
 );
-
-
-
+export const getApiList = createSelector(
+  selectFeature,
+  (state: ServersState) => state.config.apiList
+);
 
 
 // export const selectBotData = createSelector(
