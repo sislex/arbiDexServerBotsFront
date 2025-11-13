@@ -109,6 +109,31 @@ export const initialState: ServersState = {
       isLoaded: false,
       response: [],
     },
+
+    activeBot: {
+      startTime: null,
+      loadingTime: null,
+      isLoading: false,
+      isLoaded: false,
+      response: {
+        botInfo: {
+          id: '',
+          running: false,
+          createdAt: '',
+          actionCount: 0,
+          errorCount: 0,
+          lastActionTimeStart: '',
+          lastActionTimeFinish: '',
+          lastLatency: 0,
+          lastActionResult: {
+            ok: false,
+            amountOut: '',
+          }
+        },
+        botResultList: [],
+        botErrorList: [],
+      },
+    },
   },
 };
 

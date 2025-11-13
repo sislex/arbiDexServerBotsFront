@@ -1,0 +1,30 @@
+<!--<app-bot-errors-page-->
+<!--  [data]="data"-->
+<!--  (emitter)="events($event)"-->
+<!--&gt;-->
+
+<!--</app-bot-errors-page>-->
+
+
+@if (botsControlList$ | async; as list) {
+<app-title-table-layout [title]="'param_bots'">
+  <app-ag-grid-bots-control
+    content
+    [rowData]="list"
+    (emitter)="events($event)"
+  ></app-ag-grid-bots-control>
+</app-title-table-layout>
+}
+<app-title-table-layout [title]="'Params'">
+  <app-ag-grid-bot-data-list
+    content
+    [rowData]="data.params"
+  ></app-ag-grid-bot-data-list>
+</app-title-table-layout>
+
+<app-title-table-layout [title]="'Errors'">
+  <app-ag-grid-error-list
+    content
+    [rowData]="data.errors"
+  ></app-ag-grid-error-list>
+</app-title-table-layout>

@@ -92,6 +92,10 @@ export interface IBotControlAPI extends API {
   response: IBotControl[];
 }
 
+export interface IActiveBotAPI extends API {
+  response: IActiveBot;
+}
+
 export interface IBotControl {
   id: string;
   running: boolean;
@@ -102,7 +106,17 @@ export interface IBotControl {
   lastActionTimeFinish: string;
   lastLatency: number;
   lastActionResult: ILastActionResult;
+}
+
+export interface IActiveBot {
+  botInfo: IBotControl;
+  botResultList: IResult[];
   botErrorList: IBotError[];
+}
+
+export interface IResult {
+  value: string;
+  parameter: any;
 }
 
 export interface IActiveElementData {
@@ -111,4 +125,5 @@ export interface IActiveElementData {
   actionTypesList: ITypesListAPI;
   gateList: IGateItem[];
   botControlList: IBotControlAPI;
+  activeBot: IActiveBotAPI;
 }
