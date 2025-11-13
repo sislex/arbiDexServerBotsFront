@@ -1,32 +1,26 @@
 import { API } from './api';
 
-export interface IBotData {
-  id: string;
-  name: string;
-  type: any;
-  description: string;
-  gate: any;
-  maxTimeRequest: number;
-  timeRequest: number;
-  status: string;
-  sendData: boolean;
-  isStarted: boolean;
-
-  botJSON: string;
-  actionJSON: string;
-  actionTypeSelect: string;
-  botTypeSelect: string;
-}
+// export interface IBotData {
+//   id: string;
+//   name: string;
+//   type: any;
+//   description: string;
+//   gate: any;
+//   maxTimeRequest: number;
+//   timeRequest: number;
+//   status: string;
+//   sendData: boolean;
+//   isStarted: boolean;
+//
+//   botJSON: string;
+//   actionJSON: string;
+//   actionTypeSelect: string;
+//   botTypeSelect: string;
+// }
 
 export interface IServerAuthData {
   login: string;
   password: string;
-}
-
-export interface IServerDataResponse {
-  version: string;
-  startDate: Date;
-  botsList: IBotData[];
 }
 
 export interface IServerData {

@@ -1,6 +1,6 @@
 import {createReducer, on} from '@ngrx/store';
 import * as ServersActions from './servers.actions';
-import {IConfig, IServerData, IBotData, IActiveElementData} from '../../models/servers';
+import {IConfig, IServerData, IActiveElementData} from '../../models/servers';
 
 export const SERVERS_FEATURE_KEY = 'servers';
 
@@ -8,7 +8,6 @@ export interface ServersState {
   featureName: string;
   config: IConfig;
   serverListResponse: IServerData[];
-  activeBotData: IBotData[];
   activeElementData: IActiveElementData;
 }
 
@@ -70,7 +69,6 @@ export const initialState: ServersState = {
     ]
   },
   serverListResponse: [],
-  activeBotData: [],
   activeElementData: {
     serverData: {
       startTime: null,
