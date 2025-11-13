@@ -5,6 +5,11 @@ mat-tab-group {
     display: flex;
     height: 100%;
 
+    .title-content-layout {
+      display: flex;
+      width: 100%
+    }
+
     app-loader-container {
       width: 100%;
     }

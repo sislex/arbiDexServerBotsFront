@@ -6,16 +6,20 @@ import {TitleTableLayout} from '../../components/title-table-layout/title-table-
 import {AgGridBotDataList} from '../../components/ag-grid-bot-data-list/ag-grid-bot-data-list';
 import {AsyncPipe} from '@angular/common';
 import {getDataActiveBot} from '../../+state/servers/servers.selectors';
+import {TitleContentLayout} from '../../components/title-content-layout/title-content-layout';
+import {Actions} from '../../components/ag-grid-components/actions/actions';
 
 @Component({
   selector: 'app-bot-info-page-container',
-  imports: [
-    AgGridBotsControl,
-    AgGridErrorList,
-    TitleTableLayout,
-    AgGridBotDataList,
-    AsyncPipe,
-  ],
+    imports: [
+        AgGridBotsControl,
+        AgGridErrorList,
+        TitleTableLayout,
+        AgGridBotDataList,
+        AsyncPipe,
+        TitleContentLayout,
+        Actions,
+    ],
   standalone: true,
   templateUrl: './bot-info-page-container.html',
   styleUrl: './bot-info-page-container.scss',

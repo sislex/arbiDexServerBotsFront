@@ -3,8 +3,28 @@
   flex-direction: column;
   flex: 1;
 
-  .title {
-    align-self: center;
+  .title-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    padding: 8px 0;
+
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .title-content {
+      position: absolute;
+      margin-left: 16px;
+    }
+
+    .title {
+      flex: 1;
+      text-align: center;
+      margin: 0;
+    }
   }
 
   .content {

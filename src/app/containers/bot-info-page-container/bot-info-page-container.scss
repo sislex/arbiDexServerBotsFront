@@ -1,6 +1,15 @@
+:host {
+  display: flex;
+  flex: 1;
+}
+app-title-content-layout {
+  display: flex;
+  flex: 1;
+}
+
 .bot-info-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  width: 100%;
   padding: 16px;
 }
