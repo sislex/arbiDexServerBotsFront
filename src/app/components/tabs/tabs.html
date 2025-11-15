@@ -4,56 +4,58 @@
   @for (item of list; track item) {
     <mat-tab label="{{ item | titlecase }}" >
       <app-title-content-layout [title]="item">
-        @if (item === 'bots') {
-          @if (!botControlListIsLoading && botControlListIsLoaded) {
-            @if (!loadBotControlListError) {
-              <div class="server-page">
-                <app-title-table-layout [title]="'Bots control panel'">
-                  <app-ag-grid-bots-control-container content></app-ag-grid-bots-control-container>
-                </app-title-table-layout>
-              </div>
+        <div class="title-content-layout" content>
+          @if (item === 'bots') {
+            @if (!botControlListIsLoading && botControlListIsLoaded) {
+              @if (!loadBotControlListError) {
+                <div class="server-page">
+                  <app-title-table-layout [title]="'Bots control panel'">
+                    <app-ag-grid-bots-control-container content></app-ag-grid-bots-control-container>
+                  </app-title-table-layout>
+                </div>
+              } @else {
+                ошибка по API сервера ИЛИ страница с ошибкой в адресе бота или сервера
+              }
             } @else {
-              ошибка по API сервера ИЛИ страница с ошибкой в адресе бота или сервера
+              <app-loader-container></app-loader-container>
             }
-          } @else {
-            <app-loader-container></app-loader-container>
-          }
 
-        } @else if (item === 'gates') {
-          <app-ag-grid-gate-list-container></app-ag-grid-gate-list-container>
-        } @else if (item === 'server data') {
-          @if (!allServerDataIsLoading && allServerDataIsLoaded) {
-            @if (loadServerDataError && loadBotTypesError && loadActionTypesError) {
-              страница с ошибкой в адресе бота или сервера
+          } @else if (item === 'gates') {
+            <app-ag-grid-gate-list-container></app-ag-grid-gate-list-container>
+          } @else if (item === 'server data') {
+            @if (!allServerDataIsLoading && allServerDataIsLoaded) {
+              @if (loadServerDataError && loadBotTypesError && loadActionTypesError) {
+                страница с ошибкой в адресе бота или сервера
+              } @else {
+                <div class="server-page">
+                  @if (!loadServerDataError) {
+                    <app-title-table-layout [title]="'Server data'">
+                      <app-ag-grid-server-data-container content></app-ag-grid-server-data-container>
+                    </app-title-table-layout>
+                  } @else {
+                    ошибка по API сервера
+                  }
+                  @if (!loadBotTypesError) {
+                    <app-title-table-layout  [title]="'Types of bots'">
+                      <app-ag-grid-bot-list-container content></app-ag-grid-bot-list-container>
+                    </app-title-table-layout>
+                  } @else {
+                    ошибка по API типов ботов
+                  }
+                  @if (!loadActionTypesError) {
+                    <app-title-table-layout  [title]="'Types of bots actions'">
+                      <app-ag-grid-action-list-container content></app-ag-grid-action-list-container>
+                    </app-title-table-layout>
+                  } @else {
+                    ошибка по API типов экшенов
+                  }
+                </div>
+              }
             } @else {
-              <div class="server-page">
-                @if (!loadServerDataError) {
-                  <app-title-table-layout [title]="'Server data'">
-                    <app-ag-grid-server-data-container content></app-ag-grid-server-data-container>
-                  </app-title-table-layout>
-                } @else {
-                  ошибка по API сервера
-                }
-                @if (!loadBotTypesError) {
-                  <app-title-table-layout  [title]="'Types of bots'">
-                    <app-ag-grid-bot-list-container content></app-ag-grid-bot-list-container>
-                  </app-title-table-layout>
-                } @else {
-                  ошибка по API типов ботов
-                }
-                @if (!loadActionTypesError) {
-                  <app-title-table-layout  [title]="'Types of bots actions'">
-                    <app-ag-grid-action-list-container content></app-ag-grid-action-list-container>
-                  </app-title-table-layout>
-                } @else {
-                  ошибка по API типов экшенов
-                }
-              </div>
+              <app-loader-container></app-loader-container>
             }
-          } @else {
-            <app-loader-container></app-loader-container>
           }
-        }
+        </div>
       </app-title-content-layout>
     </mat-tab>
   }

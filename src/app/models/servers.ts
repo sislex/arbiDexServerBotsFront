@@ -1,32 +1,26 @@
 import { API } from './api';
 
-export interface IBotData {
-  id: string;
-  name: string;
-  type: any;
-  description: string;
-  gate: any;
-  maxTimeRequest: number;
-  timeRequest: number;
-  status: string;
-  sendData: boolean;
-  isStarted: boolean;
-
-  botJSON: string;
-  actionJSON: string;
-  actionTypeSelect: string;
-  botTypeSelect: string;
-}
+// export interface IBotData {
+//   id: string;
+//   name: string;
+//   type: any;
+//   description: string;
+//   gate: any;
+//   maxTimeRequest: number;
+//   timeRequest: number;
+//   status: string;
+//   sendData: boolean;
+//   isStarted: boolean;
+//
+//   botJSON: string;
+//   actionJSON: string;
+//   actionTypeSelect: string;
+//   botTypeSelect: string;
+// }
 
 export interface IServerAuthData {
   login: string;
   password: string;
-}
-
-export interface IServerDataResponse {
-  version: string;
-  startDate: Date;
-  botsList: IBotData[];
 }
 
 export interface IServerData {
@@ -92,6 +86,10 @@ export interface IBotControlAPI extends API {
   response: IBotControl[];
 }
 
+export interface IActiveBotAPI extends API {
+  response: IActiveBot;
+}
+
 export interface IBotControl {
   id: string;
   running: boolean;
@@ -102,7 +100,17 @@ export interface IBotControl {
   lastActionTimeFinish: string;
   lastLatency: number;
   lastActionResult: ILastActionResult;
+}
+
+export interface IActiveBot {
+  botInfo: IBotControl;
+  botResultList: IResult[];
   botErrorList: IBotError[];
+}
+
+export interface IResult {
+  value: string;
+  parameter: any;
 }
 
 export interface IActiveElementData {
@@ -111,4 +119,5 @@ export interface IActiveElementData {
   actionTypesList: ITypesListAPI;
   gateList: IGateItem[];
   botControlList: IBotControlAPI;
+  activeBot: IActiveBotAPI;
 }

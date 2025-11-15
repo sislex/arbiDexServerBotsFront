@@ -52,4 +52,9 @@ export class ServerDataService {
   getBotErrorsById(id: string): Observable<any> {
     return this.get(`/bots/errors/${id}`);
   }
+
+  // Получить список ошибок по конкретному боту
+  getBotControlById(id: string): Observable<any> {
+    return this.get(`/bots/get-all/${id}`);
+  }
 }
