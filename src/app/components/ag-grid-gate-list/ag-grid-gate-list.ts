@@ -2,15 +2,9 @@ import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 import type { ColDef, GetDataPath } from 'ag-grid-community';
 import { AgGridAngular } from 'ag-grid-angular';
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {
-  RowGroupingModule,
-  TreeDataModule
-} from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
   AllCommunityModule,
-  RowGroupingModule,
-  TreeDataModule
 ]);
 
 @Component({
