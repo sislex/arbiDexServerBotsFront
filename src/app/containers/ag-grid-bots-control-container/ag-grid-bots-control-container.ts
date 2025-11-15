@@ -6,8 +6,10 @@ import {Store} from '@ngrx/store';
 import {deletingBot, isSendData, setIsStartedBot, updateBot} from '../../+state/servers/servers.actions';
 import {BotEditFormContainer} from '../bot-edit-form-container/bot-edit-form-container';
 import {actionTypesList, botData, botTypesList} from './stabs';
-import {getBotsControlList} from '../../+state/servers/servers.selectors';
+import {getActiveServerIpPort, getBotsControlList} from '../../+state/servers/servers.selectors';
 import {AsyncPipe} from '@angular/common';
+import {Router} from '@angular/router';
+import {take} from 'rxjs';
 
 @Component({
   selector: 'app-ag-grid-bots-control-container',
@@ -22,8 +24,10 @@ import {AsyncPipe} from '@angular/common';
 export class AgGridBotsControlContainer {
   readonly dialog = inject(MatDialog);
   readonly store = inject(Store);
+  private router = inject(Router);
 
   botsControlList$ = this.store.select(getBotsControlList)
+  ipPort$ = this.store.select(getActiveServerIpPort)
 
   events($event: any) {
     if ($event.event === 'Actions:ACTION_CLICKED') {
@@ -41,8 +45,12 @@ export class AgGridBotsControlContainer {
     } else if ($event.event === 'Toggle:TOGGLE_CLICKED') {
       this.store.dispatch(isSendData({isSendData: $event.newValue, id: $event.row.id}))
     } else if ($event.event === 'AgGridBotsControl:DOUBLE_CLICKED_ROW') {
+
+      this.ipPort$.pipe(take(1)).subscribe(ipPort => {
+        this.router.navigate([`/server/${ipPort}/${$event.row.data.id}`]);
+      });
+
       console.log('кликнул по строке:', $event.row.data)
-      console.log('теперь беру ip, port из стэйта и id из строки и делаю API на ошибку')
     }
   }
 

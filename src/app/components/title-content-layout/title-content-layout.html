@@ -1,7 +1,14 @@
 <div class="title-content-layout">
-  <h2 class="title">{{ title | uppercase }}</h2>
+
+  <div class="title-row">
+    <div class="title-content">
+      <ng-content  select="[title]"></ng-content>
+    </div>
+    <h2 class="title">{{ title | uppercase }}</h2>
+  </div>
 
   <div class="content">
-    <ng-content></ng-content>
+    <ng-content select="[content]"></ng-content>
   </div>
+
 </div>

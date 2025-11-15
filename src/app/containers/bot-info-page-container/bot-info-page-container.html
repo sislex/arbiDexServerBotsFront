@@ -1,0 +1,38 @@
+<app-title-content-layout
+        [title]="'Bot Params'"
+>
+    <app-actions
+            title
+            [icon]="'reply'"
+            [type]="'default'"
+            (emitter)="onAction($event, 'reply')"
+    ></app-actions>
+
+    <div class="bot-info-container" content>
+        @if (dataActiveBot$ | async; as list) {
+            <!--    @if (list.botInfo.id !== '') {-->
+            <app-title-table-layout [title]="'Bot control - fix table height'">
+                <app-ag-grid-bots-control
+                        content
+                        [rowData]="[list.botInfo]"
+                        (emitter)="events($event)"
+                ></app-ag-grid-bots-control>
+            </app-title-table-layout>
+            <app-title-table-layout [title]="'Results'">
+                <app-ag-grid-bot-data-list
+                        content
+                        [rowData]="list.botResultList"
+                ></app-ag-grid-bot-data-list>
+            </app-title-table-layout>
+
+            <app-title-table-layout [title]="'Errors'">
+                <app-ag-grid-error-list
+                        content
+                        [rowData]="list.botErrorList"
+                ></app-ag-grid-error-list>
+            </app-title-table-layout>
+            <!--    }-->
+        }
+    </div>
+
+</app-title-content-layout>
