@@ -10,7 +10,7 @@ import {TitleContentLayout} from '../../components/title-content-layout/title-co
 import {Actions} from '../../components/ag-grid-components/actions/actions';
 import {ActivatedRoute, Router} from '@angular/router';
 import {take} from 'rxjs';
-import {clearActiveElementData, setActiveServer} from '../../+state/servers/servers.actions';
+import {clearActiveElementData, setActiveBot, setActiveServer} from '../../+state/servers/servers.actions';
 
 @Component({
     selector: 'app-bot-info-page-container',
@@ -45,11 +45,15 @@ export class BotInfoPageContainer implements OnInit {
 
         this.route.paramMap.subscribe(params => {
             const ipPort = params.get('ipPort');
+            const botId = params.get('botId');
 
             if (ipPort !== null) {
                 const [ip, port] = ipPort.split(':');
                 this.store.dispatch(clearActiveElementData());
                 this.store.dispatch(setActiveServer({ ip, port }));
+            }
+            if (botId !== null) {
+                this.store.dispatch(setActiveBot({ botId }));
             }
         });
     }

@@ -2,20 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, filter, forkJoin, map, of, switchMap, tap, withLatestFrom } from 'rxjs';
 import { Store } from '@ngrx/store';
-import {
-  loadActionTypesList,
-  loadActionTypesListFailure,
-  loadActionTypesListSuccess, loadBotControlList,
-  loadBotControlListFailure,
-  loadBotControlListSuccess,
-  loadBotTypesList,
-  loadBotTypesListFailure,
-  loadBotTypesListSuccess,
-  loadServerList,
-  loadServerListFailure,
-  loadServerListSuccess,
-  setActiveServer,
-} from './servers.actions';
+import * as ServersActions from './servers.actions';
 import { ServerDataService } from '../../services/server-data.service';
 import { getActiveTab } from '../view/view.selectors';
 
@@ -27,29 +14,29 @@ export class ServersEffects {
 
   loadServerData$ = createEffect(() =>
       this.actions$.pipe(
-        ofType(setActiveServer),
+        ofType(ServersActions.setActiveServer),
         withLatestFrom(this.store.select(getActiveTab)),
         filter(([_, tab]) => tab === 'server data'),
         switchMap(([action]) => {
-          this.store.dispatch(loadServerList());
-          this.store.dispatch(loadBotTypesList());
-          this.store.dispatch(loadActionTypesList());
+          this.store.dispatch(ServersActions.loadServerList());
+          this.store.dispatch(ServersActions.loadBotTypesList());
+          this.store.dispatch(ServersActions.loadActionTypesList());
           return forkJoin({
             info: this.serverDataService.getServerData().pipe(
               catchError(err => {
-                this.store.dispatch(loadServerListFailure({error: err}));
+                this.store.dispatch(ServersActions.loadServerListFailure({error: err}));
                 return of(null);
               })
             ),
             botTypes: this.serverDataService.getBotTypesList().pipe(
               catchError(err => {
-                this.store.dispatch(loadBotTypesListFailure({error: err}));
+                this.store.dispatch(ServersActions.loadBotTypesListFailure({error: err}));
                 return of([]);
               })
             ),
             actions: this.serverDataService.getActionTypesList().pipe(
               catchError(err => {
-                this.store.dispatch(loadActionTypesListFailure({error: err}));
+                this.store.dispatch(ServersActions.loadActionTypesListFailure({error: err}));
                 return of([]);
               })
             ),
@@ -80,9 +67,9 @@ export class ServersEffects {
                 description: item.description ?? '-',
               }));
 
-              this.store.dispatch(loadServerListSuccess({ response: responseServerData }));
-              this.store.dispatch(loadBotTypesListSuccess({ response: responseBotTypesList }));
-              this.store.dispatch(loadActionTypesListSuccess({ response: responseActionTypesList }));
+              this.store.dispatch(ServersActions.loadServerListSuccess({ response: responseServerData }));
+              this.store.dispatch(ServersActions.loadBotTypesListSuccess({ response: responseBotTypesList }));
+              this.store.dispatch(ServersActions.loadActionTypesListSuccess({ response: responseActionTypesList }));
             }),
             map(() => ({ done: true }))
           );
@@ -93,11 +80,11 @@ export class ServersEffects {
 
   loadBotsControl$ = createEffect(() => {
       return this.actions$.pipe(
-        ofType(setActiveServer),
+        ofType(ServersActions.setActiveServer),
         withLatestFrom(this.store.select(getActiveTab)),
         filter(([_, tab]) => tab === 'bots'),
         switchMap(([action]) => {
-          this.store.dispatch(loadBotControlList());
+          this.store.dispatch(ServersActions.loadBotControlList());
 
           return this.serverDataService.getBotsControl().pipe(
             tap((response: any[]) => {
@@ -118,10 +105,10 @@ export class ServersEffects {
                 running: item.running ?? false,
               }));
 
-              this.store.dispatch(loadBotControlListSuccess({response: responseBotControlList}));
+              this.store.dispatch(ServersActions.loadBotControlListSuccess({response: responseBotControlList}));
             }),
             catchError(err => {
-              this.store.dispatch(loadBotControlListFailure({error: err}));
+              this.store.dispatch(ServersActions.loadBotControlListFailure({error: err}));
               return of([]);
             }),
             map(() => ({done: true}))
@@ -131,4 +118,66 @@ export class ServersEffects {
     },
     { dispatch: false }
   );
+
+  loadBotParams$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(ServersActions.setActiveBot),
+        switchMap((action) => {
+          const botId = action.botId;
+
+          // Запуск индикаторов загрузки
+          this.store.dispatch(ServersActions.loadBotControl());
+          this.store.dispatch(ServersActions.loadBotParams());
+          this.store.dispatch(ServersActions.loadBotErrors());
+
+          return forkJoin({
+            botControl: this.serverDataService.getBotControlById(botId).pipe(
+              catchError(err => {
+                this.store.dispatch(
+                  ServersActions.loadBotControlFailure({ error: err })
+                );
+                return of(null);
+              })
+            ),
+            botParams: this.serverDataService.getBotParamsById(botId).pipe(
+              catchError(err => {
+                this.store.dispatch(
+                  ServersActions.loadBotParamsFailure({ error: err })
+                );
+                return of([]);
+              })
+            ),
+            botErrors: this.serverDataService.getBotErrorsById(botId).pipe(
+              catchError(err => {
+                this.store.dispatch(
+                  ServersActions.loadBotErrorsFailure({ error: err })
+                );
+                return of([]);
+              })
+            ),
+          }).pipe(
+            tap(({ botControl, botParams, botErrors }) => {
+
+              this.store.dispatch(
+                ServersActions.loadBotControlSuccess({ response: botControl })
+              );
+              this.store.dispatch(
+                ServersActions.loadBotParamsSuccess({ response: botParams })
+              );
+              this.store.dispatch(
+                ServersActions.loadBotErrorsSuccess({ response: botErrors })
+              );
+
+              console.log('botControl', botControl)
+              console.log('botParams', botParams)
+              console.log('botErrors', botErrors)
+            }),
+            map(() => ({ done: true }))
+          );
+        })
+      ),
+    { dispatch: false }
+  );
+
+
 }

@@ -9,6 +9,11 @@ export const setActiveServer = createAction(
   props<{ ip: string, port: string }>()
 );
 
+export const setActiveBot = createAction(
+  '[Servers] setActiveBot',
+  props<{ botId: string }>()
+);
+
 export const setActionTypesList = createAction(
   '[Servers] setActionTypesList',
   props<{ response: any }>()
@@ -76,5 +81,35 @@ export const loadBotControlListSuccess = createAction(
 );
 export const loadBotControlListFailure = createAction(
   '[Servers] loadBotControlListFailure',
+  props<{ error: string }>()
+);
+
+export const loadBotControl = createAction('[Servers] loadBotControlList');
+export const loadBotControlSuccess = createAction(
+  '[Servers] loadBotControlSuccess',
+  props<{ response: any }>()
+);
+export const loadBotControlFailure = createAction(
+  '[Servers] loadBotControlFailure',
+  props<{ error: string }>()
+);
+
+export const loadBotParams = createAction('[Servers] loadBotControlList');
+export const loadBotParamsSuccess = createAction(
+  '[Servers] loadBotParamsSuccess',
+  props<{ response: any }>()
+);
+export const loadBotParamsFailure = createAction(
+  '[Servers] loadBotParamsFailure',
+  props<{ error: string }>()
+);
+
+export const loadBotErrors = createAction('[Servers] loadBotControlList');
+export const loadBotErrorsSuccess = createAction(
+  '[Servers] loadBotErrorsSuccess',
+  props<{ response: any }>()
+);
+export const loadBotErrorsFailure = createAction(
+  '[Servers] loadBotErrorsFailure',
   props<{ error: string }>()
 );

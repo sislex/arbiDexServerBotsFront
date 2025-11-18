@@ -114,6 +114,10 @@ export const getDataActiveBot = createSelector(
   selectFeature,
   (state: ServersState) => state.activeElementData.activeBot.response
 );
+export const getActiveBotId = createSelector(
+  selectFeature,
+  (state: ServersState) => state.activeElementData.activeBot.response.botInfo.id
+);
 
 
 // export const selectBotData = createSelector(

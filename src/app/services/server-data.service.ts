@@ -49,12 +49,18 @@ export class ServerDataService {
   }
 
   // Получить список ошибок по конкретному боту
-  getBotErrorsById(id: string): Observable<any> {
-    return this.get(`/bots/errors/${id}`);
+  getBotControlById(botId: string): Observable<any> {
+    console.log('botId', botId)
+    return this.get(`/bot/${botId}/settings`);
+  }
+
+  // Получить список Параметров по конкретному боту
+  getBotParamsById(botId: string): Observable<any> {
+    return this.get(`/bot/${botId}/params`);
   }
 
   // Получить список ошибок по конкретному боту
-  getBotControlById(id: string): Observable<any> {
-    return this.get(`/bots/get-all/${id}`);
+  getBotErrorsById(botId: string): Observable<any> {
+    return this.get(`/bot/${botId}/errors`);
   }
 }

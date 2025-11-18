@@ -1,6 +1,7 @@
 import {createReducer, on} from '@ngrx/store';
 import * as ServersActions from './servers.actions';
 import {IConfig, IServerData, IActiveElementData} from '../../models/servers';
+import {ApiListConfig, serverListConfig} from './configs';
 
 export const SERVERS_FEATURE_KEY = 'servers';
 
@@ -18,55 +19,8 @@ export interface ServersPartialState {
 export const initialState: ServersState = {
   featureName: 'server manager', //Временно до внедрения в основное приложение.
   config: {
-    serverList: [
-      {
-        ip: '45.135.182.251',
-        port: '1005',
-        name: 'UNREAL_SERVER',
-      },
-      {
-        ip: '45.135.182.251',
-        port: '1001',
-        name: 'FIRST_REAL_SERVER',
-      },
-    ],
-    apiList: [
-      {
-        type: 'GET',
-        endpoint: '.../bots/get-all',
-        description: 'Это данные на управление, надо определится с описанием'
-      },
-      {
-        type: 'GET',
-        endpoint: '.../info',
-        description: 'Get server info'
-      },
-      {
-        type: 'GET',
-        endpoint: '.../info/bots-types-list',
-        description: 'Get bot types list'
-      },
-      {
-        type: 'GET',
-        endpoint: '.../info/bots-actions-list',
-        description: 'Get action types list'
-      },
-      {
-        type: 'GET',
-        endpoint: '.../bot/:id/settings',
-        description: 'Get bot rules'
-      },
-      {
-        type: 'PUT',
-        endpoint: '.../bot/:id/settings',
-        description: 'Edit bot rules'
-      },
-      {
-        type: 'add????',
-        endpoint: '.../:ipPort/',
-        description: 'Do need to add imports to your API methods?'
-      },
-    ]
+    serverList: serverListConfig,
+    apiList: ApiListConfig
   },
   serverListResponse: [],
   activeElementData: {
@@ -115,17 +69,17 @@ export const initialState: ServersState = {
       isLoaded: false,
       response: {
         botInfo: {
-          id: '',
-          running: false,
-          createdAt: '',
-          actionCount: 0,
-          errorCount: 0,
-          lastActionTimeStart: '',
-          lastActionTimeFinish: '',
-          lastLatency: 0,
-          lastActionResult: {
-            ok: false,
-            amountOut: '',
+          id: "",
+          actionParams: {
+            actionType: "",
+            i: 0
+          },
+          botParams: {
+            botType: "",
+            delayBetweenRepeat: 0,
+            isRepeat: false,
+            maxActions: 0,
+            paused: false
           }
         },
         botResultList: [],

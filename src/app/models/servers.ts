@@ -18,6 +18,26 @@ import { API } from './api';
 //   botTypeSelect: string;
 // }
 
+
+interface IActionParams {
+  actionType: string;
+  i: number;
+}
+
+interface IBotParams {
+  botType: string;
+  delayBetweenRepeat: number;
+  isRepeat: boolean;
+  maxActions: number;
+  paused: boolean;
+}
+
+interface IBotRule {
+  actionParams: IActionParams;
+  botParams: IBotParams;
+  id: string;
+}
+
 export interface IServerAuthData {
   login: string;
   password: string;
@@ -103,7 +123,7 @@ export interface IBotControl {
 }
 
 export interface IActiveBot {
-  botInfo: IBotControl;
+  botInfo: IBotRule;
   botResultList: IResult[];
   botErrorList: IBotError[];
 }
