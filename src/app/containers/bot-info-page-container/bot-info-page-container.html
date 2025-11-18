@@ -10,27 +10,31 @@
 
   <div class="bot-info-container" content>
     @if (dataActiveBot$ | async; as list) {
-      <!--    @if (list.botInfo.id !== '') {-->
-      <app-title-table-layout [title]="'Bot control - fix table height'">
-        <app-ag-grid-bots-control
-          content
-          [rowData]="[list.botInfo]"
-          (emitter)="events($event)"
-        ></app-ag-grid-bots-control>
-      </app-title-table-layout>
-      <app-title-table-layout [title]="'Results'">
-        <app-ag-grid-bot-data-list
-          content
-          [rowData]="list.botResultList.response"
-        ></app-ag-grid-bot-data-list>
-      </app-title-table-layout>
+      <!--          @if (list.botInfo && (list.botInfo.id !== '')) {-->
+      @if ((activeBotIsLoaded$ | async) && !(activeBotIsLoading$ | async)) {
+        <app-title-table-layout [title]="'Bot control - fix table height'">
+          <app-ag-grid-bots-control
+            content
+            [rowData]="[list.botInfo]"
+            (emitter)="events($event)"
+          ></app-ag-grid-bots-control>
+        </app-title-table-layout>
+        <app-title-table-layout [title]="'Results'">
+          <app-ag-grid-bot-data-list
+            content
+            [rowData]="list.botResultList.response"
+          ></app-ag-grid-bot-data-list>
+        </app-title-table-layout>
 
-      <app-title-table-layout [title]="'Errors'">
-        <app-ag-grid-error-list
-          content
-          [rowData]="list.botErrorList.response"
-        ></app-ag-grid-error-list>
-      </app-title-table-layout>
+        <app-title-table-layout [title]="'Errors'">
+          <app-ag-grid-error-list
+            content
+            [rowData]="list.botErrorList.response"
+          ></app-ag-grid-error-list>
+        </app-title-table-layout>
+      } @else {
+        <app-loader-container></app-loader-container>
+    }
       <!--    }-->
     }
   </div>

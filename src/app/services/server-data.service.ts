@@ -50,7 +50,6 @@ export class ServerDataService {
 
   // Получить список ошибок по конкретному боту
   getBotControlById(botId: string): Observable<any> {
-    console.log('botId', botId)
     return this.get(`/bot/${botId}/settings`);
   }
 

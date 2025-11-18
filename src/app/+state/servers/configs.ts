@@ -21,13 +21,23 @@ export const ApiListConfig = [
   },
   {
     type: 'GET',
-    endpoint: '.../bot/:id/settings',
+    endpoint: '.../bot/:botId/settings',
     description: 'Get bot rules'
   },
   {
     type: 'PUT',
-    endpoint: '.../bot/:id/settings',
+    endpoint: '.../bot/:botId/settings',
     description: 'Edit bot rules'
+  },
+  {
+    type: 'GET',
+    endpoint: '.../bot/:botId/params',
+    description: 'Get all bot params'
+  },
+  {
+    type: 'POST',
+    endpoint: '...bot/:botId/pause',
+    description: 'Get all bot params'
   },
 ];
 

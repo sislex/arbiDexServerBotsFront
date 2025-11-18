@@ -325,7 +325,6 @@ export const serversReducer = createReducer(
       },
     };
   }),
-
   on(ServersActions.loadBotParamsFailure, (state, { error }) => {
     const botResultList = state.activeElementData.activeBot.botResultList;
     return {
@@ -337,6 +336,66 @@ export const serversReducer = createReducer(
           botResultList: {
             ...botResultList,
             loadingTime: Date.now() - botResultList.startTime!,
+            isLoading: false,
+            isLoaded: true,
+            error,
+          },
+        },
+      },
+    };
+  }),
+
+
+  on(ServersActions.loadBotErrors, (state) => {
+    const botErrorList = state.activeElementData.activeBot.botErrorList;
+
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botErrorList: {
+            ...botErrorList,
+            startTime: Date.now(),
+            isLoading: true,
+            isLoaded: false,
+          },
+        },
+      },
+    };
+  }),
+  on(ServersActions.loadBotErrorsSuccess, (state, { response }) => {
+    const botErrorList = state.activeElementData.activeBot.botErrorList;
+
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botErrorList: {
+            ...botErrorList,
+            loadingTime: Date.now() - botErrorList.startTime!,
+            isLoading: false,
+            isLoaded: true,
+            response: [...(botErrorList.response || []), ...response],
+          },
+        },
+      },
+    };
+  }),
+  on(ServersActions.loadBotErrorsFailure, (state, { error }) => {
+    const botErrorList = state.activeElementData.activeBot.botErrorList;
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botErrorList: {
+            ...botErrorList,
+            loadingTime: Date.now() - botErrorList.startTime!,
             isLoading: false,
             isLoaded: true,
             error,
