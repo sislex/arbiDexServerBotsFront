@@ -15,7 +15,7 @@ export interface ViewPartialState {
 
 export const initialState: ViewState = {
   isSidebarOpen: true,
-  activeTab: 'bots',
+  activeTab: '',
   tabList: ['bots', 'gates', 'server data'],
 };
 

@@ -4,10 +4,10 @@ import { AgGridAngular } from 'ag-grid-angular';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';
 import {ToggleContainer} from '../../containers/ag-grid-containers/toggle-container/toggle-container';
-import {
-  LaunchControlContainer
-} from '../../containers/ag-grid-containers/launch-control-container/launch-control-container';
 import {ActionsContainer} from '../../containers/ag-grid-containers/actions-container/actions-container';
+import {PauseBotContainer} from '../../containers/pause-bot-container/pause-bot-container';
+import {RestartBotContainer} from '../../containers/restart-bot-container/restart-bot-container';
+import {RunActionOnceContainer} from '../../containers/run-action-once-container/run-action-once-container';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -110,23 +110,47 @@ export class AgGridBotsControl {
     {
       field: "isSendData",
       headerName: 'Send Data',
-      width: 80,
+      width: 100,
       cellRenderer: ToggleContainer,
       cellRendererParams: {
         onAction: this.onAction.bind(this),
       },
     },
+    // {
+    //   field: "running",
+    //   headerName: 'Start/Stop',
+    //   width: 80,
+    //   cellRenderer: LaunchControlContainer,
+    //   cellRendererParams: {
+    //     onAction: this.onAction.bind(this),
+    //   },
+    // },
     {
       field: "running",
-      headerName: 'Start/Stop',
+      headerName: 'Start/Pause',
       width: 80,
-      cellRenderer: LaunchControlContainer,
+      cellRenderer: PauseBotContainer,
       cellRendererParams: {
         onAction: this.onAction.bind(this),
       },
     },
     {
-      field: "actions",
+      headerName: 'Restart',
+      width: 80,
+      cellRenderer: RestartBotContainer,
+      cellRendererParams: {
+        onAction: this.onAction.bind(this),
+      },
+    },
+    {
+      headerName: 'Start once',
+      width: 80,
+      cellRenderer: RunActionOnceContainer,
+      cellRendererParams: {
+        onAction: this.onAction.bind(this),
+      },
+    },
+    {
       headerName: 'Actions',
       width: 125,
       cellRenderer: ActionsContainer,
@@ -135,74 +159,6 @@ export class AgGridBotsControl {
       },
     },
   ];
-  //
-  // colDefs: ColDef[] = [
-  //   {
-  //     field: "#",
-  //     headerName: '#',
-  //     width: 50,
-  //     valueGetter: params => {
-  //       if (!params.node || params.node.rowIndex == null) return '';
-  //       return params.node.rowIndex + 1;
-  //     },
-  //   },
-  //   {
-  //     field: "id",
-  //     headerName: 'ID',
-  //     flex: 1,
-  //   },
-  //   {
-  //     field: "gate",
-  //     headerName: 'Gate',
-  //     flex: 1,
-  //   },
-  //   {
-  //     field: "maxTimeRequest",
-  //     headerName: 'Max Time Request(ms)',
-  //     flex: 1,
-  //   },
-  //   {
-  //     field: "TimeRequest",
-  //     headerName: 'Time Request(ms)',
-  //     flex: 1,
-  //   },
-  //   {
-  //     field: 'status',
-  //     headerName: 'Status',
-  //     width: 80,
-  //     cellRenderer: IndicatorContainer,
-  //     cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },
-  //     headerClass: 'align-center little-width',
-  //   },
-  //   {
-  //     field: "isSendData",
-  //     headerName: 'Send Data',
-  //     minWidth: 80,
-  //     flex: 1,
-  //     cellRenderer: ToggleContainer,
-  //     cellRendererParams: {
-  //       onAction: this.onAction.bind(this),
-  //     },
-  //   },
-  //   {
-  //     field: "isStart",
-  //     headerName: 'Start/Stop',
-  //     flex: 1,
-  //     cellRenderer: LaunchControlContainer,
-  //     cellRendererParams: {
-  //       onAction: this.onAction.bind(this),
-  //     },
-  //   },
-  //   {
-  //     field: "actions",
-  //     headerName: 'Actions',
-  //     width: 125,
-  //     cellRenderer: ActionsContainer,
-  //     cellRendererParams: {
-  //       onAction: this.onAction.bind(this),
-  //     },
-  //   },
-  // ];
 
   defaultColDef: ColDef = {
     sortable: false,

@@ -1,6 +1,13 @@
 import {createReducer, on} from '@ngrx/store';
 import * as ServersActions from './servers.actions';
 import {IConfig, IServerData, IActiveElementData} from '../../models/servers';
+import {
+  ApiListConfig,
+  emptyAsyncResponse,
+  emptyBotInfoResponse,
+  emptyServerResponse,
+  serverListConfig
+} from './configs';
 
 export const SERVERS_FEATURE_KEY = 'servers';
 
@@ -16,124 +23,26 @@ export interface ServersPartialState {
 }
 
 export const initialState: ServersState = {
-  featureName: 'server manager', //Временно до внедрения в основное приложение.
+  featureName: 'server manager',
   config: {
-    serverList: [
-      {
-        ip: '45.135.182.251',
-        port: '1005',
-        name: 'UNREAL_SERVER',
-      },
-      {
-        ip: '45.135.182.251',
-        port: '1001',
-        name: 'FIRST_REAL_SERVER',
-      },
-    ],
-    apiList: [
-      {
-        type: 'GET',
-        endpoint: '.../bots/get-all',
-        description: 'Это данные на управление, надо определится с описанием'
-      },
-      {
-        type: 'GET',
-        endpoint: '.../info',
-        description: 'Get server info'
-      },
-      {
-        type: 'GET',
-        endpoint: '.../info/bots-types-list',
-        description: 'Get bot types list'
-      },
-      {
-        type: 'GET',
-        endpoint: '.../info/bots-actions-list',
-        description: 'Get action types list'
-      },
-      {
-        type: 'GET',
-        endpoint: '.../bot/:id/settings',
-        description: 'Get bot rules'
-      },
-      {
-        type: 'PUT',
-        endpoint: '.../bot/:id/settings',
-        description: 'Edit bot rules'
-      },
-      {
-        type: 'add????',
-        endpoint: '.../:ipPort/',
-        description: 'Do need to add imports to your API methods?'
-      },
-    ]
+    serverList: serverListConfig,
+    apiList: ApiListConfig
   },
   serverListResponse: [],
   activeElementData: {
-    serverData: {
-      startTime: null,
-      loadingTime: null,
-      isLoading: false,
-      isLoaded: false,
-      response: {
-        ip: '',
-        port: '',
-        version: '',
-        status: 'active',
-        timestampFinish: '',
-        timestampStart: '',
-        botsCount: 0
-      }
-    },
-    botTypesList: {
-      startTime: null,
-      loadingTime: null,
-      isLoading: false,
-      isLoaded: false,
-      response: []
-    },
-    actionTypesList: {
-      startTime: null,
-      loadingTime: null,
-      isLoading: false,
-      isLoaded: false,
-      response: []
-    },
+    serverData: emptyAsyncResponse(emptyServerResponse),
+    botTypesList: emptyAsyncResponse([]),
+    actionTypesList: emptyAsyncResponse([]),
     gateList: [],
-    botControlList: {
-      startTime: null,
-      loadingTime: null,
-      isLoading: false,
-      isLoaded: false,
-      response: [],
-    },
-
+    botControlList: emptyAsyncResponse([]),
     activeBot: {
-      startTime: null,
-      loadingTime: null,
-      isLoading: false,
-      isLoaded: false,
-      response: {
-        botInfo: {
-          id: '',
-          running: false,
-          createdAt: '',
-          actionCount: 0,
-          errorCount: 0,
-          lastActionTimeStart: '',
-          lastActionTimeFinish: '',
-          lastLatency: 0,
-          lastActionResult: {
-            ok: false,
-            amountOut: '',
-          }
-        },
-        botResultList: [],
-        botErrorList: [],
-      },
-    },
+      botInfo: emptyAsyncResponse(emptyBotInfoResponse),
+      botResultList: emptyAsyncResponse([]),
+      botErrorList: emptyAsyncResponse([])
+    }
   },
 };
+
 
 export const serversReducer = createReducer(
   initialState,
@@ -254,44 +163,250 @@ export const serversReducer = createReducer(
     }
   })),
 
-  on(ServersActions.loadBotControlList, (state) => ({
-    ...state,
-    activeElementData: {
-      ...state.activeElementData,
-      botControlList: {
-        ...state.activeElementData.botControlList,
-        startTime:  Date.now(),
-        isLoading: true,
-        isLoaded: false,
-      }
-    }
-  })),
-  on(ServersActions.loadBotControlListSuccess, (state, {response}) => ({
-    ...state,
-    activeElementData: {
-      ...state.activeElementData,
-      botControlList: {
-        ...state.activeElementData.botControlList,
-        loadingTime: Date.now() - state.activeElementData.botControlList.startTime!,
-        isLoading: false,
-        isLoaded: true,
-        response
-      }
-    }
-  })),
-  on(ServersActions.loadBotControlListFailure, (state, {error}) => ({
-    ...state,
-    activeElementData: {
-      ...state.activeElementData,
-      botControlList: {
-        ...state.activeElementData.botControlList,
-        loadingTime: Date.now() - state.activeElementData.botControlList.startTime!,
-        isLoading: false,
-        isLoaded: true,
-        error
-      }
-    }
-  })),
+  on(ServersActions.loadBotControlList, (state) => {
+    const botControlList = state.activeElementData.botControlList;
+
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        botControlList: {
+          ...botControlList,
+          startTime: Date.now(),
+          isLoading: true,
+          isLoaded: false,
+        },
+      },
+    };
+  }),
+  on(ServersActions.loadBotControlListSuccess, (state, { response }) => {
+    const botControlList = state.activeElementData.botControlList;
+
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        botControlList: {
+          ...botControlList,
+          loadingTime: Date.now() - botControlList.startTime!,
+          isLoading: false,
+          isLoaded: true,
+          response,
+        },
+      },
+    };
+  }),
+  on(ServersActions.loadBotControlListFailure, (state, { error }) => {
+    const botControlList = state.activeElementData.botControlList;
+
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        botControlList: {
+          ...botControlList,
+          loadingTime: Date.now() - botControlList.startTime!,
+          isLoading: false,
+          isLoaded: true,
+          error,
+        },
+      },
+    };
+  }),
+
+
+  on(ServersActions.loadBotControl, (state) => {
+    const bot = state.activeElementData.activeBot;
+    const botInfo = bot.botInfo;
+
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...bot,
+          botInfo: {
+            ...botInfo,
+            startTime: Date.now(),
+            isLoading: true,
+            isLoaded: false,
+          },
+        },
+      },
+    };
+  }),
+  on(ServersActions.loadBotControlSuccess, (state, { response }) => {
+    const bot = state.activeElementData.activeBot;
+    const botInfo = bot.botInfo;
+
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...bot,
+          botInfo: {
+            ...botInfo,
+            loadingTime: Date.now() - botInfo.startTime!,
+            isLoading: false,
+            isLoaded: true,
+            response,
+          },
+          botResultList: {
+            ...bot.botResultList,
+            response: [
+              ...bot.botResultList.response,
+              ...response.botParams,
+            ]
+          },
+        },
+      },
+    };
+  }),
+  on(ServersActions.loadBotControlFailure, (state, { error }) => {
+    const bot = state.activeElementData.activeBot;
+    const botInfo = bot.botInfo;
+
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...bot,
+          botInfo: {
+            ...botInfo,
+            loadingTime: Date.now() - botInfo.startTime!,
+            isLoading: false,
+            isLoaded: true,
+            error,
+          },
+        },
+      },
+    };
+  }),
+
+
+  on(ServersActions.loadBotParams, (state) => {
+    const botResultList = state.activeElementData.activeBot.botResultList;
+
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botResultList: {
+            ...botResultList,
+            startTime: Date.now(),
+            isLoading: true,
+            isLoaded: false,
+          },
+        },
+      },
+    };
+  }),
+  on(ServersActions.loadBotParamsSuccess, (state, { response }) => {
+    const botResultList = state.activeElementData.activeBot.botResultList;
+
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botResultList: {
+            ...botResultList,
+            loadingTime: Date.now() - botResultList.startTime!,
+            isLoading: false,
+            isLoaded: true,
+            response: [...(botResultList.response || []), ...response],
+          },
+        },
+      },
+    };
+  }),
+  on(ServersActions.loadBotParamsFailure, (state, { error }) => {
+    const botResultList = state.activeElementData.activeBot.botResultList;
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botResultList: {
+            ...botResultList,
+            loadingTime: Date.now() - botResultList.startTime!,
+            isLoading: false,
+            isLoaded: true,
+            error,
+          },
+        },
+      },
+    };
+  }),
+
+
+  on(ServersActions.loadBotErrors, (state) => {
+    const botErrorList = state.activeElementData.activeBot.botErrorList;
+
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botErrorList: {
+            ...botErrorList,
+            startTime: Date.now(),
+            isLoading: true,
+            isLoaded: false,
+          },
+        },
+      },
+    };
+  }),
+  on(ServersActions.loadBotErrorsSuccess, (state, { response }) => {
+    const botErrorList = state.activeElementData.activeBot.botErrorList;
+
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botErrorList: {
+            ...botErrorList,
+            loadingTime: Date.now() - botErrorList.startTime!,
+            isLoading: false,
+            isLoaded: true,
+            response: [...(botErrorList.response || []), ...response],
+          },
+        },
+      },
+    };
+  }),
+  on(ServersActions.loadBotErrorsFailure, (state, { error }) => {
+    const botErrorList = state.activeElementData.activeBot.botErrorList;
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botErrorList: {
+            ...botErrorList,
+            loadingTime: Date.now() - botErrorList.startTime!,
+            isLoading: false,
+            isLoaded: true,
+            error,
+          },
+        },
+      },
+    };
+  }),
+
+
+
   on(ServersActions.setGateList, (state, {response}) => ({
     ...state,
     activeElementData: {

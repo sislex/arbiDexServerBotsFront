@@ -18,6 +18,26 @@ import { API } from './api';
 //   botTypeSelect: string;
 // }
 
+
+interface IActionParams {
+  actionType: string;
+  i: number;
+}
+
+interface IBotParams {
+  botType: string;
+  delayBetweenRepeat: number;
+  isRepeat: boolean;
+  maxActions: number;
+  paused: boolean;
+}
+
+interface IBotRule {
+  actionParams: IActionParams;
+  botParams: IBotParams;
+  id: string;
+}
+
 export interface IServerAuthData {
   login: string;
   password: string;
@@ -35,6 +55,18 @@ export interface IServerData {
 
 export interface IServerDataAPI extends API {
   response: IServerData;
+}
+
+export interface IBotRuleAPI extends API {
+  response: IBotRule;
+}
+
+export interface IResultAPI extends API {
+  response: IResult[];
+}
+
+export interface IBotErrorAPI extends API {
+  response: IBotError[];
 }
 
 export interface ITypesListAPI extends API {
@@ -86,10 +118,6 @@ export interface IBotControlAPI extends API {
   response: IBotControl[];
 }
 
-export interface IActiveBotAPI extends API {
-  response: IActiveBot;
-}
-
 export interface IBotControl {
   id: string;
   running: boolean;
@@ -103,9 +131,9 @@ export interface IBotControl {
 }
 
 export interface IActiveBot {
-  botInfo: IBotControl;
-  botResultList: IResult[];
-  botErrorList: IBotError[];
+  botInfo: IBotRuleAPI;
+  botResultList: IResultAPI;
+  botErrorList: IBotErrorAPI;
 }
 
 export interface IResult {
@@ -119,5 +147,5 @@ export interface IActiveElementData {
   actionTypesList: ITypesListAPI;
   gateList: IGateItem[];
   botControlList: IBotControlAPI;
-  activeBot: IActiveBotAPI;
+  activeBot: IActiveBot;
 }

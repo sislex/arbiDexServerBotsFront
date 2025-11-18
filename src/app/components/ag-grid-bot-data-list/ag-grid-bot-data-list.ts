@@ -26,7 +26,7 @@ export class AgGridBotDataList {
       },
     },
     {
-      field: "parameter",
+      field: "key",
       headerName: 'Parameter',
       flex: 1,
       cellStyle: { textAlign: 'left' },
