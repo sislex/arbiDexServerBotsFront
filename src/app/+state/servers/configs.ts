@@ -43,3 +43,36 @@ export const serverListConfig = [
     name: 'FIRST_REAL_SERVER',
   },
 ]
+
+export const emptyAsyncResponse = <Example>(response: Example) => ({
+  startTime: null,
+  loadingTime: null,
+  isLoading: false,
+  isLoaded: false,
+  response
+});
+
+export const emptyServerResponse = {
+  ip: '',
+  port: '',
+  version: '',
+  status: 'active',
+  timestampFinish: '',
+  timestampStart: '',
+  botsCount: 0
+};
+
+export const emptyBotInfoResponse = {
+  id: "",
+  actionParams: {
+    actionType: "",
+    i: 0
+  },
+  botParams: {
+    botType: "",
+    delayBetweenRepeat: 0,
+    isRepeat: false,
+    maxActions: 0,
+    paused: false
+  }
+};

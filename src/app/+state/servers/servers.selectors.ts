@@ -112,11 +112,11 @@ export const getApiList = createSelector(
 );
 export const getDataActiveBot = createSelector(
   selectFeature,
-  (state: ServersState) => state.activeElementData.activeBot.response
+  (state: ServersState) => state.activeElementData.activeBot
 );
 export const getActiveBotId = createSelector(
   selectFeature,
-  (state: ServersState) => state.activeElementData.activeBot.response.botInfo.id
+  (state: ServersState) => state.activeElementData.activeBot.botInfo.response.id
 );
 
 

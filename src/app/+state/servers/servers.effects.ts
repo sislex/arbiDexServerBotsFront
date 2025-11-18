@@ -139,7 +139,7 @@ export class ServersEffects {
                 return of(null);
               })
             ),
-            botParams: this.serverDataService.getBotParamsById(botId).pipe(
+            botParamsData: this.serverDataService.getBotParamsById(botId).pipe(
               catchError(err => {
                 this.store.dispatch(
                   ServersActions.loadBotParamsFailure({ error: err })
@@ -156,23 +156,32 @@ export class ServersEffects {
               })
             ),
           }).pipe(
-            tap(({ botControl, botParams, botErrors }) => {
+            tap(({ botControl, botParamsData, botErrors }) => {
+
+              const mappedBotParams = Object.entries(botControl.botParams || {}).map(
+                ([key, value]) => ({ key, value })
+              );
 
               this.store.dispatch(
-                ServersActions.loadBotControlSuccess({ response: botControl })
+                ServersActions.loadBotControlSuccess({
+                  response: {
+                    ...botControl,
+                    botParams: mappedBotParams
+                  }
+                })
               );
+
               this.store.dispatch(
-                ServersActions.loadBotParamsSuccess({ response: botParams })
+                ServersActions.loadBotParamsSuccess({
+                  response: botParamsData
+                })
               );
+
               this.store.dispatch(
                 ServersActions.loadBotErrorsSuccess({ response: botErrors })
               );
-
-              console.log('botControl', botControl)
-              console.log('botParams', botParams)
-              console.log('botErrors', botErrors)
             }),
-            map(() => ({ done: true }))
+          map(() => ({ done: true }))
           );
         })
       ),

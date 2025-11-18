@@ -57,6 +57,18 @@ export interface IServerDataAPI extends API {
   response: IServerData;
 }
 
+export interface IBotRuleAPI extends API {
+  response: IBotRule;
+}
+
+export interface IResultAPI extends API {
+  response: IResult[];
+}
+
+export interface IBotErrorAPI extends API {
+  response: IBotError[];
+}
+
 export interface ITypesListAPI extends API {
   response: ITypesList[];
 }
@@ -106,10 +118,6 @@ export interface IBotControlAPI extends API {
   response: IBotControl[];
 }
 
-export interface IActiveBotAPI extends API {
-  response: IActiveBot;
-}
-
 export interface IBotControl {
   id: string;
   running: boolean;
@@ -123,9 +131,9 @@ export interface IBotControl {
 }
 
 export interface IActiveBot {
-  botInfo: IBotRule;
-  botResultList: IResult[];
-  botErrorList: IBotError[];
+  botInfo: IBotRuleAPI;
+  botResultList: IResultAPI;
+  botErrorList: IBotErrorAPI;
 }
 
 export interface IResult {
@@ -139,5 +147,5 @@ export interface IActiveElementData {
   actionTypesList: ITypesListAPI;
   gateList: IGateItem[];
   botControlList: IBotControlAPI;
-  activeBot: IActiveBotAPI;
+  activeBot: IActiveBot;
 }
