@@ -17,6 +17,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {take} from 'rxjs';
 import {clearActiveElementData, setActiveBot, setActiveServer} from '../../+state/servers/servers.actions';
 import {LoaderContainer} from '../loader-container/loader-container';
+import {
+  AgGridBotControlPanelContainer
+} from '../ag-grid-bot-control-panel-container/ag-grid-bot-control-panel-container';
 
 @Component({
   selector: 'app-bot-info-page-container',
@@ -29,6 +32,7 @@ import {LoaderContainer} from '../loader-container/loader-container';
     TitleContentLayout,
     Actions,
     LoaderContainer,
+    AgGridBotControlPanelContainer,
   ],
   standalone: true,
   templateUrl: './bot-info-page-container.html',

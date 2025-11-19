@@ -3,11 +3,6 @@ import type { ColDef } from 'ag-grid-community';
 import { AgGridAngular } from 'ag-grid-angular';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';
-import {ToggleContainer} from '../../containers/ag-grid-containers/toggle-container/toggle-container';
-import {ActionsContainer} from '../../containers/ag-grid-containers/actions-container/actions-container';
-import {PauseBotContainer} from '../../containers/pause-bot-container/pause-bot-container';
-import {RestartBotContainer} from '../../containers/restart-bot-container/restart-bot-container';
-import {RunActionOnceContainer} from '../../containers/run-action-once-container/run-action-once-container';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -37,7 +32,6 @@ export class AgGridBotsControl {
 
   colDefs: ColDef[] = [
     {
-      field: "#",
       headerName: '#',
       width: 50,
       valueGetter: params => {
@@ -58,7 +52,7 @@ export class AgGridBotsControl {
         if (!params.value) return '';
         const date = new Date(params.value);
         return date.toLocaleString('ru-RU', {
-          timeZone: 'Europe/Moscow' // или Asia/Bangkok
+          timeZone: 'Europe/Moscow'
         });
       },
     },
@@ -107,57 +101,14 @@ export class AgGridBotsControl {
       cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },
       headerClass: 'align-center little-width',
     },
-    {
-      field: "isSendData",
-      headerName: 'Send Data',
-      width: 100,
-      cellRenderer: ToggleContainer,
-      cellRendererParams: {
-        onAction: this.onAction.bind(this),
-      },
-    },
     // {
-    //   field: "running",
-    //   headerName: 'Start/Stop',
-    //   width: 80,
-    //   cellRenderer: LaunchControlContainer,
+    //   headerName: 'Actions',
+    //   width: 125,
+    //   cellRenderer: ActionsContainer,
     //   cellRendererParams: {
     //     onAction: this.onAction.bind(this),
     //   },
     // },
-    {
-      field: "running",
-      headerName: 'Start/Pause',
-      width: 80,
-      cellRenderer: PauseBotContainer,
-      cellRendererParams: {
-        onAction: this.onAction.bind(this),
-      },
-    },
-    {
-      headerName: 'Restart',
-      width: 80,
-      cellRenderer: RestartBotContainer,
-      cellRendererParams: {
-        onAction: this.onAction.bind(this),
-      },
-    },
-    {
-      headerName: 'Start once',
-      width: 80,
-      cellRenderer: RunActionOnceContainer,
-      cellRendererParams: {
-        onAction: this.onAction.bind(this),
-      },
-    },
-    {
-      headerName: 'Actions',
-      width: 125,
-      cellRenderer: ActionsContainer,
-      cellRendererParams: {
-        onAction: this.onAction.bind(this),
-      },
-    },
   ];
 
   defaultColDef: ColDef = {
