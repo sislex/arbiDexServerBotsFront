@@ -28,6 +28,10 @@ export const setIsStartedBot = createAction(
   '[Servers] setIsStartedBot',
   props<{ isStarted: boolean, id: string }>()
 );
+export const restartedBot = createAction(
+  '[Servers] restartedBot',
+  props<{ id: string }>()
+);
 
 export const deletingBot = createAction(
   '[Servers] deletingBot',
