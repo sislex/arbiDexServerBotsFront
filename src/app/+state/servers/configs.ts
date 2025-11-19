@@ -37,7 +37,7 @@ export const ApiListConfig = [
   {
     type: 'POST',
     endpoint: '...bot/:botId/pause',
-    description: 'Get all bot params'
+    description: 'Set pause: true/false for bot'
   },
 ];
 

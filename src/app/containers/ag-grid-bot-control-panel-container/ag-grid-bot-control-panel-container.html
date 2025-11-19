@@ -1,0 +1,6 @@
+@if (dataActiveBot$ | async; as list) {
+  <app-ag-grid-bot-control-panel
+    [rowData]="[list.botInfo.response]"
+    (emitter)="events($event)"
+  ></app-ag-grid-bot-control-panel>
+}
