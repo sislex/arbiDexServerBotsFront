@@ -1,6 +1,6 @@
-<mat-tab-group dynamicHeight class="vertical-tabs"
-               [selectedIndex]="selectedIndex"
-               (selectedIndexChange)="onTabChange($event)">
+<mat-tab-group
+  [selectedIndex]="selectedIndex"
+  (selectedIndexChange)="onTabChange($event)">
   @for (item of list; track item) {
     <mat-tab label="{{ item | titlecase }}" >
       <app-title-content-layout [title]="item">

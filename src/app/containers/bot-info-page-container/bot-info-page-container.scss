@@ -1,21 +1,16 @@
 :host {
   display: flex;
+  flex-direction: column;
   flex: 1;
 
   app-title-content-layout {
     display: flex;
     flex: 1;
 
-    .bot-info-container {
+    app-bot-info-page-tabs-container {
       display: flex;
-      flex-direction: column;
-      flex: 1;
       width: 100%;
-      padding: 16px;
-
-      app-loader-container {
-        flex: 1;
-      }
+      flex: 1;
     }
   }
 }

@@ -1,5 +1,5 @@
 <app-title-content-layout
-  [title]="'Bot Params'"
+  [title]="'Bot Params for ' + (dataActiveBot$ | async)?.botInfo?.response?.id"
 >
   <app-actions
     title
@@ -7,34 +7,5 @@
     [type]="'default'"
     (emitter)="onAction($event, 'reply')"
   ></app-actions>
-
-  <div class="bot-info-container" content>
-    @if (dataActiveBot$ | async; as list) {
-      <!--          @if (list.botInfo && (list.botInfo.id !== '')) {-->
-      @if ((activeBotIsLoaded$ | async) && !(activeBotIsLoading$ | async)) {
-        <app-title-table-layout [title]="'Bot control - fix table height'">
-          <app-ag-grid-bot-control-panel-container
-            content
-          ></app-ag-grid-bot-control-panel-container>
-        </app-title-table-layout>
-        <app-title-table-layout [title]="'Results'">
-          <app-ag-grid-bot-data-list
-            content
-            [rowData]="list.botResultList.response"
-          ></app-ag-grid-bot-data-list>
-        </app-title-table-layout>
-
-        <app-title-table-layout [title]="'Errors'">
-          <app-ag-grid-error-list
-            content
-            [rowData]="list.botErrorList.response"
-          ></app-ag-grid-error-list>
-        </app-title-table-layout>
-      } @else {
-        <app-loader-container></app-loader-container>
-    }
-      <!--    }-->
-    }
-  </div>
-
+  <app-bot-info-page-tabs-container content></app-bot-info-page-tabs-container>
 </app-title-content-layout>
