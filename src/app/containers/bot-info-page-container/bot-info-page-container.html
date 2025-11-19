@@ -1,5 +1,5 @@
 <app-title-content-layout
-  [title]="'Bot Params for ' + (dataActiveBot$ | async)?.botInfo?.response?.id"
+  [title]="(dataActiveBot$ | async)?.botInfo?.response?.id || ''"
 >
   <app-actions
     title

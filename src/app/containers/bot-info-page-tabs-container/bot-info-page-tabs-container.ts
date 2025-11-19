@@ -10,6 +10,7 @@ import {AgGridBotDataList} from '../../components/ag-grid-bot-data-list/ag-grid-
 import {AgGridErrorList} from '../../components/ag-grid-error-list/ag-grid-error-list';
 import {LoaderContainer} from '../loader-container/loader-container';
 import {AsyncPipe} from '@angular/common';
+import {JobContainer} from '../job-container/job-container';
 
 @Component({
   selector: 'app-bot-info-page-tabs-container',
@@ -20,7 +21,8 @@ import {AsyncPipe} from '@angular/common';
     AgGridBotDataList,
     AgGridErrorList,
     LoaderContainer,
-    AsyncPipe
+    AsyncPipe,
+    JobContainer
   ],
   standalone: true,
   templateUrl: './bot-info-page-tabs-container.html',
