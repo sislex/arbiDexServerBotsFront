@@ -7,14 +7,12 @@ import {deletingBot, isSendData, setIsStartedBot, updateBot} from '../../+state/
 import {ConfirmationPopUpContainer} from '../confirmation-pop-up-container/confirmation-pop-up-container';
 import {BotEditFormContainer} from '../bot-edit-form-container/bot-edit-form-container';
 import {actionTypesList, botData, botTypesList} from '../ag-grid-bots-control-container/stabs';
-import {AgGridBotsControl} from '../../components/ag-grid-bots-control/ag-grid-bots-control';
 import {AsyncPipe} from '@angular/common';
 
 @Component({
   selector: 'app-ag-grid-bot-control-panel-container',
   imports: [
     AgGridBotControlPanel,
-    AgGridBotsControl,
     AsyncPipe
   ],
   standalone: true,
