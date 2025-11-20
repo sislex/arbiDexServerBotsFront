@@ -142,3 +142,14 @@ export const restartBotFailure = createAction(
   '[Servers] restartBotFailure',
   props<{ error: string }>()
 );
+
+export const setApiList = createAction('[Servers] setApiList');
+export const setApiListSuccess = createAction(
+  '[Servers] setApiListSuccess',
+  props<{ response: any }>()
+);
+export const setApiListFailure = createAction(
+  '[Servers] setApiListFailure',
+  props<{ error: string }>()
+);
+
