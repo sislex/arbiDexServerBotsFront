@@ -3,7 +3,7 @@ import {AgGridBotControlPanel} from '../../components/ag-grid-bot-control-panel/
 import {MatDialog} from '@angular/material/dialog';
 import {Store} from '@ngrx/store';
 import {getDataActiveBot} from '../../+state/servers/servers.selectors';
-import {deletingBot, isSendData, setIsStartedBot, updateBot} from '../../+state/servers/servers.actions';
+import {deletingBot, isSendData, restartedBot, setIsStartedBot, updateBot} from '../../+state/servers/servers.actions';
 import {ConfirmationPopUpContainer} from '../confirmation-pop-up-container/confirmation-pop-up-container';
 import {BotEditFormContainer} from '../bot-edit-form-container/bot-edit-form-container';
 import {actionTypesList, botData, botTypesList} from '../ag-grid-bots-control-container/stabs';
@@ -35,6 +35,8 @@ export class AgGridBotControlPanelContainer {
         this.store.dispatch(setIsStartedBot({isStarted: true, id: $event.row.id}))
       } else if ($event.actionType === 'pause') {
         this.store.dispatch(setIsStartedBot({isStarted: false, id: $event.row.id}))
+      }else if ($event.actionType === 'restart') {
+        this.store.dispatch(restartedBot({id: $event.row.id}))
       }
     } else if ($event.event === 'Toggle:TOGGLE_CLICKED') {
       this.store.dispatch(isSendData({isSendData: $event.newValue, id: $event.row.id}))

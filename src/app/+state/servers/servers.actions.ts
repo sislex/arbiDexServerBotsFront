@@ -24,19 +24,9 @@ export const setGateList = createAction(
   props<{ response: any }>()
 );
 
-export const setIsStartedBot = createAction(
-  '[Servers] setIsStartedBot',
-  props<{ isStarted: boolean, id: string }>()
-);
-
 export const deletingBot = createAction(
   '[Servers] deletingBot',
   props<{ id: string }>()
-);
-
-export const isSendData = createAction(
-  '[Servers] isSendData',
-  props<{ isSendData: boolean, id: string }>()
 );
 
 export const updateBot = createAction(
@@ -111,5 +101,44 @@ export const loadBotErrorsSuccess = createAction(
 );
 export const loadBotErrorsFailure = createAction(
   '[Servers] loadBotErrorsFailure',
+  props<{ error: string }>()
+);
+
+export const setIsStartedBot = createAction(
+  '[Servers] setIsStartedBot',
+  props<{ isStarted: boolean, id: string }>()
+);
+export const setIsStartedBotSuccess = createAction(
+  '[Servers] setIsStartedBotSuccess',
+  props<{ response: any }>()
+);
+export const setIsStartedBotFailure = createAction(
+  '[Servers] setIsStartedBotFailure',
+  props<{ error: string }>()
+);
+
+export const isSendData = createAction(
+  '[Servers] isSendData',
+  props<{ isSendData: boolean, id: string }>()
+);
+export const setSendDataBotSuccess = createAction(
+  '[Servers] setSendDataBotSuccess',
+  props<{ response: any }>()
+);
+export const setSendDataBotFailure = createAction(
+  '[Servers] setSendDataBotFailure',
+  props<{ error: string }>()
+);
+
+export const restartedBot = createAction(
+  '[Servers] restartedBot',
+  props<{ id: string }>()
+);
+export const restartBotSuccess = createAction(
+  '[Servers] restartBotSuccess',
+  props<{ response: any }>()
+);
+export const restartBotFailure = createAction(
+  '[Servers] restartBotFailure',
   props<{ error: string }>()
 );

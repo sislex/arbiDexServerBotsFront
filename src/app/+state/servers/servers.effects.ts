@@ -83,7 +83,7 @@ export class ServersEffects {
         ofType(ServersActions.setActiveServer),
         withLatestFrom(this.store.select(getActiveTab)),
         filter(([_, tab]) => tab === 'bots'),
-        switchMap(([action]) => {
+        switchMap(() => {
           this.store.dispatch(ServersActions.loadBotControlList());
 
           return this.serverDataService.getBotsControl().pipe(
@@ -181,12 +181,83 @@ export class ServersEffects {
                 ServersActions.loadBotErrorsSuccess({ response: botErrors })
               );
             }),
-          map(() => ({ done: true }))
+            map(() => ({ done: true }))
           );
         })
       ),
     { dispatch: false }
   );
 
+  // Устанавливаем паузу/запускаем работу бота
+  setIsStartedBot$ = createEffect(() => {
+      return this.actions$.pipe(
+        ofType(ServersActions.setIsStartedBot),
+        switchMap((action) => {
+
+          return this.serverDataService.setBotPause(action.id, action.isStarted).pipe(
+            tap((response: any[]) => {
+              this.store.dispatch(ServersActions.setIsStartedBotSuccess({response}));
+              console.log('setIsStartedBotSuccess диспатч должен вызывать окно с подтверждением что поставили на паузу или запустили')
+            }),
+            catchError(err => {
+              this.store.dispatch(ServersActions.setIsStartedBotFailure({error: err}));
+              console.log('setIsStartedBotFailure диспатч должен вызывать окно с ошибкой')
+              return of([]);
+            }),
+            map(() => ({done: true}))
+          );
+        })
+      );
+    },
+    { dispatch: false }
+  );
+
+  // Устанавливаем паузу/запускаем работу бота
+  setSendDataBot$ = createEffect(() => {
+      return this.actions$.pipe(
+        ofType(ServersActions.isSendData),
+        switchMap((action) => {
+
+          return this.serverDataService.setSendDataBot(action.id, action.isSendData).pipe(
+            tap((response: any[]) => {
+              this.store.dispatch(ServersActions.setSendDataBotSuccess({response}));
+              console.log('setSendDataBotSuccess диспатч должен вызывать окно с подтверждением что поставили на паузу или запустили')
+            }),
+            catchError(err => {
+              this.store.dispatch(ServersActions.setSendDataBotFailure({error: err}));
+              console.log('setSendDataBotFailure диспатч должен вызывать окно с ошибкой')
+              return of([]);
+            }),
+            map(() => ({done: true}))
+          );
+        })
+      );
+    },
+    { dispatch: false }
+  );
+
+  // перезапускаем работу бота
+  restartBot$ = createEffect(() => {
+      return this.actions$.pipe(
+        ofType(ServersActions.restartedBot),
+        switchMap((action) => {
+
+          return this.serverDataService.restartBot(action.id).pipe(
+            tap((response: any[]) => {
+              this.store.dispatch(ServersActions.restartBotSuccess({response}));
+              console.log('restartBotSuccess диспатч должен вызывать окно с подтверждением что поставили на паузу или запустили')
+            }),
+            catchError(err => {
+              this.store.dispatch(ServersActions.restartBotFailure({error: err}));
+              console.log('restartBotFailure диспатч должен вызывать окно с ошибкой')
+              return of([]);
+            }),
+            map(() => ({done: true}))
+          );
+        })
+      );
+    },
+    { dispatch: false }
+  );
 
 }
