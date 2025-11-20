@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import * as ServersActions from './servers.actions';
 import { ServerDataService } from '../../services/server-data.service';
 import { getActiveTab } from '../view/view.selectors';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Injectable()
 export class ServersEffects {
@@ -187,6 +188,7 @@ export class ServersEffects {
       ),
     { dispatch: false }
   );
+  private _snackBar = inject(MatSnackBar);
 
   // Устанавливаем паузу/запускаем работу бота
   setIsStartedBot$ = createEffect(() => {
@@ -194,15 +196,24 @@ export class ServersEffects {
         ofType(ServersActions.setIsStartedBot),
         switchMap((action) => {
 
-          return this.serverDataService.setBotPause(action.id, action.isStarted).pipe(
-            tap((response: any[]) => {
+          return this.serverDataService.setBotPause(action.id, !action.isStarted).pipe(
+            tap((response: any) => {
               this.store.dispatch(ServersActions.setIsStartedBotSuccess({response}));
-              console.log('setIsStartedBotSuccess диспатч должен вызывать окно с подтверждением что поставили на паузу или запустили')
+
+              const isPause = response.paused.pause
+              if (!isPause) {
+                this._snackBar.open('Bot is started', '', { duration: 5000 });
+              } else {
+                this._snackBar.open('Bot is paused', '', { duration: 5000 });
+              }
+
             }),
             catchError(err => {
               this.store.dispatch(ServersActions.setIsStartedBotFailure({error: err}));
+              this._snackBar.open(`Bot is started, ${err}`, '', { duration: 5000 });
+
               console.log('setIsStartedBotFailure диспатч должен вызывать окно с ошибкой')
-              return of([]);
+              return of({ error: true });
             }),
             map(() => ({done: true}))
           );
@@ -219,14 +230,17 @@ export class ServersEffects {
         switchMap((action) => {
 
           return this.serverDataService.setSendDataBot(action.id, action.isSendData).pipe(
-            tap((response: any[]) => {
+            tap((response: any) => {
               this.store.dispatch(ServersActions.setSendDataBotSuccess({response}));
               console.log('setSendDataBotSuccess диспатч должен вызывать окно с подтверждением что поставили на паузу или запустили')
             }),
             catchError(err => {
               this.store.dispatch(ServersActions.setSendDataBotFailure({error: err}));
-              console.log('setSendDataBotFailure диспатч должен вызывать окно с ошибкой')
-              return of([]);
+              const error = err.error.error
+              console.log('setSendDataBotFailure диспатч должен вызывать окно с ошибкой', error)
+              this._snackBar.open(`${error}`, '', { duration: 5000 });
+
+              return of({ error: true });
             }),
             map(() => ({done: true}))
           );
@@ -243,14 +257,14 @@ export class ServersEffects {
         switchMap((action) => {
 
           return this.serverDataService.restartBot(action.id).pipe(
-            tap((response: any[]) => {
+            tap((response: any) => {
               this.store.dispatch(ServersActions.restartBotSuccess({response}));
               console.log('restartBotSuccess диспатч должен вызывать окно с подтверждением что поставили на паузу или запустили')
             }),
             catchError(err => {
               this.store.dispatch(ServersActions.restartBotFailure({error: err}));
               console.log('restartBotFailure диспатч должен вызывать окно с ошибкой')
-              return of([]);
+              return of({ error: true });
             }),
             map(() => ({done: true}))
           );
