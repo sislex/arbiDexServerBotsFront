@@ -8,5 +8,5 @@ RUN npm run build -- --configuration production
 FROM nginx:stable-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist/arbi-dex-server-bots-front/browser /usr/share/nginx/html
-EXPOSE 80
+EXPOSE 82
 CMD ["nginx", "-g", "daemon off;"]
