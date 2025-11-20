@@ -80,14 +80,20 @@ export interface IServer {
 }
 
 export interface IApiList {
-  type: string;
-  endpoint: string;
+  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+  path: string;
   description: string;
+  tags: string[];
+  version: string;
+}
+
+export interface IApiListAPI extends API {
+  response: IApiList[]
 }
 
 export interface IConfig {
   serverList: IServer[];
-  apiList: IApiList[];
+  apiList: IApiListAPI;
 }
 
 export interface ITypesList {

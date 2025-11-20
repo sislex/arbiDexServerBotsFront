@@ -2,7 +2,6 @@ import {createReducer, on} from '@ngrx/store';
 import * as ServersActions from './servers.actions';
 import {IConfig, IServerData, IActiveElementData} from '../../models/servers';
 import {
-  ApiListConfig,
   emptyAsyncResponse,
   emptyBotInfoResponse,
   emptyServerResponse,
@@ -26,7 +25,7 @@ export const initialState: ServersState = {
   featureName: 'server manager',
   config: {
     serverList: serverListConfig,
-    apiList: ApiListConfig
+    apiList: emptyAsyncResponse([]),
   },
   serverListResponse: [],
   activeElementData: {
@@ -400,6 +399,51 @@ export const serversReducer = createReducer(
             isLoaded: true,
             error,
           },
+        },
+      },
+    };
+  }),
+
+  on(ServersActions.setApiList, (state) => {
+    return {
+      ...state,
+      config: {
+        ...state.config,
+        apiList: {
+          ...state.config.apiList,
+          startTime: Date.now(),
+          isLoading: true,
+          isLoaded: false,
+        },
+      },
+    };
+  }),
+  on(ServersActions.setApiListSuccess, (state, { response }) => {
+    return {
+      ...state,
+      config: {
+        ...state.config,
+        apiList: {
+          ...state.config.apiList,
+          loadingTime: Date.now() - state.config.apiList.startTime!,
+          isLoading: false,
+          isLoaded: true,
+          response,
+        },
+      },
+    };
+  }),
+  on(ServersActions.loadBotErrorsFailure, (state, { error }) => {
+    return {
+      ...state,
+      config: {
+        ...state.config,
+        apiList: {
+          ...state.config.apiList,
+          loadingTime: Date.now() - state.config.apiList.startTime!,
+          isLoading: false,
+          isLoaded: true,
+          error,
         },
       },
     };
