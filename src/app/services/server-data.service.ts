@@ -28,6 +28,18 @@ export class ServerDataService {
     );
   }
 
+  private post<T>(endpoint: string, body?: any): Observable<T> {
+    return this.baseUrl$.pipe(
+      take(1),
+      switchMap(baseUrl => this.http.post<T>(`${baseUrl}${endpoint}`, body))
+    );
+  }
+
+  // Получить список всех API доступных для текущего сервера
+  getApiList(): Observable<any> {
+    return this.get(`/info/apis`);
+  }
+
   // Получить основную информацию о сервере
   getServerData(): Observable<any> {
     return this.get('/info');
@@ -65,5 +77,20 @@ export class ServerDataService {
   // Получить список ошибок по конкретному боту
   getBotErrorsById(botId: string): Observable<any> {
     return this.get(`/bot/${botId}/errors`);
+  }
+
+  // Поставить выполнение бота на паузу
+  setBotPause(botId: string, pause: boolean): Observable<any> {
+    return this.post(`/bot/${botId}/pause`, { pause });
+  }
+
+  // Отключить/включить сохранение данных, возвращаемых ботом, в базу данных
+  setSendDataBot(botId: string, isSend: boolean): Observable<any> {
+    return this.post(`/bot/${botId}/send-data`, { isSend });
+  }
+
+  // Перезапустить выполнение бота
+  restartBot(botId: string): Observable<any> {
+    return this.post(`/bot/${botId}/restart`);
   }
 }
