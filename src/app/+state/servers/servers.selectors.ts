@@ -9,7 +9,7 @@ export const getFeatureName = createSelector(
 );
 export const getApiList = createSelector(
   selectFeature,
-  (state: ServersState) => state.config.apiList
+  (state: ServersState) => state.config.apiList.response
 );
 export const getDataActiveBot = createSelector(
   selectFeature,

@@ -28,13 +28,13 @@ export class AgGridApiList {
       },
     },
     {
-      field: "type",
+      field: "method",
       headerName: 'Type',
       flex: 1,
       cellStyle: { textAlign: 'left' },
     },
     {
-      field: "endpoint",
+      field: "path",
       headerName: 'Address API',
       flex: 1,
       cellStyle: { textAlign: 'left' },

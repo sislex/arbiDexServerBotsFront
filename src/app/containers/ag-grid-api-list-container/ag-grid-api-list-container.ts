@@ -16,5 +16,6 @@ import {getApiList} from '../../+state/servers/servers.selectors';
 })
 export class AgGridApiListContainer {
   private store = inject(Store);
+
   apiList$ = this.store.select(getApiList);
 }

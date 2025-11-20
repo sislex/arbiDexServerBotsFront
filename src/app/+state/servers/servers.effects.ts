@@ -260,4 +260,28 @@ export class ServersEffects {
     { dispatch: false }
   );
 
+  // перезапускаем работу бота
+  setApiList$ = createEffect(() => {
+      return this.actions$.pipe(
+        ofType(ServersActions.setApiList),
+        switchMap(() => {
+
+          return this.serverDataService.getApiList().pipe(
+            tap((response: any[]) => {
+              this.store.dispatch(ServersActions.setApiListSuccess({response}));
+              console.log('setApiListSuccess диспатч должен вызывать окно с подтверждением что поставили на паузу или запустили')
+            }),
+            catchError(err => {
+              this.store.dispatch(ServersActions.setApiListFailure({error: err}));
+              console.log('setApiListFailure диспатч должен вызывать окно с ошибкой')
+              return of([]);
+            }),
+            map(() => ({done: true}))
+          );
+        })
+      );
+    },
+    { dispatch: false }
+  );
+
 }
