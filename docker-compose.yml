@@ -1,0 +1,9 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: DockerfileFrontend
+    container_name: angular-arbidex-front
+    ports:
+      - "8080:80"
+    restart: unless-stopped

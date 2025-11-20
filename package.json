@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "storybook": "ng run arbi-dex-server-bots-front:storybook",
-    "build-storybook": "ng run arbi-dex-server-bots-front:build-storybook"
+    "build-storybook": "ng run arbi-dex-server-bots-front:build-storybook",
+    "start:docker": "docker-compose up --build -d"
   },
   "prettier": {
     "printWidth": 100,
