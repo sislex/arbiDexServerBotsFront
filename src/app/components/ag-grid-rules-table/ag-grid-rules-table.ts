@@ -9,6 +9,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
   imports: [
     AgGridAngular
   ],
+  standalone: true,
   templateUrl: './ag-grid-rules-table.html',
   styleUrl: './ag-grid-rules-table.scss',
 })
