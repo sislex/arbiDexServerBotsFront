@@ -11,6 +11,7 @@ import {AgGridBotListContainer} from '../../containers/ag-grid-bot-list-containe
 import {AgGridActionListContainer} from '../../containers/ag-grid-action-list-container/ag-grid-action-list-container';
 import {TitleTableLayout} from '../title-table-layout/title-table-layout';
 import {LoaderContainer} from '../../containers/loader-container/loader-container';
+import {AgGridRulesTableContainer} from '../../containers/ag-grid-rules-table-container/ag-grid-rules-table-container';
 
 @Component({
   selector: 'app-tabs',
@@ -24,7 +25,8 @@ import {LoaderContainer} from '../../containers/loader-container/loader-containe
     AgGridBotListContainer,
     AgGridActionListContainer,
     TitleTableLayout,
-    LoaderContainer
+    LoaderContainer,
+    AgGridRulesTableContainer
   ],
   standalone: true,
   templateUrl: './tabs.html',

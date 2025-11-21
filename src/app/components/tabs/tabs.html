@@ -9,8 +9,11 @@
             @if (!botControlListIsLoading && botControlListIsLoaded) {
               @if (!loadBotControlListError) {
                 <div class="server-page">
-                  <app-title-table-layout [title]="'Bots control panel'">
+                  <app-title-table-layout [title]="'Bots info'">
                     <app-ag-grid-bots-control-container content></app-ag-grid-bots-control-container>
+                  </app-title-table-layout>
+                  <app-title-table-layout [title]="'Rules info (Апишку подключи, передай сюда контент, переход на бота 2-click)'">
+                    <app-ag-grid-rules-table-container content></app-ag-grid-rules-table-container>
                   </app-title-table-layout>
                 </div>
               } @else {

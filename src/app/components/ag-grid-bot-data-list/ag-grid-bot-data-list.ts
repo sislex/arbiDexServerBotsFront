@@ -36,6 +36,15 @@ export class AgGridBotDataList {
       headerName: 'Value',
       flex: 1,
       cellStyle: { textAlign: 'left' },
+      valueFormatter: p => {
+        const v = p.value;
+
+        if (v == null) return "";
+        if (typeof v === "string") return v;
+        if (typeof v === "number") return String(v);
+
+        return JSON.stringify(v, null, 2);
+      }
     },
   ];
 
