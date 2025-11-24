@@ -11,6 +11,10 @@ export const getApiList = createSelector(
   selectFeature,
   (state: ServersState) => state.config.apiList.response
 );
+export const getActionParams = createSelector(
+  selectFeature,
+  (state: ServersState) => []
+);
 export const getDataActiveBot = createSelector(
   selectFeature,
   (state: ServersState) => state.activeElementData.activeBot
@@ -46,7 +50,7 @@ export const getBotTypesList = createSelector(
 );
 export const getActionTypesList = createSelector(
   selectFeature,
-  (state: ServersState) => state.activeElementData.actionTypesList.response
+  (state: ServersState) => state.activeElementData.jobTypesList.response
 );
 export const getServerData = createSelector(
   selectFeature,
@@ -64,14 +68,14 @@ export const getBotTypesListIsLoading = createSelector(
 );
 export const getActionTypesListIsLoading = createSelector(
   selectFeature,
-  (state: ServersState) => state.activeElementData.actionTypesList.isLoading
+  (state: ServersState) => state.activeElementData.jobTypesList.isLoading
 );
 export const getAllServerDataIsLoading = createSelector(
   getServerDataIsLoading,
   getBotTypesListIsLoading,
   getActionTypesListIsLoading,
-  (serverLoading, botTypesLoading, actionTypesLoading) =>
-    serverLoading || botTypesLoading || actionTypesLoading
+  (serverLoading, botTypesLoading, jobTypesLoading) =>
+    serverLoading || botTypesLoading || jobTypesLoading
 );
 
 // ---------- isLoaded селекторы для tabs/server-data ----------
@@ -85,14 +89,14 @@ export const getBotTypesListIsLoaded = createSelector(
 );
 export const getActionTypesListIsLoaded = createSelector(
   selectFeature,
-  (state: ServersState) => state.activeElementData.actionTypesList.isLoaded
+  (state: ServersState) => state.activeElementData.jobTypesList.isLoaded
 );
 export const getAllServerDataIsLoaded = createSelector(
   getServerDataIsLoaded,
   getBotTypesListIsLoaded,
   getActionTypesListIsLoaded,
-  (serverLoaded, botTypesLoaded, actionTypesLoaded) =>
-    serverLoaded && botTypesLoaded && actionTypesLoaded
+  (serverLoaded, botTypesLoaded, jobTypesLoaded) =>
+    serverLoaded && botTypesLoaded && jobTypesLoaded
 );
 
 // ---------- error селекторы для tabs/server-data ----------
@@ -106,7 +110,7 @@ export const getLoadBotTypesError = createSelector(
 );
 export const getLoadActionTypesError = createSelector(
   selectFeature,
-  (state: ServersState) =>  !!state.activeElementData.actionTypesList.error
+  (state: ServersState) =>  !!state.activeElementData.jobTypesList.error
 );
 
 // ---------- isLoading, isLoading, error селекторы для tabs/bots ----------

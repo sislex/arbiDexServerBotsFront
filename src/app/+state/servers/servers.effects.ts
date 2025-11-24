@@ -20,7 +20,7 @@ export class ServersEffects {
         switchMap(([action]) => {
           this.store.dispatch(ServersActions.loadServerList());
           this.store.dispatch(ServersActions.loadBotTypesList());
-          this.store.dispatch(ServersActions.loadActionTypesList());
+          this.store.dispatch(ServersActions.loadJobTypesList());
           return forkJoin({
             info: this.serverDataService.getServerData().pipe(
               catchError(err => {
@@ -36,7 +36,7 @@ export class ServersEffects {
             ),
             actions: this.serverDataService.getActionTypesList().pipe(
               catchError(err => {
-                this.store.dispatch(ServersActions.loadActionTypesListFailure({error: err}));
+                this.store.dispatch(ServersActions.loadJobTypesListFailure({error: err}));
                 return of([]);
               })
             ),
@@ -69,7 +69,7 @@ export class ServersEffects {
 
               this.store.dispatch(ServersActions.loadServerListSuccess({ response: responseServerData }));
               this.store.dispatch(ServersActions.loadBotTypesListSuccess({ response: responseBotTypesList }));
-              this.store.dispatch(ServersActions.loadActionTypesListSuccess({ response: responseActionTypesList }));
+              this.store.dispatch(ServersActions.loadJobTypesListSuccess({ response: responseActionTypesList }));
             }),
             map(() => ({ done: true }))
           );
@@ -97,7 +97,7 @@ export class ServersEffects {
               const responseBotControlList = response.map(item => ({
                 id: item.id ?? '-',
                 createdAt: item.createdAt ?? '-',
-                actionCount: item.actionCount ?? 0,
+                jobCount: item.jobCount ?? 0,
                 errorCount: item.errorCount ?? 0,
                 lastActionTimeStart: item.lastActionTimeStart ?? 0,
                 status: 'warn',
@@ -158,18 +158,21 @@ export class ServersEffects {
           }).pipe(
             tap(({ botControl, botParamsData, botErrors }) => {
 
-              const mappedBotParams = Object.entries(botControl.botParams || {}).map(
-                ([key, value]) => ({ key, value })
-              );
+              if (botControl) {
+                const mappedBotParams = Object.entries(botControl.botParams || {}).map(
+                  ([key, value]) => ({ key, value })
+                );
 
-              this.store.dispatch(
-                ServersActions.loadBotControlSuccess({
-                  response: {
-                    ...botControl,
-                    botParams: mappedBotParams
-                  }
-                })
-              );
+
+                this.store.dispatch(
+                  ServersActions.loadBotControlSuccess({
+                    response: {
+                      ...botControl,
+                      botParams: mappedBotParams
+                    }
+                  })
+                );
+              }
 
               this.store.dispatch(
                 ServersActions.loadBotParamsSuccess({

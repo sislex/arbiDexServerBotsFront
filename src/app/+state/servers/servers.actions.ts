@@ -54,13 +54,13 @@ export const loadBotTypesListFailure = createAction(
   props<{ error: string }>()
 );
 
-export const loadActionTypesList = createAction('[Servers] loadActionTypesList');
-export const loadActionTypesListSuccess = createAction(
-  '[Servers] loadActionTypesListSuccess',
+export const loadJobTypesList = createAction('[Servers] loadJobTypesList');
+export const loadJobTypesListSuccess = createAction(
+  '[Servers] loadJobTypesListSuccess',
   props<{ response: ITypesList[] }>()
 );
-export const loadActionTypesListFailure = createAction(
-  '[Servers] loadActionTypesListFailure',
+export const loadJobTypesListFailure = createAction(
+  '[Servers] loadJobTypesListFailure',
   props<{ error: string }>()
 );
 

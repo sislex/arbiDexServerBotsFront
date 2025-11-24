@@ -31,7 +31,7 @@ export const initialState: ServersState = {
   activeElementData: {
     serverData: emptyAsyncResponse(emptyServerResponse),
     botTypesList: emptyAsyncResponse([]),
-    actionTypesList: emptyAsyncResponse([]),
+    jobTypesList: emptyAsyncResponse([]),
     gateList: [],
     botControlList: emptyAsyncResponse([]),
     activeBot: {
@@ -123,38 +123,38 @@ export const serversReducer = createReducer(
     }
   })),
 
-  on(ServersActions.loadActionTypesList, (state) => ({
+  on(ServersActions.loadJobTypesList, (state) => ({
     ...state,
     activeElementData: {
       ...state.activeElementData,
-      actionTypesList: {
-        ...state.activeElementData.actionTypesList,
+      jobTypesList: {
+        ...state.activeElementData.jobTypesList,
         startTime:  Date.now(),
         isLoading: true,
         isLoaded: false,
       }
     }
   })),
-  on(ServersActions.loadActionTypesListSuccess, (state, {response}) => ({
+  on(ServersActions.loadJobTypesListSuccess, (state, {response}) => ({
     ...state,
     activeElementData: {
       ...state.activeElementData,
-      actionTypesList: {
-        ...state.activeElementData.actionTypesList,
-        loadingTime: Date.now() - state.activeElementData.actionTypesList.startTime!,
+      jobTypesList: {
+        ...state.activeElementData.jobTypesList,
+        loadingTime: Date.now() - state.activeElementData.jobTypesList.startTime!,
         isLoading: false,
         isLoaded: true,
         response
       }
     }
   })),
-  on(ServersActions.loadActionTypesListFailure, (state, {error}) => ({
+  on(ServersActions.loadJobTypesListFailure, (state, {error}) => ({
     ...state,
     activeElementData: {
       ...state.activeElementData,
-      actionTypesList: {
-        ...state.activeElementData.actionTypesList,
-        loadingTime: Date.now() - state.activeElementData.actionTypesList.startTime!,
+      jobTypesList: {
+        ...state.activeElementData.jobTypesList,
+        loadingTime: Date.now() - state.activeElementData.jobTypesList.startTime!,
         isLoading: false,
         isLoaded: true,
         error
