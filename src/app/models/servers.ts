@@ -19,8 +19,8 @@ import { API } from './api';
 // }
 
 
-interface IActionParams {
-  actionType: string;
+interface IJobParams {
+  jobType: string;
   i: number;
 }
 
@@ -28,12 +28,12 @@ interface IBotParams {
   botType: string;
   delayBetweenRepeat: number;
   isRepeat: boolean;
-  maxActions: number;
+  maxJobs: number;
   paused: boolean;
 }
 
 interface IBotRule {
-  actionParams: IActionParams;
+  jobParams: IJobParams;
   botParams: IBotParams;
   id: string;
 }
@@ -108,7 +108,7 @@ export interface IGateItem {
   name: string;
 }
 
-export interface ILastActionResult {
+export interface ILastJobResult {
   ok: boolean;
   amountOut: string;
 }
@@ -128,12 +128,12 @@ export interface IBotControl {
   id: string;
   running: boolean;
   createdAt: string;
-  actionCount: number;
+  jobCount: number;
   errorCount: number;
-  lastActionTimeStart: string;
-  lastActionTimeFinish: string;
+  lastJobTimeStart: string;
+  lastJobTimeFinish: string;
   lastLatency: number;
-  lastActionResult: ILastActionResult;
+  lastJobResult: ILastJobResult;
 }
 
 export interface IActiveBot {
@@ -150,7 +150,7 @@ export interface IResult {
 export interface IActiveElementData {
   serverData: IServerDataAPI;
   botTypesList: ITypesListAPI;
-  actionTypesList: ITypesListAPI;
+  jobTypesList: ITypesListAPI;
   gateList: IGateItem[];
   botControlList: IBotControlAPI;
   activeBot: IActiveBot;

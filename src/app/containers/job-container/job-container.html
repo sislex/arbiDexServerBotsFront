@@ -1,11 +1,24 @@
-<app-title-table-layout [title]="'Job info and control'">
-  <app-ag-grid-job-rule-container
-    content
-  ></app-ag-grid-job-rule-container>
-</app-title-table-layout>
-<app-title-table-layout [title]="'Results'">
-  <app-ag-grid-bot-data-list
-    content
-    [rowData]="[]"
-  ></app-ag-grid-bot-data-list>
-</app-title-table-layout>
+Job info and control
+<div class="row">
+    <mat-form-field class="wide-textarea">
+      <mat-label>Leave a comment</mat-label>
+      <textarea matInput rows="4" placeholder="Ex. It makes me feel..."></textarea>
+    </mat-form-field>
+
+  <div class="button-group">
+    <button matButton="outlined"> Launch <mat-icon>bolt</mat-icon> </button>
+    <button matButton="outlined"> Bot set <mat-icon>save</mat-icon> </button>
+    <button matButton="outlined"> Reset <mat-icon>refresh</mat-icon> </button>
+  </div>
+</div>
+
+@if (actionParams$ | async; as list) {
+  @if (list.length) {
+    <app-title-table-layout [title]="'Results'">
+      <app-ag-grid-bot-data-list
+        content
+        [rowData]="list"
+      ></app-ag-grid-bot-data-list>
+    </app-title-table-layout>
+  }
+}

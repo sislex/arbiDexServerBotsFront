@@ -52,7 +52,7 @@ export class ServerDataService {
 
   // Получить список типов action ботов
   getActionTypesList(): Observable<any> {
-    return this.get('/info/bots-actions-list');
+    return this.get('/info/job-type-list');
   }
 
   // Получить список ботов и их состояния

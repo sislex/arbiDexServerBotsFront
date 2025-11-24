@@ -57,8 +57,8 @@ export class AgGridBotsControl {
       },
     },
     {
-      field: "actionCount",
-      headerName: 'Actions',
+      field: "jobCount",
+      headerName: 'Jobs',
       width: 100,
     },
     {
@@ -67,7 +67,7 @@ export class AgGridBotsControl {
       width: 100,
     },
     {
-      field: "TimeRequest",
+      field: "lastLatency",
       headerName: 'Time Request',
       flex: 1,
       valueFormatter: params => {
