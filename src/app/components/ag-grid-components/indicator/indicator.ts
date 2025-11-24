@@ -12,10 +12,10 @@ export class Indicator {
   @Input() status: string = '';
 
   private readonly statusColorMap: { [key: string]: string } = {
-    'active': 'var(--true-color)',
-    'pending': 'var(--warn-color)',
-    'error': 'var(--error-color)',
-    'closed': 'var(--neutral-color)'
+    'green': 'var(--true-color)',
+    'yellow': 'var(--warn-color)',
+    'red': 'var(--error-color)',
+    'gray': 'var(--neutral-color)'
   };
 
   get computedColor(): string {
