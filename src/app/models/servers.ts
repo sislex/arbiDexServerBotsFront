@@ -121,10 +121,53 @@ export interface IBotError {
 }
 
 export interface IBotControlAPI extends API {
+  response: IBotControl;
+}
+
+export interface IBotListControlAPI extends API {
   response: IBotControl[];
 }
 
-export interface IBotControl {
+// export interface IBotControl {
+//   id: string;
+//   running: boolean;
+//   createdAt: string;
+//   jobCount: number;
+//   errorCount: number;
+//   lastJobTimeStart: string;
+//   lastJobTimeFinish: string;
+//   lastLatency: number;
+//   lastJobResult: ILastJobResult;
+// }
+
+interface QuoteExactInputSingle {
+  amountOut: string;
+  sqrtPriceX96After: string;
+  initializedTicksCrossed: string;
+  gasEstimate: string;
+}
+
+interface QuoteExactOutputSingle {
+  amountIn: string;
+  sqrtPriceX96After: string;
+  initializedTicksCrossed: string;
+  gasEstimate: string;
+}
+
+interface QuoteResult {
+  quoteExactInputSingle: QuoteExactInputSingle;
+  quoteExactOutputSingle: QuoteExactOutputSingle;
+}
+
+interface LastJobResult {
+  ok: boolean;
+  latencyMs: number;
+  result: QuoteResult;
+  blockNumber: number;
+}
+
+interface IBotControl {
+  status: string;
   id: string;
   running: boolean;
   createdAt: string;
@@ -133,11 +176,11 @@ export interface IBotControl {
   lastJobTimeStart: string;
   lastJobTimeFinish: string;
   lastLatency: number;
-  lastJobResult: ILastJobResult;
+  lastJobResult: LastJobResult;
 }
 
 export interface IActiveBot {
-  botInfo: IBotRuleAPI;
+  botInfo: IBotControlAPI; //IBotRuleAPI;
   botResultList: IResultAPI;
   botErrorList: IBotErrorAPI;
 }
@@ -152,6 +195,6 @@ export interface IActiveElementData {
   botTypesList: ITypesListAPI;
   jobTypesList: ITypesListAPI;
   gateList: IGateItem[];
-  botControlList: IBotControlAPI;
+  botControlList: IBotListControlAPI;
   activeBot: IActiveBot;
 }

@@ -68,44 +68,20 @@ export class AgGridBotsControl {
     },
     {
       field: "lastLatency",
-      headerName: 'Time Request',
+      headerName: 'Time last Request',
       flex: 1,
-      valueFormatter: params => {
-        if (!params.data?.lastActionTimeStart) return '';
-
-        const startTime = new Date(params.data.lastActionTimeStart).getTime(); // UTC timestamp
-        const now = Date.now();
-        const diff = now - startTime; // миллисекунды
-
-        // Переводим в часы, минуты, секунды
-        const totalSeconds = Math.floor(diff / 1000);
-        const hours = Math.floor(totalSeconds / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-
-        // Форматируем как hh:mm:ss
-        const formattedTime: string = [
-          hours.toString().padStart(2, '0'),
-          minutes.toString().padStart(2, '0'),
-          seconds.toString().padStart(2, '0')
-        ].join(':');
-
-        return formattedTime;
-      },
     },
     {
       field: 'status',
       headerName: 'Status',
       width: 80,
       cellRenderer: IndicatorContainer,
-      cellRendererParams: { //TODO: Записать сюда верные ПРИХОДЯЩИЕ параметры под каждый цвет
+      cellRendererParams: {
         colorMapping: {
           'active': 'green',
-          'running': 'green',
-          'inactive': 'red',
-          'stopped': 'red',
-          'pending': 'yellow',
-          'error': 'red'
+          '': 'red',
+          'finished': 'gray',
+          'pause': 'yellow',
         }
       },
       cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },

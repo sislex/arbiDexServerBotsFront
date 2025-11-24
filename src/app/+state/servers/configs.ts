@@ -30,16 +30,32 @@ export const emptyServerResponse = {
 };
 
 export const emptyBotInfoResponse = {
+  status: '',
   id: "",
-  jobParams: {
-    jobType: "",
-    i: 0
-  },
-  botParams: {
-    botType: "",
-    delayBetweenRepeat: 0,
-    isRepeat: false,
-    maxJobs: 0,
-    paused: false
+  running: false,
+  createdAt: "",
+  jobCount: 0,
+  errorCount: 0,
+  lastJobTimeStart: "",
+  lastJobTimeFinish: "",
+  lastLatency: 0,
+  lastJobResult: {
+    ok: false,
+    latencyMs: 0,
+    result: {
+      quoteExactInputSingle: {
+        amountOut: "",
+        sqrtPriceX96After: "",
+        initializedTicksCrossed: "",
+        gasEstimate: ""
+      },
+      quoteExactOutputSingle: {
+        amountIn: "",
+        sqrtPriceX96After: "",
+        initializedTicksCrossed: "",
+        gasEstimate: ""
+      }
+    },
+    blockNumber: 0
   }
 };

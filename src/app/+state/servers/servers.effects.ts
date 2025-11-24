@@ -94,16 +94,23 @@ export class ServersEffects {
                 return;
               }
 
-              const responseBotControlList = response.map(item => ({
-                id: item.id ?? '-',
-                createdAt: item.createdAt ?? '-',
-                jobCount: item.jobCount ?? 0,
-                errorCount: item.errorCount ?? 0,
-                lastActionTimeStart: item.lastActionTimeStart ?? 0,
-                status: 'warn',
-                isSendData: false,
-                running: item.running ?? false,
-              }));
+              const responseBotControlList = response.map(item => {
+                let status = '';
+                if (item.running === true) {
+                  status = 'pause';
+                } else if (item.running === false) {
+                  status = 'active';
+                }
+                //   else if (item.running === false) {
+                //     status: 'finished'
+                //
+                // }
+                return {
+                  ...item,
+                  status: status
+                };
+
+              });
 
               this.store.dispatch(ServersActions.loadBotControlListSuccess({response: responseBotControlList}));
             }),
