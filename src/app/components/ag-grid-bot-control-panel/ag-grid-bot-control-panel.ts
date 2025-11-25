@@ -38,14 +38,12 @@ export class AgGridBotControlPanel {
       headerName: 'Status',
       width: 100,
       cellRenderer: IndicatorContainer,
-      cellRendererParams: { //TODO: Записать сюда верные ПРИХОДЯЩИЕ параметры под каждый цвет
+      cellRendererParams: {
         colorMapping: {
           'active': 'green',
-          'running': 'green',
-          'inactive': 'red',
-          'stopped': 'red',
-          'pending': 'yellow',
-          'error': 'red'
+          '': 'red',
+          'finished': 'gray',
+          'pause': 'yellow',
         }
       },
       cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },

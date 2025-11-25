@@ -74,15 +74,6 @@ export const loadBotControlListFailure = createAction(
   props<{ error: string }>()
 );
 
-export const loadBotControl = createAction('[Servers] loadBotControlList');
-export const loadBotControlSuccess = createAction(
-  '[Servers] loadBotControlSuccess',
-  props<{ response: any }>()
-);
-export const loadBotControlFailure = createAction(
-  '[Servers] loadBotControlFailure',
-  props<{ error: string }>()
-);
 
 export const loadBotParams = createAction('[Servers] loadBotControlList');
 export const loadBotParamsSuccess = createAction(

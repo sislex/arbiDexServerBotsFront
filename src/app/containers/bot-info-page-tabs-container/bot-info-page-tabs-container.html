@@ -14,7 +14,7 @@
         <app-title-table-layout [title]="'Results'">
           <app-ag-grid-bot-data-list
             content
-            [rowData]="list.botResultList.response"
+            [rowData]="(dataActiveBot$ | async)?.botResultList?.response | transformObjectToKeyValue"
           ></app-ag-grid-bot-data-list>
         </app-title-table-layout>
       </div>

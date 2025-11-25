@@ -96,9 +96,9 @@ export class ServersEffects {
 
               const responseBotControlList = response.map(item => {
                 let status = '';
-                if (item.running === true) {
+                if (!item.running) {
                   status = 'pause';
-                } else if (item.running === false) {
+                } else if (item.running) {
                   status = 'active';
                 }
                 //   else if (item.running === false) {
@@ -109,7 +109,6 @@ export class ServersEffects {
                   ...item,
                   status: status
                 };
-
               });
 
               this.store.dispatch(ServersActions.loadBotControlListSuccess({response: responseBotControlList}));
@@ -133,19 +132,10 @@ export class ServersEffects {
           const botId = action.botId;
 
           // Запуск индикаторов загрузки
-          this.store.dispatch(ServersActions.loadBotControl());
           this.store.dispatch(ServersActions.loadBotParams());
           this.store.dispatch(ServersActions.loadBotErrors());
 
           return forkJoin({
-            botControl: this.serverDataService.getBotControlById(botId).pipe(
-              catchError(err => {
-                this.store.dispatch(
-                  ServersActions.loadBotControlFailure({ error: err })
-                );
-                return of(null);
-              })
-            ),
             botParamsData: this.serverDataService.getBotParamsById(botId).pipe(
               catchError(err => {
                 this.store.dispatch(
@@ -163,27 +153,23 @@ export class ServersEffects {
               })
             ),
           }).pipe(
-            tap(({ botControl, botParamsData, botErrors }) => {
+            tap(({ botParamsData, botErrors }) => {
+              let status = '';
 
-              if (botControl) {
-                const mappedBotParams = Object.entries(botControl.botParams || {}).map(
-                  ([key, value]) => ({ key, value })
-                );
-
-
-                this.store.dispatch(
-                  ServersActions.loadBotControlSuccess({
-                    response: {
-                      ...botControl,
-                      botParams: mappedBotParams
-                    }
-                  })
-                );
+              if (!botParamsData.running) {
+                status = 'pause';
+              } else if (botParamsData.running) {
+                status = 'active';
               }
+
+              const responseBotControlList = {
+                ...botParamsData,
+                status: status,
+              };
 
               this.store.dispatch(
                 ServersActions.loadBotParamsSuccess({
-                  response: botParamsData
+                  response: responseBotControlList
                 })
               );
 
