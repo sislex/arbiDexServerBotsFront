@@ -1,5 +1,7 @@
 <div class="title-content-layout">
-  <h2 class="title">{{ title }}</h2>
+  <div class="title">
+    <ng-content select="[title]"></ng-content>
+  </div>
 
   <div class="content">
     <ng-content select="[content]"></ng-content>

@@ -9,7 +9,11 @@
             @if (!botControlListIsLoading && botControlListIsLoaded) {
               @if (!loadBotControlListError) {
                 <div class="server-page">
-                  <app-title-table-layout [title]="'Bots info'">
+                  <app-title-table-layout>
+                    <app-title-table-button
+                      title
+                      [title]="'Bots info'"
+                    ></app-title-table-button>
                     <app-ag-grid-bots-control-container content></app-ag-grid-bots-control-container>
                   </app-title-table-layout>
                 </div>
@@ -27,7 +31,11 @@
 <!--                  <app-title-table-layout [title]="'Bots info'">-->
 <!--                    <app-ag-grid-bots-control-container content></app-ag-grid-bots-control-container>-->
 <!--                  </app-title-table-layout>-->
-                  <app-title-table-layout [title]="'Rules info (Апишку подключи, передай сюда контент, переход на бота 2-click)'">
+                  <app-title-table-layout>
+                    <app-title-table-button
+                      title
+                      [title]="'Rules info (Апишку подключи, передай сюда контент, переход на бота 2-click)'"
+                    ></app-title-table-button>
                     <app-ag-grid-rules-table-container content></app-ag-grid-rules-table-container>
                   </app-title-table-layout>
 <!--                </div>-->
@@ -47,21 +55,33 @@
               } @else {
                 <div class="server-page">
                   @if (!loadServerDataError) {
-                    <app-title-table-layout [title]="'Server data'">
+                    <app-title-table-layout>
+                      <app-title-table-button
+                        title
+                        [title]="'Server data'"
+                      ></app-title-table-button>
                       <app-ag-grid-server-data-container content></app-ag-grid-server-data-container>
                     </app-title-table-layout>
                   } @else {
                     ошибка по API сервера
                   }
                   @if (!loadBotTypesError) {
-                    <app-title-table-layout  [title]="'Types of bots'">
+                    <app-title-table-layout>
+                      <app-title-table-button
+                        title
+                        [title]="'Types of bots'"
+                      ></app-title-table-button>
                       <app-ag-grid-bot-list-container content></app-ag-grid-bot-list-container>
                     </app-title-table-layout>
                   } @else {
                     ошибка по API типов ботов
                   }
                   @if (!loadActionTypesError) {
-                    <app-title-table-layout  [title]="'Types of bots actions'">
+                    <app-title-table-layout>
+                      <app-title-table-button
+                        title
+                        [title]="'Types of bots actions'"
+                      ></app-title-table-button>
                       <app-ag-grid-action-list-container content></app-ag-grid-action-list-container>
                     </app-title-table-layout>
                   } @else {

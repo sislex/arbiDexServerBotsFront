@@ -191,8 +191,23 @@ export class ServersEffects {
         switchMap((action) => {
 
           return this.serverDataService.setBotPause(action.id, action.isStarted).pipe(
-            tap((response: any[]) => {
-              this.store.dispatch(ServersActions.setIsStartedBotSuccess({response}));
+            tap((response: any) => {
+
+              let status = '';
+
+              if (!response.paused.pause) {
+                status = 'pause';
+              } else if (response.paused.pause) {
+                status = 'active';
+              }
+
+              const responsePause = {
+                pause: response.paused.pause,
+                status: status,
+              };
+
+              this.store.dispatch(ServersActions.setIsStartedBotSuccess({response: responsePause}));
+              console.log(response)
               console.log('setIsStartedBotSuccess диспатч должен вызывать окно с подтверждением что поставили на паузу или запустили')
             }),
             catchError(err => {
@@ -208,7 +223,7 @@ export class ServersEffects {
     { dispatch: false }
   );
 
-  // Устанавливаем паузу/запускаем работу бота
+  // устанавливаем отправку данных бота
   setSendDataBot$ = createEffect(() => {
       return this.actions$.pipe(
         ofType(ServersActions.isSendData),

@@ -1,0 +1,17 @@
+.row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  padding: 8px 0;
+
+  .title {
+    margin: 0 auto 4px 16px;
+    font-weight: inherit;
+  }
+
+  .button-end {
+    align-self: end;
+  }
+}
+

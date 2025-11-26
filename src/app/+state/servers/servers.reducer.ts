@@ -404,5 +404,26 @@ export const serversReducer = createReducer(
     ...state,
     activeElementData: initialState.activeElementData
   })),
+
+  on(ServersActions.setIsStartedBotSuccess, (state, { response }) => {
+    const botResultList = state.activeElementData.activeBot.botResultList;
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botResultList: {
+            ...botResultList,
+            response: {
+              ...botResultList.response,
+              running: response.pause,
+              status: response.status,
+            }
+          },
+        },
+      },
+    };
+  }),
 );
 
