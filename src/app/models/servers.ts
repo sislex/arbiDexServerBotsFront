@@ -19,8 +19,8 @@ import { API } from './api';
 // }
 
 
-interface IActionParams {
-  actionType: string;
+interface IJobParams {
+  jobType: string;
   i: number;
 }
 
@@ -28,12 +28,12 @@ interface IBotParams {
   botType: string;
   delayBetweenRepeat: number;
   isRepeat: boolean;
-  maxActions: number;
+  maxJobs: number;
   paused: boolean;
 }
 
 interface IBotRule {
-  actionParams: IActionParams;
+  jobParams: IJobParams;
   botParams: IBotParams;
   id: string;
 }
@@ -80,14 +80,20 @@ export interface IServer {
 }
 
 export interface IApiList {
-  type: string;
-  endpoint: string;
+  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+  path: string;
   description: string;
+  tags: string[];
+  version: string;
+}
+
+export interface IApiListAPI extends API {
+  response: IApiList[]
 }
 
 export interface IConfig {
   serverList: IServer[];
-  apiList: IApiList[];
+  apiList: IApiListAPI;
 }
 
 export interface ITypesList {
@@ -102,7 +108,7 @@ export interface IGateItem {
   name: string;
 }
 
-export interface ILastActionResult {
+export interface ILastJobResult {
   ok: boolean;
   amountOut: string;
 }
@@ -115,24 +121,67 @@ export interface IBotError {
 }
 
 export interface IBotControlAPI extends API {
+  response: IBotControl;
+}
+
+export interface IBotListControlAPI extends API {
   response: IBotControl[];
 }
 
-export interface IBotControl {
+// export interface IBotControl {
+//   id: string;
+//   running: boolean;
+//   createdAt: string;
+//   jobCount: number;
+//   errorCount: number;
+//   lastJobTimeStart: string;
+//   lastJobTimeFinish: string;
+//   lastLatency: number;
+//   lastJobResult: ILastJobResult;
+// }
+
+interface QuoteExactInputSingle {
+  amountOut: string;
+  sqrtPriceX96After: string;
+  initializedTicksCrossed: string;
+  gasEstimate: string;
+}
+
+interface QuoteExactOutputSingle {
+  amountIn: string;
+  sqrtPriceX96After: string;
+  initializedTicksCrossed: string;
+  gasEstimate: string;
+}
+
+interface QuoteResult {
+  quoteExactInputSingle: QuoteExactInputSingle;
+  quoteExactOutputSingle: QuoteExactOutputSingle;
+}
+
+interface LastJobResult {
+  ok: boolean;
+  latencyMs: number;
+  result: QuoteResult;
+  blockNumber: number;
+}
+
+interface IBotControl {
+  status: string;
   id: string;
   running: boolean;
   createdAt: string;
-  actionCount: number;
+  jobCount: number;
   errorCount: number;
-  lastActionTimeStart: string;
-  lastActionTimeFinish: string;
+  lastJobTimeStart: string;
+  lastJobTimeFinish: string;
   lastLatency: number;
-  lastActionResult: ILastActionResult;
+  lastJobResult: LastJobResult;
 }
 
 export interface IActiveBot {
-  botInfo: IBotRuleAPI;
-  botResultList: IResultAPI;
+  // botInfo: IBotControlAPI; //IBotRuleAPI;
+  botResultList: IBotControlAPI; //IResultAPI;
   botErrorList: IBotErrorAPI;
 }
 
@@ -144,8 +193,8 @@ export interface IResult {
 export interface IActiveElementData {
   serverData: IServerDataAPI;
   botTypesList: ITypesListAPI;
-  actionTypesList: ITypesListAPI;
+  jobTypesList: ITypesListAPI;
   gateList: IGateItem[];
-  botControlList: IBotControlAPI;
+  botControlList: IBotListControlAPI;
   activeBot: IActiveBot;
 }

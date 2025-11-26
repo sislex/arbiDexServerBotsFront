@@ -52,7 +52,7 @@ export class ServerDataService {
 
   // Получить список типов action ботов
   getActionTypesList(): Observable<any> {
-    return this.get('/info/bots-actions-list');
+    return this.get('/info/job-type-list');
   }
 
   // Получить список ботов и их состояния
@@ -67,10 +67,7 @@ export class ServerDataService {
 
   // Получить список Параметров по конкретному боту
   getBotParamsById(botId: string): Observable<any> {
-    return this.get(`/bot/${botId}/params`).pipe(
-      map((obj: any) =>
-        Object.entries(obj).map(([key, value]) => ({key, value}))
-      )
+    return this.get(`/bot/${botId}/params`
     );
   }
 

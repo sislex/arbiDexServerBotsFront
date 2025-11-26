@@ -58,6 +58,14 @@ export class BotInfoPageContainer implements OnInit {
             this.router.navigate([`/server/${ipPort}/tab/bots`]);
           }
         });
+      } else if (note === 'refresh') {
+        this.dataActiveBot$.pipe(
+          take(1)
+        ).subscribe(data => {
+          if (data?.botResultList?.response?.id) {
+            this.store.dispatch(setActiveBot({botId: data.botResultList.response.id}));
+          }
+        });
       }
     }
   }

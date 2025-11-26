@@ -28,16 +28,18 @@ export class AgGridApiList {
       },
     },
     {
-      field: "type",
+      field: "method",
       headerName: 'Type',
       flex: 1,
       cellStyle: { textAlign: 'left' },
+      cellClass: 'selectable-text',
     },
     {
-      field: "endpoint",
+      field: "path",
       headerName: 'Address API',
       flex: 1,
       cellStyle: { textAlign: 'left' },
+      cellClass: 'selectable-text',
     },
     {
       field: "description",
@@ -46,6 +48,7 @@ export class AgGridApiList {
       cellStyle: { textAlign: 'left'},
       autoHeight: true,
       wrapText: true,
+      cellClass: 'selectable-text',
     },
   ];
 

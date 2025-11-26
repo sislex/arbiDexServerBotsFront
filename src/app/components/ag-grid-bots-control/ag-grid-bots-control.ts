@@ -42,12 +42,16 @@ export class AgGridBotsControl {
     {
       field: "id",
       headerName: 'ID',
-      width: 80,
+      width: 120,
+      cellClass: 'selectable-text',
+      resizable: true,
+
     },
     {
       field: "createdAt",
       headerName: 'Created',
       flex: 1,
+      cellClass: 'selectable-text',
       valueFormatter: params => {
         if (!params.value) return '';
         const date = new Date(params.value);
@@ -57,8 +61,8 @@ export class AgGridBotsControl {
       },
     },
     {
-      field: "actionCount",
-      headerName: 'Actions',
+      field: "jobCount",
+      headerName: 'Jobs',
       width: 100,
     },
     {
@@ -67,37 +71,23 @@ export class AgGridBotsControl {
       width: 100,
     },
     {
-      field: "TimeRequest",
-      headerName: 'Time Request',
+      field: "lastLatency",
+      headerName: 'Time last Request',
       flex: 1,
-      valueFormatter: params => {
-        if (!params.data?.lastActionTimeStart) return '';
-
-        const startTime = new Date(params.data.lastActionTimeStart).getTime(); // UTC timestamp
-        const now = Date.now();
-        const diff = now - startTime; // миллисекунды
-
-        // Переводим в часы, минуты, секунды
-        const totalSeconds = Math.floor(diff / 1000);
-        const hours = Math.floor(totalSeconds / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-
-        // Форматируем как hh:mm:ss
-        const formattedTime: string = [
-          hours.toString().padStart(2, '0'),
-          minutes.toString().padStart(2, '0'),
-          seconds.toString().padStart(2, '0')
-        ].join(':');
-
-        return formattedTime;
-      },
     },
     {
       field: 'status',
       headerName: 'Status',
       width: 80,
       cellRenderer: IndicatorContainer,
+      cellRendererParams: {
+        colorMapping: {
+          'active': 'green',
+          '': 'red',
+          'finished': 'gray',
+          'pause': 'yellow',
+        }
+      },
       cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },
       headerClass: 'align-center little-width',
     },

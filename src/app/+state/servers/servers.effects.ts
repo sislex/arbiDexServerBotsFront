@@ -21,7 +21,7 @@ export class ServersEffects {
         switchMap(([action]) => {
           this.store.dispatch(ServersActions.loadServerList());
           this.store.dispatch(ServersActions.loadBotTypesList());
-          this.store.dispatch(ServersActions.loadActionTypesList());
+          this.store.dispatch(ServersActions.loadJobTypesList());
           return forkJoin({
             info: this.serverDataService.getServerData().pipe(
               catchError(err => {
@@ -37,7 +37,7 @@ export class ServersEffects {
             ),
             actions: this.serverDataService.getActionTypesList().pipe(
               catchError(err => {
-                this.store.dispatch(ServersActions.loadActionTypesListFailure({error: err}));
+                this.store.dispatch(ServersActions.loadJobTypesListFailure({error: err}));
                 return of([]);
               })
             ),
@@ -70,7 +70,7 @@ export class ServersEffects {
 
               this.store.dispatch(ServersActions.loadServerListSuccess({ response: responseServerData }));
               this.store.dispatch(ServersActions.loadBotTypesListSuccess({ response: responseBotTypesList }));
-              this.store.dispatch(ServersActions.loadActionTypesListSuccess({ response: responseActionTypesList }));
+              this.store.dispatch(ServersActions.loadJobTypesListSuccess({ response: responseActionTypesList }));
             }),
             map(() => ({ done: true }))
           );
@@ -95,16 +95,22 @@ export class ServersEffects {
                 return;
               }
 
-              const responseBotControlList = response.map(item => ({
-                id: item.id ?? '-',
-                createdAt: item.createdAt ?? '-',
-                actionCount: item.actionCount ?? 0,
-                errorCount: item.errorCount ?? 0,
-                lastActionTimeStart: item.lastActionTimeStart ?? 0,
-                status: 'warn',
-                isSendData: false,
-                running: item.running ?? false,
-              }));
+              const responseBotControlList = response.map(item => {
+                let status = '';
+                if (!item.running) {
+                  status = 'pause';
+                } else if (item.running) {
+                  status = 'active';
+                }
+                //   else if (item.running === false) {
+                //     status: 'finished'
+                //
+                // }
+                return {
+                  ...item,
+                  status: status
+                };
+              });
 
               this.store.dispatch(ServersActions.loadBotControlListSuccess({response: responseBotControlList}));
             }),
@@ -127,19 +133,10 @@ export class ServersEffects {
           const botId = action.botId;
 
           // Запуск индикаторов загрузки
-          this.store.dispatch(ServersActions.loadBotControl());
           this.store.dispatch(ServersActions.loadBotParams());
           this.store.dispatch(ServersActions.loadBotErrors());
 
           return forkJoin({
-            botControl: this.serverDataService.getBotControlById(botId).pipe(
-              catchError(err => {
-                this.store.dispatch(
-                  ServersActions.loadBotControlFailure({ error: err })
-                );
-                return of(null);
-              })
-            ),
             botParamsData: this.serverDataService.getBotParamsById(botId).pipe(
               catchError(err => {
                 this.store.dispatch(
@@ -157,24 +154,23 @@ export class ServersEffects {
               })
             ),
           }).pipe(
-            tap(({ botControl, botParamsData, botErrors }) => {
+            tap(({ botParamsData, botErrors }) => {
+              let status = '';
 
-              const mappedBotParams = Object.entries(botControl.botParams || {}).map(
-                ([key, value]) => ({ key, value })
-              );
+              if (!botParamsData.running) {
+                status = 'pause';
+              } else if (botParamsData.running) {
+                status = 'active';
+              }
 
-              this.store.dispatch(
-                ServersActions.loadBotControlSuccess({
-                  response: {
-                    ...botControl,
-                    botParams: mappedBotParams
-                  }
-                })
-              );
+              const responseBotControlList = {
+                ...botParamsData,
+                status: status,
+              };
 
               this.store.dispatch(
                 ServersActions.loadBotParamsSuccess({
-                  response: botParamsData
+                  response: responseBotControlList
                 })
               );
 
@@ -196,24 +192,32 @@ export class ServersEffects {
         ofType(ServersActions.setIsStartedBot),
         switchMap((action) => {
 
-          return this.serverDataService.setBotPause(action.id, !action.isStarted).pipe(
+          return this.serverDataService.setBotPause(action.id, action.isStarted).pipe(
             tap((response: any) => {
-              this.store.dispatch(ServersActions.setIsStartedBotSuccess({response}));
 
-              const isPause = response.paused.pause
-              if (!isPause) {
-                this._snackBar.open('Bot is started', '', { duration: 5000 });
-              } else {
-                this._snackBar.open('Bot is paused', '', { duration: 5000 });
+              let status = '';
+
+              if (!response.paused.pause) {
+                status = 'pause';
+              } else if (response.paused.pause) {
+                status = 'active';
               }
 
+              const responsePause = {
+                pause: response.paused.pause,
+                status: status,
+              };
+
+              this.store.dispatch(ServersActions.setIsStartedBotSuccess({response: responsePause}));
+              console.log(response)
+              console.log('setIsStartedBotSuccess диспатч должен вызывать окно с подтверждением что поставили на паузу или запустили')
             }),
             catchError(err => {
               this.store.dispatch(ServersActions.setIsStartedBotFailure({error: err}));
               this._snackBar.open(`Bot is started, ${err}`, '', { duration: 5000 });
 
               console.log('setIsStartedBotFailure диспатч должен вызывать окно с ошибкой')
-              return of({ error: true });
+              return of([]);
             }),
             map(() => ({done: true}))
           );
@@ -223,14 +227,14 @@ export class ServersEffects {
     { dispatch: false }
   );
 
-  // Устанавливаем паузу/запускаем работу бота
+  // устанавливаем отправку данных бота
   setSendDataBot$ = createEffect(() => {
       return this.actions$.pipe(
         ofType(ServersActions.isSendData),
         switchMap((action) => {
 
           return this.serverDataService.setSendDataBot(action.id, action.isSendData).pipe(
-            tap((response: any) => {
+            tap((response: any[]) => {
               this.store.dispatch(ServersActions.setSendDataBotSuccess({response}));
               console.log('setSendDataBotSuccess диспатч должен вызывать окно с подтверждением что поставили на паузу или запустили')
             }),
@@ -240,7 +244,7 @@ export class ServersEffects {
               console.log('setSendDataBotFailure диспатч должен вызывать окно с ошибкой', error)
               this._snackBar.open(`${error}`, '', { duration: 5000 });
 
-              return of({ error: true });
+              return of([]);
             }),
             map(() => ({done: true}))
           );
@@ -257,14 +261,38 @@ export class ServersEffects {
         switchMap((action) => {
 
           return this.serverDataService.restartBot(action.id).pipe(
-            tap((response: any) => {
+            tap((response: any[]) => {
               this.store.dispatch(ServersActions.restartBotSuccess({response}));
               console.log('restartBotSuccess диспатч должен вызывать окно с подтверждением что поставили на паузу или запустили')
             }),
             catchError(err => {
               this.store.dispatch(ServersActions.restartBotFailure({error: err}));
               console.log('restartBotFailure диспатч должен вызывать окно с ошибкой')
-              return of({ error: true });
+              return of([]);
+            }),
+            map(() => ({done: true}))
+          );
+        })
+      );
+    },
+    { dispatch: false }
+  );
+
+  // перезапускаем работу бота
+  setApiList$ = createEffect(() => {
+      return this.actions$.pipe(
+        ofType(ServersActions.setApiList),
+        switchMap(() => {
+
+          return this.serverDataService.getApiList().pipe(
+            tap((response: any[]) => {
+              this.store.dispatch(ServersActions.setApiListSuccess({response}));
+              console.log('setApiListSuccess диспатч должен вызывать окно с подтверждением что поставили на паузу или запустили')
+            }),
+            catchError(err => {
+              this.store.dispatch(ServersActions.setApiListFailure({error: err}));
+              console.log('setApiListFailure диспатч должен вызывать окно с ошибкой')
+              return of([]);
             }),
             map(() => ({done: true}))
           );

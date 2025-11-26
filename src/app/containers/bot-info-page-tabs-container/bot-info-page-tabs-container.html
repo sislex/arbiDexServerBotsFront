@@ -1,26 +1,40 @@
 @if (dataActiveBot$ | async; as list) {
   @if ((activeBotIsLoaded$ | async) && !(activeBotIsLoading$ | async)) {
     <app-bot-info-page-tabs
-    [firstLabel]="'Control and params'"
-    [secondLabel]="'Errors'"
-    [thirdLabel]="'Job'"
+      [firstLabel]="'Control and params'"
+      [secondLabel]="'Errors'"
+      [thirdLabel]="'Job'"
     >
       <div first>
-        <app-title-table-layout [title]="'Bot control - fix table height'">
+        <app-title-table-layout>
+          <app-title-table-button
+            title
+            [title]="'Bot control'"
+          ></app-title-table-button>
           <app-ag-grid-bot-control-panel-container
             content
           ></app-ag-grid-bot-control-panel-container>
         </app-title-table-layout>
-        <app-title-table-layout [title]="'Results'">
+
+        <app-title-table-layout>
+          <app-title-table-button
+            title
+            [title]="'Results'"
+          ></app-title-table-button>
+
           <app-ag-grid-bot-data-list
             content
-            [rowData]="list.botResultList.response"
+            [rowData]="(dataActiveBot$ | async)?.botResultList?.response | transformObjectToKeyValue"
           ></app-ag-grid-bot-data-list>
         </app-title-table-layout>
       </div>
 
       <div second>
-        <app-title-table-layout [title]="'Errors'">
+        <app-title-table-layout>
+          <app-title-table-button
+            title
+            [title]="'Errors'"
+          ></app-title-table-button>
           <app-ag-grid-error-list
             content
             [rowData]="list.botErrorList.response"

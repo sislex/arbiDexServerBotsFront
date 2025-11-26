@@ -2,19 +2,18 @@ import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 import type { ColDef } from 'ag-grid-community';
 import { AgGridAngular } from 'ag-grid-angular';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';
-import {RunActionOnceContainer} from '../../containers/run-action-once-container/run-action-once-container';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
-
 @Component({
-  selector: 'app-ag-grid-job-rule',
-  imports: [AgGridAngular],
+  selector: 'app-ag-grid-rules-table',
+  imports: [
+    AgGridAngular
+  ],
   standalone: true,
-  templateUrl: './ag-grid-job-rule.html',
-  styleUrl: './ag-grid-job-rule.scss',
+  templateUrl: './ag-grid-rules-table.html',
+  styleUrl: './ag-grid-rules-table.scss',
 })
-export class AgGridJobRule {
+export class AgGridRulesTable {
   @Input() rowData: any[] = [];
 
   @Output() emitter = new EventEmitter<any>();
@@ -25,7 +24,7 @@ export class AgGridJobRule {
 
   onRowDoubleClicked($event: any) {
     this.emitter.emit({
-      event: 'AgGridBotsControl:DOUBLE_CLICKED_ROW',
+      event: 'AgGridRulesTable:DOUBLE_CLICKED_ROW',
       row: $event
     });
   }
@@ -42,31 +41,19 @@ export class AgGridJobRule {
     {
       field: "id",
       headerName: 'ID',
-      flex: 1,
+      width: 150,
     },
     {
-      field: 'status',
-      headerName: 'Status',
+      field: "botParams",
+      headerName: 'Bot Rule',
       flex: 1,
-      cellRenderer: IndicatorContainer,
-      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },
-      headerClass: 'align-center little-width',
+      valueFormatter: p => JSON.stringify(p.value),
     },
-    // {
-    //   headerName: 'Actions',
-    //   width: 125,
-    //   cellRenderer: ActionsContainer,
-    //   cellRendererParams: {
-    //     onAction: this.onAction.bind(this),
-    //   },
-    // },
     {
-      headerName: 'Start once',
+      field: "actionParams",
+      headerName: 'Job Rule',
       flex: 1,
-      cellRenderer: RunActionOnceContainer,
-      cellRendererParams: {
-        onAction: this.onAction.bind(this),
-      },
+      valueFormatter: p => JSON.stringify(p.value),
     },
   ];
 

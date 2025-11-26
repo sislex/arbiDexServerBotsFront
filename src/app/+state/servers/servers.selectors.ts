@@ -9,7 +9,11 @@ export const getFeatureName = createSelector(
 );
 export const getApiList = createSelector(
   selectFeature,
-  (state: ServersState) => state.config.apiList
+  (state: ServersState) => state.config.apiList.response
+);
+export const getActionParams = createSelector(
+  selectFeature,
+  (state: ServersState) => []
 );
 export const getDataActiveBot = createSelector(
   selectFeature,
@@ -17,7 +21,7 @@ export const getDataActiveBot = createSelector(
 );
 export const getActiveBotId = createSelector(
   selectFeature,
-  (state: ServersState) => state.activeElementData.activeBot.botInfo.response.id
+  (state: ServersState) => state.activeElementData.activeBot.botResultList.response.id
 );
 export const getServerList = createSelector(
   selectFeature,
@@ -46,7 +50,7 @@ export const getBotTypesList = createSelector(
 );
 export const getActionTypesList = createSelector(
   selectFeature,
-  (state: ServersState) => state.activeElementData.actionTypesList.response
+  (state: ServersState) => state.activeElementData.jobTypesList.response
 );
 export const getServerData = createSelector(
   selectFeature,
@@ -64,14 +68,14 @@ export const getBotTypesListIsLoading = createSelector(
 );
 export const getActionTypesListIsLoading = createSelector(
   selectFeature,
-  (state: ServersState) => state.activeElementData.actionTypesList.isLoading
+  (state: ServersState) => state.activeElementData.jobTypesList.isLoading
 );
 export const getAllServerDataIsLoading = createSelector(
   getServerDataIsLoading,
   getBotTypesListIsLoading,
   getActionTypesListIsLoading,
-  (serverLoading, botTypesLoading, actionTypesLoading) =>
-    serverLoading || botTypesLoading || actionTypesLoading
+  (serverLoading, botTypesLoading, jobTypesLoading) =>
+    serverLoading || botTypesLoading || jobTypesLoading
 );
 
 // ---------- isLoaded селекторы для tabs/server-data ----------
@@ -85,14 +89,14 @@ export const getBotTypesListIsLoaded = createSelector(
 );
 export const getActionTypesListIsLoaded = createSelector(
   selectFeature,
-  (state: ServersState) => state.activeElementData.actionTypesList.isLoaded
+  (state: ServersState) => state.activeElementData.jobTypesList.isLoaded
 );
 export const getAllServerDataIsLoaded = createSelector(
   getServerDataIsLoaded,
   getBotTypesListIsLoaded,
   getActionTypesListIsLoaded,
-  (serverLoaded, botTypesLoaded, actionTypesLoaded) =>
-    serverLoaded && botTypesLoaded && actionTypesLoaded
+  (serverLoaded, botTypesLoaded, jobTypesLoaded) =>
+    serverLoaded && botTypesLoaded && jobTypesLoaded
 );
 
 // ---------- error селекторы для tabs/server-data ----------
@@ -106,7 +110,7 @@ export const getLoadBotTypesError = createSelector(
 );
 export const getLoadActionTypesError = createSelector(
   selectFeature,
-  (state: ServersState) =>  !!state.activeElementData.actionTypesList.error
+  (state: ServersState) =>  !!state.activeElementData.jobTypesList.error
 );
 
 // ---------- isLoading, isLoading, error селекторы для tabs/bots ----------
@@ -124,10 +128,6 @@ export const getBotControlListError = createSelector(
 );
 
 // ---------- isLoading селекторы для page-info ----------
-export const getBotInfoIsLoading = createSelector(
-  selectFeature,
-  (state: ServersState) => state.activeElementData.activeBot.botInfo.isLoading
-);
 
 export const getBotResultListIsLoading = createSelector(
   selectFeature,
@@ -140,18 +140,13 @@ export const getBotErrorListIsLoading = createSelector(
 );
 
 export const getActiveBotIsLoading = createSelector(
-  getBotInfoIsLoading,
   getBotResultListIsLoading,
   getBotErrorListIsLoading,
-  (botInfoLoading, botResultLoading, botErrorLoading) =>
-    botInfoLoading || botResultLoading || botErrorLoading
+  (botResultLoading, botErrorLoading) =>
+    botResultLoading || botErrorLoading
 );
 
 // ---------- isLoaded селекторы для page-info ----------
-export const getBotInfoIsLoaded = createSelector(
-  selectFeature,
-  (state: ServersState) => state.activeElementData.activeBot.botInfo.isLoaded
-);
 
 export const getBotResultListIsLoaded = createSelector(
   selectFeature,
@@ -164,10 +159,9 @@ export const getBotErrorListIsLoaded = createSelector(
 );
 
 export const getActiveBotIsLoaded = createSelector(
-  getBotInfoIsLoaded,
   getBotResultListIsLoaded,
   getBotErrorListIsLoaded,
-  (botInfoLoaded, botResultLoaded, botErrorLoaded) =>
-    botInfoLoaded && botResultLoaded && botErrorLoaded
+  (botResultLoaded, botErrorLoaded) =>
+    botResultLoaded && botErrorLoaded
 );
 

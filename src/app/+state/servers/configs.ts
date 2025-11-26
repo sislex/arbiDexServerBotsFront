@@ -1,46 +1,3 @@
-export const ApiListConfig = [
-  {
-    type: 'GET',
-    endpoint: '.../bots/get-all',
-    description: 'Это данные на управление, надо определится с описанием'
-  },
-  {
-    type: 'GET',
-    endpoint: '.../info',
-    description: 'Get server info'
-  },
-  {
-    type: 'GET',
-    endpoint: '.../info/bots-types-list',
-    description: 'Get bot types list'
-  },
-  {
-    type: 'GET',
-    endpoint: '.../info/bots-actions-list',
-    description: 'Get action types list'
-  },
-  {
-    type: 'GET',
-    endpoint: '.../bot/:botId/settings',
-    description: 'Get bot rules'
-  },
-  {
-    type: 'PUT',
-    endpoint: '.../bot/:botId/settings',
-    description: 'Edit bot rules'
-  },
-  {
-    type: 'GET',
-    endpoint: '.../bot/:botId/params',
-    description: 'Get all bot params'
-  },
-  {
-    type: 'POST',
-    endpoint: '...bot/:botId/pause',
-    description: 'Set pause: true/false for bot'
-  },
-];
-
 export const serverListConfig = [
   {
     ip: '45.135.182.251',
@@ -73,16 +30,32 @@ export const emptyServerResponse = {
 };
 
 export const emptyBotInfoResponse = {
+  status: '',
   id: "",
-  actionParams: {
-    actionType: "",
-    i: 0
-  },
-  botParams: {
-    botType: "",
-    delayBetweenRepeat: 0,
-    isRepeat: false,
-    maxActions: 0,
-    paused: false
+  running: false,
+  createdAt: "",
+  jobCount: 0,
+  errorCount: 0,
+  lastJobTimeStart: "",
+  lastJobTimeFinish: "",
+  lastLatency: 0,
+  lastJobResult: {
+    ok: false,
+    latencyMs: 0,
+    result: {
+      quoteExactInputSingle: {
+        amountOut: "",
+        sqrtPriceX96After: "",
+        initializedTicksCrossed: "",
+        gasEstimate: ""
+      },
+      quoteExactOutputSingle: {
+        amountIn: "",
+        sqrtPriceX96After: "",
+        initializedTicksCrossed: "",
+        gasEstimate: ""
+      }
+    },
+    blockNumber: 0
   }
 };

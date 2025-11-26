@@ -13,9 +13,14 @@ import {Indicator} from '../../../components/ag-grid-components/indicator/indica
 })
 export class IndicatorContainer implements ICellRendererAngularComp {
   status = '';
+  color = 'gray';
 
   agInit(params: any): void {
     this.status = params.value || '';
+
+    if (params.colorMapping && params.colorMapping[this.status]) {
+      this.color = params.colorMapping[this.status];
+    }
   }
 
   refresh(): boolean {

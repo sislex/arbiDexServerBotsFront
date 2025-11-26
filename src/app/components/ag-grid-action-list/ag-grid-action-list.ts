@@ -24,12 +24,12 @@ export class AgGridActionList {
         return params.node.rowIndex + 1;
       },
     },
-    {
-      field: "label",
-      headerName: 'Name',
-      flex: 1,
-      cellStyle: { textAlign: 'left' },
-    },
+    // {
+    //   field: "label",
+    //   headerName: 'Name',
+    //   flex: 1,
+    //   cellStyle: { textAlign: 'left' },
+    // },
     {
       field: "type",
       headerName: 'Type',

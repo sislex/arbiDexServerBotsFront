@@ -2,7 +2,6 @@ import {createReducer, on} from '@ngrx/store';
 import * as ServersActions from './servers.actions';
 import {IConfig, IServerData, IActiveElementData} from '../../models/servers';
 import {
-  ApiListConfig,
   emptyAsyncResponse,
   emptyBotInfoResponse,
   emptyServerResponse,
@@ -26,18 +25,18 @@ export const initialState: ServersState = {
   featureName: 'server manager',
   config: {
     serverList: serverListConfig,
-    apiList: ApiListConfig
+    apiList: emptyAsyncResponse([]),
   },
   serverListResponse: [],
   activeElementData: {
     serverData: emptyAsyncResponse(emptyServerResponse),
     botTypesList: emptyAsyncResponse([]),
-    actionTypesList: emptyAsyncResponse([]),
+    jobTypesList: emptyAsyncResponse([]),
     gateList: [],
     botControlList: emptyAsyncResponse([]),
     activeBot: {
-      botInfo: emptyAsyncResponse(emptyBotInfoResponse),
-      botResultList: emptyAsyncResponse([]),
+      // botInfo: emptyAsyncResponse(emptyBotInfoResponse),
+      botResultList: emptyAsyncResponse(emptyBotInfoResponse),
       botErrorList: emptyAsyncResponse([])
     }
   },
@@ -124,38 +123,38 @@ export const serversReducer = createReducer(
     }
   })),
 
-  on(ServersActions.loadActionTypesList, (state) => ({
+  on(ServersActions.loadJobTypesList, (state) => ({
     ...state,
     activeElementData: {
       ...state.activeElementData,
-      actionTypesList: {
-        ...state.activeElementData.actionTypesList,
+      jobTypesList: {
+        ...state.activeElementData.jobTypesList,
         startTime:  Date.now(),
         isLoading: true,
         isLoaded: false,
       }
     }
   })),
-  on(ServersActions.loadActionTypesListSuccess, (state, {response}) => ({
+  on(ServersActions.loadJobTypesListSuccess, (state, {response}) => ({
     ...state,
     activeElementData: {
       ...state.activeElementData,
-      actionTypesList: {
-        ...state.activeElementData.actionTypesList,
-        loadingTime: Date.now() - state.activeElementData.actionTypesList.startTime!,
+      jobTypesList: {
+        ...state.activeElementData.jobTypesList,
+        loadingTime: Date.now() - state.activeElementData.jobTypesList.startTime!,
         isLoading: false,
         isLoaded: true,
         response
       }
     }
   })),
-  on(ServersActions.loadActionTypesListFailure, (state, {error}) => ({
+  on(ServersActions.loadJobTypesListFailure, (state, {error}) => ({
     ...state,
     activeElementData: {
       ...state.activeElementData,
-      actionTypesList: {
-        ...state.activeElementData.actionTypesList,
-        loadingTime: Date.now() - state.activeElementData.actionTypesList.startTime!,
+      jobTypesList: {
+        ...state.activeElementData.jobTypesList,
+        loadingTime: Date.now() - state.activeElementData.jobTypesList.startTime!,
         isLoading: false,
         isLoaded: true,
         error
@@ -214,78 +213,6 @@ export const serversReducer = createReducer(
     };
   }),
 
-
-  on(ServersActions.loadBotControl, (state) => {
-    const bot = state.activeElementData.activeBot;
-    const botInfo = bot.botInfo;
-
-    return {
-      ...state,
-      activeElementData: {
-        ...state.activeElementData,
-        activeBot: {
-          ...bot,
-          botInfo: {
-            ...botInfo,
-            startTime: Date.now(),
-            isLoading: true,
-            isLoaded: false,
-          },
-        },
-      },
-    };
-  }),
-  on(ServersActions.loadBotControlSuccess, (state, { response }) => {
-    const bot = state.activeElementData.activeBot;
-    const botInfo = bot.botInfo;
-
-    return {
-      ...state,
-      activeElementData: {
-        ...state.activeElementData,
-        activeBot: {
-          ...bot,
-          botInfo: {
-            ...botInfo,
-            loadingTime: Date.now() - botInfo.startTime!,
-            isLoading: false,
-            isLoaded: true,
-            response,
-          },
-          botResultList: {
-            ...bot.botResultList,
-            response: [
-              ...bot.botResultList.response,
-              ...response.botParams,
-            ]
-          },
-        },
-      },
-    };
-  }),
-  on(ServersActions.loadBotControlFailure, (state, { error }) => {
-    const bot = state.activeElementData.activeBot;
-    const botInfo = bot.botInfo;
-
-    return {
-      ...state,
-      activeElementData: {
-        ...state.activeElementData,
-        activeBot: {
-          ...bot,
-          botInfo: {
-            ...botInfo,
-            loadingTime: Date.now() - botInfo.startTime!,
-            isLoading: false,
-            isLoaded: true,
-            error,
-          },
-        },
-      },
-    };
-  }),
-
-
   on(ServersActions.loadBotParams, (state) => {
     const botResultList = state.activeElementData.activeBot.botResultList;
 
@@ -319,7 +246,7 @@ export const serversReducer = createReducer(
             loadingTime: Date.now() - botResultList.startTime!,
             isLoading: false,
             isLoaded: true,
-            response: [...(botResultList.response || []), ...response],
+            response: response || botResultList.response ,
           },
         },
       },
@@ -405,6 +332,51 @@ export const serversReducer = createReducer(
     };
   }),
 
+  on(ServersActions.setApiList, (state) => {
+    return {
+      ...state,
+      config: {
+        ...state.config,
+        apiList: {
+          ...state.config.apiList,
+          startTime: Date.now(),
+          isLoading: true,
+          isLoaded: false,
+        },
+      },
+    };
+  }),
+  on(ServersActions.setApiListSuccess, (state, { response }) => {
+    return {
+      ...state,
+      config: {
+        ...state.config,
+        apiList: {
+          ...state.config.apiList,
+          loadingTime: Date.now() - state.config.apiList.startTime!,
+          isLoading: false,
+          isLoaded: true,
+          response,
+        },
+      },
+    };
+  }),
+  on(ServersActions.loadBotErrorsFailure, (state, { error }) => {
+    return {
+      ...state,
+      config: {
+        ...state.config,
+        apiList: {
+          ...state.config.apiList,
+          loadingTime: Date.now() - state.config.apiList.startTime!,
+          isLoading: false,
+          isLoaded: true,
+          error,
+        },
+      },
+    };
+  }),
+
 
 
   on(ServersActions.setGateList, (state, {response}) => ({
@@ -432,5 +404,26 @@ export const serversReducer = createReducer(
     ...state,
     activeElementData: initialState.activeElementData
   })),
+
+  on(ServersActions.setIsStartedBotSuccess, (state, { response }) => {
+    const botResultList = state.activeElementData.activeBot.botResultList;
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botResultList: {
+            ...botResultList,
+            response: {
+              ...botResultList.response,
+              running: response.pause,
+              status: response.status,
+            }
+          },
+        },
+      },
+    };
+  }),
 );
 

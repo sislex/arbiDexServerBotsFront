@@ -90,6 +90,7 @@ export class SidebarContainer implements OnInit {
       height: '600px',
       minHeight: '600px',
       maxHeight: '100vh',
+      panelClass: 'custom-dialog-container',
       data: {}
     });
 
