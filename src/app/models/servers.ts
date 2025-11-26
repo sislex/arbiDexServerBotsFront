@@ -1,27 +1,11 @@
 import { API } from './api';
 
-// export interface IBotData {
-//   id: string;
-//   name: string;
-//   type: any;
-//   description: string;
-//   gate: any;
-//   maxTimeRequest: number;
-//   timeRequest: number;
-//   status: string;
-//   sendData: boolean;
-//   isStarted: boolean;
-//
-//   botJSON: string;
-//   actionJSON: string;
-//   actionTypeSelect: string;
-//   botTypeSelect: string;
-// }
-
-
 interface IJobParams {
   jobType: string;
-  i: number;
+  rpcUrl: string;
+  poolAddress: string;
+  wordsAround: number;
+  maxTicks: number;
 }
 
 interface IBotParams {
@@ -32,10 +16,10 @@ interface IBotParams {
   paused: boolean;
 }
 
-interface IBotRule {
+interface IBotInfo {
+  id: string;
   jobParams: IJobParams;
   botParams: IBotParams;
-  id: string;
 }
 
 export interface IServerAuthData {
@@ -55,10 +39,6 @@ export interface IServerData {
 
 export interface IServerDataAPI extends API {
   response: IServerData;
-}
-
-export interface IBotRuleAPI extends API {
-  response: IBotRule;
 }
 
 export interface IResultAPI extends API {
@@ -124,21 +104,13 @@ export interface IBotControlAPI extends API {
   response: IBotControl;
 }
 
+export interface IBotInfoAPI extends API {
+  response: IBotInfo;
+}
+
 export interface IBotListControlAPI extends API {
   response: IBotControl[];
 }
-
-// export interface IBotControl {
-//   id: string;
-//   running: boolean;
-//   createdAt: string;
-//   jobCount: number;
-//   errorCount: number;
-//   lastJobTimeStart: string;
-//   lastJobTimeFinish: string;
-//   lastLatency: number;
-//   lastJobResult: ILastJobResult;
-// }
 
 interface QuoteExactInputSingle {
   amountOut: string;
@@ -180,8 +152,8 @@ interface IBotControl {
 }
 
 export interface IActiveBot {
-  // botInfo: IBotControlAPI; //IBotRuleAPI;
-  botResultList: IBotControlAPI; //IResultAPI;
+  botInfo: IBotInfoAPI;
+  botResultList: IBotControlAPI;
   botErrorList: IBotErrorAPI;
 }
 

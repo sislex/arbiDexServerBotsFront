@@ -59,7 +59,7 @@ export class AgGridBotControlPanel {
     //   },
     // },
     {
-      field: "running",
+      field: "paused",
       headerName: 'Start/Pause',
       flex: 1,
       cellRenderer: PauseBotContainer,

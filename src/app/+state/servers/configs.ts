@@ -29,7 +29,7 @@ export const emptyServerResponse = {
   botsCount: 0
 };
 
-export const emptyBotInfoResponse = {
+export const emptyBotResultResponse = {
   status: '',
   id: "",
   running: false,
@@ -57,5 +57,23 @@ export const emptyBotInfoResponse = {
       }
     },
     blockNumber: 0
+  }
+};
+
+export const emptyBotInfoResponse = {
+  id: '',
+  jobParams: {
+    jobType: '',
+    rpcUrl: '',
+    poolAddress: '',
+    wordsAround: 0,
+    maxTicks: 0,
+  },
+  botParams: {
+    botType: '',
+    delayBetweenRepeat: 0,
+    isRepeat: false,
+    maxJobs: 0,
+    paused: false,
   }
 };
