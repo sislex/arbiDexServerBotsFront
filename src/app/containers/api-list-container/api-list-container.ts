@@ -5,13 +5,15 @@ import {ConfirmationPopUp} from '../../components/confirmation-pop-up/confirmati
 import {MatDialogRef} from '@angular/material/dialog';
 import {Store} from '@ngrx/store';
 import {setApiList} from '../../+state/servers/servers.actions';
+import {TitleTableButton} from '../../components/title-table-button/title-table-button';
 
 @Component({
   selector: 'app-api-list-container',
   imports: [
     TitleTableLayout,
     AgGridApiListContainer,
-    ConfirmationPopUp
+    ConfirmationPopUp,
+    TitleTableButton
   ],
   standalone: true,
   templateUrl: './api-list-container.html',

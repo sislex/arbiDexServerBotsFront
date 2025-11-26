@@ -30,12 +30,16 @@ export class AgGridBotDataList {
       headerName: 'Parameter',
       flex: 1,
       cellStyle: { textAlign: 'left' },
+      cellClass: 'selectable-text',
     },
     {
       field: "value",
       headerName: 'Value',
       flex: 1,
-      cellStyle: { textAlign: 'left' },
+      cellStyle: { textAlign: 'left', lineHeight: '1.4', },
+      wrapText: true,
+      autoHeight: true,
+      cellClass: 'selectable-text',
       valueFormatter: p => {
         const v = p.value;
 

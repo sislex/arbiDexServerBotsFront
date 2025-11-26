@@ -15,7 +15,7 @@ import {MatIconModule} from '@angular/material/icon';
 
 export class Actions {
   @Input() icon: string = '';
-  @Input() type: 'green' | 'red' | 'default' = 'default';
+  @Input() type: string = 'default';
   @Output() emitter = new EventEmitter();
 
   click() {

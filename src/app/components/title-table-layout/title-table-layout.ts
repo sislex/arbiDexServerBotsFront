@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-title-table-layout',
@@ -8,5 +8,4 @@ import {Component, Input} from '@angular/core';
   styleUrl: './title-table-layout.scss'
 })
 export class TitleTableLayout {
-  @Input() title: string = '';
 }

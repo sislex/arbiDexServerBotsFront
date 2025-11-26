@@ -180,8 +180,8 @@ interface IBotControl {
 }
 
 export interface IActiveBot {
-  botInfo: IBotControlAPI; //IBotRuleAPI;
-  botResultList: IResultAPI;
+  // botInfo: IBotControlAPI; //IBotRuleAPI;
+  botResultList: IBotControlAPI; //IResultAPI;
   botErrorList: IBotErrorAPI;
 }
 

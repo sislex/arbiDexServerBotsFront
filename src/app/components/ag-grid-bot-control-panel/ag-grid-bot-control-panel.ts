@@ -1,6 +1,6 @@
-import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
-import type { ColDef } from 'ag-grid-community';
-import { AgGridAngular } from 'ag-grid-angular';
+import type {ColDef} from 'ag-grid-community';
+import {AllCommunityModule, ModuleRegistry} from 'ag-grid-community';
+import {AgGridAngular} from 'ag-grid-angular';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';
 import {ActionsContainer} from '../../containers/ag-grid-containers/actions-container/actions-container';
@@ -38,14 +38,12 @@ export class AgGridBotControlPanel {
       headerName: 'Status',
       width: 100,
       cellRenderer: IndicatorContainer,
-      cellRendererParams: { //TODO: Записать сюда верные ПРИХОДЯЩИЕ параметры под каждый цвет
+      cellRendererParams: {
         colorMapping: {
           'active': 'green',
-          'running': 'green',
-          'inactive': 'red',
-          'stopped': 'red',
-          'pending': 'yellow',
-          'error': 'red'
+          '': 'red',
+          'finished': 'gray',
+          'pause': 'yellow',
         }
       },
       cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },

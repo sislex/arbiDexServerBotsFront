@@ -1,11 +1,18 @@
 <app-title-content-layout
-  [title]="(dataActiveBot$ | async)?.botInfo?.response?.id || ''"
+  [title]="(dataActiveBot$ | async)?.botResultList?.response?.id || ''"
 >
   <app-actions
-    title
+    title-start
     [icon]="'reply'"
     [type]="'default'"
     (emitter)="onAction($event, 'reply')"
   ></app-actions>
   <app-bot-info-page-tabs-container content></app-bot-info-page-tabs-container>
+
+  <app-actions
+    title-end
+    [icon]="'refresh'"
+    [type]="'default'"
+    (emitter)="onAction($event, 'refresh')"
+  ></app-actions>
 </app-title-content-layout>

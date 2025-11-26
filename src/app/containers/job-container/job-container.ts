@@ -9,13 +9,14 @@ import {MatIconModule} from '@angular/material/icon';
 import {Store} from '@ngrx/store';
 import {AsyncPipe} from '@angular/common';
 import {getActionParams} from '../../+state/servers/servers.selectors';
+import {TitleTableButton} from '../../components/title-table-button/title-table-button';
 
 @Component({
   selector: 'app-job-container',
   imports: [
     AgGridBotDataList,
     TitleTableLayout,
-    FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, AsyncPipe
+    FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, AsyncPipe, TitleTableButton
   ],
   standalone: true,
   templateUrl: './job-container.html',
