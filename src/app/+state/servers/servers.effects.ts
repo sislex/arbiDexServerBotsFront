@@ -102,10 +102,7 @@ export class ServersEffects {
                 } else if (item.running) {
                   status = 'active';
                 }
-                //   else if (item.running === false) {
-                //     status: 'finished'
-                //
-                // }
+
                 return {
                   ...item,
                   status: status
@@ -209,8 +206,11 @@ export class ServersEffects {
               };
 
               this.store.dispatch(ServersActions.setIsStartedBotSuccess({response: responsePause}));
-              console.log(response)
-              console.log('setIsStartedBotSuccess диспатч должен вызывать окно с подтверждением что поставили на паузу или запустили')
+              if (response.paused) {
+                this._snackBar.open(`Bot is paused, ${response.id}`, '', { duration: 5000 });
+              } else {
+                this._snackBar.open(`Bot is started, ${response.id}`, '', { duration: 5000 });
+              }
             }),
             catchError(err => {
               this.store.dispatch(ServersActions.setIsStartedBotFailure({error: err}));
@@ -236,12 +236,11 @@ export class ServersEffects {
           return this.serverDataService.setSendDataBot(action.id, action.isSendData).pipe(
             tap((response: any[]) => {
               this.store.dispatch(ServersActions.setSendDataBotSuccess({response}));
-              console.log('setSendDataBotSuccess диспатч должен вызывать окно с подтверждением что поставили на паузу или запустили')
+              this._snackBar.open(`Bot is send data, ${response}`, '', { duration: 5000 });
             }),
             catchError(err => {
               this.store.dispatch(ServersActions.setSendDataBotFailure({error: err}));
               const error = err.error.error
-              console.log('setSendDataBotFailure диспатч должен вызывать окно с ошибкой', error)
               this._snackBar.open(`${error}`, '', { duration: 5000 });
 
               return of([]);
@@ -263,11 +262,11 @@ export class ServersEffects {
           return this.serverDataService.restartBot(action.id).pipe(
             tap((response: any[]) => {
               this.store.dispatch(ServersActions.restartBotSuccess({response}));
-              console.log('restartBotSuccess диспатч должен вызывать окно с подтверждением что поставили на паузу или запустили')
+              this._snackBar.open(`Bot is restarted`, '', { duration: 5000 });
             }),
             catchError(err => {
               this.store.dispatch(ServersActions.restartBotFailure({error: err}));
-              console.log('restartBotFailure диспатч должен вызывать окно с ошибкой')
+              this._snackBar.open(`Bot is error, ${err}`, '', { duration: 5000 });
               return of([]);
             }),
             map(() => ({done: true}))
