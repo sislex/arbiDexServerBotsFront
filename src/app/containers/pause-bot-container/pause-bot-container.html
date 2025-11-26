@@ -1,13 +1,13 @@
 @if (!isStarted) {
   <app-actions
-    [icon]="'play_arrow'"
-    [type]="'green'"
-    (emitter)="onAction($event, 'start')"
-  ></app-actions>
-} @else {
-  <app-actions
     [icon]="'pause'"
     [type]="'red'"
     (emitter)="onAction($event, 'pause')"
+  ></app-actions>
+} @else {
+  <app-actions
+    [icon]="'play_arrow'"
+    [type]="'green'"
+    (emitter)="onAction($event, 'start')"
   ></app-actions>
 }

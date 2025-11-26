@@ -3,7 +3,7 @@ import * as ServersActions from './servers.actions';
 import {IConfig, IServerData, IActiveElementData} from '../../models/servers';
 import {
   emptyAsyncResponse,
-  emptyBotInfoResponse,
+  emptyBotInfoResponse, emptyBotResultResponse,
   emptyServerResponse,
   serverListConfig
 } from './configs';
@@ -35,11 +35,11 @@ export const initialState: ServersState = {
     gateList: [],
     botControlList: emptyAsyncResponse([]),
     activeBot: {
-      // botInfo: emptyAsyncResponse(emptyBotInfoResponse),
-      botResultList: emptyAsyncResponse(emptyBotInfoResponse),
+      botInfo: emptyAsyncResponse(emptyBotInfoResponse),
+      botResultList: emptyAsyncResponse(emptyBotResultResponse),
       botErrorList: emptyAsyncResponse([])
     }
-  },
+  }
 };
 
 
@@ -272,6 +272,65 @@ export const serversReducer = createReducer(
     };
   }),
 
+  on(ServersActions.loadBotInfo, (state) => {
+    const botInfo = state.activeElementData.activeBot.botInfo;
+
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botInfo: {
+            ...botInfo,
+            startTime: Date.now(),
+            isLoading: true,
+            isLoaded: false,
+          },
+        },
+      },
+    };
+  }),
+  on(ServersActions.loadBotInfoSuccess, (state, { response }) => {
+    const botInfo = state.activeElementData.activeBot.botInfo;
+
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botInfo: {
+            ...botInfo,
+            loadingTime: Date.now() - botInfo.startTime!,
+            isLoading: false,
+            isLoaded: true,
+            response: response || botInfo.response ,
+          },
+        },
+      },
+    };
+  }),
+  on(ServersActions.loadBotInfoFailure, (state, { error }) => {
+    const botInfo = state.activeElementData.activeBot.botInfo;
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botInfo: {
+            ...botInfo,
+            loadingTime: Date.now() - botInfo.startTime!,
+            isLoading: false,
+            isLoaded: true,
+            error,
+          },
+        },
+      },
+    };
+  }),
+
 
   on(ServersActions.loadBotErrors, (state) => {
     const botErrorList = state.activeElementData.activeBot.botErrorList;
@@ -406,6 +465,7 @@ export const serversReducer = createReducer(
   })),
 
   on(ServersActions.setIsStartedBotSuccess, (state, { response }) => {
+    const botInfo = state.activeElementData.activeBot.botInfo;
     const botResultList = state.activeElementData.activeBot.botResultList;
     return {
       ...state,
@@ -413,11 +473,20 @@ export const serversReducer = createReducer(
         ...state.activeElementData,
         activeBot: {
           ...state.activeElementData.activeBot,
+          botInfo: {
+            ...botInfo,
+            response: {
+              ...botInfo.response,
+              botParams: {
+                ...botInfo.response.botParams,
+                paused: response.paused
+              }
+            },
+          },
           botResultList: {
             ...botResultList,
             response: {
               ...botResultList.response,
-              running: response.pause,
               status: response.status,
             }
           },

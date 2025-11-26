@@ -74,8 +74,17 @@ export const loadBotControlListFailure = createAction(
   props<{ error: string }>()
 );
 
+export const loadBotInfo = createAction('[Servers] loadBotInfo');
+export const loadBotInfoSuccess = createAction(
+  '[Servers] loadBotInfoSuccess',
+  props<{ response: any }>()
+);
+export const loadBotInfoFailure = createAction(
+  '[Servers] loadBotInfoFailure',
+  props<{ error: string }>()
+);
 
-export const loadBotParams = createAction('[Servers] loadBotControlList');
+export const loadBotParams = createAction('[Servers] loadBotParams');
 export const loadBotParamsSuccess = createAction(
   '[Servers] loadBotParamsSuccess',
   props<{ response: any }>()
@@ -85,7 +94,7 @@ export const loadBotParamsFailure = createAction(
   props<{ error: string }>()
 );
 
-export const loadBotErrors = createAction('[Servers] loadBotControlList');
+export const loadBotErrors = createAction('[Servers] loadBotErrors');
 export const loadBotErrorsSuccess = createAction(
   '[Servers] loadBotErrorsSuccess',
   props<{ response: any }>()

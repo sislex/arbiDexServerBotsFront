@@ -130,10 +130,19 @@ export class ServersEffects {
           const botId = action.botId;
 
           // Запуск индикаторов загрузки
+          this.store.dispatch(ServersActions.loadBotInfo());
           this.store.dispatch(ServersActions.loadBotParams());
           this.store.dispatch(ServersActions.loadBotErrors());
 
           return forkJoin({
+            botInfo: this.serverDataService.getBotInfo(botId).pipe(
+              catchError(err => {
+                this.store.dispatch(
+                  ServersActions.loadBotInfoFailure({ error: err })
+                );
+                return of([]);
+              })
+            ),
             botParamsData: this.serverDataService.getBotParamsById(botId).pipe(
               catchError(err => {
                 this.store.dispatch(
@@ -151,12 +160,12 @@ export class ServersEffects {
               })
             ),
           }).pipe(
-            tap(({ botParamsData, botErrors }) => {
+            tap(({ botInfo, botParamsData, botErrors }) => {
               let status = '';
 
-              if (!botParamsData.running) {
+              if (botInfo.botParams.paused) {
                 status = 'pause';
-              } else if (botParamsData.running) {
+              } else if (!botInfo.botParams.paused) {
                 status = 'active';
               }
 
@@ -168,6 +177,12 @@ export class ServersEffects {
               this.store.dispatch(
                 ServersActions.loadBotParamsSuccess({
                   response: responseBotControlList
+                })
+              );
+
+              this.store.dispatch(
+                ServersActions.loadBotInfoSuccess({
+                  response: botInfo
                 })
               );
 
@@ -188,20 +203,18 @@ export class ServersEffects {
       return this.actions$.pipe(
         ofType(ServersActions.setIsStartedBot),
         switchMap((action) => {
-
           return this.serverDataService.setBotPause(action.id, action.isStarted).pipe(
             tap((response: any) => {
 
               let status = '';
-
-              if (!response.paused.pause) {
+              if (response.paused) {
                 status = 'pause';
-              } else if (response.paused.pause) {
+              } else if (!response.paused) {
                 status = 'active';
               }
 
               const responsePause = {
-                pause: response.paused.pause,
+                paused: response.paused,
                 status: status,
               };
 

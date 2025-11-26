@@ -8,6 +8,7 @@ import {ConfirmationPopUpContainer} from '../confirmation-pop-up-container/confi
 import {BotEditFormContainer} from '../bot-edit-form-container/bot-edit-form-container';
 import {actionTypesList, botData, botTypesList} from '../ag-grid-bots-control-container/stabs';
 import {AsyncPipe} from '@angular/common';
+import {map} from 'rxjs';
 
 @Component({
   selector: 'app-ag-grid-bot-control-panel-container',
@@ -23,7 +24,14 @@ export class AgGridBotControlPanelContainer {
   readonly dialog = inject(MatDialog);
   readonly store = inject(Store);
 
-  dataActiveBot$ = this.store.select(getDataActiveBot);
+  dataActiveBot$ = this.store.select(getDataActiveBot).pipe(
+    map(list => ({
+      ...list.botResultList.response,
+      paused: list.botInfo.response.botParams.paused
+    }))
+  );
+
+
 
   events($event: any) {
     if ($event.event === 'Actions:ACTION_CLICKED') {
@@ -32,9 +40,9 @@ export class AgGridBotControlPanelContainer {
       } else if ($event.actionType === 'edit') {
         this.openEditDialog($event.row);
       } else if ($event.actionType === 'start') {
-        this.store.dispatch(setIsStartedBot({isStarted: true, id: $event.row.id}))
-      } else if ($event.actionType === 'pause') {
         this.store.dispatch(setIsStartedBot({isStarted: false, id: $event.row.id}))
+      } else if ($event.actionType === 'pause') {
+        this.store.dispatch(setIsStartedBot({isStarted: true, id: $event.row.id}))
       }else if ($event.actionType === 'restart') {
         this.store.dispatch(restartedBot({id: $event.row.id}))
       }
