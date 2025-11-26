@@ -114,6 +114,11 @@ body, .toolbar, .panel, mat-button-toggle, mat-toolbar {
   justify-content: flex-end;
 }
 
+// разрешить выделение текста
+.selectable-text {
+  user-select: text !important;
+}
+
 //reset global styles from angular-material
 .mat-mdc-tab-body-wrapper {
   display: flex !important;
@@ -131,4 +136,3 @@ body, .toolbar, .panel, mat-button-toggle, mat-toolbar {
   }
 
 }
-

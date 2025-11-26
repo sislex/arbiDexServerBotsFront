@@ -43,11 +43,13 @@ export class AgGridBotsControl {
       field: "id",
       headerName: 'ID',
       width: 80,
+      cellClass: 'selectable-text',
     },
     {
       field: "createdAt",
       headerName: 'Created',
       flex: 1,
+      cellClass: 'selectable-text',
       valueFormatter: params => {
         if (!params.value) return '';
         const date = new Date(params.value);

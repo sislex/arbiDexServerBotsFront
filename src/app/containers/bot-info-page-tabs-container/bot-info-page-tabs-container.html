@@ -1,9 +1,9 @@
 @if (dataActiveBot$ | async; as list) {
   @if ((activeBotIsLoaded$ | async) && !(activeBotIsLoading$ | async)) {
     <app-bot-info-page-tabs
-    [firstLabel]="'Control and params'"
-    [secondLabel]="'Errors'"
-    [thirdLabel]="'Job'"
+      [firstLabel]="'Control and params'"
+      [secondLabel]="'Errors'"
+      [thirdLabel]="'Job'"
     >
       <div first>
         <app-title-table-layout>
@@ -20,9 +20,6 @@
           <app-title-table-button
             title
             [title]="'Results'"
-            [icon]="'refresh'"
-            [typeIcon]="'default'"
-            (emitter)="events($event, 'refresh')"
           ></app-title-table-button>
 
           <app-ag-grid-bot-data-list

@@ -16,9 +16,14 @@
 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-    .title-content {
+    .title-content-start {
       position: absolute;
-      margin-left: 16px;
+      left: 16px;
+    }
+
+    .title-content-end {
+      position: absolute;
+      right: 16px;
     }
 
     .title {

@@ -12,6 +12,7 @@ import {LoaderContainer} from '../loader-container/loader-container';
 import {AsyncPipe} from '@angular/common';
 import {JobContainer} from '../job-container/job-container';
 import {TransformObjectToKeyValuePipe} from '../../custom-pipes/transform-object-to-key-value.pipe';
+import {TitleTableButton} from '../../components/title-table-button/title-table-button';
 
 @Component({
   selector: 'app-bot-info-page-tabs-container',
@@ -24,7 +25,8 @@ import {TransformObjectToKeyValuePipe} from '../../custom-pipes/transform-object
     LoaderContainer,
     AsyncPipe,
     JobContainer,
-    TransformObjectToKeyValuePipe
+    TransformObjectToKeyValuePipe,
+    TitleTableButton
   ],
   standalone: true,
   templateUrl: './bot-info-page-tabs-container.html',
