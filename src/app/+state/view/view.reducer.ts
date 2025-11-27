@@ -16,7 +16,9 @@ export interface ViewPartialState {
 export const initialState: ViewState = {
   isSidebarOpen: true,
   activeTab: '',
-  tabList: ['bots', 'rules', 'gates', 'server data'],
+  tabList: ['bots', 'rules',
+    // 'gates',
+    'server data'],
 };
 
 export const viewReducer = createReducer(
