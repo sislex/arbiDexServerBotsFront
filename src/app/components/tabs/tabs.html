@@ -18,7 +18,7 @@
                   </app-title-table-layout>
                 </div>
               } @else {
-                ошибка по API сервера ИЛИ страница с ошибкой в адресе бота или сервера
+                <app-not-found-page-page></app-not-found-page-page>
               }
             } @else {
               <app-loader-container></app-loader-container>
@@ -51,7 +51,7 @@
           } @else if (item === 'server data') {
             @if (!allServerDataIsLoading && allServerDataIsLoaded) {
               @if (loadServerDataError && loadBotTypesError && loadActionTypesError) {
-                страница с ошибкой в адресе бота или сервера
+                <app-not-found-page-page></app-not-found-page-page>
               } @else {
                 <div class="server-page">
                   @if (!loadServerDataError) {

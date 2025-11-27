@@ -1,0 +1,18 @@
+.column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    width: 100%
+  }
+
+  span {
+    font-size: 40px;
+  }
+}

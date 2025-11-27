@@ -18,8 +18,8 @@ export class BotEditForm implements OnInit {
   @Input() botList: any = {};
   @Input() botTitle: string = '';
 
-  @Input() actionList: any = {};
-  @Input() actionTitle: string = '';
+  @Input() jobList: any = {};
+  @Input() jobTitle: string = '';
 
   @Input() data: any = {};
 

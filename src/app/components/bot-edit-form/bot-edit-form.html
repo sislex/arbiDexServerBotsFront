@@ -16,12 +16,12 @@
 
 <div class="row">
   <app-select-field
-    [menuData]="actionList"
+    [menuData]="jobList"
     [selected]="formData.actionTypeSelect"
     (emitter)="events($event, 'actionSelect')"
   ></app-select-field>
   <app-input-text-area
-    [title]="actionTitle"
+    [title]="jobTitle"
     [label]="'Action parameters'"
     [placeholder]="'Enter action parameters JSON'"
     [inputValue]="formData.actionJSON"

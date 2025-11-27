@@ -13,6 +13,7 @@ import {TitleTableLayout} from '../title-table-layout/title-table-layout';
 import {LoaderContainer} from '../../containers/loader-container/loader-container';
 import {AgGridRulesTableContainer} from '../../containers/ag-grid-rules-table-container/ag-grid-rules-table-container';
 import {TitleTableButton} from '../title-table-button/title-table-button';
+import {NotFoundPage} from '../not-found-page/not-found-page';
 
 @Component({
   selector: 'app-tabs',
@@ -28,7 +29,8 @@ import {TitleTableButton} from '../title-table-button/title-table-button';
     TitleTableLayout,
     LoaderContainer,
     AgGridRulesTableContainer,
-    TitleTableButton
+    TitleTableButton,
+    NotFoundPage
   ],
   standalone: true,
   templateUrl: './tabs.html',

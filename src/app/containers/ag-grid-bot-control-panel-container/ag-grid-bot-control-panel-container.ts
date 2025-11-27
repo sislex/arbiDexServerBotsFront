@@ -31,8 +31,6 @@ export class AgGridBotControlPanelContainer {
     }))
   );
 
-
-
   events($event: any) {
     if ($event.event === 'Actions:ACTION_CLICKED') {
       if ($event.actionType === 'delete') {

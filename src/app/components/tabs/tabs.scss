@@ -7,7 +7,14 @@ mat-tab-group {
 
     .title-content-layout {
       display: flex;
-      width: 100%
+      width: 100%;
+      justify-content: center;
+
+      app-not-found-page-page {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
     }
 
     app-loader-container {
