@@ -36,7 +36,7 @@ export class AgGridBotDataList {
       field: "value",
       headerName: 'Value',
       flex: 1,
-      cellStyle: { textAlign: 'left', lineHeight: '1.4', },
+      cellStyle: { textAlign: 'left' },
       wrapText: true,
       autoHeight: true,
       cellClass: 'selectable-text',
