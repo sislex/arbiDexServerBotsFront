@@ -5,7 +5,7 @@
       [label]="'Job params json'"
       [rowsCount]="4"
       [placeholder]="'Enter job params JSON'"
-      [inputValue]="newJobInfo"
+      [inputValue]="newJobInfo!"
       (emitter)="events($event)"
     ></app-input-text-area>
   </div>
@@ -13,19 +13,20 @@
   <div class="button-group">
     <button matButton="outlined" (click)="clickButton('Launch')"> Launch <mat-icon>bolt</mat-icon> </button>
 
-    <button
-      matButton="outlined"
-      (click)="clickButton('Bot set')"
-      disabled="{{!(newJobInfo !== (jobInfo$ | async | json))}}"
-    >
-      Bot set
-      <mat-icon>save</mat-icon>
-    </button>
+      <button
+              matButton="outlined"
+              (click)="clickButton('Bot set')"
+              [disabled]="newJobInfo === ((jobInfo$ | async)?.jobParams | json)"
+      >
+          Bot set <mat-icon>save</mat-icon>
+      </button>
 
-    <button
-      matButton="outlined"
-      (click)="clickButton('Reset')"
-      disabled="{{!(newJobInfo !== (jobInfo$ | async | json))}}"
-    > Reset <mat-icon>refresh</mat-icon> </button>
+      <button
+              matButton="outlined"
+              (click)="clickButton('Reset')"
+              [disabled]="newJobInfo === ((jobInfo$ | async)?.jobParams | json)"
+      >
+          Reset <mat-icon>refresh</mat-icon>
+      </button>
   </div>
 </div>
