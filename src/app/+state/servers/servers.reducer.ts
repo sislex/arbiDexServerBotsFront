@@ -494,5 +494,23 @@ export const serversReducer = createReducer(
       },
     };
   }),
+
+  on(ServersActions.setBotSettingsSuccess, (state, { response }) => {
+    const botInfo = state.activeElementData.activeBot.botInfo;
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botInfo: {
+            ...botInfo,
+            response,
+          },
+        },
+      },
+    };
+  }),
+
 );
 

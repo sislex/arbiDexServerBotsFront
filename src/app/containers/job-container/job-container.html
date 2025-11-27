@@ -1,17 +1,4 @@
-Job info and control
-<div class="row">
-  <mat-form-field class="wide-textarea">
-    <mat-label>Leave a comment</mat-label>
-    <textarea matInput rows="4" placeholder="Ex. It makes me feel..."></textarea>
-  </mat-form-field>
-
-  <div class="button-group">
-    <button matButton="outlined"> Launch <mat-icon>bolt</mat-icon> </button>
-    <button matButton="outlined"> Bot set <mat-icon>save</mat-icon> </button>
-    <button matButton="outlined"> Reset <mat-icon>refresh</mat-icon> </button>
-  </div>
-</div>
-
+<app-job-form-container></app-job-form-container>
 @if (actionParams$ | async; as list) {
   @if (list.length) {
     <app-title-table-layout>

@@ -76,7 +76,7 @@ export class AgGridBotControlPanel {
       },
     },
     {
-      headerName: 'Actions',
+      headerName: 'Edit',
       width: 125,
       cellRenderer: ActionsContainer,
       cellRendererParams: {

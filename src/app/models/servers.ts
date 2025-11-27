@@ -16,7 +16,7 @@ interface IBotParams {
   paused: boolean;
 }
 
-interface IBotInfo {
+export interface IBotInfo {
   id: string;
   jobParams: IJobParams;
   botParams: IBotParams;

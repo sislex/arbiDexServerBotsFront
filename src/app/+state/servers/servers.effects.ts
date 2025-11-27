@@ -227,7 +227,7 @@ export class ServersEffects {
             }),
             catchError(err => {
               this.store.dispatch(ServersActions.setIsStartedBotFailure({error: err}));
-              this._snackBar.open(`Bot is started, ${err}`, '', { duration: 5000 });
+              this._snackBar.open(`Bot is started, ${err.error.message}`, '', { duration: 5000 });
 
               console.log('setIsStartedBotFailure диспатч должен вызывать окно с ошибкой')
               return of([]);
@@ -253,7 +253,7 @@ export class ServersEffects {
             }),
             catchError(err => {
               this.store.dispatch(ServersActions.setSendDataBotFailure({error: err}));
-              const error = err.error.error
+              const error = err.error.message
               this._snackBar.open(`${error}`, '', { duration: 5000 });
 
               return of([]);
@@ -279,7 +279,7 @@ export class ServersEffects {
             }),
             catchError(err => {
               this.store.dispatch(ServersActions.restartBotFailure({error: err}));
-              this._snackBar.open(`Bot is error, ${err}`, '', { duration: 5000 });
+              this._snackBar.open(`Bot is error, ${err.error.message}`, '', { duration: 5000 });
               return of([]);
             }),
             map(() => ({done: true}))
@@ -290,7 +290,7 @@ export class ServersEffects {
     { dispatch: false }
   );
 
-  // перезапускаем работу бота
+  // Получаем лист доступных API
   setApiList$ = createEffect(() => {
       return this.actions$.pipe(
         ofType(ServersActions.setApiList),
@@ -299,11 +299,33 @@ export class ServersEffects {
           return this.serverDataService.getApiList().pipe(
             tap((response: any[]) => {
               this.store.dispatch(ServersActions.setApiListSuccess({response}));
-              console.log('setApiListSuccess диспатч должен вызывать окно с подтверждением что поставили на паузу или запустили')
             }),
             catchError(err => {
               this.store.dispatch(ServersActions.setApiListFailure({error: err}));
-              console.log('setApiListFailure диспатч должен вызывать окно с ошибкой')
+              return of([]);
+            }),
+            map(() => ({done: true}))
+          );
+        })
+      );
+    },
+    { dispatch: false }
+  );
+
+  // Устанавливаем новые настройки бота
+  setBotSettings$ = createEffect(() => {
+      return this.actions$.pipe(
+        ofType(ServersActions.setBotSettings),
+        switchMap((action) => {
+
+          return this.serverDataService.setNewSettingsBot(action.id, action.settings).pipe(
+            tap((response: any[]) => {
+              this.store.dispatch(ServersActions.setBotSettingsSuccess({response}));
+              this._snackBar.open(`Changing bot settings was successful`, '', { duration: 5000 });
+            }),
+            catchError(err => {
+              this.store.dispatch(ServersActions.setBotSettingsFailure({error: err}));
+              this._snackBar.open(`Error changing bot settings: ${err.error.message}`, '', { duration: 5000 });
               return of([]);
             }),
             map(() => ({done: true}))
