@@ -19,6 +19,10 @@ export const getDataActiveBot = createSelector(
   selectFeature,
   (state: ServersState) => state.activeElementData.activeBot
 );
+export const getInfoActiveBot = createSelector(
+  selectFeature,
+  (state: ServersState) => state.activeElementData.activeBot.botInfo.response
+);
 
 export const getServerList = createSelector(
   selectFeature,

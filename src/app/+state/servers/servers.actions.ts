@@ -143,6 +143,19 @@ export const restartBotFailure = createAction(
   props<{ error: string }>()
 );
 
+export const setBotSettings = createAction(
+  '[Servers] setBotSettings',
+  props<{ id: string, settings: string }>()
+);
+export const setBotSettingsSuccess = createAction(
+  '[Servers] setBotSettingsSuccess',
+  props<{ response: any }>()
+);
+export const setBotSettingsFailure = createAction(
+  '[Servers] setBotSettingsFailure',
+  props<{ error: string }>()
+);
+
 export const setApiList = createAction('[Servers] setApiList');
 export const setApiListSuccess = createAction(
   '[Servers] setApiListSuccess',

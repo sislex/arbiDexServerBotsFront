@@ -12,9 +12,10 @@ import {MatInputModule} from '@angular/material/input';
 })
 export class InputTextArea {
   @Input() label: string = '';
-  @Input() placeholder: string = ''
-  @Input() inputValue: string = ''
-  @Input() title: string = ''
+  @Input() placeholder: string = '';
+  @Input() inputValue: string = '';
+  @Input() title: string = '';
+  @Input() rowsCount: number = 4;
 
   @Output() emitter = new EventEmitter();
 

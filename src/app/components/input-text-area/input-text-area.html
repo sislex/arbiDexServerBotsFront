@@ -2,14 +2,15 @@
   @if (title) {
     <div class="title">{{ title }}</div>
   }
-  <mat-form-field class="example-full-width">
+  <mat-form-field class="wide-textarea">
     @if (label) {
-      <mat-label>{{label}}</mat-label>
+      <mat-label>{{ label }}</mat-label>
     }
     <textarea matInput
-              placeholder="{{ placeholder }}"
+              [rows]="rowsCount"
+              [placeholder]="placeholder"
               [(ngModel)]="inputValue"
               (ngModelChange)="onInputChange($event)">
-  </textarea>
+    </textarea>
   </mat-form-field>
 </div>
