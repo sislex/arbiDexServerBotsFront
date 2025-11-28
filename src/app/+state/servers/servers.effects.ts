@@ -6,6 +6,7 @@ import * as ServersActions from './servers.actions';
 import { ServerDataService } from '../../services/server-data.service';
 import { getActiveTab } from '../view/view.selectors';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {ITypesList} from '../../models/servers';
 
 @Injectable()
 export class ServersEffects {
@@ -13,70 +14,81 @@ export class ServersEffects {
   private serverDataService = inject(ServerDataService);
   private store = inject(Store);
 
-  loadServerData$ = createEffect(() =>
+  loadServerDataOnTab$ = createEffect(() =>
       this.actions$.pipe(
         ofType(ServersActions.setActiveServer),
         withLatestFrom(this.store.select(getActiveTab)),
         filter(([_, tab]) => tab === 'server data'),
-        switchMap(([action]) => {
-          this.store.dispatch(ServersActions.loadServerList());
+        tap(([action]) => {
+          this.store.dispatch(ServersActions.loadServerList({ip: action.ip, port: action.port}));
           this.store.dispatch(ServersActions.loadBotTypesList());
           this.store.dispatch(ServersActions.loadJobTypesList());
-          return forkJoin({
-            info: this.serverDataService.getServerData().pipe(
-              catchError(err => {
-                this.store.dispatch(ServersActions.loadServerListFailure({error: err}));
-                return of(null);
-              })
-            ),
-            botTypes: this.serverDataService.getBotTypesList().pipe(
-              catchError(err => {
-                this.store.dispatch(ServersActions.loadBotTypesListFailure({error: err}));
-                return of([]);
-              })
-            ),
-            actions: this.serverDataService.getActionTypesList().pipe(
-              catchError(err => {
-                this.store.dispatch(ServersActions.loadJobTypesListFailure({error: err}));
-                return of([]);
-              })
-            ),
-          }).pipe(
-            tap(({ info, botTypes, actions }) => {
-
-              const responseServerData = {
-                ip: action.ip,
-                port: action.port,
-                version: info?.appVersion ?? '-',
-                timestampFinish: info?.timestampFinish ?? '',
-                timestampStart: '',
-                status: info ? 'active' : 'unknown',
-                botsCount: info?.botsCount ?? 0,
-              };
-
-              const responseBotTypesList = (botTypes || []).map((item: any) => ({
-                id: item.id ?? '-',
-                label: item.label ?? '-',
-                type: item.type ?? '-',
-                description: item.description ?? '-',
-              }));
-
-              const responseActionTypesList = (actions || []).map((item: any) => ({
-                id: item.id ?? '-',
-                label: item.label ?? '-',
-                type: item.type ?? '-',
-                description: item.description ?? '-',
-              }));
-
-              this.store.dispatch(ServersActions.loadServerListSuccess({ response: responseServerData }));
-              this.store.dispatch(ServersActions.loadBotTypesListSuccess({ response: responseBotTypesList }));
-              this.store.dispatch(ServersActions.loadJobTypesListSuccess({ response: responseActionTypesList }));
-            }),
-            map(() => ({ done: true }))
-          );
         })
       ),
     { dispatch: false }
+  );
+
+  loadServerData$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ServersActions.loadServerList),
+      switchMap((action) =>
+        this.serverDataService.getServerData().pipe(
+          map(info => {
+            const response = {
+              ip: action.ip,
+              port: action.port,
+              version: info?.appVersion ?? '-',
+              timestampFinish: info?.timestampFinish ?? '',
+              timestampStart: info?.timestampStart ?? '',
+              status: info ? 'active' : 'unknown',
+              botsCount: info?.botsCount ?? 0,
+            };
+            return ServersActions.loadServerListSuccess({ response });
+          }),
+          catchError(error => of(ServersActions.loadServerListFailure({ error })))
+        )
+      )
+    )
+  );
+
+  loadBotTypes$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ServersActions.loadBotTypesList),
+      switchMap(() =>
+        this.serverDataService.getBotTypesList().pipe(
+          map(items => {
+            const response = items.map((item: ITypesList) => ({
+              id: item.id ?? '-',
+              label: item.label ?? '-',
+              type: item.type ?? '-',
+              description: item.description ?? '-',
+            }));
+            return ServersActions.loadBotTypesListSuccess({ response });
+          }),
+          catchError(error => of(ServersActions.loadBotTypesListFailure({ error })))
+        )
+      )
+    )
+  );
+
+  loadJobTypes$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ServersActions.loadJobTypesList),
+      switchMap(() =>
+        this.serverDataService.getActionTypesList().pipe(
+          map(items => {
+            const response = items.map((item: ITypesList) => ({
+              id: item.id ?? '-',
+              label: item.label ?? '-',
+              type: item.type ?? '-',
+              description: item.description ?? '-',
+            }));
+            return ServersActions.loadJobTypesListSuccess({ response });
+          }),
+          catchError(error => of(ServersActions.loadJobTypesListFailure({ error })))
+        )
+      )
+    )
   );
 
   loadBotsControl$ = createEffect(() => {

@@ -34,7 +34,10 @@ export const updateBot = createAction(
   props<{ isSendData: boolean, id: string }>()
 );
 
-export const loadServerList = createAction('[Servers] loadServerList');
+export const loadServerList = createAction(
+  '[Servers] loadServerList',
+  props<{ ip: string, port: string }>()
+);
 export const loadServerListSuccess = createAction(
   '[Servers] loadServerListSuccess',
   props<{ response: IServerData }>()
