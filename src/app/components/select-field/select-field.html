@@ -1,10 +1,8 @@
 <mat-form-field>
-  @if (menuData.title) {
-    <mat-label>{{ menuData.title }}</mat-label>
-  }
+  <mat-label>{{ title }}</mat-label>
   <mat-select [(value)]="selected">
-    @for (item of menuData.list; track item) {
-      <mat-option (click)="click(item)" [value]="item.label">{{item.label}}</mat-option>
+    @for (item of list; track item) {
+      <mat-option (click)="click(item)" [value]="item">{{item}}</mat-option>
     }
   </mat-select>
 </mat-form-field>

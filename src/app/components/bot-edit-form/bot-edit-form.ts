@@ -15,11 +15,13 @@ import {MatDividerModule} from '@angular/material/divider';
   styleUrl: './bot-edit-form.scss'
 })
 export class BotEditForm implements OnInit {
-  @Input() botList: any = {};
+  @Input() botList: string[] = [];
   @Input() botTitle: string = '';
+  @Input() textAreaBotTitle: string = '';
 
-  @Input() jobList: any = {};
+  @Input() jobList: string[] = [];
   @Input() jobTitle: string = '';
+  @Input() textAreaJobTitle: string = '';
 
   @Input() data: any = {};
 

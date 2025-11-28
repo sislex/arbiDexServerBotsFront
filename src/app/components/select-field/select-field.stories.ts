@@ -21,14 +21,14 @@ const meta: Meta<SelectField> = {
   ],
   args: {
     emitter: fn(),
-    menuData: {
-      title: 'title',
-      list: [
-        {
-          label: 'element1',
-        },
-      ]
-    },
+    // menuData: {
+    //   title: 'title',
+    //   list: [
+    //     {
+    //       label: 'element1',
+    //     },
+    //   ]
+    // },
     selected: ''
   },
 };
@@ -37,71 +37,71 @@ type Story = StoryObj<SelectField>;
 
 export const Base: Story = {};
 
-export const PreSelect: Story = {
-  args: {
-    menuData: {
-      title: 'Main Title',
-      list: [
-        {
-          label: '1type',
-        },
-        {
-          label: '2type',
-        },
-        {
-          label: '3type',
-        },
-        {
-          label: '4type',
-        },
-      ]
-    },
-    selected: '4type'
-  },
-};
-
-export const NoSelect: Story = {
-  args: {
-    menuData: {
-      title: 'Title',
-      list: [
-        {
-          label: '1type',
-        },
-        {
-          label: '2type',
-        },
-        {
-          label: '3type',
-        },
-        {
-          label: '4type',
-        },
-      ]
-    },
-    selected: ''
-  },
-};
-
-export const NoTitle: Story = {
-  args: {
-    menuData: {
-      title: '',
-      list: [
-        {
-          label: '1type',
-        },
-        {
-          label: '2type',
-        },
-        {
-          label: '3type',
-        },
-        {
-          label: '4type',
-        },
-      ]
-    },
-    selected: '1type'
-  },
-};
+// export const PreSelect: Story = {
+//   args: {
+//     menuData: {
+//       title: 'Main Title',
+//       list: [
+//         {
+//           label: '1type',
+//         },
+//         {
+//           label: '2type',
+//         },
+//         {
+//           label: '3type',
+//         },
+//         {
+//           label: '4type',
+//         },
+//       ]
+//     },
+//     selected: '4type'
+//   },
+// };
+//
+// export const NoSelect: Story = {
+//   args: {
+//     menuData: {
+//       title: 'Title',
+//       list: [
+//         {
+//           label: '1type',
+//         },
+//         {
+//           label: '2type',
+//         },
+//         {
+//           label: '3type',
+//         },
+//         {
+//           label: '4type',
+//         },
+//       ]
+//     },
+//     selected: ''
+//   },
+// };
+//
+// export const NoTitle: Story = {
+//   args: {
+//     menuData: {
+//       title: '',
+//       list: [
+//         {
+//           label: '1type',
+//         },
+//         {
+//           label: '2type',
+//         },
+//         {
+//           label: '3type',
+//         },
+//         {
+//           label: '4type',
+//         },
+//       ]
+//     },
+//     selected: '1type'
+//   },
+// };

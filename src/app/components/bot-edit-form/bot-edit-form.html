@@ -1,11 +1,12 @@
 <div class="row">
   <app-select-field
-    [menuData]="botList"
+    [list]="botList"
+    [title]="botTitle"
     [selected]="formData.botTypeSelect"
     (emitter)="events($event, 'botSelect')"
   ></app-select-field>
   <app-input-text-area
-    [title]="botTitle"
+    [title]="textAreaBotTitle"
     [label]="'Bot parameters'"
     [placeholder]="'Enter bot parameters JSON'"
     [inputValue]="formData.botJSON"
@@ -16,12 +17,13 @@
 
 <div class="row">
   <app-select-field
-    [menuData]="jobList"
+    [list]="jobList"
+    [title]="jobTitle"
     [selected]="formData.actionTypeSelect"
     (emitter)="events($event, 'actionSelect')"
   ></app-select-field>
   <app-input-text-area
-    [title]="jobTitle"
+    [title]="textAreaJobTitle"
     [label]="'Action parameters'"
     [placeholder]="'Enter action parameters JSON'"
     [inputValue]="formData.actionJSON"
