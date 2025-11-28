@@ -106,7 +106,7 @@ export const serversReducer = createReducer(
         isLoading: false,
         isLoaded: true,
         response
-      }
+      },
     }
   })),
   on(ServersActions.loadBotTypesListFailure, (state, {error}) => ({
