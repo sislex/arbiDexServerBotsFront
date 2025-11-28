@@ -91,48 +91,48 @@ export class ServersEffects {
     )
   );
 
-  loadBotsControl$ = createEffect(() => {
-      return this.actions$.pipe(
+  loadBotsControlOnTab$ = createEffect(() =>
+      this.actions$.pipe(
         ofType(ServersActions.setActiveServer),
         withLatestFrom(this.store.select(getActiveTab)),
         filter(([_, tab]) => tab === 'bots'),
-        switchMap(() => {
+        tap(() => {
           this.store.dispatch(ServersActions.loadBotControlList());
+        })
+      ),
+    { dispatch: false }
+  );
 
-          return this.serverDataService.getBotsControl().pipe(
-            tap((response: any[]) => {
+  loadBotControlList$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ServersActions.loadBotControlList),
+      switchMap(() =>
+        this.serverDataService.getBotsControl().pipe(
+          map((items: any[]) => {
+            if (!Array.isArray(items)) {
+              console.warn('Expected array but got:', items);
+              return ServersActions.loadBotControlListSuccess({ response: [] });
+            }
 
-              if (!Array.isArray(response)) {
-                console.warn('Expected array but got:', response);
-                return;
+            const response = items.map(item => {
+              let status = '';
+              if (!item.running) {
+                status = 'pause'
+              } else {
+                status = 'active'
               }
 
-              const responseBotControlList = response.map(item => {
-                let status = '';
-                if (!item.running) {
-                  status = 'pause';
-                } else if (item.running) {
-                  status = 'active';
-                }
+              return { ...item, status };
+            });
 
-                return {
-                  ...item,
-                  status: status
-                };
-              });
-
-              this.store.dispatch(ServersActions.loadBotControlListSuccess({response: responseBotControlList}));
-            }),
-            catchError(err => {
-              this.store.dispatch(ServersActions.loadBotControlListFailure({error: err}));
-              return of([]);
-            }),
-            map(() => ({done: true}))
-          );
-        })
-      );
-    },
-    { dispatch: false }
+            return ServersActions.loadBotControlListSuccess({ response });
+          }),
+          catchError(error =>
+            of(ServersActions.loadBotControlListFailure({ error }))
+          )
+        )
+      )
+    )
   );
 
   loadBotParams$ = createEffect(() =>
