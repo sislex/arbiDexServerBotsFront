@@ -98,7 +98,8 @@ export class AgGridBotControlPanelContainer {
             botInfoTitle: 'Bot Params',
             jobInfoTitle: 'Job Params',
             botData: botInfo,
-          }
+          },
+          panelClass: 'custom-dialog-container',
         });
         dialogRef.afterClosed().subscribe(result => {
           if (result.$event.data === 'save') {
