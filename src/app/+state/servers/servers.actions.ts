@@ -159,6 +159,16 @@ export const setBotSettingsFailure = createAction(
   props<{ error: string }>()
 );
 
+export const getRulesList = createAction('[Servers] getRulesList');
+export const getRulesListSuccess = createAction(
+  '[Servers] getRulesListSuccess',
+  props<{ response: any }>()
+);
+export const getRulesListFailure = createAction(
+  '[Servers] getRulesListFailure',
+  props<{ error: string }>()
+);
+
 export const setApiList = createAction('[Servers] setApiList');
 export const setApiListSuccess = createAction(
   '[Servers] setApiListSuccess',

@@ -102,4 +102,9 @@ export class ServerDataService {
   restartBot(botId: string): Observable<any> {
     return this.post(`/bot/${botId}/restart`);
   }
+
+  // Получить список правил
+  getRulesList(): Observable<any> {
+    return this.get('/rules/get-all');
+  }
 }

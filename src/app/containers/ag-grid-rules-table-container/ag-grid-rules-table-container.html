@@ -1,5 +1,7 @@
-<app-ag-grid-rules-table
-  [rowData]="[]"
-  (emitter)="events($event)"
->
-</app-ag-grid-rules-table>
+@if (ruleList$ | async; as list) {
+  <app-ag-grid-rules-table
+    [rowData]="list"
+    (emitter)="events($event)"
+  >
+  </app-ag-grid-rules-table>
+}

@@ -47,13 +47,17 @@ export class AgGridRulesTable {
       field: "botParams",
       headerName: 'Bot Rule',
       flex: 1,
-      valueFormatter: p => JSON.stringify(p.value),
+      wrapText: true,
+      autoHeight: true,
+      valueFormatter: p => JSON.stringify(p.value, null, 2),
     },
     {
-      field: "actionParams",
+      field: "jobParams",
       headerName: 'Job Rule',
       flex: 1,
-      valueFormatter: p => JSON.stringify(p.value),
+      wrapText: true,
+      autoHeight: true,
+      valueFormatter: p => JSON.stringify(p.value, null, 2),
     },
   ];
 

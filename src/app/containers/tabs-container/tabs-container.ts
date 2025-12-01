@@ -11,7 +11,7 @@ import {
   getBotControlListIsLoaded,
   getBotControlListIsLoading,
   getLoadBotTypesError, getLoadJobTypesError,
-  getLoadServerDataError,
+  getLoadServerDataError, getRuleListError, getRuleListIsLoaded, getRuleListIsLoading,
 } from '../../+state/servers/servers.selectors';
 import {take} from 'rxjs';
 import {getActiveTab, getTabList} from '../../+state/view/view.selectors';
@@ -40,6 +40,10 @@ export class TabsContainer {
   loadServerDataError$ = this.store.select(getLoadServerDataError);
   loadBotTypesError$ = this.store.select(getLoadBotTypesError);
   loadActionTypesError$ = this.store.select(getLoadJobTypesError);
+
+  ruleListIsLoaded$ = this.store.select(getRuleListIsLoaded);
+  ruleListIsLoading$ = this.store.select(getRuleListIsLoading);
+  ruleListError$ = this.store.select(getRuleListError);
 
   events($event: any) {
     if ($event.event === 'Tabs:TAB_CLICKED') {

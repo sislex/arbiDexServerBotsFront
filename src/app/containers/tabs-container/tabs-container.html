@@ -10,6 +10,9 @@
   [loadServerDataError]="(loadServerDataError$ | async)!"
   [loadBotTypesError]="(loadBotTypesError$ | async)!"
   [loadActionTypesError]="(loadActionTypesError$ | async)!"
+  [ruleListIsLoaded]="(ruleListIsLoaded$ | async)!"
+  [ruleListIsLoading]="(ruleListIsLoading$ | async)!"
+  [ruleListError]="(ruleListError$ | async)!"
 
   (emitter)="events($event)"
 ></app-tabs>

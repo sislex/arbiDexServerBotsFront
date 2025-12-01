@@ -48,6 +48,9 @@ export class Tabs implements OnChanges {
   @Input() loadServerDataError!: boolean;
   @Input() loadBotTypesError!: boolean;
   @Input() loadActionTypesError!: boolean;
+  @Input() ruleListIsLoaded!: boolean;
+  @Input() ruleListIsLoading!: boolean;
+  @Input() ruleListError!: boolean;
 
   @Output() emitter = new EventEmitter();
 

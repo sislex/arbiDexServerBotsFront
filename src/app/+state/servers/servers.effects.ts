@@ -103,6 +103,18 @@ export class ServersEffects {
     { dispatch: false }
   );
 
+  loadRuleListOnTab$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(ServersActions.setActiveServer),
+        withLatestFrom(this.store.select(getActiveTab)),
+        filter(([_, tab]) => tab === 'rules'),
+        tap(() => {
+          this.store.dispatch(ServersActions.getRulesList());
+        })
+      ),
+    { dispatch: false }
+  );
+
   loadBotControlList$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ServersActions.loadBotControlList),
@@ -329,7 +341,6 @@ export class ServersEffects {
       return this.actions$.pipe(
         ofType(ServersActions.setBotSettings),
         switchMap((action) => {
-
           return this.serverDataService.setNewSettingsBot(action.id, action.settings).pipe(
             tap((response: any[]) => {
               this.store.dispatch(ServersActions.setBotSettingsSuccess({response}));
@@ -338,6 +349,27 @@ export class ServersEffects {
             catchError(err => {
               this.store.dispatch(ServersActions.setBotSettingsFailure({error: err}));
               this._snackBar.open(`Error changing bot settings: ${err.error.message}`, '', { duration: 5000 });
+              return of([]);
+            }),
+            map(() => ({done: true}))
+          );
+        })
+      );
+    },
+    { dispatch: false }
+  );
+
+  // Устанавливаем новые настройки бота
+  getRulesList$ = createEffect(() => {
+      return this.actions$.pipe(
+        ofType(ServersActions.getRulesList),
+        switchMap((_) => {
+          return this.serverDataService.getRulesList().pipe(
+            tap((response: any[]) => {
+              this.store.dispatch(ServersActions.getRulesListSuccess({response}));
+            }),
+            catchError(err => {
+              this.store.dispatch(ServersActions.getRulesListFailure({error: err}));
               return of([]);
             }),
             map(() => ({done: true}))
