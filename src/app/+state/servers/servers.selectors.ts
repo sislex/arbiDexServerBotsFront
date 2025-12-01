@@ -49,7 +49,7 @@ export const getBotTypesList = createSelector(
   selectFeature,
   (state: ServersState) => state.activeElementData.botTypesList.response
 );
-export const getActionTypesList = createSelector(
+export const getJobTypesList = createSelector(
   selectFeature,
   (state: ServersState) => state.activeElementData.jobTypesList.response
 );
@@ -67,14 +67,14 @@ export const getBotTypesListIsLoading = createSelector(
   selectFeature,
   (state: ServersState) => state.activeElementData.botTypesList.isLoading
 );
-export const getActionTypesListIsLoading = createSelector(
+export const getJobTypesListIsLoading = createSelector(
   selectFeature,
   (state: ServersState) => state.activeElementData.jobTypesList.isLoading
 );
 export const getAllServerDataIsLoading = createSelector(
   getServerDataIsLoading,
   getBotTypesListIsLoading,
-  getActionTypesListIsLoading,
+  getJobTypesListIsLoading,
   (serverLoading, botTypesLoading, jobTypesLoading) =>
     serverLoading || botTypesLoading || jobTypesLoading
 );
@@ -88,14 +88,14 @@ export const getBotTypesListIsLoaded = createSelector(
   selectFeature,
   (state: ServersState) => state.activeElementData.botTypesList.isLoaded
 );
-export const getActionTypesListIsLoaded = createSelector(
+export const getJobTypesListIsLoaded = createSelector(
   selectFeature,
   (state: ServersState) => state.activeElementData.jobTypesList.isLoaded
 );
 export const getAllServerDataIsLoaded = createSelector(
   getServerDataIsLoaded,
   getBotTypesListIsLoaded,
-  getActionTypesListIsLoaded,
+  getJobTypesListIsLoaded,
   (serverLoaded, botTypesLoaded, jobTypesLoaded) =>
     serverLoaded && botTypesLoaded && jobTypesLoaded
 );
@@ -109,7 +109,7 @@ export const getLoadBotTypesError = createSelector(
   selectFeature,
   (state: ServersState) => !!state.activeElementData.botTypesList.error
 );
-export const getLoadActionTypesError = createSelector(
+export const getLoadJobTypesError = createSelector(
   selectFeature,
   (state: ServersState) =>  !!state.activeElementData.jobTypesList.error
 );
@@ -148,17 +148,14 @@ export const getActiveBotIsLoading = createSelector(
 );
 
 // ---------- isLoaded селекторы для page-info ----------
-
 export const getBotResultListIsLoaded = createSelector(
   selectFeature,
   (state: ServersState) => state.activeElementData.activeBot.botResultList.isLoaded
 );
-
 export const getBotErrorListIsLoaded = createSelector(
   selectFeature,
   (state: ServersState) => state.activeElementData.activeBot.botErrorList.isLoaded
 );
-
 export const getActiveBotIsLoaded = createSelector(
   getBotResultListIsLoaded,
   getBotErrorListIsLoaded,
@@ -166,3 +163,20 @@ export const getActiveBotIsLoaded = createSelector(
     botResultLoaded && botErrorLoaded
 );
 
+// ---------- селекторы для rules ----------
+export const getRuleListIsLoaded = createSelector(
+  selectFeature,
+  (state: ServersState) => state.activeElementData.ruleList.isLoaded
+);
+export const getRuleListIsLoading = createSelector(
+  selectFeature,
+  (state: ServersState) => state.activeElementData.ruleList.isLoading
+);
+export const getRuleListError = createSelector(
+  selectFeature,
+  (state: ServersState) => !!state.activeElementData.ruleList.error
+);
+export const getRuleList = createSelector(
+  selectFeature,
+  (state: ServersState) => state.activeElementData.ruleList.response
+);

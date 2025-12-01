@@ -4,10 +4,9 @@
   (emitter)="events($event)"
 >
   <app-bot-edit-form
-    [botList]="data.botTypesList"
-    [actionList]="data.actionTypesList"
-    [data]="data.botData"
-
+    [info]="data.botData"
+    [botInfoTitle]="data.botInfoTitle"
+    [jobInfoTitle]="data.jobInfoTitle"
     (emitter)="setData($event)"
     form
   >

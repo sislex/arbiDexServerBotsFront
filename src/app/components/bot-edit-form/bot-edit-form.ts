@@ -1,70 +1,48 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {InputTextArea} from '../input-text-area/input-text-area';
-import {SelectField} from '../select-field/select-field';
 import {MatDividerModule} from '@angular/material/divider';
+import {IBotInfo} from '../../models/servers';
 
 @Component({
   selector: 'app-bot-edit-form',
   imports: [
     InputTextArea,
-    SelectField,
-    MatDividerModule
+    MatDividerModule,
   ],
   standalone: true,
   templateUrl: './bot-edit-form.html',
   styleUrl: './bot-edit-form.scss'
 })
 export class BotEditForm implements OnInit {
-  @Input() botList: any = {};
-  @Input() botTitle: string = '';
-
-  @Input() actionList: any = {};
-  @Input() actionTitle: string = '';
-
-  @Input() data: any = {};
+  @Input() info!: IBotInfo ;
+  @Input() botInfoTitle: string = '';
+  @Input() jobInfoTitle: string = '';
 
   @Output() emitter = new EventEmitter();
-
-  formData: any = {};
+  botData = '';
+  jobData = '';
 
   ngOnInit() {
-    this.formData = { ...this.data };
+    this.botData = JSON.stringify(this.info.botParams, null, 2);
+    this.jobData = JSON.stringify(this.info.jobParams, null, 2);
   };
 
   events(event: any, note: string) {
-    if (event.event === 'InputField:INPUT_CHANGED') {
-      console.log(event.event, event.data);
-    } else if (event.event === 'SelectField:ITEM_SELECTED') {
-      if (note === 'botSelect') {
-        this.formData = {
-          ...this.formData,
-          botSelect: event.data.label
-        }
-      } else if (note === 'actionSelect') {
-        this.formData = {
-          ...this.formData,
-          actionSelect: event.data.label
-        }
-      }
-    } else if (event.event === 'InputTextArea:INPUT_CHANGED') {
+    if (event.event === 'InputTextArea:INPUT_CHANGED') {
       if (note === 'botTextArea') {
-        this.formData = {
-          ...this.formData,
-          botJSON: event.data
-        }
+        console.log('просто отправляем все текущие данные об объекте');
       } else if (note === 'actionTextArea') {
-        this.formData = {
-          ...this.formData,
-          actionJSON: event.data
-        }
+        console.log('просто отправляем все текущие данные об объекте');
       }
-    } else if (event.event === 'Toggle:TOGGLE_CHANGED') {
-      console.log(event.event, event.data);
     }
 
     this.emitter.emit({
       event: 'BotEditForm:CHANGE_DATA',
-      data: this.formData
+      data: {
+        id: this.info.id,
+        botParams: this.botData,
+        jobParams: this.jobData
+      }
     });
   }
 }

@@ -18,40 +18,37 @@
                   </app-title-table-layout>
                 </div>
               } @else {
-                ошибка по API сервера ИЛИ страница с ошибкой в адресе бота или сервера
+                <app-not-found-page-page></app-not-found-page-page>
               }
             } @else {
               <app-loader-container></app-loader-container>
             }
 
           } @else if (item === 'rules') {
-<!--            @if (!botControlListIsLoading && botControlListIsLoaded) {-->
-<!--              @if (!loadBotControlListError) {-->
-<!--                <div class="server-page">-->
-<!--                  <app-title-table-layout [title]="'Bots info'">-->
-<!--                    <app-ag-grid-bots-control-container content></app-ag-grid-bots-control-container>-->
-<!--                  </app-title-table-layout>-->
+            @if (!ruleListIsLoading && ruleListIsLoaded) {
+              @if (!ruleListError) {
+                <div class="server-page">
                   <app-title-table-layout>
                     <app-title-table-button
                       title
-                      [title]="'Rules info (Апишку подключи, передай сюда контент, переход на бота 2-click)'"
+                      [title]="'Rules info'"
                     ></app-title-table-button>
                     <app-ag-grid-rules-table-container content></app-ag-grid-rules-table-container>
                   </app-title-table-layout>
-<!--                </div>-->
-<!--              } @else {-->
-<!--                ошибка по API сервера ИЛИ страница с ошибкой в адресе бота или сервера-->
-<!--              }-->
-<!--            } @else {-->
-<!--              <app-loader-container></app-loader-container>-->
-<!--            }-->
+                </div>
+              } @else {
+                <app-not-found-page-page></app-not-found-page-page>
+              }
+            } @else {
+              <app-loader-container></app-loader-container>
+            }
 
           } @else if (item === 'gates') {
             <app-ag-grid-gate-list-container></app-ag-grid-gate-list-container>
           } @else if (item === 'server data') {
             @if (!allServerDataIsLoading && allServerDataIsLoaded) {
               @if (loadServerDataError && loadBotTypesError && loadActionTypesError) {
-                страница с ошибкой в адресе бота или сервера
+                <app-not-found-page-page></app-not-found-page-page>
               } @else {
                 <div class="server-page">
                   @if (!loadServerDataError) {

@@ -34,6 +34,7 @@ export const initialState: ServersState = {
     jobTypesList: emptyAsyncResponse([]),
     gateList: [],
     botControlList: emptyAsyncResponse([]),
+    ruleList: emptyAsyncResponse([]),
     activeBot: {
       botInfo: emptyAsyncResponse(emptyBotInfoResponse),
       botResultList: emptyAsyncResponse(emptyBotResultResponse),
@@ -106,7 +107,7 @@ export const serversReducer = createReducer(
         isLoading: false,
         isLoaded: true,
         response
-      }
+      },
     }
   })),
   on(ServersActions.loadBotTypesListFailure, (state, {error}) => ({
@@ -427,6 +428,51 @@ export const serversReducer = createReducer(
         ...state.config,
         apiList: {
           ...state.config.apiList,
+          loadingTime: Date.now() - state.config.apiList.startTime!,
+          isLoading: false,
+          isLoaded: true,
+          error,
+        },
+      },
+    };
+  }),
+
+  on(ServersActions.getRulesList, (state) => {
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        ruleList: {
+          ...state.activeElementData.ruleList,
+          startTime: Date.now(),
+          isLoading: true,
+          isLoaded: false,
+        },
+      },
+    };
+  }),
+  on(ServersActions.getRulesListSuccess, (state, { response }) => {
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        ruleList: {
+          ...state.activeElementData.ruleList,
+          loadingTime: Date.now() - state.config.apiList.startTime!,
+          isLoading: false,
+          isLoaded: true,
+          response,
+        },
+      },
+    };
+  }),
+  on(ServersActions.getRulesListFailure, (state, { error }) => {
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        ruleList: {
+          ...state.activeElementData.ruleList,
           loadingTime: Date.now() - state.config.apiList.startTime!,
           isLoading: false,
           isLoaded: true,

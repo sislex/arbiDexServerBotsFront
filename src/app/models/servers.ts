@@ -53,6 +53,16 @@ export interface ITypesListAPI extends API {
   response: ITypesList[];
 }
 
+export interface IRuleListAPI extends API {
+  response: IRuleList[];
+}
+
+export interface IRuleList {
+  id: string;
+  botParam: any;
+  jobParams: any;
+}
+
 export interface IServer {
   ip: string;
   port?: string;
@@ -169,4 +179,5 @@ export interface IActiveElementData {
   gateList: IGateItem[];
   botControlList: IBotListControlAPI;
   activeBot: IActiveBot;
+  ruleList: IRuleListAPI;
 }

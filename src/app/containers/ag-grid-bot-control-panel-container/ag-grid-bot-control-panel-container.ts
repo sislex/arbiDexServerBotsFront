@@ -2,13 +2,19 @@ import {Component, inject} from '@angular/core';
 import {AgGridBotControlPanel} from '../../components/ag-grid-bot-control-panel/ag-grid-bot-control-panel';
 import {MatDialog} from '@angular/material/dialog';
 import {Store} from '@ngrx/store';
-import {getDataActiveBot} from '../../+state/servers/servers.selectors';
-import {deletingBot, isSendData, restartedBot, setIsStartedBot, updateBot} from '../../+state/servers/servers.actions';
+import {
+  getDataActiveBot,
+} from '../../+state/servers/servers.selectors';
+import {
+  deletingBot,
+  isSendData,
+  restartedBot, setBotSettings,
+  setIsStartedBot,
+} from '../../+state/servers/servers.actions';
 import {ConfirmationPopUpContainer} from '../confirmation-pop-up-container/confirmation-pop-up-container';
 import {BotEditFormContainer} from '../bot-edit-form-container/bot-edit-form-container';
-import {actionTypesList, botData, botTypesList} from '../ag-grid-bots-control-container/stabs';
 import {AsyncPipe} from '@angular/common';
-import {map} from 'rxjs';
+import {combineLatest, map, take} from 'rxjs';
 
 @Component({
   selector: 'app-ag-grid-bot-control-panel-container',
@@ -31,14 +37,18 @@ export class AgGridBotControlPanelContainer {
     }))
   );
 
-
+  botInfo$ = this.store.select(getDataActiveBot).pipe(
+    map(list => ({
+      ...list.botInfo.response,
+    }))
+  );
 
   events($event: any) {
     if ($event.event === 'Actions:ACTION_CLICKED') {
       if ($event.actionType === 'delete') {
         this.openDeleteDialog($event.row);
       } else if ($event.actionType === 'edit') {
-        this.openEditDialog($event.row);
+        this.openEditDialog();
       } else if ($event.actionType === 'start') {
         this.store.dispatch(setIsStartedBot({isStarted: false, id: $event.row.id}))
       } else if ($event.actionType === 'pause') {
@@ -74,27 +84,28 @@ export class AgGridBotControlPanelContainer {
     });
   }
 
-  openEditDialog(rowData: any) {
-    const dialogRef = this.dialog.open(BotEditFormContainer, {
-      width: '800px',
-      height: '500px',
-      data: {
-        title: 'Change bot settings',
-        botData: botData,
-        botTypesList: botTypesList,
-        actionTypesList: actionTypesList,
-      }
-    });
+  openEditDialog() {
+    combineLatest([
+      this.botInfo$.pipe(take(1))
+    ])
+      .subscribe(([botInfo]) => {
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        if (result.$event.data === 'save') {
-          this.store.dispatch(updateBot({isSendData: result.data, id: rowData.id}))
-        } else {
-        }
-      } else {
-        console.log('Edit cancelled');
-      }
-    });
+        const dialogRef = this.dialog.open(BotEditFormContainer, {
+          width: '800px',
+          height: '500px',
+          data: {
+            title: 'Change bot settings',
+            botInfoTitle: 'Bot Params',
+            jobInfoTitle: 'Job Params',
+            botData: botInfo,
+          },
+          panelClass: 'custom-dialog-container',
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          if (result.$event.data === 'save') {
+            this.store.dispatch(setBotSettings({id: result.data.id, settings: result.data}))
+          }
+        });
+      });
   }
 }

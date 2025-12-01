@@ -34,7 +34,10 @@ export const updateBot = createAction(
   props<{ isSendData: boolean, id: string }>()
 );
 
-export const loadServerList = createAction('[Servers] loadServerList');
+export const loadServerList = createAction(
+  '[Servers] loadServerList',
+  props<{ ip: string, port: string }>()
+);
 export const loadServerListSuccess = createAction(
   '[Servers] loadServerListSuccess',
   props<{ response: IServerData }>()
@@ -153,6 +156,16 @@ export const setBotSettingsSuccess = createAction(
 );
 export const setBotSettingsFailure = createAction(
   '[Servers] setBotSettingsFailure',
+  props<{ error: string }>()
+);
+
+export const getRulesList = createAction('[Servers] getRulesList');
+export const getRulesListSuccess = createAction(
+  '[Servers] getRulesListSuccess',
+  props<{ response: any }>()
+);
+export const getRulesListFailure = createAction(
+  '[Servers] getRulesListFailure',
   props<{ error: string }>()
 );
 

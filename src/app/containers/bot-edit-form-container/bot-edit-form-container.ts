@@ -2,6 +2,7 @@ import {Component, inject} from '@angular/core';
 import {BotEditForm} from '../../components/bot-edit-form/bot-edit-form';
 import {FormLayout} from '../../components/form-layout/form-layout';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {IBotInfo} from '../../models/servers';
 
 @Component({
   selector: 'app-bot-edit-form-container',
@@ -17,9 +18,9 @@ export class BotEditFormContainer {
   private dialogRef = inject(MatDialogRef<BotEditFormContainer>);
   public data = inject(MAT_DIALOG_DATA) as {
     title: string
-    botData: any,
-    botTypesList: string[],
-    actionTypesList: string[],
+    botData: IBotInfo,
+    botInfoTitle: string
+    jobInfoTitle: string,
   };
 
   newData: any = {...this.data.botData};
@@ -28,8 +29,6 @@ export class BotEditFormContainer {
     if ($event.event === 'BotEditForm:CHANGE_DATA') {
       this.newData = $event.data
     }
-    console.log($event)
-    console.log(this.newData)
   }
 
   events($event: any) {
