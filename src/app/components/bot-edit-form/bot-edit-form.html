@@ -1,32 +1,20 @@
 <div class="row">
-  <app-select-field
-    [list]="botList"
-    [title]="botTitle"
-    [selected]="formData.botTypeSelect"
-    (emitter)="events($event, 'botSelect')"
-  ></app-select-field>
   <app-input-text-area
-    [title]="textAreaBotTitle"
+    [title]="botInfoTitle"
     [label]="'Bot parameters'"
     [placeholder]="'Enter bot parameters JSON'"
-    [inputValue]="formData.botJSON"
+    [inputValue]="botData"
     (emitter)="events($event, 'botTextArea')"
   >
   </app-input-text-area>
 </div>
 
 <div class="row">
-  <app-select-field
-    [list]="jobList"
-    [title]="jobTitle"
-    [selected]="formData.actionTypeSelect"
-    (emitter)="events($event, 'actionSelect')"
-  ></app-select-field>
   <app-input-text-area
-    [title]="textAreaJobTitle"
+    [title]="jobInfoTitle"
     [label]="'Action parameters'"
     [placeholder]="'Enter action parameters JSON'"
-    [inputValue]="formData.actionJSON"
+    [inputValue]="jobData"
     (emitter)="events($event, 'actionTextArea')"
   >
   </app-input-text-area>
