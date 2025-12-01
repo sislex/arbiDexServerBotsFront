@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, filter, forkJoin, map, of, switchMap, tap, withLatestFrom } from 'rxjs';
+import { catchError, filter, map, of, switchMap, tap, withLatestFrom } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as ServersActions from './servers.actions';
 import { ServerDataService } from '../../services/server-data.service';
@@ -13,6 +13,7 @@ export class ServersEffects {
   private actions$ = inject(Actions);
   private serverDataService = inject(ServerDataService);
   private store = inject(Store);
+  private _snackBar = inject(MatSnackBar);
 
   loadServerDataOnTab$ = createEffect(() =>
       this.actions$.pipe(
@@ -127,7 +128,7 @@ export class ServersEffects {
             }
 
             const response = items.map(item => {
-              let status = '';
+              let status: string;
               if (!item.running) {
                 status = 'pause'
               } else {
@@ -147,80 +148,69 @@ export class ServersEffects {
     )
   );
 
-  loadBotParams$ = createEffect(() =>
+  loadBotDataOnSelect$ = createEffect(() =>
       this.actions$.pipe(
         ofType(ServersActions.setActiveBot),
-        switchMap((action) => {
-          const botId = action.botId;
-
-          // Запуск индикаторов загрузки
-          this.store.dispatch(ServersActions.loadBotInfo());
-          this.store.dispatch(ServersActions.loadBotParams());
-          this.store.dispatch(ServersActions.loadBotErrors());
-
-          return forkJoin({
-            botInfo: this.serverDataService.getBotInfo(botId).pipe(
-              catchError(err => {
-                this.store.dispatch(
-                  ServersActions.loadBotInfoFailure({ error: err })
-                );
-                return of([]);
-              })
-            ),
-            botParamsData: this.serverDataService.getBotParamsById(botId).pipe(
-              catchError(err => {
-                this.store.dispatch(
-                  ServersActions.loadBotParamsFailure({ error: err })
-                );
-                return of([]);
-              })
-            ),
-            botErrors: this.serverDataService.getBotErrorsById(botId).pipe(
-              catchError(err => {
-                this.store.dispatch(
-                  ServersActions.loadBotErrorsFailure({ error: err })
-                );
-                return of([]);
-              })
-            ),
-          }).pipe(
-            tap(({ botInfo, botParamsData, botErrors }) => {
-              let status = '';
-
-              if (botInfo.botParams.paused) {
-                status = 'pause';
-              } else if (!botInfo.botParams.paused) {
-                status = 'active';
-              }
-
-              const responseBotControlList = {
-                ...botParamsData,
-                status: status,
-              };
-
-              this.store.dispatch(
-                ServersActions.loadBotParamsSuccess({
-                  response: responseBotControlList
-                })
-              );
-
-              this.store.dispatch(
-                ServersActions.loadBotInfoSuccess({
-                  response: botInfo
-                })
-              );
-
-              this.store.dispatch(
-                ServersActions.loadBotErrorsSuccess({ response: botErrors })
-              );
-            }),
-            map(() => ({ done: true }))
-          );
+        tap((action) => {
+          this.store.dispatch(ServersActions.loadBotInfo({ botId: action.botId }));
+          this.store.dispatch(ServersActions.loadBotParams({ botId: action.botId }));
+          this.store.dispatch(ServersActions.loadBotErrors({ botId: action.botId }));
         })
       ),
     { dispatch: false }
   );
-  private _snackBar = inject(MatSnackBar);
+
+
+  loadBotInfo$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ServersActions.loadBotInfo),
+      switchMap((action) =>
+        this.serverDataService.getBotInfo(action.botId).pipe(
+          map(botInfo => {
+            const response = { ...botInfo };
+            return ServersActions.loadBotInfoSuccess({ response });
+          }),
+          catchError(error =>
+            of(ServersActions.loadBotInfoFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
+  loadBotParams$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ServersActions.loadBotParams),
+      switchMap((action) =>
+        this.serverDataService.getBotParamsById(action.botId).pipe(
+          map(botParams => {
+            const status = botParams?.paused ? 'pause' : 'active';
+            const response = { ...botParams, status };
+            return ServersActions.loadBotParamsSuccess({ response });
+          }),
+          catchError(error =>
+            of(ServersActions.loadBotParamsFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
+  loadBotErrors$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ServersActions.loadBotErrors),
+      switchMap((action) =>
+        this.serverDataService.getBotErrorsById(action.botId).pipe(
+          map(botErrors => {
+            return ServersActions.loadBotErrorsSuccess({ response: botErrors });
+          }),
+          catchError(error =>
+            of(ServersActions.loadBotErrorsFailure({ error }))
+          )
+        )
+      )
+    )
+  );
 
   // Устанавливаем паузу/запускаем работу бота
   setIsStartedBot$ = createEffect(() => {
