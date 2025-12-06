@@ -1,16 +1,21 @@
 :host {
   width: 100%;
-  padding: 8px
-}
-.info {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
+  padding: 0 8px;
 
-  span {
-    margin-right: 20px;
-    flex: 1;
+  .info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    span {
+      margin-right: 20px;
+      flex: 1 1 auto;
+    }
+
+    .actions-wrapper {
+      flex: 0 0 auto;
+    }
+
   }
 }

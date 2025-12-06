@@ -1,8 +1,10 @@
 <div class="info">
   <span>{{ title }}</span>
-  <app-actions
-    [icon]="icon"
-    [type]="'default'"
-    (emitter)="emitter.emit($event)"
-  ></app-actions>
+  <div class="actions-wrapper">
+    <app-actions
+      [icon]="icon"
+      [type]="'default'"
+      (emitter)="emitter.emit($event)"
+    ></app-actions>
+  </div>
 </div>
