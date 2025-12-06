@@ -28,30 +28,28 @@ export class AgGridErrorList {
       },
     },
     {
-      field: "id",
-      headerName: 'ID',
-      width: 50,
-    },
-    {
-      field: "time",
+      field: 'createdAt',
       headerName: 'Time',
       flex: 1,
       valueFormatter: params => {
         if (!params.value) return '';
         const date = new Date(params.value);
-        return date.toLocaleString('ru-RU', {
-          timeZone: 'Europe/Moscow' // или Asia/Bangkok
-        });
+        return date.toLocaleString('ru-RU');
       },
     },
     {
-      field: "status",
-      headerName: 'Status',
+      field: "durationMs",
+      headerName: 'Duration (ms)',
+      flex: 1,
+    },
+    {
+      field: "errorCode",
+      headerName: 'Error Code',
       flex: 1,
     },
     {
       field: "message",
-      headerName: 'Message',
+      headerName: 'Error Message',
       flex: 3,
       cellStyle: { textAlign: 'left'},
       autoHeight: true,
