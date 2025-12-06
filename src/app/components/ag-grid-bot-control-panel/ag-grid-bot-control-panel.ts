@@ -91,5 +91,6 @@ export class AgGridBotControlPanel {
     headerClass: 'align-center',
     resizable: false,
     suppressMovable: true,
+    autoHeight: true,
   };
 }
