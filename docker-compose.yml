@@ -5,5 +5,5 @@ services:
       dockerfile: DockerfileFrontend
     container_name: angular-arbidex-front
     ports:
-      - "8230:82"
+      - "8230:80"
     restart: unless-stopped
