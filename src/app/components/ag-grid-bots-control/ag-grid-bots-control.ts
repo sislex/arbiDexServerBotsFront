@@ -71,8 +71,13 @@ export class AgGridBotsControl {
       width: 100,
     },
     {
-      field: "lastLatency",
+      field: "latency",
       headerName: 'Average Request Time',
+      flex: 1,
+    },
+    {
+      field: "lastLatency",
+      headerName: 'Last Request Time',
       flex: 1,
     },
     {

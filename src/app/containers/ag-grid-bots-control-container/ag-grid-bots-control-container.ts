@@ -31,7 +31,6 @@ export class AgGridBotsControlContainer {
         this.openAddDialog();
       }
     } else if ($event.event === 'AgGridBotsControl:DOUBLE_CLICKED_ROW') {
-
       this.ipPort$.pipe(take(1)).subscribe(ipPort => {
         this.router.navigate([`/server/${ipPort}/${$event.row.data.id}`]);
       });
