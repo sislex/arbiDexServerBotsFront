@@ -1,8 +1,8 @@
 export const serverListConfig = [
   {
-    ip: '45.135.182.251',
-    port: '1005',
-    name: 'UNREAL_SERVER',
+    ip: '127.0.0.1',
+    port: '3000',
+    name: 'LOCAL_SERVER',
   },
   {
     ip: '45.135.182.251',
