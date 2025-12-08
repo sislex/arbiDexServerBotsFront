@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, filter, map, of, switchMap, tap, withLatestFrom } from 'rxjs';
+import { catchError, map, of, switchMap, tap, withLatestFrom } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as ServersActions from './servers.actions';
 import { ServerDataService } from '../../services/server-data.service';
@@ -15,19 +15,34 @@ export class ServersEffects {
   private store = inject(Store);
   private _snackBar = inject(MatSnackBar);
 
-  loadServerDataOnTab$ = createEffect(() =>
+  loadDataByTab$ = createEffect(
+    () =>
       this.actions$.pipe(
         ofType(ServersActions.setActiveServer),
         withLatestFrom(this.store.select(getActiveTab)),
-        filter(([_, tab]) => tab === 'server data'),
-        tap(([action]) => {
-          this.store.dispatch(ServersActions.loadServerList({ip: action.ip, port: action.port}));
-          this.store.dispatch(ServersActions.loadBotTypesList());
-          this.store.dispatch(ServersActions.loadJobTypesList());
+        tap(([action, tab]) => {
+          switch (tab) {
+            case 'server data':
+              this.store.dispatch(
+                ServersActions.loadServerList({ ip: action.ip, port: action.port })
+              );
+              this.store.dispatch(ServersActions.loadBotTypesList());
+              this.store.dispatch(ServersActions.loadJobTypesList());
+              break;
+
+            case 'bots':
+              this.store.dispatch(ServersActions.loadBotControlList());
+              break;
+
+            case 'rules':
+              this.store.dispatch(ServersActions.getRulesList());
+              break;
+          }
         })
       ),
     { dispatch: false }
   );
+
 
   loadServerData$ = createEffect(() =>
     this.actions$.pipe(
@@ -92,29 +107,6 @@ export class ServersEffects {
     )
   );
 
-  loadBotsControlOnTab$ = createEffect(() =>
-      this.actions$.pipe(
-        ofType(ServersActions.setActiveServer),
-        withLatestFrom(this.store.select(getActiveTab)),
-        filter(([_, tab]) => tab === 'bots'),
-        tap(() => {
-          this.store.dispatch(ServersActions.loadBotControlList());
-        })
-      ),
-    { dispatch: false }
-  );
-
-  loadRuleListOnTab$ = createEffect(() =>
-      this.actions$.pipe(
-        ofType(ServersActions.setActiveServer),
-        withLatestFrom(this.store.select(getActiveTab)),
-        filter(([_, tab]) => tab === 'rules'),
-        tap(() => {
-          this.store.dispatch(ServersActions.getRulesList());
-        })
-      ),
-    { dispatch: false }
-  );
 
   loadBotControlList$ = createEffect(() =>
     this.actions$.pipe(
