@@ -1,5 +1,5 @@
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
-import type { ColDef } from 'ag-grid-community';
+import type { ICellRendererParams, ColDef } from 'ag-grid-community';
 import { AgGridAngular } from 'ag-grid-angular';
 import {Component, Input} from '@angular/core';
 
@@ -28,7 +28,8 @@ export class AgGridBotDataList {
     {
       field: "key",
       headerName: 'Parameter',
-      flex: 1,
+      width: 200,
+      resizable: true,
       cellStyle: { textAlign: 'left' },
       cellClass: 'selectable-text',
     },
@@ -40,6 +41,7 @@ export class AgGridBotDataList {
       wrapText: true,
       autoHeight: true,
       cellClass: 'selectable-text',
+
       valueFormatter: p => {
         const v = p.value;
 
@@ -48,7 +50,15 @@ export class AgGridBotDataList {
         if (typeof v === "number") return String(v);
 
         return JSON.stringify(v, null, 2);
-      }
+      },
+
+      cellRenderer: (params: ICellRendererParams) => {
+        const pre = document.createElement("pre");
+        pre.style.margin = "0";
+        pre.style.whiteSpace = "pre-wrap";
+        pre.textContent = params.valueFormatted ?? params.value;
+        return pre;
+      },
     },
   ];
 
