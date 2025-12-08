@@ -67,8 +67,8 @@ export class AgGridBotsControl {
     },
     {
       field: "arbitrageCount",
-      headerName: 'Arbitrage Count',
-      width: 100,
+      headerName: 'Arbitrages',
+      width: 120,
     },
     {
       field: "errorCount",
