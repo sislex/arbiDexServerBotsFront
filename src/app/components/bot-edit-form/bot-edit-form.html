@@ -12,10 +12,10 @@
 <div class="row">
   <app-input-text-area
     [title]="jobInfoTitle"
-    [label]="'Action parameters'"
-    [placeholder]="'Enter action parameters JSON'"
+    [label]="'Job parameters'"
+    [placeholder]="'Enter job parameters JSON'"
     [inputValue]="jobData"
-    (emitter)="events($event, 'actionTextArea')"
+    (emitter)="events($event, 'jobTextArea')"
   >
   </app-input-text-area>
 </div>
