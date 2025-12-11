@@ -1,3 +1,15 @@
-.content {
-  padding: 16px !important;
+:host {
+  display: block;
+  height: 100%;
+
+  mat-tab-group {
+    height: 100%;
+  }
+
+  .content {
+    height: 100%;
+    box-sizing: border-box;
+    padding: 16px !important;
+  }
 }
+

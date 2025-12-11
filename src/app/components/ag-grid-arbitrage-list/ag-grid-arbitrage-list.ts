@@ -28,6 +28,33 @@ export class AgGridArbitrageList {
       },
     },
     {
+      field: 'createdAt',
+      headerName: 'time',
+      flex: 1,
+      cellStyle: { textAlign: 'left' },
+      wrapText: true,
+      autoHeight: true,
+      cellClass: 'selectable-text',
+
+      valueFormatter: p => {
+        const v = p.value;
+        if (!v) return "";
+
+        const date = new Date(v);
+        if (isNaN(date.getTime())) return String(v);
+
+        return date.toLocaleString(); // покажет в локальной таймзоне
+      },
+
+      cellRenderer: (params: ICellRendererParams) => {
+        const pre = document.createElement("pre");
+        pre.style.margin = "0";
+        pre.style.whiteSpace = "pre-wrap";
+        pre.textContent = params.valueFormatted ?? params.value;
+        return pre;
+      },
+    },
+    {
       field: 'details',
       headerName: 'Arbitrage',
       flex: 1,
