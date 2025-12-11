@@ -44,8 +44,6 @@ export class AgGridBotsControl {
       headerName: 'ID',
       width: 120,
       cellClass: 'selectable-text',
-      resizable: true,
-
     },
     {
       field: "createdAt",
@@ -115,7 +113,6 @@ export class AgGridBotsControl {
     sortable: false,
     cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },
     headerClass: 'align-center',
-    resizable: false,
     suppressMovable: true,
   };
 }

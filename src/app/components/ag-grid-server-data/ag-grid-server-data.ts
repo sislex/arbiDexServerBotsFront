@@ -90,7 +90,6 @@ export class AgGridServerData {
     sortable: false,
     cellStyle: { textAlign: 'center'},
     headerClass: 'align-center',
-    resizable: false,
     suppressMovable: true,
   };
 }
