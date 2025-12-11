@@ -49,6 +49,10 @@ export interface IBotErrorAPI extends API {
   response: IBotError[];
 }
 
+export interface IArbitrageAPI extends API {
+  response: IArbitrage[];
+}
+
 export interface ITypesListAPI extends API {
   response: ITypesList[];
 }
@@ -110,6 +114,11 @@ export interface IBotError {
   message: string;
 }
 
+export interface IArbitrage {
+  createdAt: string;
+  details: any;
+}
+
 export interface IBotControlAPI extends API {
   response: IBotControl;
 }
@@ -165,6 +174,7 @@ export interface IActiveBot {
   botInfo: IBotInfoAPI;
   botResultList: IBotControlAPI;
   botErrorList: IBotErrorAPI;
+  botArbitrageList: IArbitrageAPI;
 }
 
 export interface IResult {

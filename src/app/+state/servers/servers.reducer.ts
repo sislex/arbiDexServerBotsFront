@@ -38,7 +38,8 @@ export const initialState: ServersState = {
     activeBot: {
       botInfo: emptyAsyncResponse(emptyBotInfoResponse),
       botResultList: emptyAsyncResponse(emptyBotResultResponse),
-      botErrorList: emptyAsyncResponse([])
+      botErrorList: emptyAsyncResponse([]),
+      botArbitrageList: emptyAsyncResponse([]),
     }
   }
 };
@@ -383,6 +384,66 @@ export const serversReducer = createReducer(
           botErrorList: {
             ...botErrorList,
             loadingTime: Date.now() - botErrorList.startTime!,
+            isLoading: false,
+            isLoaded: true,
+            error,
+          },
+        },
+      },
+    };
+  }),
+
+
+  on(ServersActions.loadBotArbitrationSituations, (state) => {
+    const botArbitrageList = state.activeElementData.activeBot.botArbitrageList;
+
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botArbitrageList: {
+            ...botArbitrageList,
+            startTime: Date.now(),
+            isLoading: true,
+            isLoaded: false,
+          },
+        },
+      },
+    };
+  }),
+  on(ServersActions.loadBotArbitrationSituationsSuccess, (state, { response }) => {
+    const botArbitrageList = state.activeElementData.activeBot.botArbitrageList;
+
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botArbitrageList: {
+            ...botArbitrageList,
+            loadingTime: Date.now() - botArbitrageList.startTime!,
+            isLoading: false,
+            isLoaded: true,
+            response: [...(botArbitrageList.response || []), ...response],
+          },
+        },
+      },
+    };
+  }),
+  on(ServersActions.loadBotArbitrationSituationsFailure, (state, { error }) => {
+    const botArbitrageList = state.activeElementData.activeBot.botArbitrageList;
+    return {
+      ...state,
+      activeElementData: {
+        ...state.activeElementData,
+        activeBot: {
+          ...state.activeElementData.activeBot,
+          botArbitrageList: {
+            ...botArbitrageList,
+            loadingTime: Date.now() - botArbitrageList.startTime!,
             isLoading: false,
             isLoaded: true,
             error,
