@@ -45,14 +45,6 @@ export class AgGridArbitrageList {
 
         return date.toLocaleString(); // покажет в локальной таймзоне
       },
-
-      cellRenderer: (params: ICellRendererParams) => {
-        const pre = document.createElement("pre");
-        pre.style.margin = "0";
-        pre.style.whiteSpace = "pre-wrap";
-        pre.textContent = params.valueFormatted ?? params.value;
-        return pre;
-      },
     },
     {
       field: 'details',
@@ -70,7 +62,7 @@ export class AgGridArbitrageList {
         if (typeof v === "string") return v;
         if (typeof v === "number") return String(v);
 
-        return JSON.stringify(v, null, 2);
+        return JSON.stringify(v.groups, null, 2);
       },
 
       cellRenderer: (params: ICellRendererParams) => {
