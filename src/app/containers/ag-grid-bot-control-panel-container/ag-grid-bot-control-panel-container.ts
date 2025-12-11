@@ -91,8 +91,9 @@ export class AgGridBotControlPanelContainer {
       .subscribe(([botInfo]) => {
 
         const dialogRef = this.dialog.open(BotEditFormContainer, {
-          width: '800px',
-          height: '500px',
+          width: '90%',
+          maxWidth: '100%',
+          height: '90%',
           data: {
             title: 'Change bot settings',
             botInfoTitle: 'Bot Params',

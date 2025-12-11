@@ -4,6 +4,7 @@
     [label]="'Bot parameters'"
     [placeholder]="'Enter bot parameters JSON'"
     [inputValue]="botData"
+    [rowsCount]="10"
     (emitter)="events($event, 'botTextArea')"
   >
   </app-input-text-area>
@@ -15,6 +16,7 @@
     [label]="'Job parameters'"
     [placeholder]="'Enter job parameters JSON'"
     [inputValue]="jobData"
+    [rowsCount]="10"
     (emitter)="events($event, 'jobTextArea')"
   >
   </app-input-text-area>
