@@ -1,4 +1,4 @@
-import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import {ModuleRegistry, AllCommunityModule, ICellRendererParams} from 'ag-grid-community';
 import type { ColDef } from 'ag-grid-community';
 import { AgGridAngular } from 'ag-grid-angular';
 import {Component, EventEmitter, Input, Output} from '@angular/core';
@@ -47,18 +47,36 @@ export class AgGridRulesTable {
       field: "botParams",
       headerName: 'Bot Rule',
       flex: 1,
+      cellStyle: { textAlign: 'left'},
       wrapText: true,
       autoHeight: true,
       valueFormatter: p => JSON.stringify(p.value, null, 2),
+
+      cellRenderer: (params: ICellRendererParams) => {
+        const pre = document.createElement("pre");
+        pre.style.margin = "0";
+        pre.style.whiteSpace = "pre-wrap";
+        pre.textContent = params.valueFormatted ?? params.value;
+        return pre;
+      },
     },
     {
       field: "jobParams",
       headerName: 'Job Rule',
       flex: 1,
+      cellStyle: { textAlign: 'left'},
       wrapText: true,
       autoHeight: true,
       valueFormatter: p => JSON.stringify(p.value, null, 2),
-    },
+
+      cellRenderer: (params: ICellRendererParams) => {
+        const pre = document.createElement("pre");
+        pre.style.margin = "0";
+        pre.style.whiteSpace = "pre-wrap";
+        pre.textContent = params.valueFormatted ?? params.value;
+        return pre;
+      },
+    }
   ];
 
   defaultColDef: ColDef = {
