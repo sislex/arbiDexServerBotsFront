@@ -29,7 +29,6 @@ export class AgGridBotDataList {
       field: "key",
       headerName: 'Parameter',
       width: 200,
-      resizable: true,
       cellStyle: { textAlign: 'left' },
       cellClass: 'selectable-text',
     },
@@ -66,7 +65,6 @@ export class AgGridBotDataList {
     sortable: false,
     cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },
     headerClass: 'align-center',
-    resizable: false,
     suppressMovable: true,
   };
 }

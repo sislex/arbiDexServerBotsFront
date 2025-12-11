@@ -38,7 +38,6 @@ export class AgGrid {
     sortable: false,
     cellStyle: { textAlign: 'center'},
     headerClass: 'align-center',
-    resizable: false,
     suppressMovable: true,
     flex: 1
   };

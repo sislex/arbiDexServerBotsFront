@@ -88,7 +88,6 @@ export class AgGridGateList implements OnChanges {
     sortable: false,
     cellStyle: { textAlign: 'center'},
     headerClass: 'align-center',
-    resizable: false,
     suppressMovable: true,
     flex: 1
   };
