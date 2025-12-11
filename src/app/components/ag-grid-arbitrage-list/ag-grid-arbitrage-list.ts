@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {AgGridAngular} from 'ag-grid-angular';
-import {AllCommunityModule, ColDef, ModuleRegistry} from 'ag-grid-community';
+import {AllCommunityModule, ColDef, type ICellRendererParams, ModuleRegistry} from 'ag-grid-community';
 
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -31,6 +31,28 @@ export class AgGridArbitrageList {
       field: 'details',
       headerName: 'Arbitrage',
       flex: 1,
+      cellStyle: { textAlign: 'left' },
+      wrapText: true,
+      autoHeight: true,
+      cellClass: 'selectable-text',
+
+      valueFormatter: p => {
+        const v = p.value;
+
+        if (v == null) return "";
+        if (typeof v === "string") return v;
+        if (typeof v === "number") return String(v);
+
+        return JSON.stringify(v, null, 2);
+      },
+
+      cellRenderer: (params: ICellRendererParams) => {
+        const pre = document.createElement("pre");
+        pre.style.margin = "0";
+        pre.style.whiteSpace = "pre-wrap";
+        pre.textContent = params.valueFormatted ?? params.value;
+        return pre;
+      },
     },
   ];
 
