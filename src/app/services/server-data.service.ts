@@ -83,6 +83,11 @@ export class ServerDataService {
     return this.get(`/bot/${botId}/errors`);
   }
 
+  // Получить список арбитражных событий
+  getBotArbitrageById(botId: string): Observable<any> {
+    return this.get(`/bot/${botId}/arbitrage`);
+  }
+
   // Поставить выполнение бота на паузу
   setBotPause(botId: string, pause: boolean): Observable<any> {
     return this.post(`/bot/${botId}/pause`, { pause });

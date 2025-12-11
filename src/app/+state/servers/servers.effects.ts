@@ -147,6 +147,7 @@ export class ServersEffects {
           this.store.dispatch(ServersActions.loadBotInfo({ botId: action.botId }));
           this.store.dispatch(ServersActions.loadBotParams({ botId: action.botId }));
           this.store.dispatch(ServersActions.loadBotErrors({ botId: action.botId }));
+          this.store.dispatch(ServersActions.loadBotArbitrationSituations({ botId: action.botId }));
         })
       ),
     { dispatch: false }
@@ -198,6 +199,22 @@ export class ServersEffects {
           }),
           catchError(error =>
             of(ServersActions.loadBotErrorsFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
+  loadBotArbitrationSituations$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ServersActions.loadBotArbitrationSituations),
+      switchMap((action) =>
+        this.serverDataService.getBotArbitrageById(action.botId).pipe(
+          map(botArbitrationSituations => {
+            return ServersActions.loadBotArbitrationSituationsSuccess({ response: botArbitrationSituations });
+          }),
+          catchError(error =>
+            of(ServersActions.loadBotArbitrationSituationsFailure({ error }))
           )
         )
       )

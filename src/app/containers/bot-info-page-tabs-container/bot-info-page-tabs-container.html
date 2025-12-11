@@ -2,8 +2,9 @@
   @if ((activeBotIsLoaded$ | async) && !(activeBotIsLoading$ | async)) {
     <app-bot-info-page-tabs
       [firstLabel]="'Control and params'"
-      [secondLabel]="'Errors'"
-      [thirdLabel]="'Job'"
+      [secondLabel]="'Arbitrage'"
+      [thirdLabel]="'Errors'"
+      [fourthLabel]="'Job'"
     >
       <div first>
         <app-title-table-layout>
@@ -33,6 +34,19 @@
         <app-title-table-layout>
           <app-title-table-button
             title
+            [title]="'Arbitrage'"
+          ></app-title-table-button>
+          <app-ag-grid-arbitrage-list
+            content
+            [rowData]="list.botArbitrageList.response"
+          ></app-ag-grid-arbitrage-list>
+        </app-title-table-layout>
+      </div>
+
+      <div third>
+        <app-title-table-layout>
+          <app-title-table-button
+            title
             [title]="'Errors'"
           ></app-title-table-button>
           <app-ag-grid-error-list
@@ -42,7 +56,7 @@
         </app-title-table-layout>
       </div>
 
-      <div third>
+      <div fourth>
         <app-job-container></app-job-container>
       </div>
 

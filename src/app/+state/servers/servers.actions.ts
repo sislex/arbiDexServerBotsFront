@@ -116,6 +116,19 @@ export const loadBotErrorsFailure = createAction(
   props<{ error: string }>()
 );
 
+export const loadBotArbitrationSituations = createAction(
+  '[Servers] loadBotArbitrationSituations',
+  props<{ botId: string }>()
+);
+export const loadBotArbitrationSituationsSuccess = createAction(
+  '[Servers] loadBotArbitrationSituationsSuccess',
+  props<{ response: any }>()
+);
+export const loadBotArbitrationSituationsFailure = createAction(
+  '[Servers] loadBotArbitrationSituationsFailure',
+  props<{ error: string }>()
+);
+
 export const setIsStartedBot = createAction(
   '[Servers] setIsStartedBot',
   props<{ isStarted: boolean, id: string }>()

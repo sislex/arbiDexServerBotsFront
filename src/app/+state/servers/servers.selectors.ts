@@ -135,6 +135,11 @@ export const getBotResultListIsLoading = createSelector(
   (state: ServersState) => state.activeElementData.activeBot.botResultList.isLoading
 );
 
+export const getBotArbitrageListIsLoading = createSelector(
+  selectFeature,
+  (state: ServersState) => state.activeElementData.activeBot.botArbitrageList.isLoading
+);
+
 export const getBotErrorListIsLoading = createSelector(
   selectFeature,
   (state: ServersState) => state.activeElementData.activeBot.botErrorList.isLoading
@@ -142,9 +147,10 @@ export const getBotErrorListIsLoading = createSelector(
 
 export const getActiveBotIsLoading = createSelector(
   getBotResultListIsLoading,
+  getBotArbitrageListIsLoading,
   getBotErrorListIsLoading,
-  (botResultLoading, botErrorLoading) =>
-    botResultLoading || botErrorLoading
+  (botResultLoading,botArbitrageLoading, botErrorLoading) =>
+    botResultLoading || botArbitrageLoading || botErrorLoading
 );
 
 // ---------- isLoaded селекторы для page-info ----------
@@ -152,15 +158,20 @@ export const getBotResultListIsLoaded = createSelector(
   selectFeature,
   (state: ServersState) => state.activeElementData.activeBot.botResultList.isLoaded
 );
+export const getBotArbitrageListListIsLoaded = createSelector(
+  selectFeature,
+  (state: ServersState) => state.activeElementData.activeBot.botArbitrageList.isLoaded
+);
 export const getBotErrorListIsLoaded = createSelector(
   selectFeature,
   (state: ServersState) => state.activeElementData.activeBot.botErrorList.isLoaded
 );
 export const getActiveBotIsLoaded = createSelector(
   getBotResultListIsLoaded,
+  getBotArbitrageListListIsLoaded,
   getBotErrorListIsLoaded,
-  (botResultLoaded, botErrorLoaded) =>
-    botResultLoaded && botErrorLoaded
+  (botResultLoaded, botArbitrageLoaded, botErrorLoaded) =>
+    botResultLoaded && botArbitrageLoaded && botErrorLoaded
 );
 
 // ---------- селекторы для rules ----------
