@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
-import {Indicator} from '../../../components/ag-grid-components/indicator/indicator';
+import {Indicator} from '../../../components/indicator/indicator';
 
 @Component({
   selector: 'app-indicator-container',

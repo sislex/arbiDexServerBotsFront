@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {Actions} from '../../../components/ag-grid-components/actions/actions';
+import {Actions} from '../../../components/actions/actions';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 
 @Component({

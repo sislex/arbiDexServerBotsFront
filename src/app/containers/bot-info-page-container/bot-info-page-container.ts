@@ -6,7 +6,7 @@ import {
   getDataActiveBot
 } from '../../+state/servers/servers.selectors';
 import {TitleContentLayout} from '../../components/title-content-layout/title-content-layout';
-import {Actions} from '../../components/ag-grid-components/actions/actions';
+import {Actions} from '../../components/actions/actions';
 import {ActivatedRoute, Router} from '@angular/router';
 import {take} from 'rxjs';
 import {clearActiveElementData, setActiveBot, setActiveServer} from '../../+state/servers/servers.actions';

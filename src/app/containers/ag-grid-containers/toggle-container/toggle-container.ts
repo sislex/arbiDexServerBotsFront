@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
-import {Toggle} from '../../../components/ag-grid-components/toggle/toggle';
+import {Toggle} from '../../../components/toggle/toggle';
 
 @Component({
   selector: 'app-toggle-container',
