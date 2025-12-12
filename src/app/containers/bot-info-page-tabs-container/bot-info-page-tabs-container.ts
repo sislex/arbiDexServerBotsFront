@@ -13,7 +13,7 @@ import {AsyncPipe} from '@angular/common';
 import {JobContainer} from '../job-container/job-container';
 import {TransformObjectToKeyValuePipe} from '../../custom-pipes/transform-object-to-key-value.pipe';
 import {TitleTableButton} from '../../components/title-table-button/title-table-button';
-import {AgGridArbitrageList} from '../../components/ag-grid-arbitrage-list/ag-grid-arbitrage-list';
+import {AgGridArbitrageListContainer} from '../ag-grid-arbitrage-list-container/ag-grid-arbitrage-list-container';
 
 @Component({
   selector: 'app-bot-info-page-tabs-container',
@@ -28,7 +28,7 @@ import {AgGridArbitrageList} from '../../components/ag-grid-arbitrage-list/ag-gr
     JobContainer,
     TransformObjectToKeyValuePipe,
     TitleTableButton,
-    AgGridArbitrageList
+    AgGridArbitrageListContainer
   ],
   templateUrl: './bot-info-page-tabs-container.html',
   styleUrl: './bot-info-page-tabs-container.scss',

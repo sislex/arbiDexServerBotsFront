@@ -8,6 +8,8 @@ import {
   actionListStabs_3,
 } from '../+stabs/action-stabs';
 import {apiListColDefs, apiListDefaultColDef, apiListStabs_1} from '../+stabs/api-list-stabs';
+import {botsControlStabs_1} from '../+stabs/bots-control-stabs';
+import {botsControlColDefs, botsControlDefaultColDef} from '../+stabs/bot-control-panel-stabs';
 
 const meta: Meta<AgGrid> = {
   component: AgGrid,
@@ -27,7 +29,9 @@ const meta: Meta<AgGrid> = {
     }),
   ],
   args: {
+
   },
+
 
 };
 export default meta;
@@ -62,5 +66,22 @@ export const ApiListOneEntry: Story = {
     rowData: apiListStabs_1,
     colDefs: apiListColDefs,
     defaultColDef: apiListDefaultColDef
+  },
+};
+
+// export const ArbitrageListOneEntry: Story = {
+//   args: {
+//     rowData: arbitrageListStabs_1,
+//     colDefs: arbitrageListColDefs,
+//     defaultColDef: arbitrageListDefaultColDef
+//   },
+// };
+
+export const botsControlOneEntry: Story = {
+  args: {
+    rowData: botsControlStabs_1,
+    colDefs: botsControlColDefs,
+    defaultColDef: botsControlDefaultColDef,
+
   },
 };

@@ -36,10 +36,9 @@
             title
             [title]="'Arbitrage'"
           ></app-title-table-button>
-          <app-ag-grid-arbitrage-list
+          <app-ag-grid-arbitrage-list-container
             content
-            [rowData]="((dataActiveBot$ | async)?.botArbitrageList?.response)!"
-          ></app-ag-grid-arbitrage-list>
+          ></app-ag-grid-arbitrage-list-container>
         </app-title-table-layout>
       </div>
 

@@ -1,21 +1,25 @@
-import {Component, Input} from '@angular/core';
-import {AgGridAngular} from 'ag-grid-angular';
-import {AllCommunityModule, ColDef, type ICellRendererParams, ModuleRegistry} from 'ag-grid-community';
-
-
-ModuleRegistry.registerModules([AllCommunityModule]);
+import {Component, inject} from '@angular/core';
+import {AgGrid} from '../../components/ag-grid/ag-grid';
+import {AsyncPipe} from '@angular/common';
+import {Store} from '@ngrx/store';
+import {getDataActiveBot} from '../../+state/servers/servers.selectors';
+import {ColDef, ICellRendererParams} from 'ag-grid-community';
 
 @Component({
-  selector: 'app-ag-grid-arbitrage-list',
-  imports: [
-    AgGridAngular
-  ],
-  templateUrl: './ag-grid-arbitrage-list.html',
-  styleUrl: './ag-grid-arbitrage-list.scss',
-})
-export class AgGridArbitrageList {
+  selector: 'app-ag-grid-arbitrage-list-container',
 
-  @Input() rowData: any[] = [];
+  imports: [
+    AgGrid,
+    AsyncPipe
+  ],
+  templateUrl: './ag-grid-arbitrage-list-container.html',
+  styleUrl: './ag-grid-arbitrage-list-container.scss',
+})
+
+export class AgGridArbitrageListContainer {
+  private store = inject(Store);
+
+  dataActiveBot$ = this.store.select(getDataActiveBot);
 
   colDefs: ColDef[] = [
     {
@@ -30,7 +34,7 @@ export class AgGridArbitrageList {
     {
       field: 'createdAt',
       headerName: 'time',
-      flex: 1,
+      width: 150,
       cellStyle: { textAlign: 'left' },
       wrapText: true,
       autoHeight: true,
@@ -43,7 +47,7 @@ export class AgGridArbitrageList {
         const date = new Date(v);
         if (isNaN(date.getTime())) return String(v);
 
-        return date.toLocaleString(); // покажет в локальной таймзоне
+        return date.toLocaleString();
       },
     },
     {

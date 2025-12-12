@@ -11,15 +11,14 @@ import {AgGrid} from '../../components/ag-grid/ag-grid';
     AsyncPipe,
     AgGrid
   ],
-  standalone: true,
   templateUrl: './ag-grid-api-list-container.html',
   styleUrl: './ag-grid-api-list-container.scss',
 })
 export class AgGridApiListContainer {
+
   private store = inject(Store);
 
   apiList$ = this.store.select(getApiList);
-
 
   colDefs: ColDef[] = [
     {
