@@ -1,18 +1,16 @@
-import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
-import type { ICellRendererParams, ColDef } from 'ag-grid-community';
-import { AgGridAngular } from 'ag-grid-angular';
 import {Component, Input} from '@angular/core';
-
-ModuleRegistry.registerModules([AllCommunityModule]);
+import type {ColDef, ICellRendererParams} from 'ag-grid-community';
+import {AgGrid} from '../../components/ag-grid/ag-grid';
 
 @Component({
-  selector: 'app-ag-grid-bot-data-list',
-  imports: [AgGridAngular],
-  standalone: true,
-  templateUrl: './ag-grid-bot-data-list.html',
-  styleUrl: './ag-grid-bot-data-list.scss',
+  selector: 'app-ag-grid-bot-data-list-container',
+  imports: [
+    AgGrid,
+  ],
+  templateUrl: './ag-grid-bot-data-list-container.html',
+  styleUrl: './ag-grid-bot-data-list-container.scss',
 })
-export class AgGridBotDataList {
+export class AgGridBotDataListContainer {
   @Input() rowData: any[] = [];
 
   colDefs: ColDef[] = [

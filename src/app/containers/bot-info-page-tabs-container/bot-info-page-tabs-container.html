@@ -23,10 +23,10 @@
             [title]="'Results'"
           ></app-title-table-button>
 
-          <app-ag-grid-bot-data-list
+          <app-ag-grid-bot-data-list-container
             content
             [rowData]="(dataActiveBot$ | async)?.botResultList?.response | transformObjectToKeyValue"
-          ></app-ag-grid-bot-data-list>
+          ></app-ag-grid-bot-data-list-container>
         </app-title-table-layout>
       </div>
 

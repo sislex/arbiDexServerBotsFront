@@ -6,7 +6,6 @@ import {TitleTableLayout} from '../../components/title-table-layout/title-table-
 import {
   AgGridBotControlPanelContainer
 } from '../ag-grid-bot-control-panel-container/ag-grid-bot-control-panel-container';
-import {AgGridBotDataList} from '../../components/ag-grid-bot-data-list/ag-grid-bot-data-list';
 import {AgGridErrorList} from '../../components/ag-grid-error-list/ag-grid-error-list';
 import {LoaderContainer} from '../loader-container/loader-container';
 import {AsyncPipe} from '@angular/common';
@@ -14,6 +13,7 @@ import {JobContainer} from '../job-container/job-container';
 import {TransformObjectToKeyValuePipe} from '../../custom-pipes/transform-object-to-key-value.pipe';
 import {TitleTableButton} from '../../components/title-table-button/title-table-button';
 import {AgGridArbitrageListContainer} from '../ag-grid-arbitrage-list-container/ag-grid-arbitrage-list-container';
+import {AgGridBotDataListContainer} from '../ag-grid-bot-data-list-container/ag-grid-bot-data-list-container';
 
 @Component({
   selector: 'app-bot-info-page-tabs-container',
@@ -21,14 +21,14 @@ import {AgGridArbitrageListContainer} from '../ag-grid-arbitrage-list-container/
     BotInfoPageTabs,
     TitleTableLayout,
     AgGridBotControlPanelContainer,
-    AgGridBotDataList,
     AgGridErrorList,
     LoaderContainer,
     AsyncPipe,
     JobContainer,
     TransformObjectToKeyValuePipe,
     TitleTableButton,
-    AgGridArbitrageListContainer
+    AgGridArbitrageListContainer,
+    AgGridBotDataListContainer
   ],
   templateUrl: './bot-info-page-tabs-container.html',
   styleUrl: './bot-info-page-tabs-container.scss',

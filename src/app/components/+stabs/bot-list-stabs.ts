@@ -1,3 +1,5 @@
+import type {ColDef} from 'ag-grid-community';
+
 export const botListStabs_1 = [
   {
     "label": "Binance Parser",
@@ -136,3 +138,44 @@ export const botListStabs_3 = [
     "description": "Asset bridge monitoring between Ethereum and Polygon for arbitrage opportunities"
   }
 ];
+
+
+
+export const botListColDefs: ColDef[] = [
+  {
+    field: "#",
+    headerName: '#',
+    width: 50,
+    valueGetter: params => {
+      if (!params.node || params.node.rowIndex == null) return '';
+      return params.node.rowIndex + 1;
+    },
+  },
+  // {
+  //   field: "label",
+  //   headerName: 'Name',
+  //   flex: 1,
+  //   cellStyle: { textAlign: 'left' },
+  // },
+  {
+    field: "type",
+    headerName: 'Type',
+    flex: 1,
+    cellStyle: { textAlign: 'left' },
+  },
+  {
+    field: "description",
+    headerName: 'Description',
+    flex: 3,
+    cellStyle: { textAlign: 'left'},
+    autoHeight: true,
+    wrapText: true,
+  },
+];
+
+export const botListDefaultColDef: ColDef = {
+  sortable: false,
+  cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },
+  headerClass: 'align-center',
+  suppressMovable: true,
+};

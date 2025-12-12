@@ -3163,6 +3163,47 @@
             "templateData": "<app-ag-grid\n  [rowData]=\"((dataActiveBot$ | async)?.botArbitrageList?.response)!\"\n  [colDefs]=\"colDefs\"\n  [defaultColDef]=\"defaultColDef\"\n>\n</app-ag-grid>\n"
         },
         {
+            "name": "AgGridArbitrageListContainer",
+            "id": "component-AgGridArbitrageListContainer-0c04e703a02f61f6f43f678a744a80173c9b7b50eecb35e6525b4051591ceed2c1a840fc7a4484f925e1903dd3d87174adce027ddf5d7a54b289ff72ce5a1bea-1",
+            "file": "src/app/containesr/ag-grid-arbitrage-list-container/ag-grid-arbitrage-list-container.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-ag-grid-arbitrage-list-container",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./ag-grid-arbitrage-list-container.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": false,
+            "imports": [],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\n\n@Component({\n  selector: 'app-ag-grid-arbitrage-list-container',\n  imports: [],\n  templateUrl: './ag-grid-arbitrage-list-container.html',\n  styleUrl: './ag-grid-arbitrage-list-container.scss',\n})\nexport class AgGridArbitrageListContainer {\n\n}\n",
+            "styleUrl": "./ag-grid-arbitrage-list-container.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "isDuplicate": true,
+            "duplicateId": 1,
+            "duplicateName": "AgGridArbitrageListContainer-1",
+            "templateData": "<p>ag-grid-arbitrage-list-container works!</p>\n"
+        },
+        {
             "name": "AgGridBotControlPanelContainer",
             "id": "component-AgGridBotControlPanelContainer-e7b3430ac7cb2c01632298a1bb4b61e9a9831cc50fed3de18c307fc27170c7019334da7db963e04b95274bc4b5a01dd5c631e827160ae68835bb02cbe04b5c7d",
             "file": "src/app/containers/ag-grid-bot-control-panel-container/ag-grid-bot-control-panel-container.ts",
@@ -3364,19 +3405,19 @@
             "templateData": "@if (dataActiveBot$ | async; as list) {\n  <app-ag-grid\n    [rowData]=\"[list]\"\n    [colDefs]=\"colDefs\"\n    [defaultColDef]=\"defaultColDef\"\n  >\n  </app-ag-grid>\n}\n"
         },
         {
-            "name": "AgGridBotDataList",
-            "id": "component-AgGridBotDataList-4fb6f6eb7cc6ad0bf4d4240911bba89c8066fc76373460a16392a4b06807b29b3e35305cceafc97395f0353a23b403b939a7b36c9414060a801192cff4b4d9be",
-            "file": "src/app/components/ag-grid-bot-data-list/ag-grid-bot-data-list.ts",
+            "name": "AgGridBotDataListContainer",
+            "id": "component-AgGridBotDataListContainer-e0a05d06c0903c36321f301b8e81bb155dddf20b8f84278fdc5a9a079e44f530549bdc5539d8f4583d220bf4a11427ca8c9d3a867b49fe6e17bc18e2935d91f6",
+            "file": "src/app/containers/ag-grid-bot-data-list-container/ag-grid-bot-data-list-container.ts",
             "encapsulation": [],
             "entryComponents": [],
             "inputs": [],
             "outputs": [],
             "providers": [],
-            "selector": "app-ag-grid-bot-data-list",
+            "selector": "app-ag-grid-bot-data-list-container",
             "styleUrls": [],
             "styles": [],
             "templateUrl": [
-                "./ag-grid-bot-data-list.html"
+                "./ag-grid-bot-data-list-container.html"
             ],
             "viewProviders": [],
             "hostDirectives": [],
@@ -3421,22 +3462,26 @@
             "deprecationMessage": "",
             "hostBindings": [],
             "hostListeners": [],
-            "standalone": true,
+            "standalone": false,
             "imports": [
                 {
-                    "name": "AgGridAngular"
+                    "name": "AgGrid"
+                },
+                {
+                    "name": "AsyncPipe",
+                    "type": "pipe"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ICellRendererParams, ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, Input} from '@angular/core';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-bot-data-list',\n  imports: [AgGridAngular],\n  standalone: true,\n  templateUrl: './ag-grid-bot-data-list.html',\n  styleUrl: './ag-grid-bot-data-list.scss',\n})\nexport class AgGridBotDataList {\n  @Input() rowData: any[] = [];\n\n  colDefs: ColDef[] = [\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"key\",\n      headerName: 'Parameter',\n      width: 200,\n      cellStyle: { textAlign: 'left' },\n      cellClass: 'selectable-text',\n    },\n    {\n      field: \"value\",\n      headerName: 'Value',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n      wrapText: true,\n      autoHeight: true,\n      cellClass: 'selectable-text',\n\n      valueFormatter: p => {\n        const v = p.value;\n\n        if (v == null) return \"\";\n        if (typeof v === \"string\") return v;\n        if (typeof v === \"number\") return String(v);\n\n        return JSON.stringify(v, null, 2);\n      },\n\n      cellRenderer: (params: ICellRendererParams) => {\n        const pre = document.createElement(\"pre\");\n        pre.style.margin = \"0\";\n        pre.style.whiteSpace = \"pre-wrap\";\n        pre.textContent = params.valueFormatted ?? params.value;\n        return pre;\n      },\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n    headerClass: 'align-center',\n    suppressMovable: true,\n  };\n}\n",
-            "styleUrl": "./ag-grid-bot-data-list.scss",
+            "sourceCode": "import {Component, Input} from '@angular/core';\nimport type {ColDef, ICellRendererParams} from 'ag-grid-community';\nimport {AgGrid} from '../../components/ag-grid/ag-grid';\nimport {AsyncPipe} from '@angular/common';\n\n@Component({\n  selector: 'app-ag-grid-bot-data-list-container',\n  imports: [\n    AgGrid,\n    AsyncPipe\n  ],\n  templateUrl: './ag-grid-bot-data-list-container.html',\n  styleUrl: './ag-grid-bot-data-list-container.scss',\n})\nexport class AgGridBotDataListContainer {\n  @Input() rowData: any[] = [];\n\n  colDefs: ColDef[] = [\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: \"key\",\n      headerName: 'Parameter',\n      width: 200,\n      cellStyle: { textAlign: 'left' },\n      cellClass: 'selectable-text',\n    },\n    {\n      field: \"value\",\n      headerName: 'Value',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n      wrapText: true,\n      autoHeight: true,\n      cellClass: 'selectable-text',\n\n      valueFormatter: p => {\n        const v = p.value;\n\n        if (v == null) return \"\";\n        if (typeof v === \"string\") return v;\n        if (typeof v === \"number\") return String(v);\n\n        return JSON.stringify(v, null, 2);\n      },\n\n      cellRenderer: (params: ICellRendererParams) => {\n        const pre = document.createElement(\"pre\");\n        pre.style.margin = \"0\";\n        pre.style.whiteSpace = \"pre-wrap\";\n        pre.textContent = params.valueFormatted ?? params.value;\n        return pre;\n      },\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n    headerClass: 'align-center',\n    suppressMovable: true,\n  };\n}\n",
+            "styleUrl": "./ag-grid-bot-data-list-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<ag-grid-angular\n  [rowData]=\"rowData\"\n  [columnDefs]=\"colDefs\"\n  [defaultColDef]=\"defaultColDef\"\n  domLayout=\"autoHeight\"\n>\n</ag-grid-angular>\n"
+            "templateData": "<app-ag-grid\n  [rowData]=\"rowData\"\n  [colDefs]=\"colDefs\"\n  [defaultColDef]=\"defaultColDef\"\n>\n</app-ag-grid>\n"
         },
         {
             "name": "AgGridBotList",
@@ -5429,7 +5474,7 @@
         },
         {
             "name": "BotInfoPageTabsContainer",
-            "id": "component-BotInfoPageTabsContainer-f6e74e1bc6085842a53191e47afac12c198d9da4acba54fe8d8fbb53b11a22293f021825dfda9694166fe6fa1de9798299e7dbf9fc5deec461ce3d5a26ba12fb",
+            "id": "component-BotInfoPageTabsContainer-85680afce909f687869c845de635b110b97e85cfa9c23a366f7e6a2f9a429c8c560ebfcd1fc78349ab4574b7349ac49ca4251c99c74b8090b8ad0d89bf324ded",
             "file": "src/app/containers/bot-info-page-tabs-container/bot-info-page-tabs-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -5512,9 +5557,6 @@
                     "name": "AgGridBotControlPanelContainer"
                 },
                 {
-                    "name": "AgGridBotDataList"
-                },
-                {
                     "name": "AgGridErrorList"
                 },
                 {
@@ -5536,18 +5578,21 @@
                 },
                 {
                     "name": "AgGridArbitrageListContainer"
+                },
+                {
+                    "name": "AgGridBotDataListContainer"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {BotInfoPageTabs} from '../../components/bot-info-page-tabs/bot-info-page-tabs';\nimport {getActiveBotIsLoaded, getActiveBotIsLoading, getDataActiveBot} from '../../+state/servers/servers.selectors';\nimport {Store} from '@ngrx/store';\nimport {TitleTableLayout} from '../../components/title-table-layout/title-table-layout';\nimport {\n  AgGridBotControlPanelContainer\n} from '../ag-grid-bot-control-panel-container/ag-grid-bot-control-panel-container';\nimport {AgGridBotDataList} from '../../components/ag-grid-bot-data-list/ag-grid-bot-data-list';\nimport {AgGridErrorList} from '../../components/ag-grid-error-list/ag-grid-error-list';\nimport {LoaderContainer} from '../loader-container/loader-container';\nimport {AsyncPipe} from '@angular/common';\nimport {JobContainer} from '../job-container/job-container';\nimport {TransformObjectToKeyValuePipe} from '../../custom-pipes/transform-object-to-key-value.pipe';\nimport {TitleTableButton} from '../../components/title-table-button/title-table-button';\nimport {AgGridArbitrageListContainer} from '../ag-grid-arbitrage-list-container/ag-grid-arbitrage-list-container';\n\n@Component({\n  selector: 'app-bot-info-page-tabs-container',\n  imports: [\n    BotInfoPageTabs,\n    TitleTableLayout,\n    AgGridBotControlPanelContainer,\n    AgGridBotDataList,\n    AgGridErrorList,\n    LoaderContainer,\n    AsyncPipe,\n    JobContainer,\n    TransformObjectToKeyValuePipe,\n    TitleTableButton,\n    AgGridArbitrageListContainer\n  ],\n  templateUrl: './bot-info-page-tabs-container.html',\n  styleUrl: './bot-info-page-tabs-container.scss',\n})\nexport class BotInfoPageTabsContainer {\n  private store = inject(Store);\n\n  dataActiveBot$ = this.store.select(getDataActiveBot)\n\n  activeBotIsLoaded$ = this.store.select(getActiveBotIsLoaded);\n  activeBotIsLoading$ = this.store.select(getActiveBotIsLoading);\n}\n",
+            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {BotInfoPageTabs} from '../../components/bot-info-page-tabs/bot-info-page-tabs';\nimport {getActiveBotIsLoaded, getActiveBotIsLoading, getDataActiveBot} from '../../+state/servers/servers.selectors';\nimport {Store} from '@ngrx/store';\nimport {TitleTableLayout} from '../../components/title-table-layout/title-table-layout';\nimport {\n  AgGridBotControlPanelContainer\n} from '../ag-grid-bot-control-panel-container/ag-grid-bot-control-panel-container';\nimport {AgGridErrorList} from '../../components/ag-grid-error-list/ag-grid-error-list';\nimport {LoaderContainer} from '../loader-container/loader-container';\nimport {AsyncPipe} from '@angular/common';\nimport {JobContainer} from '../job-container/job-container';\nimport {TransformObjectToKeyValuePipe} from '../../custom-pipes/transform-object-to-key-value.pipe';\nimport {TitleTableButton} from '../../components/title-table-button/title-table-button';\nimport {AgGridArbitrageListContainer} from '../ag-grid-arbitrage-list-container/ag-grid-arbitrage-list-container';\nimport {AgGridBotDataListContainer} from '../ag-grid-bot-data-list-container/ag-grid-bot-data-list-container';\n\n@Component({\n  selector: 'app-bot-info-page-tabs-container',\n  imports: [\n    BotInfoPageTabs,\n    TitleTableLayout,\n    AgGridBotControlPanelContainer,\n    AgGridErrorList,\n    LoaderContainer,\n    AsyncPipe,\n    JobContainer,\n    TransformObjectToKeyValuePipe,\n    TitleTableButton,\n    AgGridArbitrageListContainer,\n    AgGridBotDataListContainer\n  ],\n  templateUrl: './bot-info-page-tabs-container.html',\n  styleUrl: './bot-info-page-tabs-container.scss',\n})\nexport class BotInfoPageTabsContainer {\n  private store = inject(Store);\n\n  dataActiveBot$ = this.store.select(getDataActiveBot)\n\n  activeBotIsLoaded$ = this.store.select(getActiveBotIsLoaded);\n  activeBotIsLoading$ = this.store.select(getActiveBotIsLoading);\n}\n",
             "styleUrl": "./bot-info-page-tabs-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "@if (dataActiveBot$ | async; as list) {\n  @if ((activeBotIsLoaded$ | async) && !(activeBotIsLoading$ | async)) {\n    <app-bot-info-page-tabs\n      [firstLabel]=\"'Control and params'\"\n      [secondLabel]=\"'Arbitrage'\"\n      [thirdLabel]=\"'Errors'\"\n      [fourthLabel]=\"'Job'\"\n    >\n      <div first>\n        <app-title-table-layout>\n          <app-title-table-button\n            title\n            [title]=\"'Bot control'\"\n          ></app-title-table-button>\n          <app-ag-grid-bot-control-panel-container\n            content\n          ></app-ag-grid-bot-control-panel-container>\n        </app-title-table-layout>\n\n        <app-title-table-layout>\n          <app-title-table-button\n            title\n            [title]=\"'Results'\"\n          ></app-title-table-button>\n\n          <app-ag-grid-bot-data-list\n            content\n            [rowData]=\"(dataActiveBot$ | async)?.botResultList?.response | transformObjectToKeyValue\"\n          ></app-ag-grid-bot-data-list>\n        </app-title-table-layout>\n      </div>\n\n      <div second class=\"table-layout-wrapper\">\n        <app-title-table-layout>\n          <app-title-table-button\n            title\n            [title]=\"'Arbitrage'\"\n          ></app-title-table-button>\n          <app-ag-grid-arbitrage-list-container\n            content\n          ></app-ag-grid-arbitrage-list-container>\n        </app-title-table-layout>\n      </div>\n\n      <div third>\n        <app-title-table-layout>\n          <app-title-table-button\n            title\n            [title]=\"'Errors'\"\n          ></app-title-table-button>\n          <app-ag-grid-error-list\n            content\n            [rowData]=\"list.botErrorList.response\"\n          ></app-ag-grid-error-list>\n        </app-title-table-layout>\n      </div>\n\n      <div fourth>\n        <app-job-container></app-job-container>\n      </div>\n\n\n    </app-bot-info-page-tabs>\n  } @else {\n    <app-loader-container></app-loader-container>\n  }\n}\n"
+            "templateData": "@if (dataActiveBot$ | async; as list) {\n  @if ((activeBotIsLoaded$ | async) && !(activeBotIsLoading$ | async)) {\n    <app-bot-info-page-tabs\n      [firstLabel]=\"'Control and params'\"\n      [secondLabel]=\"'Arbitrage'\"\n      [thirdLabel]=\"'Errors'\"\n      [fourthLabel]=\"'Job'\"\n    >\n      <div first>\n        <app-title-table-layout>\n          <app-title-table-button\n            title\n            [title]=\"'Bot control'\"\n          ></app-title-table-button>\n          <app-ag-grid-bot-control-panel-container\n            content\n          ></app-ag-grid-bot-control-panel-container>\n        </app-title-table-layout>\n\n        <app-title-table-layout>\n          <app-title-table-button\n            title\n            [title]=\"'Results'\"\n          ></app-title-table-button>\n\n          <app-ag-grid-bot-data-list-container\n            content\n            [rowData]=\"(dataActiveBot$ | async)?.botResultList?.response | transformObjectToKeyValue\"\n          ></app-ag-grid-bot-data-list-container>\n        </app-title-table-layout>\n      </div>\n\n      <div second class=\"table-layout-wrapper\">\n        <app-title-table-layout>\n          <app-title-table-button\n            title\n            [title]=\"'Arbitrage'\"\n          ></app-title-table-button>\n          <app-ag-grid-arbitrage-list-container\n            content\n          ></app-ag-grid-arbitrage-list-container>\n        </app-title-table-layout>\n      </div>\n\n      <div third>\n        <app-title-table-layout>\n          <app-title-table-button\n            title\n            [title]=\"'Errors'\"\n          ></app-title-table-button>\n          <app-ag-grid-error-list\n            content\n            [rowData]=\"list.botErrorList.response\"\n          ></app-ag-grid-error-list>\n        </app-title-table-layout>\n      </div>\n\n      <div fourth>\n        <app-job-container></app-job-container>\n      </div>\n\n\n    </app-bot-info-page-tabs>\n  } @else {\n    <app-loader-container></app-loader-container>\n  }\n}\n"
         },
         {
             "name": "ButtonComponent",
@@ -6733,7 +6778,7 @@
         },
         {
             "name": "JobContainer",
-            "id": "component-JobContainer-207c2ca70f94e09ecdc844f9c3db7db8ecfea6f22156eac7f9cd4705212f6a98ec17242e3088468216f773833ae250f3ee6e34a291238bd381f98c433bffed1e",
+            "id": "component-JobContainer-e8f60a61033fcb79d8329b0dfa628f1d249b5ffe48b4a509ec784f69cb33021269aa082e630ff7f0db5209ca3bc82aa53e011b97012c1c9161f1ebfbb0a76997",
             "file": "src/app/containers/job-container/job-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -6785,9 +6830,6 @@
             "standalone": true,
             "imports": [
                 {
-                    "name": "AgGridBotDataList"
-                },
-                {
                     "name": "TitleTableLayout"
                 },
                 {
@@ -6799,18 +6841,21 @@
                 {
                     "name": "AsyncPipe",
                     "type": "pipe"
+                },
+                {
+                    "name": "AgGridBotDataListContainer"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {AgGridBotDataList} from '../../components/ag-grid-bot-data-list/ag-grid-bot-data-list';\nimport {TitleTableLayout} from '../../components/title-table-layout/title-table-layout';\nimport {Store} from '@ngrx/store';\nimport {AsyncPipe} from '@angular/common';\nimport {getActionParams} from '../../+state/servers/servers.selectors';\nimport {TitleTableButton} from '../../components/title-table-button/title-table-button';\nimport {JobFormContainer} from '../job-form-container/job-form-container';\n\n@Component({\n  selector: 'app-job-container',\n  imports: [\n    AgGridBotDataList,\n    TitleTableLayout,\n    TitleTableButton,\n    JobFormContainer,\n    AsyncPipe\n  ],\n  standalone: true,\n  templateUrl: './job-container.html',\n  styleUrl: './job-container.scss',\n})\nexport class JobContainer {\n  private store = inject(Store)\n\n  actionParams$ = this.store.select(getActionParams)\n}\n",
+            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {TitleTableLayout} from '../../components/title-table-layout/title-table-layout';\nimport {Store} from '@ngrx/store';\nimport {AsyncPipe} from '@angular/common';\nimport {getActionParams} from '../../+state/servers/servers.selectors';\nimport {TitleTableButton} from '../../components/title-table-button/title-table-button';\nimport {JobFormContainer} from '../job-form-container/job-form-container';\nimport {AgGridBotDataListContainer} from '../ag-grid-bot-data-list-container/ag-grid-bot-data-list-container';\n\n@Component({\n  selector: 'app-job-container',\n  imports: [\n    TitleTableLayout,\n    TitleTableButton,\n    JobFormContainer,\n    AsyncPipe,\n    AgGridBotDataListContainer\n  ],\n  standalone: true,\n  templateUrl: './job-container.html',\n  styleUrl: './job-container.scss',\n})\nexport class JobContainer {\n  private store = inject(Store)\n\n  actionParams$ = this.store.select(getActionParams)\n}\n",
             "styleUrl": "./job-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<app-job-form-container></app-job-form-container>\n@if (actionParams$ | async; as list) {\n  @if (list.length) {\n    <app-title-table-layout>\n      <app-title-table-button\n        title\n        [title]=\"'Results'\"\n      ></app-title-table-button>\n      <app-ag-grid-bot-data-list\n        content\n        [rowData]=\"list\"\n      ></app-ag-grid-bot-data-list>\n    </app-title-table-layout>\n  }\n}\n"
+            "templateData": "<app-job-form-container></app-job-form-container>\n@if (actionParams$ | async; as list) {\n  @if (list.length) {\n    <app-title-table-layout>\n      <app-title-table-button\n        title\n        [title]=\"'Results'\"\n      ></app-title-table-button>\n      <app-ag-grid-bot-data-list-container\n        content\n        [rowData]=\"list\"\n      ></app-ag-grid-bot-data-list-container>\n    </app-title-table-layout>\n  }\n}\n"
         },
         {
             "name": "JobFormContainer",
@@ -9862,7 +9907,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "ColDef[]",
-                "defaultValue": "[\n  {\n    field: \"#\",\n    headerName: '#',\n    width: 50,\n    valueGetter: params => {\n      if (!params.node || params.node.rowIndex == null) return '';\n      return params.node.rowIndex + 1;\n    },\n  },\n  // {\n  //   field: \"label\",\n  //   headerName: 'Name',\n  //   flex: 1,\n  //   cellStyle: { textAlign: 'left' },\n  // },\n  {\n    field: \"type\",\n    headerName: 'Type',\n    flex: 1,\n    cellStyle: { textAlign: 'left' },\n  },\n  {\n    field: \"description\",\n    headerName: 'Description',\n    flex: 3,\n    cellStyle: { textAlign: 'left'},\n    autoHeight: true,\n    wrapText: true,\n  },\n]"
+                "defaultValue": "[\n  {\n    field: \"#\",\n    headerName: '#',\n    width: 50,\n    valueGetter: params => {\n      if (!params.node || params.node.rowIndex == null) return '';\n      return params.node.rowIndex + 1;\n    },\n  },\n  {\n    field: \"type\",\n    headerName: 'Type',\n    flex: 1,\n    cellStyle: { textAlign: 'left' },\n  },\n  {\n    field: \"description\",\n    headerName: 'Description',\n    flex: 3,\n    cellStyle: { textAlign: 'left'},\n    autoHeight: true,\n    wrapText: true,\n  },\n]"
             },
             {
                 "name": "actionListDefaultColDef",
@@ -9965,16 +10010,6 @@
                 "defaultValue": "{\n  providers: [\n    provideBrowserGlobalErrorListeners(),\n    provideHttpClient(),\n    provideZoneChangeDetection({ eventCoalescing: true }),\n    provideRouter(routes),\n    provideState(SERVERS_FEATURE_KEY, serversReducer),\n    provideState(VIEW_FEATURE_KEY, viewReducer),\n    provideStore(),\n    provideEffects(ServersEffects, ViewEffects),\n    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),\n    provideRouterStore(),\n    importProvidersFrom(\n      AgGridModule\n    )\n  ]\n}"
             },
             {
-                "name": "botControlColDefsDefaultColDef",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
-                "file": "src/app/components/+stabs/bot-control-panel-stabs.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "object",
-                "defaultValue": "{\n  sortable: false,\n  cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n  headerClass: 'align-center',\n  suppressMovable: true,\n  autoHeight: true,\n}"
-            },
-            {
                 "name": "botData",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
@@ -9983,6 +10018,26 @@
                 "deprecationMessage": "",
                 "type": "object",
                 "defaultValue": "{\n  botJSON: '331',\n  actionJSON: '225',\n  actionTypeSelect: 'type3',\n  botTypeSelect: 'type2',\n}"
+            },
+            {
+                "name": "botDataListColDefs",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/+stabs/bot-data-list-stabs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "ColDef[]",
+                "defaultValue": "[\n  {\n    field: \"#\",\n    headerName: '#',\n    width: 50,\n    valueGetter: params => {\n      if (!params.node || params.node.rowIndex == null) return '';\n      return params.node.rowIndex + 1;\n    },\n  },\n  {\n    field: \"key\",\n    headerName: 'Parameter',\n    width: 200,\n    cellStyle: { textAlign: 'left' },\n    cellClass: 'selectable-text',\n  },\n  {\n    field: \"value\",\n    headerName: 'Value',\n    flex: 1,\n    cellStyle: { textAlign: 'left' },\n    wrapText: true,\n    autoHeight: true,\n    cellClass: 'selectable-text',\n\n    valueFormatter: p => {\n      const v = p.value;\n\n      if (v == null) return \"\";\n      if (typeof v === \"string\") return v;\n      if (typeof v === \"number\") return String(v);\n\n      return JSON.stringify(v, null, 2);\n    },\n\n    cellRenderer: (params: ICellRendererParams) => {\n      const pre = document.createElement(\"pre\");\n      pre.style.margin = \"0\";\n      pre.style.whiteSpace = \"pre-wrap\";\n      pre.textContent = params.valueFormatted ?? params.value;\n      return pre;\n    },\n  },\n]"
+            },
+            {
+                "name": "botDataListDefaultColDef",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/+stabs/bot-data-list-stabs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "object",
+                "defaultValue": "{\n  sortable: false,\n  cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n  headerClass: 'align-center',\n  suppressMovable: true,\n}"
             },
             {
                 "name": "botDataListStabs_1",
@@ -10002,7 +10057,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\n  {\n    parameter: 'parameter_1',\n    value: 'value_1',\n  },\n]"
+                "defaultValue": "[\n  {\n    key: \"parameter\",\n    value: 'value_1',\n  },\n]"
             },
             {
                 "name": "botListStabs_1",
@@ -10043,6 +10098,16 @@
                 "deprecationMessage": "",
                 "type": "[]",
                 "defaultValue": "[\n  {\n    field: \"id\",\n    headerName: 'ID',\n    width: 100,\n  },\n  {\n    field: 'status',\n    headerName: 'Status',\n    width: 100,\n    cellRenderer: IndicatorContainer,\n    cellRendererParams: {\n      colorMapping: {\n        'active': 'green',\n        '': 'red',\n        'finished': 'gray',\n        'pause': 'yellow',\n      }\n    },\n    cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n    headerClass: 'align-center little-width',\n  },\n  {\n    field: \"paused\",\n    headerName: 'Start/Pause',\n    flex: 1,\n    cellRenderer: PauseBotContainer,\n    // cellRendererParams: {\n    //   onAction: this.onAction.bind(this),\n    // },\n  },\n  {\n    headerName: 'Restart',\n    flex: 1,\n    cellRenderer: RestartBotContainer,\n    // cellRendererParams: {\n    //   onAction: this.onAction.bind(this),\n    // },\n  },\n  {\n    headerName: 'Edit',\n    width: 125,\n    cellRenderer: ActionsContainer,\n    // cellRendererParams: {\n    //   onAction: this.onAction.bind(this),\n    // },\n  },\n]"
+            },
+            {
+                "name": "botsControlDefaultColDef",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/+stabs/bot-control-panel-stabs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "object",
+                "defaultValue": "{\n  sortable: false,\n  cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n  headerClass: 'align-center',\n  suppressMovable: true,\n  autoHeight: true,\n}"
             },
             {
                 "name": "botsControlStabs_1",
@@ -10678,21 +10743,21 @@
                 "name": "initialState",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/app/+state/servers/servers.reducer.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "ServersState",
-                "defaultValue": "{\n  featureName: 'server manager',\n  config: {\n    serverList: serverListConfig,\n    apiList: emptyAsyncResponse([]),\n  },\n  serverListResponse: [],\n  activeElementData: {\n    serverData: emptyAsyncResponse(emptyServerResponse),\n    botTypesList: emptyAsyncResponse([]),\n    jobTypesList: emptyAsyncResponse([]),\n    gateList: [],\n    botControlList: emptyAsyncResponse([]),\n    ruleList: emptyAsyncResponse([]),\n    activeBot: {\n      botInfo: emptyAsyncResponse(emptyBotInfoResponse),\n      botResultList: emptyAsyncResponse(emptyBotResultResponse),\n      botErrorList: emptyAsyncResponse([]),\n      botArbitrageList: emptyAsyncResponse([]),\n    }\n  }\n}"
-            },
-            {
-                "name": "initialState",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/app/+state/view/view.reducer.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "ViewState",
                 "defaultValue": "{\n  isSidebarOpen: true,\n  activeTab: '',\n  tabList: ['bots', 'rules',\n    // 'gates',\n    'server data'],\n}"
+            },
+            {
+                "name": "initialState",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/+state/servers/servers.reducer.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "ServersState",
+                "defaultValue": "{\n  featureName: 'server manager',\n  config: {\n    serverList: serverListConfig,\n    apiList: emptyAsyncResponse([]),\n  },\n  serverListResponse: [],\n  activeElementData: {\n    serverData: emptyAsyncResponse(emptyServerResponse),\n    botTypesList: emptyAsyncResponse([]),\n    jobTypesList: emptyAsyncResponse([]),\n    gateList: [],\n    botControlList: emptyAsyncResponse([]),\n    ruleList: emptyAsyncResponse([]),\n    activeBot: {\n      botInfo: emptyAsyncResponse(emptyBotInfoResponse),\n      botResultList: emptyAsyncResponse(emptyBotResultResponse),\n      botErrorList: emptyAsyncResponse([]),\n      botArbitrageList: emptyAsyncResponse([]),\n    }\n  }\n}"
             },
             {
                 "name": "IRule_1",
@@ -11008,21 +11073,21 @@
                 "name": "selectFeature",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/app/+state/servers/servers.selectors.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "unknown",
-                "defaultValue": "createFeatureSelector<ServersState>(SERVERS_FEATURE_KEY)"
-            },
-            {
-                "name": "selectFeature",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/app/+state/view/view.selectors.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "unknown",
                 "defaultValue": "createFeatureSelector<ViewState>(VIEW_FEATURE_KEY)"
+            },
+            {
+                "name": "selectFeature",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/+state/servers/servers.selectors.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "unknown",
+                "defaultValue": "createFeatureSelector<ServersState>(SERVERS_FEATURE_KEY)"
             },
             {
                 "name": "serverListConfig",
@@ -11308,7 +11373,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "ColDef[]",
-                    "defaultValue": "[\n  {\n    field: \"#\",\n    headerName: '#',\n    width: 50,\n    valueGetter: params => {\n      if (!params.node || params.node.rowIndex == null) return '';\n      return params.node.rowIndex + 1;\n    },\n  },\n  // {\n  //   field: \"label\",\n  //   headerName: 'Name',\n  //   flex: 1,\n  //   cellStyle: { textAlign: 'left' },\n  // },\n  {\n    field: \"type\",\n    headerName: 'Type',\n    flex: 1,\n    cellStyle: { textAlign: 'left' },\n  },\n  {\n    field: \"description\",\n    headerName: 'Description',\n    flex: 3,\n    cellStyle: { textAlign: 'left'},\n    autoHeight: true,\n    wrapText: true,\n  },\n]"
+                    "defaultValue": "[\n  {\n    field: \"#\",\n    headerName: '#',\n    width: 50,\n    valueGetter: params => {\n      if (!params.node || params.node.rowIndex == null) return '';\n      return params.node.rowIndex + 1;\n    },\n  },\n  {\n    field: \"type\",\n    headerName: 'Type',\n    flex: 1,\n    cellStyle: { textAlign: 'left' },\n  },\n  {\n    field: \"description\",\n    headerName: 'Description',\n    flex: 3,\n    cellStyle: { textAlign: 'left'},\n    autoHeight: true,\n    wrapText: true,\n  },\n]"
                 },
                 {
                     "name": "actionListDefaultColDef",
@@ -11469,17 +11534,39 @@
                     "defaultValue": "{\n  providers: [\n    provideBrowserGlobalErrorListeners(),\n    provideHttpClient(),\n    provideZoneChangeDetection({ eventCoalescing: true }),\n    provideRouter(routes),\n    provideState(SERVERS_FEATURE_KEY, serversReducer),\n    provideState(VIEW_FEATURE_KEY, viewReducer),\n    provideStore(),\n    provideEffects(ServersEffects, ViewEffects),\n    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),\n    provideRouterStore(),\n    importProvidersFrom(\n      AgGridModule\n    )\n  ]\n}"
                 }
             ],
-            "src/app/components/+stabs/bot-control-panel-stabs.ts": [
+            "src/app/components/+stabs/bot-data-list-stabs.ts": [
                 {
-                    "name": "botControlColDefsDefaultColDef",
+                    "name": "botDataListColDefs",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
-                    "file": "src/app/components/+stabs/bot-control-panel-stabs.ts",
+                    "file": "src/app/components/+stabs/bot-data-list-stabs.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ColDef[]",
+                    "defaultValue": "[\n  {\n    field: \"#\",\n    headerName: '#',\n    width: 50,\n    valueGetter: params => {\n      if (!params.node || params.node.rowIndex == null) return '';\n      return params.node.rowIndex + 1;\n    },\n  },\n  {\n    field: \"key\",\n    headerName: 'Parameter',\n    width: 200,\n    cellStyle: { textAlign: 'left' },\n    cellClass: 'selectable-text',\n  },\n  {\n    field: \"value\",\n    headerName: 'Value',\n    flex: 1,\n    cellStyle: { textAlign: 'left' },\n    wrapText: true,\n    autoHeight: true,\n    cellClass: 'selectable-text',\n\n    valueFormatter: p => {\n      const v = p.value;\n\n      if (v == null) return \"\";\n      if (typeof v === \"string\") return v;\n      if (typeof v === \"number\") return String(v);\n\n      return JSON.stringify(v, null, 2);\n    },\n\n    cellRenderer: (params: ICellRendererParams) => {\n      const pre = document.createElement(\"pre\");\n      pre.style.margin = \"0\";\n      pre.style.whiteSpace = \"pre-wrap\";\n      pre.textContent = params.valueFormatted ?? params.value;\n      return pre;\n    },\n  },\n]"
+                },
+                {
+                    "name": "botDataListDefaultColDef",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/components/+stabs/bot-data-list-stabs.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "object",
-                    "defaultValue": "{\n  sortable: false,\n  cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n  headerClass: 'align-center',\n  suppressMovable: true,\n  autoHeight: true,\n}"
+                    "defaultValue": "{\n  sortable: false,\n  cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n  headerClass: 'align-center',\n  suppressMovable: true,\n}"
                 },
+                {
+                    "name": "botDataListStabs_1",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/components/+stabs/bot-data-list-stabs.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "[]",
+                    "defaultValue": "[\n  {\n    key: \"parameter\",\n    value: 'value_1',\n  },\n]"
+                }
+            ],
+            "src/app/components/+stabs/bot-control-panel-stabs.ts": [
                 {
                     "name": "botDataListStabs_1",
                     "ctype": "miscellaneous",
@@ -11499,18 +11586,16 @@
                     "deprecationMessage": "",
                     "type": "[]",
                     "defaultValue": "[\n  {\n    field: \"id\",\n    headerName: 'ID',\n    width: 100,\n  },\n  {\n    field: 'status',\n    headerName: 'Status',\n    width: 100,\n    cellRenderer: IndicatorContainer,\n    cellRendererParams: {\n      colorMapping: {\n        'active': 'green',\n        '': 'red',\n        'finished': 'gray',\n        'pause': 'yellow',\n      }\n    },\n    cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n    headerClass: 'align-center little-width',\n  },\n  {\n    field: \"paused\",\n    headerName: 'Start/Pause',\n    flex: 1,\n    cellRenderer: PauseBotContainer,\n    // cellRendererParams: {\n    //   onAction: this.onAction.bind(this),\n    // },\n  },\n  {\n    headerName: 'Restart',\n    flex: 1,\n    cellRenderer: RestartBotContainer,\n    // cellRendererParams: {\n    //   onAction: this.onAction.bind(this),\n    // },\n  },\n  {\n    headerName: 'Edit',\n    width: 125,\n    cellRenderer: ActionsContainer,\n    // cellRendererParams: {\n    //   onAction: this.onAction.bind(this),\n    // },\n  },\n]"
-                }
-            ],
-            "src/app/components/+stabs/bot-data-list-stabs.ts": [
+                },
                 {
-                    "name": "botDataListStabs_1",
+                    "name": "botsControlDefaultColDef",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
-                    "file": "src/app/components/+stabs/bot-data-list-stabs.ts",
+                    "file": "src/app/components/+stabs/bot-control-panel-stabs.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "[]",
-                    "defaultValue": "[\n  {\n    parameter: 'parameter_1',\n    value: 'value_1',\n  },\n]"
+                    "type": "object",
+                    "defaultValue": "{\n  sortable: false,\n  cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n  headerClass: 'align-center',\n  suppressMovable: true,\n  autoHeight: true,\n}"
                 }
             ],
             "src/app/components/+stabs/bot-list-stabs.ts": [
@@ -12665,38 +12750,6 @@
                     "defaultValue": "createFeatureSelector<ViewState>(VIEW_FEATURE_KEY)"
                 }
             ],
-            "src/app/+state/servers/servers.reducer.ts": [
-                {
-                    "name": "initialState",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/+state/servers/servers.reducer.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "ServersState",
-                    "defaultValue": "{\n  featureName: 'server manager',\n  config: {\n    serverList: serverListConfig,\n    apiList: emptyAsyncResponse([]),\n  },\n  serverListResponse: [],\n  activeElementData: {\n    serverData: emptyAsyncResponse(emptyServerResponse),\n    botTypesList: emptyAsyncResponse([]),\n    jobTypesList: emptyAsyncResponse([]),\n    gateList: [],\n    botControlList: emptyAsyncResponse([]),\n    ruleList: emptyAsyncResponse([]),\n    activeBot: {\n      botInfo: emptyAsyncResponse(emptyBotInfoResponse),\n      botResultList: emptyAsyncResponse(emptyBotResultResponse),\n      botErrorList: emptyAsyncResponse([]),\n      botArbitrageList: emptyAsyncResponse([]),\n    }\n  }\n}"
-                },
-                {
-                    "name": "SERVERS_FEATURE_KEY",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/+state/servers/servers.reducer.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "defaultValue": "'servers'"
-                },
-                {
-                    "name": "serversReducer",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/+state/servers/servers.reducer.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "defaultValue": "createReducer(\n  initialState,\n  on(ServersActions.loadServerList, (state) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: {\n        ...state.activeElementData.serverData,\n        startTime:  Date.now(),\n        isLoading: true,\n        isLoaded: false,\n      }\n    }\n  })),\n  on(ServersActions.loadServerListSuccess, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: {\n        ...state.activeElementData.serverData,\n        loadingTime: Date.now() - state.activeElementData.serverData.startTime!,\n        isLoading: false,\n        isLoaded: true,\n        response\n      }\n    }\n  })),\n  on(ServersActions.loadServerListFailure, (state, {error}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: {\n        ...state.activeElementData.serverData,\n        loadingTime: Date.now() - state.activeElementData.serverData.startTime!,\n        isLoading: false,\n        isLoaded: true,\n        error\n      }\n    }\n  })),\n\n  on(ServersActions.loadBotTypesList, (state) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: {\n        ...state.activeElementData.botTypesList,\n        startTime:  Date.now(),\n        isLoading: true,\n        isLoaded: false,\n      }\n    }\n  })),\n  on(ServersActions.loadBotTypesListSuccess, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: {\n        ...state.activeElementData.botTypesList,\n        loadingTime: Date.now() - state.activeElementData.botTypesList.startTime!,\n        isLoading: false,\n        isLoaded: true,\n        response\n      },\n    }\n  })),\n  on(ServersActions.loadBotTypesListFailure, (state, {error}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: {\n        ...state.activeElementData.botTypesList,\n        loadingTime: Date.now() - state.activeElementData.botTypesList.startTime!,\n        isLoading: false,\n        isLoaded: true,\n        error\n      }\n    }\n  })),\n\n  on(ServersActions.loadJobTypesList, (state) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      jobTypesList: {\n        ...state.activeElementData.jobTypesList,\n        startTime:  Date.now(),\n        isLoading: true,\n        isLoaded: false,\n      }\n    }\n  })),\n  on(ServersActions.loadJobTypesListSuccess, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      jobTypesList: {\n        ...state.activeElementData.jobTypesList,\n        loadingTime: Date.now() - state.activeElementData.jobTypesList.startTime!,\n        isLoading: false,\n        isLoaded: true,\n        response\n      }\n    }\n  })),\n  on(ServersActions.loadJobTypesListFailure, (state, {error}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      jobTypesList: {\n        ...state.activeElementData.jobTypesList,\n        loadingTime: Date.now() - state.activeElementData.jobTypesList.startTime!,\n        isLoading: false,\n        isLoaded: true,\n        error\n      }\n    }\n  })),\n\n  on(ServersActions.loadBotControlList, (state) => {\n    const botControlList = state.activeElementData.botControlList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        botControlList: {\n          ...botControlList,\n          startTime: Date.now(),\n          isLoading: true,\n          isLoaded: false,\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotControlListSuccess, (state, { response }) => {\n    const botControlList = state.activeElementData.botControlList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        botControlList: {\n          ...botControlList,\n          loadingTime: Date.now() - botControlList.startTime!,\n          isLoading: false,\n          isLoaded: true,\n          response,\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotControlListFailure, (state, { error }) => {\n    const botControlList = state.activeElementData.botControlList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        botControlList: {\n          ...botControlList,\n          loadingTime: Date.now() - botControlList.startTime!,\n          isLoading: false,\n          isLoaded: true,\n          error,\n        },\n      },\n    };\n  }),\n\n  on(ServersActions.loadBotParams, (state) => {\n    const botResultList = state.activeElementData.activeBot.botResultList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botResultList: {\n            ...botResultList,\n            startTime: Date.now(),\n            isLoading: true,\n            isLoaded: false,\n          },\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotParamsSuccess, (state, { response }) => {\n    const botResultList = state.activeElementData.activeBot.botResultList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botResultList: {\n            ...botResultList,\n            loadingTime: Date.now() - botResultList.startTime!,\n            isLoading: false,\n            isLoaded: true,\n            response: response || botResultList.response ,\n          },\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotParamsFailure, (state, { error }) => {\n    const botResultList = state.activeElementData.activeBot.botResultList;\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botResultList: {\n            ...botResultList,\n            loadingTime: Date.now() - botResultList.startTime!,\n            isLoading: false,\n            isLoaded: true,\n            error,\n          },\n        },\n      },\n    };\n  }),\n\n  on(ServersActions.loadBotInfo, (state) => {\n    const botInfo = state.activeElementData.activeBot.botInfo;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botInfo: {\n            ...botInfo,\n            startTime: Date.now(),\n            isLoading: true,\n            isLoaded: false,\n          },\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotInfoSuccess, (state, { response }) => {\n    const botInfo = state.activeElementData.activeBot.botInfo;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botInfo: {\n            ...botInfo,\n            loadingTime: Date.now() - botInfo.startTime!,\n            isLoading: false,\n            isLoaded: true,\n            response: response || botInfo.response ,\n          },\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotInfoFailure, (state, { error }) => {\n    const botInfo = state.activeElementData.activeBot.botInfo;\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botInfo: {\n            ...botInfo,\n            loadingTime: Date.now() - botInfo.startTime!,\n            isLoading: false,\n            isLoaded: true,\n            error,\n          },\n        },\n      },\n    };\n  }),\n\n\n  on(ServersActions.loadBotErrors, (state) => {\n    const botErrorList = state.activeElementData.activeBot.botErrorList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botErrorList: {\n            ...botErrorList,\n            startTime: Date.now(),\n            isLoading: true,\n            isLoaded: false,\n          },\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotErrorsSuccess, (state, { response }) => {\n    const botErrorList = state.activeElementData.activeBot.botErrorList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botErrorList: {\n            ...botErrorList,\n            loadingTime: Date.now() - botErrorList.startTime!,\n            isLoading: false,\n            isLoaded: true,\n            response: [...(botErrorList.response || []), ...response],\n          },\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotErrorsFailure, (state, { error }) => {\n    const botErrorList = state.activeElementData.activeBot.botErrorList;\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botErrorList: {\n            ...botErrorList,\n            loadingTime: Date.now() - botErrorList.startTime!,\n            isLoading: false,\n            isLoaded: true,\n            error,\n          },\n        },\n      },\n    };\n  }),\n\n\n  on(ServersActions.loadBotArbitrationSituations, (state) => {\n    const botArbitrageList = state.activeElementData.activeBot.botArbitrageList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botArbitrageList: {\n            ...botArbitrageList,\n            startTime: Date.now(),\n            isLoading: true,\n            isLoaded: false,\n          },\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotArbitrationSituationsSuccess, (state, { response }) => {\n    const botArbitrageList = state.activeElementData.activeBot.botArbitrageList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botArbitrageList: {\n            ...botArbitrageList,\n            loadingTime: Date.now() - botArbitrageList.startTime!,\n            isLoading: false,\n            isLoaded: true,\n            response: [...(botArbitrageList.response || []), ...response],\n          },\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotArbitrationSituationsFailure, (state, { error }) => {\n    const botArbitrageList = state.activeElementData.activeBot.botArbitrageList;\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botArbitrageList: {\n            ...botArbitrageList,\n            loadingTime: Date.now() - botArbitrageList.startTime!,\n            isLoading: false,\n            isLoaded: true,\n            error,\n          },\n        },\n      },\n    };\n  }),\n\n  on(ServersActions.setApiList, (state) => {\n    return {\n      ...state,\n      config: {\n        ...state.config,\n        apiList: {\n          ...state.config.apiList,\n          startTime: Date.now(),\n          isLoading: true,\n          isLoaded: false,\n        },\n      },\n    };\n  }),\n  on(ServersActions.setApiListSuccess, (state, { response }) => {\n    return {\n      ...state,\n      config: {\n        ...state.config,\n        apiList: {\n          ...state.config.apiList,\n          loadingTime: Date.now() - state.config.apiList.startTime!,\n          isLoading: false,\n          isLoaded: true,\n          response,\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotErrorsFailure, (state, { error }) => {\n    return {\n      ...state,\n      config: {\n        ...state.config,\n        apiList: {\n          ...state.config.apiList,\n          loadingTime: Date.now() - state.config.apiList.startTime!,\n          isLoading: false,\n          isLoaded: true,\n          error,\n        },\n      },\n    };\n  }),\n\n  on(ServersActions.getRulesList, (state) => {\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        ruleList: {\n          ...state.activeElementData.ruleList,\n          startTime: Date.now(),\n          isLoading: true,\n          isLoaded: false,\n        },\n      },\n    };\n  }),\n  on(ServersActions.getRulesListSuccess, (state, { response }) => {\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        ruleList: {\n          ...state.activeElementData.ruleList,\n          loadingTime: Date.now() - state.config.apiList.startTime!,\n          isLoading: false,\n          isLoaded: true,\n          response,\n        },\n      },\n    };\n  }),\n  on(ServersActions.getRulesListFailure, (state, { error }) => {\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        ruleList: {\n          ...state.activeElementData.ruleList,\n          loadingTime: Date.now() - state.config.apiList.startTime!,\n          isLoading: false,\n          isLoaded: true,\n          error,\n        },\n      },\n    };\n  }),\n\n\n\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: {\n        ...state.activeElementData.serverData,\n        response: {\n          ...state.activeElementData.serverData.response,\n          ip,\n          port\n        }\n      }\n    }\n  })),\n  on(ServersActions.clearActiveElementData, (state,) => ({\n    ...state,\n    activeElementData: initialState.activeElementData\n  })),\n\n  on(ServersActions.setIsStartedBotSuccess, (state, { response }) => {\n    const botInfo = state.activeElementData.activeBot.botInfo;\n    const botResultList = state.activeElementData.activeBot.botResultList;\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botInfo: {\n            ...botInfo,\n            response: {\n              ...botInfo.response,\n              botParams: {\n                ...botInfo.response.botParams,\n                paused: response.paused\n              }\n            },\n          },\n          botResultList: {\n            ...botResultList,\n            response: {\n              ...botResultList.response,\n              status: response.status,\n            }\n          },\n        },\n      },\n    };\n  }),\n\n  on(ServersActions.setBotSettingsSuccess, (state, { response }) => {\n    const botInfo = state.activeElementData.activeBot.botInfo;\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botInfo: {\n            ...botInfo,\n            response,\n          },\n        },\n      },\n    };\n  }),\n\n)"
-                }
-            ],
             "src/app/+state/view/view.reducer.ts": [
                 {
                     "name": "initialState",
@@ -12727,6 +12780,38 @@
                     "deprecationMessage": "",
                     "type": "unknown",
                     "defaultValue": "createReducer(\n  initialState,\n  on(ViewActions.toggleSidebar, (state) => ({\n    ...state,\n    isSidebarOpen: !state.isSidebarOpen\n  })),\n  on(ViewActions.setActiveTab, (state, {tab}) => ({\n    ...state,\n    activeTab: tab\n  })),\n)"
+                }
+            ],
+            "src/app/+state/servers/servers.reducer.ts": [
+                {
+                    "name": "initialState",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/servers/servers.reducer.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ServersState",
+                    "defaultValue": "{\n  featureName: 'server manager',\n  config: {\n    serverList: serverListConfig,\n    apiList: emptyAsyncResponse([]),\n  },\n  serverListResponse: [],\n  activeElementData: {\n    serverData: emptyAsyncResponse(emptyServerResponse),\n    botTypesList: emptyAsyncResponse([]),\n    jobTypesList: emptyAsyncResponse([]),\n    gateList: [],\n    botControlList: emptyAsyncResponse([]),\n    ruleList: emptyAsyncResponse([]),\n    activeBot: {\n      botInfo: emptyAsyncResponse(emptyBotInfoResponse),\n      botResultList: emptyAsyncResponse(emptyBotResultResponse),\n      botErrorList: emptyAsyncResponse([]),\n      botArbitrageList: emptyAsyncResponse([]),\n    }\n  }\n}"
+                },
+                {
+                    "name": "SERVERS_FEATURE_KEY",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/servers/servers.reducer.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "defaultValue": "'servers'"
+                },
+                {
+                    "name": "serversReducer",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/servers/servers.reducer.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "unknown",
+                    "defaultValue": "createReducer(\n  initialState,\n  on(ServersActions.loadServerList, (state) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: {\n        ...state.activeElementData.serverData,\n        startTime:  Date.now(),\n        isLoading: true,\n        isLoaded: false,\n      }\n    }\n  })),\n  on(ServersActions.loadServerListSuccess, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: {\n        ...state.activeElementData.serverData,\n        loadingTime: Date.now() - state.activeElementData.serverData.startTime!,\n        isLoading: false,\n        isLoaded: true,\n        response\n      }\n    }\n  })),\n  on(ServersActions.loadServerListFailure, (state, {error}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: {\n        ...state.activeElementData.serverData,\n        loadingTime: Date.now() - state.activeElementData.serverData.startTime!,\n        isLoading: false,\n        isLoaded: true,\n        error\n      }\n    }\n  })),\n\n  on(ServersActions.loadBotTypesList, (state) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: {\n        ...state.activeElementData.botTypesList,\n        startTime:  Date.now(),\n        isLoading: true,\n        isLoaded: false,\n      }\n    }\n  })),\n  on(ServersActions.loadBotTypesListSuccess, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: {\n        ...state.activeElementData.botTypesList,\n        loadingTime: Date.now() - state.activeElementData.botTypesList.startTime!,\n        isLoading: false,\n        isLoaded: true,\n        response\n      },\n    }\n  })),\n  on(ServersActions.loadBotTypesListFailure, (state, {error}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      botTypesList: {\n        ...state.activeElementData.botTypesList,\n        loadingTime: Date.now() - state.activeElementData.botTypesList.startTime!,\n        isLoading: false,\n        isLoaded: true,\n        error\n      }\n    }\n  })),\n\n  on(ServersActions.loadJobTypesList, (state) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      jobTypesList: {\n        ...state.activeElementData.jobTypesList,\n        startTime:  Date.now(),\n        isLoading: true,\n        isLoaded: false,\n      }\n    }\n  })),\n  on(ServersActions.loadJobTypesListSuccess, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      jobTypesList: {\n        ...state.activeElementData.jobTypesList,\n        loadingTime: Date.now() - state.activeElementData.jobTypesList.startTime!,\n        isLoading: false,\n        isLoaded: true,\n        response\n      }\n    }\n  })),\n  on(ServersActions.loadJobTypesListFailure, (state, {error}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      jobTypesList: {\n        ...state.activeElementData.jobTypesList,\n        loadingTime: Date.now() - state.activeElementData.jobTypesList.startTime!,\n        isLoading: false,\n        isLoaded: true,\n        error\n      }\n    }\n  })),\n\n  on(ServersActions.loadBotControlList, (state) => {\n    const botControlList = state.activeElementData.botControlList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        botControlList: {\n          ...botControlList,\n          startTime: Date.now(),\n          isLoading: true,\n          isLoaded: false,\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotControlListSuccess, (state, { response }) => {\n    const botControlList = state.activeElementData.botControlList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        botControlList: {\n          ...botControlList,\n          loadingTime: Date.now() - botControlList.startTime!,\n          isLoading: false,\n          isLoaded: true,\n          response,\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotControlListFailure, (state, { error }) => {\n    const botControlList = state.activeElementData.botControlList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        botControlList: {\n          ...botControlList,\n          loadingTime: Date.now() - botControlList.startTime!,\n          isLoading: false,\n          isLoaded: true,\n          error,\n        },\n      },\n    };\n  }),\n\n  on(ServersActions.loadBotParams, (state) => {\n    const botResultList = state.activeElementData.activeBot.botResultList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botResultList: {\n            ...botResultList,\n            startTime: Date.now(),\n            isLoading: true,\n            isLoaded: false,\n          },\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotParamsSuccess, (state, { response }) => {\n    const botResultList = state.activeElementData.activeBot.botResultList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botResultList: {\n            ...botResultList,\n            loadingTime: Date.now() - botResultList.startTime!,\n            isLoading: false,\n            isLoaded: true,\n            response: response || botResultList.response ,\n          },\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotParamsFailure, (state, { error }) => {\n    const botResultList = state.activeElementData.activeBot.botResultList;\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botResultList: {\n            ...botResultList,\n            loadingTime: Date.now() - botResultList.startTime!,\n            isLoading: false,\n            isLoaded: true,\n            error,\n          },\n        },\n      },\n    };\n  }),\n\n  on(ServersActions.loadBotInfo, (state) => {\n    const botInfo = state.activeElementData.activeBot.botInfo;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botInfo: {\n            ...botInfo,\n            startTime: Date.now(),\n            isLoading: true,\n            isLoaded: false,\n          },\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotInfoSuccess, (state, { response }) => {\n    const botInfo = state.activeElementData.activeBot.botInfo;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botInfo: {\n            ...botInfo,\n            loadingTime: Date.now() - botInfo.startTime!,\n            isLoading: false,\n            isLoaded: true,\n            response: response || botInfo.response ,\n          },\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotInfoFailure, (state, { error }) => {\n    const botInfo = state.activeElementData.activeBot.botInfo;\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botInfo: {\n            ...botInfo,\n            loadingTime: Date.now() - botInfo.startTime!,\n            isLoading: false,\n            isLoaded: true,\n            error,\n          },\n        },\n      },\n    };\n  }),\n\n\n  on(ServersActions.loadBotErrors, (state) => {\n    const botErrorList = state.activeElementData.activeBot.botErrorList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botErrorList: {\n            ...botErrorList,\n            startTime: Date.now(),\n            isLoading: true,\n            isLoaded: false,\n          },\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotErrorsSuccess, (state, { response }) => {\n    const botErrorList = state.activeElementData.activeBot.botErrorList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botErrorList: {\n            ...botErrorList,\n            loadingTime: Date.now() - botErrorList.startTime!,\n            isLoading: false,\n            isLoaded: true,\n            response: [...(botErrorList.response || []), ...response],\n          },\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotErrorsFailure, (state, { error }) => {\n    const botErrorList = state.activeElementData.activeBot.botErrorList;\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botErrorList: {\n            ...botErrorList,\n            loadingTime: Date.now() - botErrorList.startTime!,\n            isLoading: false,\n            isLoaded: true,\n            error,\n          },\n        },\n      },\n    };\n  }),\n\n\n  on(ServersActions.loadBotArbitrationSituations, (state) => {\n    const botArbitrageList = state.activeElementData.activeBot.botArbitrageList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botArbitrageList: {\n            ...botArbitrageList,\n            startTime: Date.now(),\n            isLoading: true,\n            isLoaded: false,\n          },\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotArbitrationSituationsSuccess, (state, { response }) => {\n    const botArbitrageList = state.activeElementData.activeBot.botArbitrageList;\n\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botArbitrageList: {\n            ...botArbitrageList,\n            loadingTime: Date.now() - botArbitrageList.startTime!,\n            isLoading: false,\n            isLoaded: true,\n            response: [...(botArbitrageList.response || []), ...response],\n          },\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotArbitrationSituationsFailure, (state, { error }) => {\n    const botArbitrageList = state.activeElementData.activeBot.botArbitrageList;\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botArbitrageList: {\n            ...botArbitrageList,\n            loadingTime: Date.now() - botArbitrageList.startTime!,\n            isLoading: false,\n            isLoaded: true,\n            error,\n          },\n        },\n      },\n    };\n  }),\n\n  on(ServersActions.setApiList, (state) => {\n    return {\n      ...state,\n      config: {\n        ...state.config,\n        apiList: {\n          ...state.config.apiList,\n          startTime: Date.now(),\n          isLoading: true,\n          isLoaded: false,\n        },\n      },\n    };\n  }),\n  on(ServersActions.setApiListSuccess, (state, { response }) => {\n    return {\n      ...state,\n      config: {\n        ...state.config,\n        apiList: {\n          ...state.config.apiList,\n          loadingTime: Date.now() - state.config.apiList.startTime!,\n          isLoading: false,\n          isLoaded: true,\n          response,\n        },\n      },\n    };\n  }),\n  on(ServersActions.loadBotErrorsFailure, (state, { error }) => {\n    return {\n      ...state,\n      config: {\n        ...state.config,\n        apiList: {\n          ...state.config.apiList,\n          loadingTime: Date.now() - state.config.apiList.startTime!,\n          isLoading: false,\n          isLoaded: true,\n          error,\n        },\n      },\n    };\n  }),\n\n  on(ServersActions.getRulesList, (state) => {\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        ruleList: {\n          ...state.activeElementData.ruleList,\n          startTime: Date.now(),\n          isLoading: true,\n          isLoaded: false,\n        },\n      },\n    };\n  }),\n  on(ServersActions.getRulesListSuccess, (state, { response }) => {\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        ruleList: {\n          ...state.activeElementData.ruleList,\n          loadingTime: Date.now() - state.config.apiList.startTime!,\n          isLoading: false,\n          isLoaded: true,\n          response,\n        },\n      },\n    };\n  }),\n  on(ServersActions.getRulesListFailure, (state, { error }) => {\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        ruleList: {\n          ...state.activeElementData.ruleList,\n          loadingTime: Date.now() - state.config.apiList.startTime!,\n          isLoading: false,\n          isLoaded: true,\n          error,\n        },\n      },\n    };\n  }),\n\n\n\n  on(ServersActions.setGateList, (state, {response}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      gateList: response\n    }\n  })),\n  on(ServersActions.setActiveServer, (state, {ip, port}) => ({\n    ...state,\n    activeElementData: {\n      ...state.activeElementData,\n      serverData: {\n        ...state.activeElementData.serverData,\n        response: {\n          ...state.activeElementData.serverData.response,\n          ip,\n          port\n        }\n      }\n    }\n  })),\n  on(ServersActions.clearActiveElementData, (state,) => ({\n    ...state,\n    activeElementData: initialState.activeElementData\n  })),\n\n  on(ServersActions.setIsStartedBotSuccess, (state, { response }) => {\n    const botInfo = state.activeElementData.activeBot.botInfo;\n    const botResultList = state.activeElementData.activeBot.botResultList;\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botInfo: {\n            ...botInfo,\n            response: {\n              ...botInfo.response,\n              botParams: {\n                ...botInfo.response.botParams,\n                paused: response.paused\n              }\n            },\n          },\n          botResultList: {\n            ...botResultList,\n            response: {\n              ...botResultList.response,\n              status: response.status,\n            }\n          },\n        },\n      },\n    };\n  }),\n\n  on(ServersActions.setBotSettingsSuccess, (state, { response }) => {\n    const botInfo = state.activeElementData.activeBot.botInfo;\n    return {\n      ...state,\n      activeElementData: {\n        ...state.activeElementData,\n        activeBot: {\n          ...state.activeElementData.activeBot,\n          botInfo: {\n            ...botInfo,\n            response,\n          },\n        },\n      },\n    };\n  }),\n\n)"
                 }
             ],
             "src/app/components/+stabs/rules-table-stabs.ts": [
@@ -14063,16 +14148,6 @@
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
-                "name": "botControlColDefsDefaultColDef",
-                "coveragePercent": 0,
-                "coverageCount": "0/1",
-                "status": "low"
-            },
-            {
-                "filePath": "src/app/components/+stabs/bot-control-panel-stabs.ts",
-                "type": "variable",
-                "linktype": "miscellaneous",
-                "linksubtype": "variable",
                 "name": "botDataListStabs_1",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
@@ -14084,6 +14159,36 @@
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
                 "name": "botsControlColDefs",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/+stabs/bot-control-panel-stabs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "botsControlDefaultColDef",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/+stabs/bot-data-list-stabs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "botDataListColDefs",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/+stabs/bot-data-list-stabs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "botDataListDefaultColDef",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
@@ -14256,15 +14361,6 @@
                 "name": "serverStabs_3",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
-                "status": "low"
-            },
-            {
-                "filePath": "src/app/components/ag-grid-bot-data-list/ag-grid-bot-data-list.ts",
-                "type": "component",
-                "linktype": "component",
-                "name": "AgGridBotDataList",
-                "coveragePercent": 0,
-                "coverageCount": "0/4",
                 "status": "low"
             },
             {
@@ -14585,6 +14681,15 @@
                 "status": "low"
             },
             {
+                "filePath": "src/app/containers/ag-grid-bot-data-list-container/ag-grid-bot-data-list-container.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "AgGridBotDataListContainer",
+                "coveragePercent": 0,
+                "coverageCount": "0/4",
+                "status": "low"
+            },
+            {
                 "filePath": "src/app/containers/ag-grid-bot-list-container/ag-grid-bot-list-container.ts",
                 "type": "component",
                 "linktype": "component",
@@ -14846,6 +14951,15 @@
                 "name": "ToolbarContainer",
                 "coveragePercent": 0,
                 "coverageCount": "0/4",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/containesr/ag-grid-arbitrage-list-container/ag-grid-arbitrage-list-container.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "AgGridArbitrageListContainer",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
                 "status": "low"
             },
             {

@@ -10,6 +10,14 @@ import {
 import {apiListColDefs, apiListDefaultColDef, apiListStabs_1} from '../+stabs/api-list-stabs';
 import {botsControlStabs_1} from '../+stabs/bots-control-stabs';
 import {botsControlColDefs, botsControlDefaultColDef} from '../+stabs/bot-control-panel-stabs';
+import {botDataListColDefs, botDataListDefaultColDef, botDataListStabs_1} from '../+stabs/bot-data-list-stabs';
+import {
+  botListColDefs,
+  botListDefaultColDef,
+  botListStabs_1,
+  botListStabs_2,
+  botListStabs_3
+} from '../+stabs/bot-list-stabs';
 
 const meta: Meta<AgGrid> = {
   component: AgGrid,
@@ -83,5 +91,46 @@ export const botsControlOneEntry: Story = {
     colDefs: botsControlColDefs,
     defaultColDef: botsControlDefaultColDef,
 
+  },
+};
+
+export const botsDataOneEntry: Story = {
+  args: {
+    rowData: botDataListStabs_1,
+    colDefs: botDataListColDefs,
+    defaultColDef: botDataListDefaultColDef,
+  },
+};
+
+
+
+export const botListOneEntry: Story = {
+  args: {
+    rowData: botListStabs_1,
+    colDefs: botListColDefs,
+    defaultColDef: botListDefaultColDef,
+  },
+};
+
+export const botListServersList: Story = {
+  args: {
+    rowData: botListStabs_2,
+    colDefs: botListColDefs,
+    defaultColDef: botListDefaultColDef,
+  },
+};
+
+export const botListBigDataServersList: Story = {
+  args: {
+    rowData: botListStabs_3,
+    colDefs: botListColDefs,
+    defaultColDef: botListDefaultColDef,
+  },
+};
+
+
+export const botControlOneEntry: Story = {
+  args: {
+    rowData: botsControlStabs_1,
   },
 };
