@@ -1,23 +1,21 @@
 import { Component } from '@angular/core';
-import {Actions} from '../../../components/actions/actions';
+import {Actions} from '../../components/actions/actions';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 
 @Component({
-  selector: 'app-launch-control-container',
+  selector: 'app-actions-container',
   imports: [
     Actions
   ],
   standalone: true,
-  templateUrl: './launch-control-container.html',
-  styleUrl: './launch-control-container.scss'
+  templateUrl: './actions-container.html',
+  styleUrl: './actions-container.scss'
 })
-export class LaunchControlContainer implements ICellRendererAngularComp {
+export class ActionsContainer implements ICellRendererAngularComp {
   params: any;
-  isStarted: boolean = false;
 
   agInit(params: any): void {
     this.params = params;
-    this.isStarted = params.value ?? false;
   }
 
   refresh(): boolean {
@@ -29,7 +27,7 @@ export class LaunchControlContainer implements ICellRendererAngularComp {
       this.params.onAction(
         {
           event: $event.event,
-          actionType
+          actionType,
         },
         this.params.data
       );

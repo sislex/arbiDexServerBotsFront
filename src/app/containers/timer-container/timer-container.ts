@@ -1,5 +1,5 @@
 import {Component, OnDestroy} from '@angular/core';
-import {Timer} from '../../../components/timer/timer';
+import {Timer} from '../../components/timer/timer';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 
 @Component({

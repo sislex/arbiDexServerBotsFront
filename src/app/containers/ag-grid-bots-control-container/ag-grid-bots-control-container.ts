@@ -6,7 +6,7 @@ import {AsyncPipe} from '@angular/common';
 import {Router} from '@angular/router';
 import {take} from 'rxjs';
 import type {ColDef} from 'ag-grid-community';
-import {IndicatorContainer} from '../ag-grid-containers/indicator-container/indicator-container';
+import {IndicatorContainer} from '../indicator-container/indicator-container';
 import {AgGrid} from '../../components/ag-grid/ag-grid';
 
 @Component({

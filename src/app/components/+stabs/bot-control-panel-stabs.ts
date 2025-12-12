@@ -1,7 +1,7 @@
-import {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';
+import {IndicatorContainer} from '../../containers/indicator-container/indicator-container';
 import {PauseBotContainer} from '../../containers/pause-bot-container/pause-bot-container';
 import {RestartBotContainer} from '../../containers/restart-bot-container/restart-bot-container';
-import {ActionsContainer} from '../../containers/ag-grid-containers/actions-container/actions-container';
+import {ActionsContainer} from '../../containers/actions-container/actions-container';
 
 export const botDataListStabs_1 = [
   {

@@ -16,10 +16,10 @@ import {AsyncPipe} from '@angular/common';
 import {combineLatest, map, take} from 'rxjs';
 import {AgGrid} from '../../components/ag-grid/ag-grid';
 import type {ColDef} from 'ag-grid-community';
-import {IndicatorContainer} from '../ag-grid-containers/indicator-container/indicator-container';
+import {IndicatorContainer} from '../indicator-container/indicator-container';
 import {PauseBotContainer} from '../pause-bot-container/pause-bot-container';
 import {RestartBotContainer} from '../restart-bot-container/restart-bot-container';
-import {ActionsContainer} from '../ag-grid-containers/actions-container/actions-container';
+import {ActionsContainer} from '../actions-container/actions-container';
 
 @Component({
   selector: 'app-ag-grid-bot-control-panel-container',

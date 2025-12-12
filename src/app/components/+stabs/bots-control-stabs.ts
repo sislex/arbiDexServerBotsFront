@@ -1,5 +1,5 @@
 import type {ColDef} from 'ag-grid-community';
-import {IndicatorContainer} from '../../containers/ag-grid-containers/indicator-container/indicator-container';
+import {IndicatorContainer} from '../../containers/indicator-container/indicator-container';
 
 export const botsControlStabs_1 = [
   {
