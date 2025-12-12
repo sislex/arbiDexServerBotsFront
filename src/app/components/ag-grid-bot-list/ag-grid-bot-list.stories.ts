@@ -1,6 +1,6 @@
 import {Meta, moduleMetadata, StoryObj} from '@storybook/angular';
 import {AgGridBotList} from './ag-grid-bot-list';
-import {botListStabs_1, botListStabs_2, botListStabs_3} from './stabs';
+import {botListStabs_1, botListStabs_2, botListStabs_3} from '../+stabs/bot-list-stabs';
 
 const meta: Meta<AgGridBotList> = {
   component: AgGridBotList,

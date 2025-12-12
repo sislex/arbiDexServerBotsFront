@@ -1,6 +1,6 @@
 import {Meta, moduleMetadata, StoryObj} from '@storybook/angular';
 import {AgGridServerData} from './ag-grid-server-data';
-import {serverStabs_1, serverStabs_2, serverStabs_3} from './stabs';
+import {serverStabs_1, serverStabs_2, serverStabs_3} from '../+stabs/server-data-stabs';
 
 const meta: Meta<AgGridServerData> = {
   component: AgGridServerData,

@@ -1,6 +1,6 @@
 import {Meta, moduleMetadata, StoryObj} from '@storybook/angular';
 import {AgGridRulesTable} from './ag-grid-rules-table';
-import {IRule_1, IRule_2} from './stabs';
+import {IRule_1, IRule_2} from '../+stabs/rules-table-stabs';
 
 const meta: Meta<AgGridRulesTable> = {
   component: AgGridRulesTable,

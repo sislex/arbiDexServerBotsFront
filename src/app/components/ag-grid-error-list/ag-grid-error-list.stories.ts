@@ -1,6 +1,6 @@
 import {Meta, moduleMetadata, StoryObj} from '@storybook/angular';
 import {AgGridErrorList} from './ag-grid-error-list';
-import {errorListStabs_1, errorListStabs_2, errorListStabs_3} from './stabs';
+import {errorListStabs_1, errorListStabs_2, errorListStabs_3} from '../+stabs/error-list-stabs';
 
 
 const meta: Meta<AgGridErrorList> = {

@@ -1,7 +1,7 @@
 import {Meta, moduleMetadata, StoryObj} from '@storybook/angular';
 import {AgGridGateList} from './ag-grid-gate-list';
-import {gateListStabs_2, gateListStabs_3, gateListStabs_4} from './stabs';
 import { AgGridAngular } from 'ag-grid-angular';
+import {gateListStabs_2, gateListStabs_3, gateListStabs_4} from '../+stabs/gate-list-stabs';
 
 const meta: Meta<AgGridGateList> = {
   component: AgGridGateList,
