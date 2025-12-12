@@ -1,3 +1,7 @@
+import type {ColDef} from 'ag-grid-community';
+import {TimerContainer} from '../../containers/timer-container/timer-container';
+import {IndicatorContainer} from '../../containers/indicator-container/indicator-container';
+
 const addDaysUTC = (days: number): string => {
   const now = new Date();
   const utcNow = Date.UTC(
@@ -77,4 +81,80 @@ export const serverStabs_3 = {
   timestampStart: addDaysUTC(-10),
   timestampFinish: addDaysUTC(1),
   botsCount: 0,
+};
+
+
+export const serverColDefs: ColDef[] = [
+  {
+    field: 'ip',
+    headerName: 'IP',
+    flex: 1,
+  },
+  {
+    headerName: 'Authorization Data',
+    flex: 1,
+    valueGetter:(params) => {
+      const authorizationData = params.data?.authorizationData;
+      return authorizationData || "-";
+    }
+  },
+  {
+    field: 'version',
+    headerName: 'Version',
+    flex: 1,
+  },
+  {
+    headerName: 'Time To Close',
+    cellRenderer: TimerContainer,
+    flex: 1,
+    valueGetter: (params) => {
+      const time = params.data?.timestampFinish;
+      if (!time) return null;
+
+      const finishUTC = Date.parse(time);
+      return finishUTC > Date.now() ? time : null;
+    },
+  },
+  {
+    headerName: 'Time After Close',
+    cellRenderer: TimerContainer,
+    flex: 1,
+    valueGetter: (params) => {
+      const time = params.data?.timestampFinish;
+      if (!time) return null;
+
+      const finishUTC = Date.parse(time);
+      return finishUTC < Date.now() ? time : null;
+    },
+  },
+  {
+    field: 'botsCount',
+    headerName: 'Bots',
+    flex: 1,
+  },
+  {
+    field: 'status',
+    width: 80,
+    headerName: 'Status',
+    cellRenderer: IndicatorContainer,
+    cellRendererParams: {
+      colorMapping: {
+        'active': 'green',
+        'running': 'green',
+        'inactive': 'red',
+        'stopped': 'red',
+        'pending': 'yellow',
+        'error': 'red'
+      }
+    },
+    cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },
+    headerClass: 'align-center little-width',
+  },
+];
+
+export const serverDefaultColDef: ColDef = {
+  sortable: false,
+  cellStyle: { textAlign: 'center'},
+  headerClass: 'align-center',
+  suppressMovable: true,
 };

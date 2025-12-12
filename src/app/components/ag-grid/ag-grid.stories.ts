@@ -26,6 +26,13 @@ import {
   errorListStabs_3
 } from '../+stabs/error-list-stabs';
 import {IRule_1, IRule_2, rulesTableColDefs, rulesTableDefaultColDef} from '../+stabs/rules-table-stabs';
+import {
+  serverColDefs,
+  serverDefaultColDef,
+  serverStabs_1,
+  serverStabs_2,
+  serverStabs_3
+} from '../+stabs/server-data-stabs';
 
 const meta: Meta<AgGrid> = {
   component: AgGrid,
@@ -181,5 +188,31 @@ export const rulesTableFiveEntry: Story = {
     rowData: IRule_2,
     colDefs: rulesTableColDefs,
     defaultColDef: rulesTableDefaultColDef,
+  },
+};
+
+
+
+export const OneServer: Story = {
+  args: {
+    rowData: [serverStabs_1],
+    colDefs: serverColDefs,
+    defaultColDef: serverDefaultColDef,
+  },
+};
+
+export const ServersListBigData: Story = {
+  args: {
+    rowData: serverStabs_2,
+    colDefs: serverColDefs,
+    defaultColDef: serverDefaultColDef,
+  },
+};
+
+export const ServerError: Story = {
+  args: {
+    rowData: [serverStabs_3],
+    colDefs: serverColDefs,
+    defaultColDef: serverDefaultColDef,
   },
 };
