@@ -1,6 +1,13 @@
 import {Meta, moduleMetadata, StoryObj} from '@storybook/angular';
 import {AgGrid} from './ag-grid';
-import {gridStabs_1} from './stabs';
+import {
+  actionListColDefs,
+  actionListDefaultColDef,
+  actionListStabs_1,
+  actionListStabs_2,
+  actionListStabs_3,
+} from '../+stabs/action-stabs';
+import {apiListColDefs, apiListDefaultColDef, apiListStabs_1} from '../+stabs/api-list-stabs';
 
 const meta: Meta<AgGrid> = {
   component: AgGrid,
@@ -28,8 +35,32 @@ type Story = StoryObj<AgGrid>;
 
 export const Empty: Story = {};
 
-export const BasicRows: Story = {
+export const ActionListOneEntry: Story = {
   args: {
-    rowData: gridStabs_1
+    rowData: actionListStabs_1,
+    colDefs: actionListColDefs,
+    defaultColDef: actionListDefaultColDef
+  },
+};
+export const ActionListBasic: Story = {
+  args: {
+    rowData: actionListStabs_2,
+    colDefs: actionListColDefs,
+    defaultColDef: actionListDefaultColDef
+  },
+};
+export const ActionListBigDataServersList: Story = {
+  args: {
+    rowData: actionListStabs_3,
+    colDefs: actionListColDefs,
+    defaultColDef: actionListDefaultColDef
+  },
+};
+
+export const ApiListOneEntry: Story = {
+  args: {
+    rowData: apiListStabs_1,
+    colDefs: apiListColDefs,
+    defaultColDef: apiListDefaultColDef
   },
 };

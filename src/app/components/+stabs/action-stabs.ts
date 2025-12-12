@@ -1,3 +1,6 @@
+import type {ColDef} from 'ag-grid-community';
+
+
 export const actionListStabs_1 = [
   {
     "label": "Market Buy Order",
@@ -141,3 +144,42 @@ export const actionListStabs_3 = [
     "description": "Dynamic portfolio hedging using inverse products, options, or futures positions"
   }
 ];
+
+export const actionListColDefs: ColDef[] = [
+  {
+    field: "#",
+    headerName: '#',
+    width: 50,
+    valueGetter: params => {
+      if (!params.node || params.node.rowIndex == null) return '';
+      return params.node.rowIndex + 1;
+    },
+  },
+  // {
+  //   field: "label",
+  //   headerName: 'Name',
+  //   flex: 1,
+  //   cellStyle: { textAlign: 'left' },
+  // },
+  {
+    field: "type",
+    headerName: 'Type',
+    flex: 1,
+    cellStyle: { textAlign: 'left' },
+  },
+  {
+    field: "description",
+    headerName: 'Description',
+    flex: 3,
+    cellStyle: { textAlign: 'left'},
+    autoHeight: true,
+    wrapText: true,
+  },
+];
+
+export const actionListDefaultColDef: ColDef = {
+  sortable: false,
+  cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },
+  headerClass: 'align-center',
+  suppressMovable: true,
+};

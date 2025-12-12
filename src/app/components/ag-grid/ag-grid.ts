@@ -14,31 +14,6 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class AgGrid {
   @Input() rowData: any[] = [];
-
-  colDefs: ColDef[] = [
-    {
-      field: "make",
-      headerName: 'Make',
-    },
-    {
-      field: "model",
-      headerName: 'Model',
-    },
-    {
-      field: "price",
-      headerName: 'Price',
-    },
-    {
-      field: "make",
-      headerName: 'Electric',
-    },
-  ];
-
-  defaultColDef: ColDef = {
-    sortable: false,
-    cellStyle: { textAlign: 'center'},
-    headerClass: 'align-center',
-    suppressMovable: true,
-    flex: 1
-  };
+  @Input() colDefs: ColDef[] = [];
+  @Input() defaultColDef: ColDef = {};
 }
