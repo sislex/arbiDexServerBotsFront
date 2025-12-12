@@ -43,8 +43,6 @@
               <app-loader-container></app-loader-container>
             }
 
-          } @else if (item === 'gates') {
-            <app-ag-grid-gate-list-container></app-ag-grid-gate-list-container>
           } @else if (item === 'server data') {
             @if (!allServerDataIsLoading && allServerDataIsLoaded) {
               @if (loadServerDataError && loadBotTypesError && loadActionTypesError) {

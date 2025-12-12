@@ -1,21 +1,23 @@
-import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
-import type { ColDef } from 'ag-grid-community';
-import { AgGridAngular } from 'ag-grid-angular';
-import {Component, Input} from '@angular/core';
-
-ModuleRegistry.registerModules([AllCommunityModule]);
+import {Component, inject} from '@angular/core';
+import {AgGrid} from '../../components/ag-grid/ag-grid';
+import type {ColDef} from 'ag-grid-community';
+import {AsyncPipe} from '@angular/common';
+import {Store} from '@ngrx/store';
+import {getDataActiveBot} from '../../+state/servers/servers.selectors';
 
 @Component({
-  selector: 'app-ag-grid-error-list',
+  selector: 'app-ag-grid-error-list-container',
   imports: [
-    AgGridAngular
+    AgGrid,
+    AsyncPipe
   ],
-  standalone: true,
-  templateUrl: './ag-grid-error-list.html',
-  styleUrl: './ag-grid-error-list.scss'
+  templateUrl: './ag-grid-error-list-container.html',
+  styleUrl: './ag-grid-error-list-container.scss',
 })
-export class AgGridErrorList {
-  @Input() rowData: any[] = [];
+export class AgGridErrorListContainer {
+  private store = inject(Store);
+
+  dataActiveBot$ = this.store.select(getDataActiveBot)
 
   colDefs: ColDef[] = [
     {

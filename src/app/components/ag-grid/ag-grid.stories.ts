@@ -18,6 +18,14 @@ import {
   botListStabs_2,
   botListStabs_3
 } from '../+stabs/bot-list-stabs';
+import {
+  errorListColDefs,
+  errorListDefaultColDef,
+  errorListStabs_1,
+  errorListStabs_2,
+  errorListStabs_3
+} from '../+stabs/error-list-stabs';
+import {IRule_1, IRule_2, rulesTableColDefs, rulesTableDefaultColDef} from '../+stabs/rules-table-stabs';
 
 const meta: Meta<AgGrid> = {
   component: AgGrid,
@@ -102,8 +110,6 @@ export const botsDataOneEntry: Story = {
   },
 };
 
-
-
 export const botListOneEntry: Story = {
   args: {
     rowData: botListStabs_1,
@@ -111,7 +117,6 @@ export const botListOneEntry: Story = {
     defaultColDef: botListDefaultColDef,
   },
 };
-
 export const botListServersList: Story = {
   args: {
     rowData: botListStabs_2,
@@ -119,7 +124,6 @@ export const botListServersList: Story = {
     defaultColDef: botListDefaultColDef,
   },
 };
-
 export const botListBigDataServersList: Story = {
   args: {
     rowData: botListStabs_3,
@@ -128,9 +132,54 @@ export const botListBigDataServersList: Story = {
   },
 };
 
-
 export const botControlOneEntry: Story = {
   args: {
     rowData: botsControlStabs_1,
+    colDefs: botsControlColDefs,
+    defaultColDef: botsControlDefaultColDef,
+  },
+};
+
+
+
+export const errorListOneEntry: Story = {
+  args: {
+    rowData: errorListStabs_1,
+    colDefs: errorListColDefs,
+    defaultColDef: errorListDefaultColDef,
+  },
+};
+
+export const  errorListFiveEntry: Story = {
+  args: {
+    rowData: errorListStabs_2,
+    colDefs: errorListColDefs,
+    defaultColDef: errorListDefaultColDef,
+  },
+};
+
+export const  errorListBigDataEntry: Story = {
+  args: {
+    rowData: errorListStabs_3,
+    colDefs: errorListColDefs,
+    defaultColDef: errorListDefaultColDef,
+  },
+};
+
+
+
+export const rulesTableOneEntry: Story = {
+  args: {
+    rowData: IRule_1,
+    colDefs: rulesTableColDefs,
+    defaultColDef: rulesTableDefaultColDef,
+  },
+};
+
+export const rulesTableFiveEntry: Story = {
+  args: {
+    rowData: IRule_2,
+    colDefs: rulesTableColDefs,
+    defaultColDef: rulesTableDefaultColDef,
   },
 };

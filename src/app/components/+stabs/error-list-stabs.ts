@@ -1,3 +1,5 @@
+import type {ColDef} from 'ag-grid-community';
+
 export const errorListStabs_1 = [
   {
     id: 1,
@@ -102,3 +104,50 @@ export const errorListStabs_3 = [
     message: "Критическая ошибка: недостаточно прав для выполнения данной операции. Обратитесь к администратору системы"
   }
 ];
+
+export const errorListColDefs: ColDef[] = [
+  {
+    field: "#",
+    headerName: '#',
+    width: 50,
+    valueGetter: params => {
+      if (!params.node || params.node.rowIndex == null) return '';
+      return params.node.rowIndex + 1;
+    },
+  },
+  {
+    field: 'createdAt',
+    headerName: 'Time',
+    flex: 1,
+    valueFormatter: params => {
+      if (!params.value) return '';
+      const date = new Date(params.value);
+      return date.toLocaleString('ru-RU');
+    },
+  },
+  {
+    field: "durationMs",
+    headerName: 'Duration (ms)',
+    flex: 1,
+  },
+  {
+    field: "errorCode",
+    headerName: 'Error Code',
+    flex: 1,
+  },
+  {
+    field: "message",
+    headerName: 'Error Message',
+    flex: 3,
+    cellStyle: { textAlign: 'left'},
+    autoHeight: true,
+    wrapText: true,
+  },
+];
+
+export const errorListDefaultColDef: ColDef = {
+  sortable: false,
+  cellStyle: { textAlign: 'center'},
+  headerClass: 'align-center',
+  suppressMovable: true,
+};

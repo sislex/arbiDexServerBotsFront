@@ -1,9 +1,8 @@
-@if (ruleList$ | async; as list) {
+@if (dataActiveBot$ | async; as list) {
   <app-ag-grid
-    [rowData]="list"
+    [rowData]="list.botErrorList.response"
     [colDefs]="colDefs"
     [defaultColDef]="defaultColDef"
-    (emitter)="events($event)"
   >
   </app-ag-grid>
 }
