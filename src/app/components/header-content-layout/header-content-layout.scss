@@ -1,0 +1,15 @@
+.title-content-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+
+  .header {
+    height: 36px;
+  }
+
+  .content {
+    display: flex;
+    flex: 1;
+  }
+}
