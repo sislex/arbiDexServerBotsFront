@@ -6,7 +6,7 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'server/45.135.182.251:1005/tab/gates',
+    redirectTo: 'server/45.135.182.251:1001/tab/bots',
   },
   {
     path: 'server/:ipPort/tab/:tabId',
@@ -18,6 +18,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'server/45.135.182.251:1005/tab/gates',
+    redirectTo: 'server/45.135.182.251:1001/tab/bots',
   },
 ];

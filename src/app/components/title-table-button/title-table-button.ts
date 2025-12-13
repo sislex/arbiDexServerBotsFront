@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Actions} from '../ag-grid-components/actions/actions';
+import {Actions} from '../actions/actions';
 
 @Component({
   selector: 'app-title-table-button',

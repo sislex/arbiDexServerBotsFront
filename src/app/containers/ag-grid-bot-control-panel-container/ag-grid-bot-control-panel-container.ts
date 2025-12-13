@@ -1,5 +1,4 @@
 import {Component, inject} from '@angular/core';
-import {AgGridBotControlPanel} from '../../components/ag-grid-bot-control-panel/ag-grid-bot-control-panel';
 import {MatDialog} from '@angular/material/dialog';
 import {Store} from '@ngrx/store';
 import {
@@ -15,12 +14,18 @@ import {ConfirmationPopUpContainer} from '../confirmation-pop-up-container/confi
 import {BotEditFormContainer} from '../bot-edit-form-container/bot-edit-form-container';
 import {AsyncPipe} from '@angular/common';
 import {combineLatest, map, take} from 'rxjs';
+import {AgGrid} from '../../components/ag-grid/ag-grid';
+import type {ColDef} from 'ag-grid-community';
+import {IndicatorContainer} from '../indicator-container/indicator-container';
+import {PauseBotContainer} from '../pause-bot-container/pause-bot-container';
+import {RestartBotContainer} from '../restart-bot-container/restart-bot-container';
+import {ActionsContainer} from '../actions-container/actions-container';
 
 @Component({
   selector: 'app-ag-grid-bot-control-panel-container',
   imports: [
-    AgGridBotControlPanel,
-    AsyncPipe
+    AsyncPipe,
+    AgGrid
   ],
   standalone: true,
   templateUrl: './ag-grid-bot-control-panel-container.html',
@@ -29,6 +34,63 @@ import {combineLatest, map, take} from 'rxjs';
 export class AgGridBotControlPanelContainer {
   readonly dialog = inject(MatDialog);
   readonly store = inject(Store);
+
+  colDefs: ColDef[] = [
+    {
+      field: "id",
+      headerName: 'ID',
+      width: 100,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      width: 100,
+      cellRenderer: IndicatorContainer,
+      cellRendererParams: {
+        colorMapping: {
+          'active': 'green',
+          '': 'red',
+          'finished': 'gray',
+          'pause': 'yellow',
+        }
+      },
+      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },
+      headerClass: 'align-center little-width',
+    },
+    {
+      field: "paused",
+      headerName: 'Start/Pause',
+      flex: 1,
+      cellRenderer: PauseBotContainer,
+      cellRendererParams: {
+        onAction: this.onAction.bind(this),
+      },
+    },
+    {
+      headerName: 'Restart',
+      flex: 1,
+      cellRenderer: RestartBotContainer,
+      cellRendererParams: {
+        onAction: this.onAction.bind(this),
+      },
+    },
+    {
+      headerName: 'Edit',
+      width: 125,
+      cellRenderer: ActionsContainer,
+      cellRendererParams: {
+        onAction: this.onAction.bind(this),
+      },
+    },
+  ];
+
+  defaultColDef: ColDef = {
+    sortable: false,
+    cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },
+    headerClass: 'align-center',
+    suppressMovable: true,
+    autoHeight: true,
+  };
 
   dataActiveBot$ = this.store.select(getDataActiveBot).pipe(
     map(list => ({
@@ -43,21 +105,21 @@ export class AgGridBotControlPanelContainer {
     }))
   );
 
-  events($event: any) {
+  onAction($event: any, row: any) {
     if ($event.event === 'Actions:ACTION_CLICKED') {
       if ($event.actionType === 'delete') {
-        this.openDeleteDialog($event.row);
+        this.openDeleteDialog(row);
       } else if ($event.actionType === 'edit') {
         this.openEditDialog();
       } else if ($event.actionType === 'start') {
-        this.store.dispatch(setIsStartedBot({isStarted: false, id: $event.row.id}))
+        this.store.dispatch(setIsStartedBot({isStarted: false, id: row.id}))
       } else if ($event.actionType === 'pause') {
-        this.store.dispatch(setIsStartedBot({isStarted: true, id: $event.row.id}))
+        this.store.dispatch(setIsStartedBot({isStarted: true, id: row.id}))
       }else if ($event.actionType === 'restart') {
-        this.store.dispatch(restartedBot({id: $event.row.id}))
+        this.store.dispatch(restartedBot({id: row.id}))
       }
     } else if ($event.event === 'Toggle:TOGGLE_CLICKED') {
-      this.store.dispatch(isSendData({isSendData: $event.newValue, id: $event.row.id}))
+      this.store.dispatch(isSendData({isSendData: $event.newValue, id: row.id}))
     }
   }
 

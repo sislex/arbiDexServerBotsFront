@@ -6,7 +6,7 @@
       [thirdLabel]="'Errors'"
       [fourthLabel]="'Job'"
     >
-      <div first>
+      <div class="tab-content" first>
         <app-title-table-layout>
           <app-title-table-button
             title
@@ -17,46 +17,44 @@
           ></app-ag-grid-bot-control-panel-container>
         </app-title-table-layout>
 
-        <app-title-table-layout>
+        <app-title-table-layout class="bot-control">
           <app-title-table-button
             title
             [title]="'Results'"
           ></app-title-table-button>
 
-          <app-ag-grid-bot-data-list
+          <app-ag-grid-bot-data-list-container
             content
             [rowData]="(dataActiveBot$ | async)?.botResultList?.response | transformObjectToKeyValue"
-          ></app-ag-grid-bot-data-list>
+          ></app-ag-grid-bot-data-list-container>
         </app-title-table-layout>
       </div>
 
-      <div second class="table-layout-wrapper">
-        <app-title-table-layout>
+      <div second class="tab-content">
+        <app-title-table-layout class="bot-control">
           <app-title-table-button
             title
             [title]="'Arbitrage'"
           ></app-title-table-button>
-          <app-ag-grid-arbitrage-list
+          <app-ag-grid-arbitrage-list-container
             content
-            [rowData]="((dataActiveBot$ | async)?.botArbitrageList?.response)!"
-          ></app-ag-grid-arbitrage-list>
+          ></app-ag-grid-arbitrage-list-container>
         </app-title-table-layout>
       </div>
 
-      <div third>
-        <app-title-table-layout>
+      <div third class="tab-content">
+        <app-title-table-layout class="bot-control">
           <app-title-table-button
             title
             [title]="'Errors'"
           ></app-title-table-button>
-          <app-ag-grid-error-list
+          <app-ag-grid-error-list-container
             content
-            [rowData]="list.botErrorList.response"
-          ></app-ag-grid-error-list>
+          ></app-ag-grid-error-list-container>
         </app-title-table-layout>
       </div>
 
-      <div fourth>
+      <div fourth class="set-margin-top">
         <app-job-container></app-job-container>
       </div>
 

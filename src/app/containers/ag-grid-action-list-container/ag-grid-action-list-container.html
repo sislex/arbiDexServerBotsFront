@@ -1,6 +1,8 @@
 @if (jobTypesList$ | async; as list) {
-  <app-ag-grid-action-list
+  <app-ag-grid
     [rowData]="list"
+    [colDefs]="colDefs"
+    [defaultColDef]="defaultColDef"
   >
-  </app-ag-grid-action-list>
+  </app-ag-grid>
 }

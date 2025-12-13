@@ -1,0 +1,8 @@
+@if (dataActiveBot$ | async; as list) {
+  <app-ag-grid
+    [rowData]="list.botErrorList.response"
+    [colDefs]="colDefs"
+    [defaultColDef]="defaultColDef"
+  >
+  </app-ag-grid>
+}

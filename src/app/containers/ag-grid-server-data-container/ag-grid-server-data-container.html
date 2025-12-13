@@ -1,3 +1,8 @@
-@if (serverData$ | async; as data) {
-  <app-ag-grid-server-data [rowData]="data"></app-ag-grid-server-data>
+@if (serverData$ | async; as list) {
+  <app-ag-grid
+    [rowData]="list"
+    [colDefs]="colDefs"
+    [defaultColDef]="defaultColDef"
+  >
+  </app-ag-grid>
 }

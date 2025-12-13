@@ -1,6 +1,8 @@
 @if (dataActiveBot$ | async; as list) {
-  <app-ag-grid-bot-control-panel
+  <app-ag-grid
     [rowData]="[list]"
-    (emitter)="events($event)"
-  ></app-ag-grid-bot-control-panel>
+    [colDefs]="colDefs"
+    [defaultColDef]="defaultColDef"
+  >
+  </app-ag-grid>
 }

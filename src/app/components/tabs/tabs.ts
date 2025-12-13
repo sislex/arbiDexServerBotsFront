@@ -6,7 +6,6 @@ import {
   AgGridBotsControlContainer
 } from '../../containers/ag-grid-bots-control-container/ag-grid-bots-control-container';
 import {AgGridServerDataContainer} from '../../containers/ag-grid-server-data-container/ag-grid-server-data-container';
-import {AgGridGateListContainer} from '../../containers/ag-grid-gate-list-container/ag-grid-gate-list-container';
 import {AgGridBotListContainer} from '../../containers/ag-grid-bot-list-container/ag-grid-bot-list-container';
 import {AgGridActionListContainer} from '../../containers/ag-grid-action-list-container/ag-grid-action-list-container';
 import {TitleTableLayout} from '../title-table-layout/title-table-layout';
@@ -23,7 +22,6 @@ import {NotFoundPage} from '../not-found-page/not-found-page';
     TitleContentLayout,
     AgGridBotsControlContainer,
     AgGridServerDataContainer,
-    AgGridGateListContainer,
     AgGridBotListContainer,
     AgGridActionListContainer,
     TitleTableLayout,

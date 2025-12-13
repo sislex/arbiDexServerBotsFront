@@ -1,6 +1,38 @@
 import {Meta, moduleMetadata, StoryObj} from '@storybook/angular';
 import {AgGrid} from './ag-grid';
-import {gridStabs_1} from './stabs';
+import {
+  actionListColDefs,
+  actionListDefaultColDef,
+  actionListStabs_1,
+  actionListStabs_2,
+  actionListStabs_3,
+} from '../+stabs/action-stabs';
+import {apiListColDefs, apiListDefaultColDef, apiListStabs_1} from '../+stabs/api-list-stabs';
+import {botsControlStabs_1} from '../+stabs/bots-control-stabs';
+import {botsControlColDefs, botsControlDefaultColDef} from '../+stabs/bot-control-panel-stabs';
+import {botDataListColDefs, botDataListDefaultColDef, botDataListStabs_1} from '../+stabs/bot-data-list-stabs';
+import {
+  botListColDefs,
+  botListDefaultColDef,
+  botListStabs_1,
+  botListStabs_2,
+  botListStabs_3
+} from '../+stabs/bot-list-stabs';
+import {
+  errorListColDefs,
+  errorListDefaultColDef,
+  errorListStabs_1,
+  errorListStabs_2,
+  errorListStabs_3
+} from '../+stabs/error-list-stabs';
+import {IRule_1, IRule_2, rulesTableColDefs, rulesTableDefaultColDef} from '../+stabs/rules-table-stabs';
+import {
+  serverColDefs,
+  serverDefaultColDef,
+  serverStabs_1,
+  serverStabs_2,
+  serverStabs_3
+} from '../+stabs/server-data-stabs';
 
 const meta: Meta<AgGrid> = {
   component: AgGrid,
@@ -20,7 +52,9 @@ const meta: Meta<AgGrid> = {
     }),
   ],
   args: {
+
   },
+
 
 };
 export default meta;
@@ -28,8 +62,157 @@ type Story = StoryObj<AgGrid>;
 
 export const Empty: Story = {};
 
-export const BasicRows: Story = {
+export const ActionListOneEntry: Story = {
   args: {
-    rowData: gridStabs_1
+    rowData: actionListStabs_1,
+    colDefs: actionListColDefs,
+    defaultColDef: actionListDefaultColDef
+  },
+};
+export const ActionListBasic: Story = {
+  args: {
+    rowData: actionListStabs_2,
+    colDefs: actionListColDefs,
+    defaultColDef: actionListDefaultColDef
+  },
+};
+export const ActionListBigDataServersList: Story = {
+  args: {
+    rowData: actionListStabs_3,
+    colDefs: actionListColDefs,
+    defaultColDef: actionListDefaultColDef
+  },
+};
+
+export const ApiListOneEntry: Story = {
+  args: {
+    rowData: apiListStabs_1,
+    colDefs: apiListColDefs,
+    defaultColDef: apiListDefaultColDef
+  },
+};
+
+// export const ArbitrageListOneEntry: Story = {
+//   args: {
+//     rowData: arbitrageListStabs_1,
+//     colDefs: arbitrageListColDefs,
+//     defaultColDef: arbitrageListDefaultColDef
+//   },
+// };
+
+export const botsControlOneEntry: Story = {
+  args: {
+    rowData: botsControlStabs_1,
+    colDefs: botsControlColDefs,
+    defaultColDef: botsControlDefaultColDef,
+
+  },
+};
+
+export const botsDataOneEntry: Story = {
+  args: {
+    rowData: botDataListStabs_1,
+    colDefs: botDataListColDefs,
+    defaultColDef: botDataListDefaultColDef,
+  },
+};
+
+export const botListOneEntry: Story = {
+  args: {
+    rowData: botListStabs_1,
+    colDefs: botListColDefs,
+    defaultColDef: botListDefaultColDef,
+  },
+};
+export const botListServersList: Story = {
+  args: {
+    rowData: botListStabs_2,
+    colDefs: botListColDefs,
+    defaultColDef: botListDefaultColDef,
+  },
+};
+export const botListBigDataServersList: Story = {
+  args: {
+    rowData: botListStabs_3,
+    colDefs: botListColDefs,
+    defaultColDef: botListDefaultColDef,
+  },
+};
+
+export const botControlOneEntry: Story = {
+  args: {
+    rowData: botsControlStabs_1,
+    colDefs: botsControlColDefs,
+    defaultColDef: botsControlDefaultColDef,
+  },
+};
+
+
+
+export const errorListOneEntry: Story = {
+  args: {
+    rowData: errorListStabs_1,
+    colDefs: errorListColDefs,
+    defaultColDef: errorListDefaultColDef,
+  },
+};
+
+export const  errorListFiveEntry: Story = {
+  args: {
+    rowData: errorListStabs_2,
+    colDefs: errorListColDefs,
+    defaultColDef: errorListDefaultColDef,
+  },
+};
+
+export const  errorListBigDataEntry: Story = {
+  args: {
+    rowData: errorListStabs_3,
+    colDefs: errorListColDefs,
+    defaultColDef: errorListDefaultColDef,
+  },
+};
+
+
+
+export const rulesTableOneEntry: Story = {
+  args: {
+    rowData: IRule_1,
+    colDefs: rulesTableColDefs,
+    defaultColDef: rulesTableDefaultColDef,
+  },
+};
+
+export const rulesTableFiveEntry: Story = {
+  args: {
+    rowData: IRule_2,
+    colDefs: rulesTableColDefs,
+    defaultColDef: rulesTableDefaultColDef,
+  },
+};
+
+
+
+export const OneServer: Story = {
+  args: {
+    rowData: [serverStabs_1],
+    colDefs: serverColDefs,
+    defaultColDef: serverDefaultColDef,
+  },
+};
+
+export const ServersListBigData: Story = {
+  args: {
+    rowData: serverStabs_2,
+    colDefs: serverColDefs,
+    defaultColDef: serverDefaultColDef,
+  },
+};
+
+export const ServerError: Story = {
+  args: {
+    rowData: [serverStabs_3],
+    colDefs: serverColDefs,
+    defaultColDef: serverDefaultColDef,
   },
 };

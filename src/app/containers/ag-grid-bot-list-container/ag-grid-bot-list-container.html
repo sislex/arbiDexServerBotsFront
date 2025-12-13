@@ -1,6 +1,8 @@
 @if (botTypesList$ | async; as list) {
-  <app-ag-grid-bot-list
+  <app-ag-grid
     [rowData]="list"
+    [colDefs]="colDefs"
+    [defaultColDef]="defaultColDef"
   >
-  </app-ag-grid-bot-list>
+  </app-ag-grid>
 }

@@ -1,7 +1,9 @@
 @if (ruleList$ | async; as list) {
-  <app-ag-grid-rules-table
+  <app-ag-grid
     [rowData]="list"
+    [colDefs]="colDefs"
+    [defaultColDef]="defaultColDef"
     (emitter)="events($event)"
   >
-  </app-ag-grid-rules-table>
+  </app-ag-grid>
 }

@@ -13,7 +13,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {take} from 'rxjs';
 import {getActiveTab, getIsSidebarOpen} from '../../+state/view/view.selectors';
 import {setActiveTab, toggleSidebar} from '../../+state/view/view.actions';
-import {Actions} from '../../components/ag-grid-components/actions/actions';
+import {Actions} from '../../components/actions/actions';
 import {ApiInfoPanel} from '../../components/api-info-panel/api-info-panel';
 import {MatDialog} from '@angular/material/dialog';
 import {ApiListContainer} from '../api-list-container/api-list-container';
@@ -84,10 +84,10 @@ export class SidebarContainer implements OnInit {
 
   openEditDialog() {
     const dialogRef = this.dialog.open(ApiListContainer, {
-      width: '90vw',
+      width: '90%',
       maxWidth: '100vw',
       minWidth: '800px',
-      height: '600px',
+      height: '90%',
       minHeight: '600px',
       maxHeight: '100vh',
       panelClass: 'custom-dialog-container',

@@ -1,5 +1,8 @@
 @if (apiList$ | async; as list) {
-  <app-ag-grid-api-list
+  <app-ag-grid
     [rowData]="list"
-  ></app-ag-grid-api-list>
+    [colDefs]="colDefs"
+    [defaultColDef]="defaultColDef"
+  >
+  </app-ag-grid>
 }
