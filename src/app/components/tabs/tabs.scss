@@ -1,5 +1,6 @@
 mat-tab-group {
-  height: 100%;
+  display: flex;
+  flex: 1;
 
   app-title-content-layout {
     display: flex;
@@ -7,8 +8,8 @@ mat-tab-group {
 
     .title-content-layout {
       display: flex;
-      width: 100%;
       justify-content: center;
+      flex: 1;
 
       app-not-found-page-page {
         display: flex;
@@ -18,19 +19,31 @@ mat-tab-group {
     }
 
     app-loader-container {
-      width: 100%;
+      display: flex;
+      flex: 1;
     }
 
     .server-page {
-      height: 100%;
-      width: 100%;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+
+      app-title-table-layout {
+        display: flex;
+        flex: 1;
+      }
     }
   }
 }
 
-app-ag-grid-bots-control-container, app-ag-grid-gate-list-container {
+app-ag-grid-bots-control-container,
+app-ag-grid-rules-table-container,
+app-ag-grid-server-data-container,
+app-ag-grid-bot-list-container,
+app-ag-grid-action-list-container
+{
   flex-direction: column;
   display: flex;
-  flex: 1;
-  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
 }
