@@ -1,7 +1,11 @@
 app-ag-grid-api-list-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+app-title-table-layout {
+  flex: 1;
 }
 
 app-confirmation-pop-up {
