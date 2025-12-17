@@ -141,3 +141,11 @@ body, .toolbar, .panel, mat-button-toggle, mat-toolbar {
   min-height: 0;        // КЛЮЧЕВО
 
 }
+
+app-ag-grid {
+  .ag-cell.selectable-text {
+    user-select: text !important;
+    cursor: text;
+  }
+
+}

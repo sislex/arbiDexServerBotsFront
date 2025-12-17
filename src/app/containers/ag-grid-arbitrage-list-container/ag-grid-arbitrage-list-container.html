@@ -1,6 +1,5 @@
 <app-ag-grid
-  [rowData]="((dataActiveBot$ | async)?.botArbitrageList?.response)!"
+  [rowData]="(getDataActiveBotArbitrage$ | async)!"
   [colDefs]="colDefs"
   [defaultColDef]="defaultColDef"
->
-</app-ag-grid>
+></app-ag-grid>
