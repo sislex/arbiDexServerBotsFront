@@ -34,7 +34,7 @@ export class AgGridArbitrageListContainer {
     {
       field: 'blockNumber',
       headerName: 'block',
-      width: 100,
+      width: 110,
       sortable: true,
 
       valueGetter: (p: any) => {
