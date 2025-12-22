@@ -1,12 +1,19 @@
 @if (dataActiveBot$ | async; as list) {
   @if ((activeBotIsLoaded$ | async) && !(activeBotIsLoading$ | async)) {
     <app-bot-info-page-tabs
-      [firstLabel]="'Arbitrage'"
-      [secondLabel]="'Control and params'"
+      [firstLabel]="'Control and params'"
+      [secondLabel]="'Arbitrage' + ' (' + (getDataActiveBotArbitrage$ | async)?.length + ')'"
       [thirdLabel]="'Errors'"
       [fourthLabel]="'Job'"
     >
-      <div second  class="tab-content">
+      <div second class="tab-content">
+        <app-title-table-layout class="bot-control">
+          <app-title-table-button title [title]="'Arbitrage' + ' (' + (getDataActiveBotArbitrage$ | async)?.length + ')'"></app-title-table-button>
+          <app-ag-grid-arbitrage-list-container content></app-ag-grid-arbitrage-list-container>
+        </app-title-table-layout>
+      </div>
+
+      <div first  class="tab-content">
         <app-title-table-layout>
           <app-title-table-button
             title
@@ -27,13 +34,6 @@
             content
             [rowData]="(dataActiveBot$ | async)?.botResultList?.response | transformObjectToKeyValue"
           ></app-ag-grid-bot-data-list-container>
-        </app-title-table-layout>
-      </div>
-
-      <div first class="tab-content">
-        <app-title-table-layout class="bot-control">
-          <app-title-table-button title [title]="'Arbitrage'"></app-title-table-button>
-          <app-ag-grid-arbitrage-list-container content></app-ag-grid-arbitrage-list-container>
         </app-title-table-layout>
       </div>
 

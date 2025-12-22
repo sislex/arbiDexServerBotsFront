@@ -1,6 +1,11 @@
 import {Component, inject} from '@angular/core';
 import {BotInfoPageTabs} from '../../components/bot-info-page-tabs/bot-info-page-tabs';
-import {getActiveBotIsLoaded, getActiveBotIsLoading, getDataActiveBot} from '../../+state/servers/servers.selectors';
+import {
+  getActiveBotIsLoaded,
+  getActiveBotIsLoading,
+  getDataActiveBot,
+  getDataActiveBotArbitrage
+} from '../../+state/servers/servers.selectors';
 import {Store} from '@ngrx/store';
 import {TitleTableLayout} from '../../components/title-table-layout/title-table-layout';
 import {
@@ -37,6 +42,7 @@ export class BotInfoPageTabsContainer {
   private store = inject(Store);
 
   dataActiveBot$ = this.store.select(getDataActiveBot);
+  getDataActiveBotArbitrage$ = this.store.select(getDataActiveBotArbitrage);
 
   activeBotIsLoaded$ = this.store.select(getActiveBotIsLoaded);
   activeBotIsLoading$ = this.store.select(getActiveBotIsLoading);
