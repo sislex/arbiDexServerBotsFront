@@ -1,12 +1,17 @@
 import { Routes } from '@angular/router';
 import {SidebarContainer} from './containers/sidebar-container/sidebar-container';
 import {BotInfoPageContainer} from './containers/bot-info-page-container/bot-info-page-container';
+import {GraphPage} from './containers/graph-page/graph-page';
 
 export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
     redirectTo: 'server/45.135.182.251:1001/tab/bots',
+  },
+  {
+    path: 'server/graph',
+    component: GraphPage,
   },
   {
     path: 'server/:ipPort/tab/:tabId',
