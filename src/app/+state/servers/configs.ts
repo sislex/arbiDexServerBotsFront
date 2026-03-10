@@ -5,8 +5,8 @@ export const serverListConfig = [
     name: 'LOCAL_SERVER',
   },
   {
-    ip: '45.135.182.251',
-    port: '1001',
+    ip: 'localhost',
+    port: '3000',
     name: 'FIRST_REAL_SERVER',
   },
 ]

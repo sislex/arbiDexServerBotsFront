@@ -120,6 +120,7 @@ export class ServersEffects {
             }
 
             const response = items.map(item => {
+
               let status: string;
               if (!item.running) {
                 status = 'pause'
