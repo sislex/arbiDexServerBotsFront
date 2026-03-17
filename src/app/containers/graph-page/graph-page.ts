@@ -8,6 +8,7 @@ import {
   ModuleRegistry,
   NumberAxisModule,
   ZoomModule,
+  TimeAxisModule,
 } from "ag-charts-enterprise";
 import { getData } from "./data";
 
@@ -17,7 +18,8 @@ ModuleRegistry.registerModules([
   LineSeriesModule,
   NumberAxisModule,
   ZoomModule,
-  ChartToolbarModule
+  ChartToolbarModule,
+  TimeAxisModule
 ]);
 
 @Component({
@@ -30,59 +32,48 @@ export class GraphPage {
   public options: any;
 
   constructor() {
+
     this.options = {
+      data: getData(),
+      initialState: {
+        zoom: {
+          ratioX: { start: 0.3, end: 1 },
+        },
+      },
+      autoSize: true,
+      height: 600,
       width: 1200,
       zoom: {
         enabled: true,
-        // panKey: 'alt',
-        enableScrolling: true
+        enableScrolling: true,
       },
-      contextMenu: {
-        enabled: true, // Включает меню по правой кнопке (Enterprise)
+      axes: {
+        x: {
+          type: 'time',
+          position: 'bottom',
+          // title: { text: 'Время' },
+        },
+        y: {
+          type: 'number',
+          position: 'left',
+          title: { text: 'Стоимость (Cost)' },
+        },
       },
-
-      title: {
-        text: "Annual Fuel Expenditure",
-      },
-      data: getData(),
       series: [
         {
           type: "line",
-          xKey: "quarter",
-          yKey: "petrol",
-          yName: "Petrol",
-        },
-        {
-          type: "line",
-          xKey: "quarter",
-          yKey: "diesel",
-          yName: "Diesel",
+          xKey: "timestamp",
+          yKey: "cost",
+          yName: "Cost",
         },
       ],
+      listeners: {
+        zoom: (event: any) => {
+          if (event.ratioX.start <= 0.1) {
+            console.log('10% - Пора подгружать данные! Вызываем GET API', event);
+          }
+        }
+      },
     };
   }
 }
-
-
-//
-// export class GraphPage {
-//   options: AgFinancialChartOptions = {
-//
-//   };
-//
-//   constructor() {
-//     this.options = {
-//       data: getData(),
-//       title: { text: "Acme Inc." },
-//       toolbar: true,
-//       rangeButtons: true,
-//       volume: false,
-//       statusBar: false,
-//       zoom: true,
-//       width: 600,
-//       initialState: {
-//
-//       },
-//     };
-//   }
-// }
