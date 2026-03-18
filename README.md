@@ -57,3 +57,20 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+
+## DB Map
+CREATE EXTENSION IF NOT EXISTS postgres_fdw;
+
+CREATE SERVER config_info_db
+FOREIGN DATA WRAPPER postgres_fdw
+OPTIONS (
+host '45.135.182.251',
+port '5432', 
+dbname 'config_info_db_2'
+);
+
+
+CREATE USER MAPPING FOR CURRENT_USER
+SERVER config_info_db
+OPTIONS (user 'user_secret', password 'pass_secret');

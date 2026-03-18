@@ -10,7 +10,7 @@ export const routes: Routes = [
     redirectTo: 'server/45.135.182.251:1001/tab/bots',
   },
   {
-    path: 'server/graph',
+    path: 'server/graphs',
     component: GraphPage,
   },
   {
