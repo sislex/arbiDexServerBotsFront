@@ -1,4 +1,4 @@
-import {Component, inject} from "@angular/core";
+import {Component, inject, OnDestroy} from "@angular/core";
 import { AgCharts } from "ag-charts-angular";
 import {
   AgChartOptions,
@@ -14,6 +14,7 @@ import {
 import {Store} from '@ngrx/store';
 import {setQuotesCostData} from '../../+state/graphs/graphs.actions';
 import {getQuotesCostData} from '../../+state/graphs/graphs.selectors';
+import {WsService} from '../../services/ws.service';
 
 ModuleRegistry.registerModules([
   CategoryAxisModule,
@@ -32,13 +33,19 @@ ModuleRegistry.registerModules([
   templateUrl: './graph-page.html',
   styleUrl: './graph-page.scss',
 })
-export class GraphPage {
+export class GraphPage implements OnDestroy {
   private store = inject(Store);
   public options: any;
 
   data: any;
-  constructor() {
+  constructor(
+    private wsService: WsService
+  ) {
     this.store.dispatch(setQuotesCostData());
+
+    setTimeout(() => {
+      this.wsService.send('KYKY');
+    }, 500);
 
     this.options = {
       data: [],
@@ -165,5 +172,11 @@ export class GraphPage {
         series,
       };
     });
+  }
+
+  ngOnDestroy() {
+    // 3. Закрываем при уходе со страницы
+    this.wsService.disconnect();
+    console.log('🔌 Соединение закрыто при уничтожении компонента');
   }
 }
