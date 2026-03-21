@@ -2,45 +2,38 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class WsService {
-  private socket = new WebSocket('ws://127.0.0.1:8080');
-  constructor() {
+  private socket: WebSocket | null = null;
+
+  // Метод для открытия соединения
+  connect(url: string = 'ws://127.0.0.1:8080') {
+    // Если сокет уже открыт, не создаем дубль
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) return;
+
+    this.socket = new WebSocket(url);
+
+    this.socket.onopen = () => console.log('✅ Соединение установлено!');
     this.socket.onmessage = (event) => console.log('От сервера:', event.data);
-
-    this.socket.onopen = (event) => {
-      console.log('✅ Соединение установлено!');
-    };
-
-    // 2. Ошибка
-    this.socket.onerror = (error) => {
-      console.error('❌ Ошибка сокета:', error);
-    };
-
-    // 3. Закрытие
-    this.socket.onclose = (event) => {
-      console.warn('⚠️ Соединение закрыто:', event.reason);
-    };
+    this.socket.onerror = (err) => console.error('❌ Ошибка:', err);
+    this.socket.onclose = () => console.warn('⚠️ Соединение закрыто');
   }
 
-  // В ws.service.ts
   send(data: any) {
+    if (!this.socket) return;
+
     const msg = JSON.stringify({ event: 'message', data });
 
     if (this.socket.readyState === WebSocket.OPEN) {
       this.socket.send(msg);
-    } else {
-      // Если сокет еще соединяется, ждем события open
-      this.socket.onopen = () => this.socket.send(msg);
+    } else if (this.socket.readyState === WebSocket.CONNECTING) {
+      // Используем addEventListener, чтобы не затирать старые колбэки
+      this.socket.addEventListener('open', () => this.socket?.send(msg), { once: true });
     }
   }
 
-  // ws.service.ts
   disconnect() {
     if (this.socket) {
       this.socket.close(1000, "Работа завершена");
-      // 1000 — это стандартный код "Normal Closure"
+      this.socket = null; // Обязательно обнуляем ссылку
     }
   }
-
-
-
 }
