@@ -12,7 +12,7 @@ import {
   UnitTimeAxisModule,
 } from "ag-charts-enterprise";
 import {Store} from '@ngrx/store';
-import {setQuotesCostData} from '../../+state/graphs/graphs.actions';
+import {setCurrentQuotesCostData, setQuotesCostData} from '../../+state/graphs/graphs.actions';
 import {getQuotesCostData} from '../../+state/graphs/graphs.selectors';
 import {WsService} from '../../services/ws.service';
 import {Router} from '@angular/router';
@@ -175,8 +175,24 @@ export class GraphPage implements OnDestroy, OnInit {
 
   ngOnInit() {
     this.wsService.connect();
+    const mySubs = [
+      {
+        chain: 1,
+        pairs: [
+          { token0Id: 2, token1Id: 10 },
+          { token0Id: 3, token1Id: 11 }
+        ]
+      },
+    ];
 
-    this.wsService.send('KYKY');
+    this.wsService.messages$.subscribe(message => {
+
+      if (message.event === 'quotes_update') {
+        this.store.dispatch(setCurrentQuotesCostData({ data: [message.data] }));
+      }
+    });
+
+    this.wsService.emit('subscribe', mySubs);
   }
 
   ngOnDestroy() {

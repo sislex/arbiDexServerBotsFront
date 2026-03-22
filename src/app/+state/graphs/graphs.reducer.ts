@@ -66,6 +66,19 @@ export const graphsReducer = createReducer(
       }
     }
   )),
+  on(GraphsActions.setCurrentQuotesCostData, (state, { data }) => ({
+    ...state,
+    quotesCostData: {
+      ...state.quotesCostData,
+      startTime: Date.now(),
+      isLoading: false,
+      isLoaded: true,
+      response: [
+        ...(state.quotesCostData.response || []),
+        ...data
+      ]
+    }
+  }))
 
 );
 

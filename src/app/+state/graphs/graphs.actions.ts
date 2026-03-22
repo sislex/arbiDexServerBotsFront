@@ -10,3 +10,7 @@ export const setQuotesCostDataFailure = createAction(
   '[Graphs] setQuotesCostDataFailure',
   props<{ error: any }>()
 );
+export const setCurrentQuotesCostData = createAction(
+  '[Graphs] setCurrentQuotesCostData',
+  props<{ data: any }>()
+);
