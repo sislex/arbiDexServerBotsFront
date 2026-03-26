@@ -1472,6 +1472,99 @@
             "extends": []
         },
         {
+            "name": "PricePoint",
+            "id": "interface-PricePoint-ed0f1cdd5d47838c0777432ec705c213ee00e5bbe9ca46bf3a6bd8ca1c72b2232965a0572f1d4fc1295ad8425d7bcdc68fb8dba5491e36429a45fd5dec7dca8d",
+            "file": "src/app/components/price-chart/price-chart.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import {\n  Component,\n  Input,\n  OnChanges,\n  OnDestroy,\n  OnInit,\n  SimpleChanges,\n} from '@angular/core';\nimport { AgCharts } from 'ag-charts-angular';\nimport { ModuleRegistry, AllCommunityModule } from 'ag-charts-community';\nimport { ZoomModule, NavigatorModule } from 'ag-charts-enterprise';\nimport type { AgCartesianChartOptions } from 'ag-charts-community';\n\nModuleRegistry.registerModules([AllCommunityModule, ZoomModule, NavigatorModule]);\n\n/** Describes one line on the chart */\nexport interface PriceSeriesConfig {\n  /** Field name in data objects, e.g. 'binanceBid' */\n  key: string;\n  /** Display name shown in legend / tooltip, e.g. 'Binance Bid' */\n  name: string;\n  /** Line colour, e.g. '#0ecb81' */\n  color: string;\n}\n\n/** A single data row — `time` + arbitrary price fields matching PriceSeriesConfig.key */\nexport interface PricePoint {\n  time: number;\n  [key: string]: number;\n}\n\n@Component({\n  selector: 'app-price-chart',\n  imports: [AgCharts],\n  standalone: true,\n  templateUrl: './price-chart.html',\n  styleUrl: './price-chart.scss',\n})\nexport class PriceChart implements OnInit, OnChanges, OnDestroy {\n  /** Full dataset to display */\n  @Input() data: PricePoint[] = [];\n\n  /** Which price lines to draw. Each entry becomes one line series. */\n  @Input() series: PriceSeriesConfig[] = [];\n\n  /**\n   * Keys of series to hide, e.g. `['binanceAsk', 'mexSell']`.\n   * Pass an empty array (default) to show all.\n   */\n  @Input() hiddenKeys: string[] = [];\n\n  /**\n   * When `true` the chart will progressively reveal `data` points\n   * one-by-one every 500 ms (streaming mode).\n   * When `false` all data is shown immediately.\n   */\n  @Input() streaming = false;\n\n  options: AgCartesianChartOptions = { series: [] };\n\n  private chartData: PricePoint[] = [];\n  private streamIndex = 0;\n  private intervalId: ReturnType<typeof setInterval> | null = null;\n\n  ngOnInit(): void {\n    this.initChart();\n  }\n\n  ngOnChanges(changes: SimpleChanges): void {\n    if (changes['data'] || changes['streaming'] || changes['series']) {\n      this.initChart();\n    } else if (changes['hiddenKeys']) {\n      this.updateOptions();\n    }\n  }\n\n  ngOnDestroy(): void {\n    this.clearStreamInterval();\n  }\n\n  private initChart(): void {\n    this.clearStreamInterval();\n\n    if (this.streaming && this.data.length > 0) {\n      this.chartData = [];\n      this.streamIndex = 0;\n      this.updateOptions();\n      this.intervalId = setInterval(() => this.tick(), 500);\n    } else {\n      this.chartData = [...this.data];\n      this.updateOptions();\n    }\n  }\n\n  private tick(): void {\n    if (this.streamIndex < this.data.length) {\n      this.chartData = [...this.chartData, this.data[this.streamIndex]];\n      this.streamIndex++;\n      this.updateOptions();\n    } else {\n      this.clearStreamInterval();\n    }\n  }\n\n  private clearStreamInterval(): void {\n    if (this.intervalId !== null) {\n      clearInterval(this.intervalId);\n      this.intervalId = null;\n    }\n  }\n\n  private buildSeries(): AgCartesianChartOptions['series'] {\n    const hidden = new Set(this.hiddenKeys);\n    return this.series\n      .filter((s) => !hidden.has(s.key))\n      .map((s) => ({\n      type: 'line' as const,\n      xKey: 'time',\n      yKey: s.key,\n      yName: s.name,\n      stroke: s.color,\n      strokeWidth: 2,\n      marker: { enabled: false },\n      tooltip: {\n        renderer: (params: any) => ({\n          title: s.name,\n          content: `${Number(params.datum[params.yKey]).toFixed(4)}`,\n        }),\n      },\n    }));\n  }\n\n  private updateOptions(): void {\n    const opts: AgCartesianChartOptions = {\n      background: { fill: '#161a25' },\n      padding: { top: 16, right: 16, bottom: 16, left: 16 },\n      height: 500,\n      data: this.chartData,\n      series: this.buildSeries(),\n      axes: {\n        x: {\n          type: 'number',\n          position: 'bottom',\n          label: {\n            color: '#848e9c',\n            formatter: (params: any) => {\n              const d = new Date(params.value);\n              return `${d.getHours().toString().padStart(2, '0')}:${d\n                .getMinutes()\n                .toString()\n                .padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;\n            },\n          },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n        y: {\n          type: 'number',\n          position: 'right',\n          label: { color: '#848e9c' },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n      },\n      legend: {\n        position: 'top',\n        item: { label: { color: '#eaecef' } },\n      },\n      zoom: {\n        enabled: true,\n        axes: 'x',\n        scrollingStep: 0.3,\n      },\n      navigator: {\n        enabled: true,\n        height: 30,\n      },\n    };\n    this.options = opts;\n  }\n}\n\n\n\n\n\n\n",
+            "properties": [
+                {
+                    "name": "time",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 28
+                }
+            ],
+            "indexSignatures": [
+                {
+                    "id": "index-declaration-ed0f1cdd5d47838c0777432ec705c213ee00e5bbe9ca46bf3a6bd8ca1c72b2232965a0572f1d4fc1295ad8425d7bcdc68fb8dba5491e36429a45fd5dec7dca8d",
+                    "args": [
+                        {
+                            "name": "key",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "returnType": "number",
+                    "line": 28,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                }
+            ],
+            "kind": 182,
+            "description": "<p>A single data row — <code>time</code> + arbitrary price fields matching PriceSeriesConfig.key</p>\n",
+            "rawdescription": "\nA single data row — `time` + arbitrary price fields matching PriceSeriesConfig.key",
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "PriceSeriesConfig",
+            "id": "interface-PriceSeriesConfig-ed0f1cdd5d47838c0777432ec705c213ee00e5bbe9ca46bf3a6bd8ca1c72b2232965a0572f1d4fc1295ad8425d7bcdc68fb8dba5491e36429a45fd5dec7dca8d",
+            "file": "src/app/components/price-chart/price-chart.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import {\n  Component,\n  Input,\n  OnChanges,\n  OnDestroy,\n  OnInit,\n  SimpleChanges,\n} from '@angular/core';\nimport { AgCharts } from 'ag-charts-angular';\nimport { ModuleRegistry, AllCommunityModule } from 'ag-charts-community';\nimport { ZoomModule, NavigatorModule } from 'ag-charts-enterprise';\nimport type { AgCartesianChartOptions } from 'ag-charts-community';\n\nModuleRegistry.registerModules([AllCommunityModule, ZoomModule, NavigatorModule]);\n\n/** Describes one line on the chart */\nexport interface PriceSeriesConfig {\n  /** Field name in data objects, e.g. 'binanceBid' */\n  key: string;\n  /** Display name shown in legend / tooltip, e.g. 'Binance Bid' */\n  name: string;\n  /** Line colour, e.g. '#0ecb81' */\n  color: string;\n}\n\n/** A single data row — `time` + arbitrary price fields matching PriceSeriesConfig.key */\nexport interface PricePoint {\n  time: number;\n  [key: string]: number;\n}\n\n@Component({\n  selector: 'app-price-chart',\n  imports: [AgCharts],\n  standalone: true,\n  templateUrl: './price-chart.html',\n  styleUrl: './price-chart.scss',\n})\nexport class PriceChart implements OnInit, OnChanges, OnDestroy {\n  /** Full dataset to display */\n  @Input() data: PricePoint[] = [];\n\n  /** Which price lines to draw. Each entry becomes one line series. */\n  @Input() series: PriceSeriesConfig[] = [];\n\n  /**\n   * Keys of series to hide, e.g. `['binanceAsk', 'mexSell']`.\n   * Pass an empty array (default) to show all.\n   */\n  @Input() hiddenKeys: string[] = [];\n\n  /**\n   * When `true` the chart will progressively reveal `data` points\n   * one-by-one every 500 ms (streaming mode).\n   * When `false` all data is shown immediately.\n   */\n  @Input() streaming = false;\n\n  options: AgCartesianChartOptions = { series: [] };\n\n  private chartData: PricePoint[] = [];\n  private streamIndex = 0;\n  private intervalId: ReturnType<typeof setInterval> | null = null;\n\n  ngOnInit(): void {\n    this.initChart();\n  }\n\n  ngOnChanges(changes: SimpleChanges): void {\n    if (changes['data'] || changes['streaming'] || changes['series']) {\n      this.initChart();\n    } else if (changes['hiddenKeys']) {\n      this.updateOptions();\n    }\n  }\n\n  ngOnDestroy(): void {\n    this.clearStreamInterval();\n  }\n\n  private initChart(): void {\n    this.clearStreamInterval();\n\n    if (this.streaming && this.data.length > 0) {\n      this.chartData = [];\n      this.streamIndex = 0;\n      this.updateOptions();\n      this.intervalId = setInterval(() => this.tick(), 500);\n    } else {\n      this.chartData = [...this.data];\n      this.updateOptions();\n    }\n  }\n\n  private tick(): void {\n    if (this.streamIndex < this.data.length) {\n      this.chartData = [...this.chartData, this.data[this.streamIndex]];\n      this.streamIndex++;\n      this.updateOptions();\n    } else {\n      this.clearStreamInterval();\n    }\n  }\n\n  private clearStreamInterval(): void {\n    if (this.intervalId !== null) {\n      clearInterval(this.intervalId);\n      this.intervalId = null;\n    }\n  }\n\n  private buildSeries(): AgCartesianChartOptions['series'] {\n    const hidden = new Set(this.hiddenKeys);\n    return this.series\n      .filter((s) => !hidden.has(s.key))\n      .map((s) => ({\n      type: 'line' as const,\n      xKey: 'time',\n      yKey: s.key,\n      yName: s.name,\n      stroke: s.color,\n      strokeWidth: 2,\n      marker: { enabled: false },\n      tooltip: {\n        renderer: (params: any) => ({\n          title: s.name,\n          content: `${Number(params.datum[params.yKey]).toFixed(4)}`,\n        }),\n      },\n    }));\n  }\n\n  private updateOptions(): void {\n    const opts: AgCartesianChartOptions = {\n      background: { fill: '#161a25' },\n      padding: { top: 16, right: 16, bottom: 16, left: 16 },\n      height: 500,\n      data: this.chartData,\n      series: this.buildSeries(),\n      axes: {\n        x: {\n          type: 'number',\n          position: 'bottom',\n          label: {\n            color: '#848e9c',\n            formatter: (params: any) => {\n              const d = new Date(params.value);\n              return `${d.getHours().toString().padStart(2, '0')}:${d\n                .getMinutes()\n                .toString()\n                .padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;\n            },\n          },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n        y: {\n          type: 'number',\n          position: 'right',\n          label: { color: '#848e9c' },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n      },\n      legend: {\n        position: 'top',\n        item: { label: { color: '#eaecef' } },\n      },\n      zoom: {\n        enabled: true,\n        axes: 'x',\n        scrollingStep: 0.3,\n      },\n      navigator: {\n        enabled: true,\n        height: 30,\n      },\n    };\n    this.options = opts;\n  }\n}\n\n\n\n\n\n\n",
+            "properties": [
+                {
+                    "name": "color",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "<p>Line colour, e.g. &#39;#0ecb81&#39;</p>\n",
+                    "line": 23,
+                    "rawdescription": "\nLine colour, e.g. '#0ecb81'"
+                },
+                {
+                    "name": "key",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "<p>Field name in data objects, e.g. &#39;binanceBid&#39;</p>\n",
+                    "line": 19,
+                    "rawdescription": "\nField name in data objects, e.g. 'binanceBid'"
+                },
+                {
+                    "name": "name",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "<p>Display name shown in legend / tooltip, e.g. &#39;Binance Bid&#39;</p>\n",
+                    "line": 21,
+                    "rawdescription": "\nDisplay name shown in legend / tooltip, e.g. 'Binance Bid'"
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 172,
+            "description": "<p>Describes one line on the chart</p>\n",
+            "rawdescription": "\nDescribes one line on the chart",
+            "methods": [],
+            "extends": []
+        },
+        {
             "name": "QuoteExactInputSingle",
             "id": "interface-QuoteExactInputSingle-8899385d7e1697e6c1c3b63f4da47ed7eb27d93ea3dbefb71042333907e8dff6f34edf484973bb7cf68846dd8c4fdc0480b3afd10735a36bbb7db80181105f79",
             "file": "src/app/models/servers.ts",
@@ -1801,7 +1894,7 @@
     "injectables": [
         {
             "name": "ServerDataService",
-            "id": "injectable-ServerDataService-d58e9d3c26ea1ad97e78050893b6428a4e301ba5134f1f9d6a8bdf3daf9c4bd648362ead3db22608c6e8f65bb8dc51da36902e116d9329fbc60b3b5eba4d6c39",
+            "id": "injectable-ServerDataService-191a54fc16915ba019077897e0de0be2ec0a01e52a741bb531228d71f98d83ae3d084820942ecaf5f93a99121ccc2adca1727b45e2e67492694dcd5dfe9e8465",
             "file": "src/app/services/server-data.service.ts",
             "properties": [
                 {
@@ -2030,6 +2123,44 @@
                     "returnType": "Observable<any>",
                     "typeParameters": [],
                     "line": 56,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "getPriceByKey",
+                    "args": [
+                        {
+                            "name": "key",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "Observable<literal type>",
+                    "typeParameters": [],
+                    "line": 122,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "key",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "getPriceKeys",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "Observable<string[]>",
+                    "typeParameters": [],
+                    "line": 117,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -2315,7 +2446,7 @@
             "deprecationMessage": "",
             "description": "",
             "rawdescription": "\n",
-            "sourceCode": "import { inject, Injectable } from '@angular/core';\nimport { HttpClient } from '@angular/common/http';\nimport {Observable, map, switchMap, take, filter} from 'rxjs';\nimport { Store } from '@ngrx/store';\nimport { getActiveServerIpPort } from '../+state/servers/servers.selectors';\n\n@Injectable({ providedIn: 'root' })\nexport class ServerDataService {\n  private http = inject(HttpClient);\n  private store = inject(Store);\n\n  //Универсальный url\n  private baseUrl$ = this.store.select(getActiveServerIpPort).pipe(\n    map(ipPort => {\n      if (!ipPort || ipPort.includes('undefined') || ipPort === ':' || ipPort.trim() === '') {\n        return null;\n      }\n      return `http://${ipPort}`;\n    }),\n    filter((item: string | null) => !!item)\n    // startWith(environment.hostUrl)\n  );\n\n  private get<T>(endpoint: string): Observable<T> {\n    return this.baseUrl$.pipe(\n      take(1),\n      switchMap(baseUrl => this.http.get<T>(`${baseUrl}${endpoint}`))\n    );\n  }\n\n  private post<T>(endpoint: string, body?: any): Observable<T> {\n    return this.baseUrl$.pipe(\n      take(1),\n      switchMap(baseUrl => this.http.post<T>(`${baseUrl}${endpoint}`, body))\n    );\n  }\n\n  private put<T>(endpoint: string, body?: any): Observable<T> {\n    return this.baseUrl$.pipe(\n      take(1),\n      switchMap(baseUrl => this.http.put<T>(`${baseUrl}${endpoint}`, body))\n    );\n  }\n\n  // Получить список всех API доступных для текущего сервера\n  getApiList(): Observable<any> {\n    return this.get(`/info/apis`);\n  }\n\n  // Получить основную информацию о сервере\n  getServerData(): Observable<any> {\n    return this.get('/info');\n  }\n\n  // Получить список типов ботов\n  getBotTypesList(): Observable<any> {\n    return this.get('/info/bots-types-list');\n  }\n\n  // Получить список типов action ботов\n  getActionTypesList(): Observable<any> {\n    return this.get('/info/job-type-list');\n  }\n\n  // Получить список ботов и их состояния\n  getBotsControl(): Observable<any> {\n    return this.get('/bots/get-all');\n  }\n\n  // Получить список ошибок по конкретному боту\n  getBotInfo(botId: string): Observable<any> {\n    return this.get(`/bot/${botId}/settings`);\n  }\n\n  // Получить список Параметров по конкретному боту\n  getBotParamsById(botId: string): Observable<any> {\n    return this.get(`/bot/${botId}/params`\n    );\n  }\n\n  // Получить список ошибок по конкретному боту\n  getBotErrorsById(botId: string): Observable<any> {\n    return this.get(`/bot/${botId}/errors`);\n  }\n\n  // Получить список арбитражных событий\n  getBotArbitrageById(botId: string): Observable<any> {\n    return this.get(`/bot/${botId}/arbitrage`);\n  }\n\n  // Поставить выполнение бота на паузу\n  setBotPause(botId: string, pause: boolean): Observable<any> {\n    return this.post(`/bot/${botId}/pause`, { pause });\n  }\n\n  // Отключить/включить сохранение данных, возвращаемых ботом, в базу данных\n  setSendDataBot(botId: string, isSend: boolean): Observable<any> {\n    return this.post(`/bot/${botId}/send-data`, { isSend });\n  }\n\n  // Отключить/включить сохранение данных, возвращаемых ботом, в базу данных\n  setNewSettingsBot(botId: string, data: string): Observable<any> {\n    return this.put(`/bot/${botId}/settings`, { data });\n  }\n\n  // Перезапустить выполнение бота\n  restartBot(botId: string): Observable<any> {\n    return this.post(`/bot/${botId}/restart`);\n  }\n\n  // Получить список правил\n  getRulesList(): Observable<any> {\n    return this.get('/rules/get-all');\n  }\n}\n",
+            "sourceCode": "import { inject, Injectable } from '@angular/core';\nimport { HttpClient } from '@angular/common/http';\nimport {Observable, map, switchMap, take, filter} from 'rxjs';\nimport { Store } from '@ngrx/store';\nimport { getActiveServerIpPort } from '../+state/servers/servers.selectors';\n\n@Injectable({ providedIn: 'root' })\nexport class ServerDataService {\n  private http = inject(HttpClient);\n  private store = inject(Store);\n\n  //Универсальный url\n  private baseUrl$ = this.store.select(getActiveServerIpPort).pipe(\n    map(ipPort => {\n      if (!ipPort || ipPort.includes('undefined') || ipPort === ':' || ipPort.trim() === '') {\n        return null;\n      }\n      return `http://${ipPort}`;\n    }),\n    filter((item: string | null) => !!item)\n    // startWith(environment.hostUrl)\n  );\n\n  private get<T>(endpoint: string): Observable<T> {\n    return this.baseUrl$.pipe(\n      take(1),\n      switchMap(baseUrl => this.http.get<T>(`${baseUrl}${endpoint}`))\n    );\n  }\n\n  private post<T>(endpoint: string, body?: any): Observable<T> {\n    return this.baseUrl$.pipe(\n      take(1),\n      switchMap(baseUrl => this.http.post<T>(`${baseUrl}${endpoint}`, body))\n    );\n  }\n\n  private put<T>(endpoint: string, body?: any): Observable<T> {\n    return this.baseUrl$.pipe(\n      take(1),\n      switchMap(baseUrl => this.http.put<T>(`${baseUrl}${endpoint}`, body))\n    );\n  }\n\n  // Получить список всех API доступных для текущего сервера\n  getApiList(): Observable<any> {\n    return this.get(`/info/apis`);\n  }\n\n  // Получить основную информацию о сервере\n  getServerData(): Observable<any> {\n    return this.get('/info');\n  }\n\n  // Получить список типов ботов\n  getBotTypesList(): Observable<any> {\n    return this.get('/info/bots-types-list');\n  }\n\n  // Получить список типов action ботов\n  getActionTypesList(): Observable<any> {\n    return this.get('/info/job-type-list');\n  }\n\n  // Получить список ботов и их состояния\n  getBotsControl(): Observable<any> {\n    return this.get('/bots/get-all');\n  }\n\n  // Получить список ошибок по конкретному боту\n  getBotInfo(botId: string): Observable<any> {\n    return this.get(`/bot/${botId}/settings`);\n  }\n\n  // Получить список Параметров по конкретному боту\n  getBotParamsById(botId: string): Observable<any> {\n    return this.get(`/bot/${botId}/params`\n    );\n  }\n\n  // Получить список ошибок по конкретному боту\n  getBotErrorsById(botId: string): Observable<any> {\n    return this.get(`/bot/${botId}/errors`);\n  }\n\n  // Получить список арбитражных событий\n  getBotArbitrageById(botId: string): Observable<any> {\n    return this.get(`/bot/${botId}/arbitrage`);\n  }\n\n  // Поставить выполнение бота на паузу\n  setBotPause(botId: string, pause: boolean): Observable<any> {\n    return this.post(`/bot/${botId}/pause`, { pause });\n  }\n\n  // Отключить/включить сохранение данных, возвращаемых ботом, в базу данных\n  setSendDataBot(botId: string, isSend: boolean): Observable<any> {\n    return this.post(`/bot/${botId}/send-data`, { isSend });\n  }\n\n  // Отключить/включить сохранение данных, возвращаемых ботом, в базу данных\n  setNewSettingsBot(botId: string, data: string): Observable<any> {\n    return this.put(`/bot/${botId}/settings`, { data });\n  }\n\n  // Перезапустить выполнение бота\n  restartBot(botId: string): Observable<any> {\n    return this.post(`/bot/${botId}/restart`);\n  }\n\n  // Получить список правил\n  getRulesList(): Observable<any> {\n    return this.get('/rules/get-all');\n  }\n\n  // Получить список доступных ключей цен\n  getPriceKeys(): Observable<string[]> {\n    return this.get<string[]>('/prices/keys');\n  }\n\n  // Получить точки цены по ключу, например 'binance|ETHUSDC|bidPrice'\n  getPriceByKey(key: string): Observable<{ key: string; points: { t: number; v: number }[]; count: number; last: { t: number; v: number } }> {\n    return this.get(`/prices/key/${encodeURIComponent(key)}`);\n  }\n}\n",
             "extends": [],
             "type": "injectable"
         },
@@ -2916,7 +3047,7 @@
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<ag-grid-angular\n  [rowData]=\"rowData\"\n  [columnDefs]=\"colDefs\"\n  [defaultColDef]=\"defaultColDef\"\n  (rowDoubleClicked)=\"onRowDoubleClicked($event)\"\n  domLayout=\"autoHeight\"\n>\n</ag-grid-angular>\n"
+            "templateData": "<ag-grid-angular\n  [rowData]=\"rowData\"\n  [columnDefs]=\"colDefs\"\n  [defaultColDef]=\"defaultColDef\"\n  (rowDoubleClicked)=\"onRowDoubleClicked($event)\"\n>\n</ag-grid-angular>\n"
         },
         {
             "name": "AgGridActionListContainer",
@@ -3108,7 +3239,7 @@
         },
         {
             "name": "AgGridArbitrageListContainer",
-            "id": "component-AgGridArbitrageListContainer-c288e728498c905ee32416f380729e3449d5f33b9a9ed5bbb9ebb5a9935119bb9492c74f0cf8108bf8d1d100b16a1df85b08deb908c4518c5b72fd78ddf18425",
+            "id": "component-AgGridArbitrageListContainer-02cca8743fe2dc056c7acc09fdc1655032216d573fe402ee8cf7a3b17cb9586df4bceb8ceb3e1c4c24c513c45f060d760c0aa1c1dbd56fcd77cdfe3b84258c86",
             "file": "src/app/containers/ag-grid-arbitrage-list-container/ag-grid-arbitrage-list-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -3128,7 +3259,7 @@
             "propertiesClass": [
                 {
                     "name": "colDefs",
-                    "defaultValue": "[\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: 'createdAt',\n      headerName: 'time',\n      width: 150,\n      cellStyle: { textAlign: 'left' },\n      wrapText: true,\n      autoHeight: true,\n      cellClass: 'selectable-text',\n\n      valueFormatter: p => {\n        const v = p.value;\n        if (!v) return \"\";\n\n        const date = new Date(v);\n        if (isNaN(date.getTime())) return String(v);\n\n        return date.toLocaleString();\n      },\n    },\n    {\n      field: 'details',\n      headerName: 'Arbitrage',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n      wrapText: true,\n      autoHeight: true,\n      cellClass: 'selectable-text',\n\n      valueFormatter: p => {\n        const v = p.value;\n\n        if (v == null) return \"\";\n        if (typeof v === \"string\") return v;\n        if (typeof v === \"number\") return String(v);\n\n        return JSON.stringify(v.groups, null, 2);\n      },\n\n      cellRenderer: (params: ICellRendererParams) => {\n        const pre = document.createElement(\"pre\");\n        pre.style.margin = \"0\";\n        pre.style.whiteSpace = \"pre-wrap\";\n        pre.textContent = params.valueFormatted ?? params.value;\n        return pre;\n      },\n    },\n  ]",
+                    "defaultValue": "[\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 70,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: 'blockNumber',\n      headerName: 'block',\n      width: 110,\n      sortable: true,\n\n      valueGetter: (p: any) => {\n        const v = p.data?.blockNumber;\n        return v == null ? null : Number(v);\n      },\n\n      filter: 'agNumberColumnFilter',\n      filterParams: {\n        filterOptions: ['greaterThan', 'lessThan', 'inRange', 'equals'],\n        buttons: ['reset'],\n        debounceMs: 200,\n      },\n      cellClass: 'selectable-text',\n    },\n    {\n      field: 'poolsCount',\n      headerName: 'pools',\n      width: 70,\n      valueGetter: (params: any) => {\n        return params.data.poolsCount ?? '';\n      },\n    },\n    {\n      field: 'createdAt',\n      headerName: 'time',\n      width: 95,\n      sortable: true,\n      cellStyle: { textAlign: 'left' },\n      wrapText: false,\n      autoHeight: true,\n      cellClass: 'selectable-text',\n\n      // 👉 значение для сортировки (число)\n      valueGetter: p => {\n        const v = p.data?.createdAt;\n        const t = new Date(v).getTime();\n        return isNaN(t) ? null : t;\n      },\n\n      // 👉 отображение в UI\n      valueFormatter: p => {\n        if (p.value == null) return '';\n\n        return new Date(p.value).toLocaleTimeString('ru-RU', {\n          hour: '2-digit',\n          minute: '2-digit',\n          second: '2-digit',\n        });\n      },\n    },\n    {\n      field: 'spread_pct',\n      headerName: 'spread',\n      width: 100,\n      sortable: true,\n\n      valueGetter: (p: any) => {\n        const v = p.data?.spread_pct;\n        return v == null ? null : Number(v);\n      },\n\n      filter: 'agNumberColumnFilter',\n      filterParams: {\n        // можно оставить только нужные операции:\n        filterOptions: ['greaterThan', 'lessThan', 'inRange', 'equals'],\n        // чтобы не нажимать \"Apply\" (фильтр применится сам)\n        buttons: ['reset'],\n        debounceMs: 200,\n      },\n      cellClass: 'selectable-text',\n    },\n    {\n      field: 'bestBuyPool',\n      headerName: 'bestBuyPool',\n      width: 150,\n      valueGetter: (params: any) => {\n        const v = params.data.bestBuyPool;\n        return `${v.version} ${v.dex}  ${v.feePpm}`;\n      },\n      cellClass: 'selectable-text',\n    },\n    {\n      field: 'bestSellPool',\n      headerName: 'bestSellPool',\n      width: 150,\n      valueGetter: (params: any) => {\n        const v = params.data.bestSellPool;\n        return `${v.version} ${v.dex} ${v.feePpm}`;\n      },\n      cellClass: 'selectable-text',\n    },\n    {\n      field: 'tokenIn',\n      headerName: 'tokenIn',\n      width: 390,\n      valueGetter: (p: any) => p.data?.tokenIn?.address ?? null,\n      filter: 'agTextColumnFilter',\n      filterParams: {\n        filterOptions: ['equals'],\n        debounceMs: 200,\n      },\n      cellClass: 'selectable-text',\n    },\n    {\n      field: 'tokenOut',\n      headerName: 'tokenOut',\n      width: 390,\n      valueGetter: p => p.data?.tokenOut?.address ?? null,\n      filter: 'agTextColumnFilter',\n      filterParams: {\n        filterOptions: ['equals'],\n        debounceMs: 200,\n      },\n      cellClass: 'selectable-text',\n    },\n  ]",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "ColDef[]",
@@ -3138,8 +3269,19 @@
                     "line": 24
                 },
                 {
-                    "name": "dataActiveBot$",
-                    "defaultValue": "this.store.select(getDataActiveBot)",
+                    "name": "defaultColDef",
+                    "defaultValue": "{\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    suppressMovable: true,\n\n    filter: true,\n    floatingFilter: true,\n    resizable: true,\n  }",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ColDef",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 156
+                },
+                {
+                    "name": "getDataActiveBotArbitrage$",
+                    "defaultValue": "this.store.select(getDataActiveBotArbitrage)",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "unknown",
@@ -3147,17 +3289,6 @@
                     "optional": false,
                     "description": "",
                     "line": 22
-                },
-                {
-                    "name": "defaultColDef",
-                    "defaultValue": "{\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    suppressMovable: true,\n  }",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "ColDef",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 82
                 },
                 {
                     "name": "store",
@@ -3192,13 +3323,13 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {AgGrid} from '../../components/ag-grid/ag-grid';\nimport {AsyncPipe} from '@angular/common';\nimport {Store} from '@ngrx/store';\nimport {getDataActiveBot} from '../../+state/servers/servers.selectors';\nimport {ColDef, ICellRendererParams} from 'ag-grid-community';\n\n@Component({\n  selector: 'app-ag-grid-arbitrage-list-container',\n\n  imports: [\n    AgGrid,\n    AsyncPipe\n  ],\n  templateUrl: './ag-grid-arbitrage-list-container.html',\n  styleUrl: './ag-grid-arbitrage-list-container.scss',\n})\n\nexport class AgGridArbitrageListContainer {\n  private store = inject(Store);\n\n  dataActiveBot$ = this.store.select(getDataActiveBot);\n\n  colDefs: ColDef[] = [\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 50,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: 'createdAt',\n      headerName: 'time',\n      width: 150,\n      cellStyle: { textAlign: 'left' },\n      wrapText: true,\n      autoHeight: true,\n      cellClass: 'selectable-text',\n\n      valueFormatter: p => {\n        const v = p.value;\n        if (!v) return \"\";\n\n        const date = new Date(v);\n        if (isNaN(date.getTime())) return String(v);\n\n        return date.toLocaleString();\n      },\n    },\n    {\n      field: 'details',\n      headerName: 'Arbitrage',\n      flex: 1,\n      cellStyle: { textAlign: 'left' },\n      wrapText: true,\n      autoHeight: true,\n      cellClass: 'selectable-text',\n\n      valueFormatter: p => {\n        const v = p.value;\n\n        if (v == null) return \"\";\n        if (typeof v === \"string\") return v;\n        if (typeof v === \"number\") return String(v);\n\n        return JSON.stringify(v.groups, null, 2);\n      },\n\n      cellRenderer: (params: ICellRendererParams) => {\n        const pre = document.createElement(\"pre\");\n        pre.style.margin = \"0\";\n        pre.style.whiteSpace = \"pre-wrap\";\n        pre.textContent = params.valueFormatted ?? params.value;\n        return pre;\n      },\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    suppressMovable: true,\n  };\n}\n",
+            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {AgGrid} from '../../components/ag-grid/ag-grid';\nimport {AsyncPipe} from '@angular/common';\nimport {Store} from '@ngrx/store';\nimport {getDataActiveBot, getDataActiveBotArbitrage} from '../../+state/servers/servers.selectors';\nimport {ColDef, ICellRendererParams} from 'ag-grid-community';\n\n@Component({\n  selector: 'app-ag-grid-arbitrage-list-container',\n\n  imports: [\n    AgGrid,\n    AsyncPipe\n  ],\n  templateUrl: './ag-grid-arbitrage-list-container.html',\n  styleUrl: './ag-grid-arbitrage-list-container.scss',\n})\n\nexport class AgGridArbitrageListContainer {\n  private store = inject(Store);\n\n  getDataActiveBotArbitrage$ = this.store.select(getDataActiveBotArbitrage);\n\n  colDefs: ColDef[] = [\n    {\n      field: \"#\",\n      headerName: '#',\n      width: 70,\n      valueGetter: params => {\n        if (!params.node || params.node.rowIndex == null) return '';\n        return params.node.rowIndex + 1;\n      },\n    },\n    {\n      field: 'blockNumber',\n      headerName: 'block',\n      width: 110,\n      sortable: true,\n\n      valueGetter: (p: any) => {\n        const v = p.data?.blockNumber;\n        return v == null ? null : Number(v);\n      },\n\n      filter: 'agNumberColumnFilter',\n      filterParams: {\n        filterOptions: ['greaterThan', 'lessThan', 'inRange', 'equals'],\n        buttons: ['reset'],\n        debounceMs: 200,\n      },\n      cellClass: 'selectable-text',\n    },\n    {\n      field: 'poolsCount',\n      headerName: 'pools',\n      width: 70,\n      valueGetter: (params: any) => {\n        return params.data.poolsCount ?? '';\n      },\n    },\n    {\n      field: 'createdAt',\n      headerName: 'time',\n      width: 95,\n      sortable: true,\n      cellStyle: { textAlign: 'left' },\n      wrapText: false,\n      autoHeight: true,\n      cellClass: 'selectable-text',\n\n      // 👉 значение для сортировки (число)\n      valueGetter: p => {\n        const v = p.data?.createdAt;\n        const t = new Date(v).getTime();\n        return isNaN(t) ? null : t;\n      },\n\n      // 👉 отображение в UI\n      valueFormatter: p => {\n        if (p.value == null) return '';\n\n        return new Date(p.value).toLocaleTimeString('ru-RU', {\n          hour: '2-digit',\n          minute: '2-digit',\n          second: '2-digit',\n        });\n      },\n    },\n    {\n      field: 'spread_pct',\n      headerName: 'spread',\n      width: 100,\n      sortable: true,\n\n      valueGetter: (p: any) => {\n        const v = p.data?.spread_pct;\n        return v == null ? null : Number(v);\n      },\n\n      filter: 'agNumberColumnFilter',\n      filterParams: {\n        // можно оставить только нужные операции:\n        filterOptions: ['greaterThan', 'lessThan', 'inRange', 'equals'],\n        // чтобы не нажимать \"Apply\" (фильтр применится сам)\n        buttons: ['reset'],\n        debounceMs: 200,\n      },\n      cellClass: 'selectable-text',\n    },\n    {\n      field: 'bestBuyPool',\n      headerName: 'bestBuyPool',\n      width: 150,\n      valueGetter: (params: any) => {\n        const v = params.data.bestBuyPool;\n        return `${v.version} ${v.dex}  ${v.feePpm}`;\n      },\n      cellClass: 'selectable-text',\n    },\n    {\n      field: 'bestSellPool',\n      headerName: 'bestSellPool',\n      width: 150,\n      valueGetter: (params: any) => {\n        const v = params.data.bestSellPool;\n        return `${v.version} ${v.dex} ${v.feePpm}`;\n      },\n      cellClass: 'selectable-text',\n    },\n    {\n      field: 'tokenIn',\n      headerName: 'tokenIn',\n      width: 390,\n      valueGetter: (p: any) => p.data?.tokenIn?.address ?? null,\n      filter: 'agTextColumnFilter',\n      filterParams: {\n        filterOptions: ['equals'],\n        debounceMs: 200,\n      },\n      cellClass: 'selectable-text',\n    },\n    {\n      field: 'tokenOut',\n      headerName: 'tokenOut',\n      width: 390,\n      valueGetter: p => p.data?.tokenOut?.address ?? null,\n      filter: 'agTextColumnFilter',\n      filterParams: {\n        filterOptions: ['equals'],\n        debounceMs: 200,\n      },\n      cellClass: 'selectable-text',\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    suppressMovable: true,\n\n    filter: true,\n    floatingFilter: true,\n    resizable: true,\n  };\n}\n",
             "styleUrl": "./ag-grid-arbitrage-list-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<app-ag-grid\n  [rowData]=\"((dataActiveBot$ | async)?.botArbitrageList?.response)!\"\n  [colDefs]=\"colDefs\"\n  [defaultColDef]=\"defaultColDef\"\n>\n</app-ag-grid>\n"
+            "templateData": "<app-ag-grid\n  [rowData]=\"(getDataActiveBotArbitrage$ | async)!\"\n  [colDefs]=\"colDefs\"\n  [defaultColDef]=\"defaultColDef\"\n></app-ag-grid>\n"
         },
         {
             "name": "AgGridBotControlPanelContainer",
@@ -3986,83 +4117,8 @@
             "templateData": "@if (ruleList$ | async; as list) {\n  <app-ag-grid\n    [rowData]=\"list\"\n    [colDefs]=\"colDefs\"\n    [defaultColDef]=\"defaultColDef\"\n    (emitter)=\"events($event)\"\n  >\n  </app-ag-grid>\n}\n"
         },
         {
-            "name": "AgGridServerData",
-            "id": "component-AgGridServerData-66c8702bc311a4b6a564eaa0d78bba124f4a2d3f52ef9de7e76fa8133585a5c53418d67c7a6ed39cf8b87407ce8e7d90ade74df6005dbae78ef1f49e9a65df4c",
-            "file": "src/app/components/ag-grid-server-data/ag-grid-server-data.ts",
-            "encapsulation": [],
-            "entryComponents": [],
-            "inputs": [],
-            "outputs": [],
-            "providers": [],
-            "selector": "app-ag-grid-server-data",
-            "styleUrls": [],
-            "styles": [],
-            "templateUrl": [
-                "./ag-grid-server-data.html"
-            ],
-            "viewProviders": [],
-            "hostDirectives": [],
-            "inputsClass": [
-                {
-                    "name": "rowData",
-                    "defaultValue": "[]",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 19,
-                    "type": "IServerData[]",
-                    "decorators": []
-                }
-            ],
-            "outputsClass": [],
-            "propertiesClass": [
-                {
-                    "name": "colDefs",
-                    "defaultValue": "[\n    {\n      field: 'ip',\n      headerName: 'IP',\n      flex: 1,\n    },\n    {\n      headerName: 'Authorization Data',\n      flex: 1,\n      valueGetter:(params) => {\n        const authorizationData = params.data?.authorizationData;\n        return authorizationData || \"-\";\n      }\n    },\n    {\n      field: 'version',\n      headerName: 'Version',\n      flex: 1,\n    },\n    {\n      headerName: 'Time To Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const time = params.data?.timestampFinish;\n        if (!time) return null;\n\n        const finishUTC = Date.parse(time);\n        return finishUTC > Date.now() ? time : null;\n      },\n    },\n    {\n      headerName: 'Time After Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const time = params.data?.timestampFinish;\n        if (!time) return null;\n\n        const finishUTC = Date.parse(time);\n        return finishUTC < Date.now() ? time : null;\n      },\n    },\n    {\n      field: 'botsCount',\n      headerName: 'Bots',\n      flex: 1,\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellRendererParams: { //TODO: Записать сюда верные ПРИХОДЯЩИЕ параметры под каждый цвет\n        colorMapping: {\n          'active': 'green',\n          'running': 'green',\n          'inactive': 'red',\n          'stopped': 'red',\n          'pending': 'yellow',\n          'error': 'red'\n        }\n      },\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n  ]",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "ColDef[]",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 21
-                },
-                {
-                    "name": "defaultColDef",
-                    "defaultValue": "{\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    suppressMovable: true,\n  }",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "ColDef",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 89
-                }
-            ],
-            "methodsClass": [],
-            "deprecated": false,
-            "deprecationMessage": "",
-            "hostBindings": [],
-            "hostListeners": [],
-            "standalone": true,
-            "imports": [
-                {
-                    "name": "AgGridAngular"
-                }
-            ],
-            "description": "",
-            "rawdescription": "\n",
-            "type": "component",
-            "sourceCode": "import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';\nimport type { ColDef } from 'ag-grid-community';\nimport { AgGridAngular } from 'ag-grid-angular';\nimport {Component, Input} from '@angular/core';\nimport {IndicatorContainer} from '../../containers/indicator-container/indicator-container';\nimport {TimerContainer} from '../../containers/timer-container/timer-container';\nimport {IServerData} from '../../models/servers';\n\nModuleRegistry.registerModules([AllCommunityModule]);\n\n@Component({\n  selector: 'app-ag-grid-server-data',\n  imports: [AgGridAngular],\n  standalone: true,\n  templateUrl: './ag-grid-server-data.html',\n  styleUrl: './ag-grid-server-data.scss'\n})\nexport class AgGridServerData {\n  @Input() rowData: IServerData[] = [];\n\n  colDefs: ColDef[] = [\n    {\n      field: 'ip',\n      headerName: 'IP',\n      flex: 1,\n    },\n    {\n      headerName: 'Authorization Data',\n      flex: 1,\n      valueGetter:(params) => {\n        const authorizationData = params.data?.authorizationData;\n        return authorizationData || \"-\";\n      }\n    },\n    {\n      field: 'version',\n      headerName: 'Version',\n      flex: 1,\n    },\n    {\n      headerName: 'Time To Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const time = params.data?.timestampFinish;\n        if (!time) return null;\n\n        const finishUTC = Date.parse(time);\n        return finishUTC > Date.now() ? time : null;\n      },\n    },\n    {\n      headerName: 'Time After Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const time = params.data?.timestampFinish;\n        if (!time) return null;\n\n        const finishUTC = Date.parse(time);\n        return finishUTC < Date.now() ? time : null;\n      },\n    },\n    {\n      field: 'botsCount',\n      headerName: 'Bots',\n      flex: 1,\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellRendererParams: { //TODO: Записать сюда верные ПРИХОДЯЩИЕ параметры под каждый цвет\n        colorMapping: {\n          'active': 'green',\n          'running': 'green',\n          'inactive': 'red',\n          'stopped': 'red',\n          'pending': 'yellow',\n          'error': 'red'\n        }\n      },\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    suppressMovable: true,\n  };\n}\n",
-            "styleUrl": "./ag-grid-server-data.scss",
-            "assetsDirs": [],
-            "styleUrlsData": "",
-            "stylesData": "",
-            "extends": [],
-            "templateData": "<ag-grid-angular\n  [rowData]=\"rowData\"\n  [columnDefs]=\"colDefs\"\n  [defaultColDef]=\"defaultColDef\"\n  domLayout=\"autoHeight\"\n>\n</ag-grid-angular>\n"
-        },
-        {
             "name": "AgGridServerDataContainer",
-            "id": "component-AgGridServerDataContainer-70ef2ce4692d0613f7564629ca9344b8cdbbec1691ca9929bbad9fb344ae98fa1a5b33c0fe2e69fbe8b3c31b6dc4d0aa6673070302a3f37bca8be1451046f7b3",
+            "id": "component-AgGridServerDataContainer-41cafac421330433ef7b7a4b56fde9fe8bd4863b95d2d94646e62da360a1b2b57bb42a916290f20513c055e10c730bba8921119c62117f3fc25face4fc190a9e",
             "file": "src/app/containers/ag-grid-server-data-container/ag-grid-server-data-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -4081,6 +4137,28 @@
             "outputsClass": [],
             "propertiesClass": [
                 {
+                    "name": "colDefs",
+                    "defaultValue": "[\n    {\n      field: 'ip',\n      headerName: 'IP',\n      flex: 1,\n    },\n    {\n      headerName: 'Authorization Data',\n      flex: 1,\n      valueGetter:(params) => {\n        const authorizationData = params.data?.authorizationData;\n        return authorizationData || \"-\";\n      }\n    },\n    {\n      field: 'version',\n      headerName: 'Version',\n      flex: 1,\n    },\n    {\n      headerName: 'Time To Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const time = params.data?.timestampFinish;\n        if (!time) return null;\n\n        const finishUTC = Date.parse(time);\n        return finishUTC > Date.now() ? time : null;\n      },\n    },\n    {\n      headerName: 'Time After Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const time = params.data?.timestampFinish;\n        if (!time) return null;\n\n        const finishUTC = Date.parse(time);\n        return finishUTC < Date.now() ? time : null;\n      },\n    },\n    {\n      field: 'botsCount',\n      headerName: 'Bots',\n      flex: 1,\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellRendererParams: {\n        colorMapping: {\n          'active': 'green',\n          'running': 'green',\n          'inactive': 'red',\n          'stopped': 'red',\n          'pending': 'yellow',\n          'error': 'red'\n        }\n      },\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n  ]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ColDef[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 26
+                },
+                {
+                    "name": "defaultColDef",
+                    "defaultValue": "{\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    suppressMovable: true,\n  }",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ColDef",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 94
+                },
+                {
                     "name": "serverData$",
                     "defaultValue": "this.store.select(getServerData)",
                     "deprecated": false,
@@ -4089,7 +4167,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 21
+                    "line": 24
                 },
                 {
                     "name": "store",
@@ -4100,7 +4178,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 20,
+                    "line": 23,
                     "modifierKind": [
                         123
                     ]
@@ -4114,23 +4192,23 @@
             "standalone": true,
             "imports": [
                 {
-                    "name": "AgGridServerData"
-                },
-                {
                     "name": "AsyncPipe",
                     "type": "pipe"
+                },
+                {
+                    "name": "AgGrid"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {AgGridServerData} from '../../components/ag-grid-server-data/ag-grid-server-data';\nimport {Store} from '@ngrx/store';\nimport {getServerData} from '../../+state/servers/servers.selectors';\nimport {AsyncPipe} from '@angular/common';\nimport {Observable} from 'rxjs';\nimport {IServerData} from '../../models/servers';\n\n@Component({\n  selector: 'app-ag-grid-server-data-container',\n  imports: [\n    AgGridServerData,\n    AsyncPipe\n  ],\n  standalone: true,\n  templateUrl: './ag-grid-server-data-container.html',\n  styleUrl: './ag-grid-server-data-container.scss'\n})\nexport class AgGridServerDataContainer {\n  private store = inject(Store);\n  serverData$: Observable<IServerData[]> = this.store.select(getServerData);\n}\n",
+            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {Store} from '@ngrx/store';\nimport {getServerData} from '../../+state/servers/servers.selectors';\nimport {AsyncPipe} from '@angular/common';\nimport {Observable} from 'rxjs';\nimport {IServerData} from '../../models/servers';\nimport {AgGrid} from '../../components/ag-grid/ag-grid';\nimport type {ColDef} from 'ag-grid-community';\nimport {TimerContainer} from '../timer-container/timer-container';\nimport {IndicatorContainer} from '../indicator-container/indicator-container';\n\n@Component({\n  selector: 'app-ag-grid-server-data-container',\n  imports: [\n    AsyncPipe,\n    AgGrid\n  ],\n  standalone: true,\n  templateUrl: './ag-grid-server-data-container.html',\n  styleUrl: './ag-grid-server-data-container.scss'\n})\nexport class AgGridServerDataContainer {\n  private store = inject(Store);\n  serverData$: Observable<IServerData[]> = this.store.select(getServerData);\n\n  colDefs: ColDef[] = [\n    {\n      field: 'ip',\n      headerName: 'IP',\n      flex: 1,\n    },\n    {\n      headerName: 'Authorization Data',\n      flex: 1,\n      valueGetter:(params) => {\n        const authorizationData = params.data?.authorizationData;\n        return authorizationData || \"-\";\n      }\n    },\n    {\n      field: 'version',\n      headerName: 'Version',\n      flex: 1,\n    },\n    {\n      headerName: 'Time To Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const time = params.data?.timestampFinish;\n        if (!time) return null;\n\n        const finishUTC = Date.parse(time);\n        return finishUTC > Date.now() ? time : null;\n      },\n    },\n    {\n      headerName: 'Time After Close',\n      cellRenderer: TimerContainer,\n      flex: 1,\n      valueGetter: (params) => {\n        const time = params.data?.timestampFinish;\n        if (!time) return null;\n\n        const finishUTC = Date.parse(time);\n        return finishUTC < Date.now() ? time : null;\n      },\n    },\n    {\n      field: 'botsCount',\n      headerName: 'Bots',\n      flex: 1,\n    },\n    {\n      field: 'status',\n      width: 80,\n      headerName: 'Status',\n      cellRenderer: IndicatorContainer,\n      cellRendererParams: {\n        colorMapping: {\n          'active': 'green',\n          'running': 'green',\n          'inactive': 'red',\n          'stopped': 'red',\n          'pending': 'yellow',\n          'error': 'red'\n        }\n      },\n      cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n      headerClass: 'align-center little-width',\n    },\n  ];\n\n  defaultColDef: ColDef = {\n    sortable: false,\n    cellStyle: { textAlign: 'center'},\n    headerClass: 'align-center',\n    suppressMovable: true,\n  };\n}\n",
             "styleUrl": "./ag-grid-server-data-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "@if (serverData$ | async; as data) {\n  <app-ag-grid-server-data [rowData]=\"data\"></app-ag-grid-server-data>\n}\n"
+            "templateData": "@if (serverData$ | async; as list) {\n  <app-ag-grid\n    [rowData]=\"list\"\n    [colDefs]=\"colDefs\"\n    [defaultColDef]=\"defaultColDef\"\n  >\n  </app-ag-grid>\n}\n"
         },
         {
             "name": "ApiInfoPanel",
@@ -4858,11 +4936,11 @@
             "implements": [
                 "OnInit"
             ],
-            "templateData": "<app-title-content-layout\n  [title]=\"(dataActiveBot$ | async)?.botResultList?.response?.id || ''\"\n>\n  <app-actions\n    title-start\n    [icon]=\"'reply'\"\n    [type]=\"'default'\"\n    (emitter)=\"onAction($event, 'reply')\"\n  ></app-actions>\n  <app-bot-info-page-tabs-container content></app-bot-info-page-tabs-container>\n\n  <app-actions\n    title-end\n    [icon]=\"'refresh'\"\n    [type]=\"'default'\"\n    (emitter)=\"onAction($event, 'refresh')\"\n  ></app-actions>\n</app-title-content-layout>\n"
+            "templateData": "<app-title-content-layout\n  [title]=\"(dataActiveBot$ | async)?.botResultList?.response?.id || ''\"\n>\n  <app-actions\n    title-start\n    [icon]=\"'reply'\"\n    [type]=\"'default'\"\n    (emitter)=\"onAction($event, 'reply')\"\n  >\n  </app-actions>\n  <app-bot-info-page-tabs-container content></app-bot-info-page-tabs-container>\n\n  <app-actions\n    title-end\n    [icon]=\"'refresh'\"\n    [type]=\"'default'\"\n    (emitter)=\"onAction($event, 'refresh')\"\n  ></app-actions>\n</app-title-content-layout>\n"
         },
         {
             "name": "BotInfoPageTabs",
-            "id": "component-BotInfoPageTabs-1f699908a9b9f8e7851185c8fca49a0a76c0d52a578b44693f36155e076eab2be404d6ef7123bf7a03bdb462bd5e16b9154c047d9bf37a8cdb0c531e7ebe45a6",
+            "id": "component-BotInfoPageTabs-8ec32aaeca797ac8cce2c9ec83e44467cc2dbd97eccfc1ec8678a5cde7f1bce8b02759644db97d3373e7191d3c1aff782afbeb26a8709f42f34bf38a9fd5e1b7",
             "file": "src/app/components/bot-info-page-tabs/bot-info-page-tabs.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -4878,6 +4956,15 @@
             "viewProviders": [],
             "hostDirectives": [],
             "inputsClass": [
+                {
+                    "name": "fifthLabel",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 16,
+                    "type": "string",
+                    "decorators": []
+                },
                 {
                     "name": "firstLabel",
                     "defaultValue": "''",
@@ -4932,17 +5019,17 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, Input} from '@angular/core';\nimport {MatTabsModule} from '@angular/material/tabs';\n\n@Component({\n  selector: 'app-bot-info-page-tabs',\n  imports: [MatTabsModule],\n  standalone: true,\n  templateUrl: './bot-info-page-tabs.html',\n  styleUrl: './bot-info-page-tabs.scss',\n})\nexport class BotInfoPageTabs {\n  @Input() firstLabel = '';\n  @Input() secondLabel = '';\n  @Input() thirdLabel = '';\n  @Input() fourthLabel = '';\n\n}\n",
+            "sourceCode": "import {Component, Input} from '@angular/core';\nimport {MatTabsModule} from '@angular/material/tabs';\n\n@Component({\n  selector: 'app-bot-info-page-tabs',\n  imports: [MatTabsModule],\n  standalone: true,\n  templateUrl: './bot-info-page-tabs.html',\n  styleUrl: './bot-info-page-tabs.scss',\n})\nexport class BotInfoPageTabs {\n  @Input() firstLabel = '';\n  @Input() secondLabel = '';\n  @Input() thirdLabel = '';\n  @Input() fourthLabel = '';\n  @Input() fifthLabel = '';\n\n}\n",
             "styleUrl": "./bot-info-page-tabs.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<mat-tab-group>\n  <mat-tab label=\"{{ firstLabel }}\">\n\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[first]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n\n  <mat-tab label=\"{{ secondLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[second]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n\n  <mat-tab label=\"{{ thirdLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[third]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n\n  <mat-tab label=\"{{ fourthLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[fourth]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n\n\n</mat-tab-group>\n"
+            "templateData": "<mat-tab-group>\n  <mat-tab label=\"{{ firstLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[first]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n\n  <mat-tab label=\"{{ secondLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[second]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n\n  <mat-tab label=\"{{ thirdLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[third]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n\n  <mat-tab label=\"{{ fourthLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[fourth]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n\n  <mat-tab label=\"{{ fifthLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[fifth]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n</mat-tab-group>\n"
         },
         {
             "name": "BotInfoPageTabsContainer",
-            "id": "component-BotInfoPageTabsContainer-abcf3b22995741680bdb4c68c88cc57d4886df9836fed32c04c6dc93b5a809e82795eac98d179b8896ff329a558d30c288fe2b948546dcf6088d8d59a64fd25e",
+            "id": "component-BotInfoPageTabsContainer-2a7d9a6b138c71c0399dd206960cb0554325f2f6b9ae262a6dfed78c1b1083880e91056cc817263dd4b4eafa6eb027777cdc63f369867dc9fbd594f5cb698782",
             "file": "src/app/containers/bot-info-page-tabs-container/bot-info-page-tabs-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -4969,7 +5056,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 41
+                    "line": 49
                 },
                 {
                     "name": "activeBotIsLoading$",
@@ -4980,7 +5067,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 42
+                    "line": 50
                 },
                 {
                     "name": "dataActiveBot$",
@@ -4991,7 +5078,18 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 39
+                    "line": 46
+                },
+                {
+                    "name": "getDataActiveBotArbitrage$",
+                    "defaultValue": "this.store.select(getDataActiveBotArbitrage)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "unknown",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 47
                 },
                 {
                     "name": "store",
@@ -5002,7 +5100,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 37,
+                    "line": 44,
                     "modifierKind": [
                         123
                     ]
@@ -5049,18 +5147,21 @@
                 },
                 {
                     "name": "AgGridErrorListContainer"
+                },
+                {
+                    "name": "PriceChartContainer"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {BotInfoPageTabs} from '../../components/bot-info-page-tabs/bot-info-page-tabs';\nimport {getActiveBotIsLoaded, getActiveBotIsLoading, getDataActiveBot} from '../../+state/servers/servers.selectors';\nimport {Store} from '@ngrx/store';\nimport {TitleTableLayout} from '../../components/title-table-layout/title-table-layout';\nimport {\n  AgGridBotControlPanelContainer\n} from '../ag-grid-bot-control-panel-container/ag-grid-bot-control-panel-container';\nimport {LoaderContainer} from '../loader-container/loader-container';\nimport {AsyncPipe} from '@angular/common';\nimport {JobContainer} from '../job-container/job-container';\nimport {TransformObjectToKeyValuePipe} from '../../custom-pipes/transform-object-to-key-value.pipe';\nimport {TitleTableButton} from '../../components/title-table-button/title-table-button';\nimport {AgGridArbitrageListContainer} from '../ag-grid-arbitrage-list-container/ag-grid-arbitrage-list-container';\nimport {AgGridBotDataListContainer} from '../ag-grid-bot-data-list-container/ag-grid-bot-data-list-container';\nimport {AgGridErrorListContainer} from '../ag-grid-error-list-container/ag-grid-error-list-container';\n\n@Component({\n  selector: 'app-bot-info-page-tabs-container',\n  imports: [\n    BotInfoPageTabs,\n    TitleTableLayout,\n    AgGridBotControlPanelContainer,\n    LoaderContainer,\n    AsyncPipe,\n    JobContainer,\n    TransformObjectToKeyValuePipe,\n    TitleTableButton,\n    AgGridArbitrageListContainer,\n    AgGridBotDataListContainer,\n    AgGridErrorListContainer\n  ],\n  templateUrl: './bot-info-page-tabs-container.html',\n  styleUrl: './bot-info-page-tabs-container.scss',\n})\nexport class BotInfoPageTabsContainer {\n  private store = inject(Store);\n\n  dataActiveBot$ = this.store.select(getDataActiveBot);\n\n  activeBotIsLoaded$ = this.store.select(getActiveBotIsLoaded);\n  activeBotIsLoading$ = this.store.select(getActiveBotIsLoading);\n}\n",
+            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {BotInfoPageTabs} from '../../components/bot-info-page-tabs/bot-info-page-tabs';\nimport {\n  getActiveBotIsLoaded,\n  getActiveBotIsLoading,\n  getDataActiveBot,\n  getDataActiveBotArbitrage\n} from '../../+state/servers/servers.selectors';\nimport {Store} from '@ngrx/store';\nimport {TitleTableLayout} from '../../components/title-table-layout/title-table-layout';\nimport {\n  AgGridBotControlPanelContainer\n} from '../ag-grid-bot-control-panel-container/ag-grid-bot-control-panel-container';\nimport {LoaderContainer} from '../loader-container/loader-container';\nimport {AsyncPipe} from '@angular/common';\nimport {JobContainer} from '../job-container/job-container';\nimport {TransformObjectToKeyValuePipe} from '../../custom-pipes/transform-object-to-key-value.pipe';\nimport {TitleTableButton} from '../../components/title-table-button/title-table-button';\nimport {AgGridArbitrageListContainer} from '../ag-grid-arbitrage-list-container/ag-grid-arbitrage-list-container';\nimport {AgGridBotDataListContainer} from '../ag-grid-bot-data-list-container/ag-grid-bot-data-list-container';\nimport {AgGridErrorListContainer} from '../ag-grid-error-list-container/ag-grid-error-list-container';\nimport {PriceChartContainer} from '../price-chart-container/price-chart-container';\n\n@Component({\n  selector: 'app-bot-info-page-tabs-container',\n  imports: [\n    BotInfoPageTabs,\n    TitleTableLayout,\n    AgGridBotControlPanelContainer,\n    LoaderContainer,\n    AsyncPipe,\n    JobContainer,\n    TransformObjectToKeyValuePipe,\n    TitleTableButton,\n    AgGridArbitrageListContainer,\n    AgGridBotDataListContainer,\n    AgGridErrorListContainer,\n    PriceChartContainer,\n  ],\n  templateUrl: './bot-info-page-tabs-container.html',\n  styleUrl: './bot-info-page-tabs-container.scss',\n})\nexport class BotInfoPageTabsContainer {\n  private store = inject(Store);\n\n  dataActiveBot$ = this.store.select(getDataActiveBot);\n  getDataActiveBotArbitrage$ = this.store.select(getDataActiveBotArbitrage);\n\n  activeBotIsLoaded$ = this.store.select(getActiveBotIsLoaded);\n  activeBotIsLoading$ = this.store.select(getActiveBotIsLoading);\n}\n",
             "styleUrl": "./bot-info-page-tabs-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "@if (dataActiveBot$ | async; as list) {\n  @if ((activeBotIsLoaded$ | async) && !(activeBotIsLoading$ | async)) {\n    <app-bot-info-page-tabs\n      [firstLabel]=\"'Control and params'\"\n      [secondLabel]=\"'Arbitrage'\"\n      [thirdLabel]=\"'Errors'\"\n      [fourthLabel]=\"'Job'\"\n    >\n      <div first>\n        <app-title-table-layout>\n          <app-title-table-button\n            title\n            [title]=\"'Bot control'\"\n          ></app-title-table-button>\n          <app-ag-grid-bot-control-panel-container\n            content\n          ></app-ag-grid-bot-control-panel-container>\n        </app-title-table-layout>\n\n        <app-title-table-layout>\n          <app-title-table-button\n            title\n            [title]=\"'Results'\"\n          ></app-title-table-button>\n\n          <app-ag-grid-bot-data-list-container\n            content\n            [rowData]=\"(dataActiveBot$ | async)?.botResultList?.response | transformObjectToKeyValue\"\n          ></app-ag-grid-bot-data-list-container>\n        </app-title-table-layout>\n      </div>\n\n      <div second class=\"table-layout-wrapper\">\n        <app-title-table-layout>\n          <app-title-table-button\n            title\n            [title]=\"'Arbitrage'\"\n          ></app-title-table-button>\n          <app-ag-grid-arbitrage-list-container\n            content\n          ></app-ag-grid-arbitrage-list-container>\n        </app-title-table-layout>\n      </div>\n\n      <div third>\n        <app-title-table-layout>\n          <app-title-table-button\n            title\n            [title]=\"'Errors'\"\n          ></app-title-table-button>\n          <app-ag-grid-error-list-container\n            content\n          ></app-ag-grid-error-list-container>\n        </app-title-table-layout>\n      </div>\n\n      <div fourth>\n        <app-job-container></app-job-container>\n      </div>\n\n\n    </app-bot-info-page-tabs>\n  } @else {\n    <app-loader-container></app-loader-container>\n  }\n}\n"
+            "templateData": "@if (dataActiveBot$ | async; as list) {\n  @if ((activeBotIsLoaded$ | async) && !(activeBotIsLoading$ | async)) {\n    <app-bot-info-page-tabs\n      [firstLabel]=\"'Control and params'\"\n      [secondLabel]=\"'Arbitrage' + ' (' + (getDataActiveBotArbitrage$ | async)?.length + ')'\"\n      [thirdLabel]=\"'Errors'\"\n      [fourthLabel]=\"'Job'\"\n      [fifthLabel]=\"'Chart'\"\n    >\n      <div second class=\"tab-content\">\n        <app-title-table-layout class=\"bot-control\">\n          <app-title-table-button title [title]=\"'Arbitrage' + ' (' + (getDataActiveBotArbitrage$ | async)?.length + ')'\"></app-title-table-button>\n          <app-ag-grid-arbitrage-list-container content></app-ag-grid-arbitrage-list-container>\n        </app-title-table-layout>\n      </div>\n\n      <div first  class=\"tab-content\">\n        <app-title-table-layout>\n          <app-title-table-button\n            title\n            [title]=\"'Bot control'\"\n          ></app-title-table-button>\n          <app-ag-grid-bot-control-panel-container\n            content\n          ></app-ag-grid-bot-control-panel-container>\n        </app-title-table-layout>\n\n        <app-title-table-layout class=\"bot-control\">\n          <app-title-table-button\n            title\n            [title]=\"'Results'\"\n          ></app-title-table-button>\n\n          <app-ag-grid-bot-data-list-container\n            content\n            [rowData]=\"(dataActiveBot$ | async)?.botResultList?.response | transformObjectToKeyValue\"\n          ></app-ag-grid-bot-data-list-container>\n        </app-title-table-layout>\n      </div>\n\n      <div third class=\"tab-content\">\n        <app-title-table-layout class=\"bot-control\">\n          <app-title-table-button\n            title\n            [title]=\"'Errors'\"\n          ></app-title-table-button>\n          <app-ag-grid-error-list-container\n            content\n          ></app-ag-grid-error-list-container>\n        </app-title-table-layout>\n      </div>\n\n      <div fourth class=\"set-margin-top\">\n        <app-job-container></app-job-container>\n      </div>\n\n      <div fifth class=\"tab-content\">\n        <app-price-chart-container></app-price-chart-container>\n      </div>\n\n    </app-bot-info-page-tabs>\n  } @else {\n    <app-loader-container></app-loader-container>\n  }\n}\n"
         },
         {
             "name": "ButtonComponent",
@@ -5795,6 +5896,44 @@
             ],
             "stylesData": "",
             "extends": []
+        },
+        {
+            "name": "HeaderContentLayout",
+            "id": "component-HeaderContentLayout-8a302dfc9d917d424e868368114ae66c96652e89ad7a3cd03da91e8d80c72e0e39dfef381b1749e9bbd73e79c1b1e7d0070dc12384185bd46018a0c8ca287363",
+            "file": "src/app/components/header-content-layout/header-content-layout.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-header-content-layout",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./header-content-layout.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": false,
+            "imports": [],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\nimport {UpperCasePipe} from '@angular/common';\n\n@Component({\n  selector: 'app-header-content-layout',\n  templateUrl: './header-content-layout.html',\n  styleUrl: './header-content-layout.scss',\n})\nexport class HeaderContentLayout {\n\n}\n",
+            "styleUrl": "./header-content-layout.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<div class=\"title-content-layout\">\n\n  <div class=\"header\">\n    <ng-content  select=\"[title]\"></ng-content>\n  </div>\n\n  <div class=\"content\">\n    <ng-content select=\"[content]\"></ng-content>\n  </div>\n\n</div>\n"
         },
         {
             "name": "Indicator",
@@ -7075,8 +7214,487 @@
             "templateData": "@if (!isStarted) {\n  <app-actions\n    [icon]=\"'pause'\"\n    [type]=\"'red'\"\n    (emitter)=\"onAction($event, 'pause')\"\n  ></app-actions>\n} @else {\n  <app-actions\n    [icon]=\"'play_arrow'\"\n    [type]=\"'green'\"\n    (emitter)=\"onAction($event, 'start')\"\n  ></app-actions>\n}\n"
         },
         {
+            "name": "PriceChart",
+            "id": "component-PriceChart-ed0f1cdd5d47838c0777432ec705c213ee00e5bbe9ca46bf3a6bd8ca1c72b2232965a0572f1d4fc1295ad8425d7bcdc68fb8dba5491e36429a45fd5dec7dca8d",
+            "file": "src/app/components/price-chart/price-chart.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-price-chart",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./price-chart.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "data",
+                    "defaultValue": "[]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\nFull dataset to display",
+                    "description": "<p>Full dataset to display</p>\n",
+                    "line": 41,
+                    "type": "PricePoint[]",
+                    "decorators": []
+                },
+                {
+                    "name": "hiddenKeys",
+                    "defaultValue": "[]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\n\nKeys of series to hide, e.g. `['binanceAsk', 'mexSell']`.\nPass an empty array (default) to show all.\n",
+                    "description": "<p>Keys of series to hide, e.g. <code>[&#39;binanceAsk&#39;, &#39;mexSell&#39;]</code>.\nPass an empty array (default) to show all.</p>\n",
+                    "line": 50,
+                    "type": "string[]",
+                    "decorators": []
+                },
+                {
+                    "name": "series",
+                    "defaultValue": "[]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\nWhich price lines to draw. Each entry becomes one line series.",
+                    "description": "<p>Which price lines to draw. Each entry becomes one line series.</p>\n",
+                    "line": 44,
+                    "type": "PriceSeriesConfig[]",
+                    "decorators": []
+                },
+                {
+                    "name": "streaming",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\n\nWhen `true` the chart will progressively reveal `data` points\none-by-one every 500 ms (streaming mode).\nWhen `false` all data is shown immediately.\n",
+                    "description": "<p>When <code>true</code> the chart will progressively reveal <code>data</code> points\none-by-one every 500 ms (streaming mode).\nWhen <code>false</code> all data is shown immediately.</p>\n",
+                    "line": 57,
+                    "type": "boolean",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "chartData",
+                    "defaultValue": "[]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "PricePoint[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 61,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "intervalId",
+                    "defaultValue": "null",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ReturnType<unknown> | null",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 63,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "options",
+                    "defaultValue": "{ series: [] }",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "AgCartesianChartOptions",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 59
+                },
+                {
+                    "name": "streamIndex",
+                    "defaultValue": "0",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 62,
+                    "modifierKind": [
+                        123
+                    ]
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "buildSeries",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "unknown",
+                    "typeParameters": [],
+                    "line": 112,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "clearStreamInterval",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 105,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "initChart",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 81,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "ngOnChanges",
+                    "args": [
+                        {
+                            "name": "changes",
+                            "type": "SimpleChanges",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 69,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "changes",
+                            "type": "SimpleChanges",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "ngOnDestroy",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 77,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "ngOnInit",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 65,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "tick",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 95,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "updateOptions",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 133,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "AgCharts"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import {\n  Component,\n  Input,\n  OnChanges,\n  OnDestroy,\n  OnInit,\n  SimpleChanges,\n} from '@angular/core';\nimport { AgCharts } from 'ag-charts-angular';\nimport { ModuleRegistry, AllCommunityModule } from 'ag-charts-community';\nimport { ZoomModule, NavigatorModule } from 'ag-charts-enterprise';\nimport type { AgCartesianChartOptions } from 'ag-charts-community';\n\nModuleRegistry.registerModules([AllCommunityModule, ZoomModule, NavigatorModule]);\n\n/** Describes one line on the chart */\nexport interface PriceSeriesConfig {\n  /** Field name in data objects, e.g. 'binanceBid' */\n  key: string;\n  /** Display name shown in legend / tooltip, e.g. 'Binance Bid' */\n  name: string;\n  /** Line colour, e.g. '#0ecb81' */\n  color: string;\n}\n\n/** A single data row — `time` + arbitrary price fields matching PriceSeriesConfig.key */\nexport interface PricePoint {\n  time: number;\n  [key: string]: number;\n}\n\n@Component({\n  selector: 'app-price-chart',\n  imports: [AgCharts],\n  standalone: true,\n  templateUrl: './price-chart.html',\n  styleUrl: './price-chart.scss',\n})\nexport class PriceChart implements OnInit, OnChanges, OnDestroy {\n  /** Full dataset to display */\n  @Input() data: PricePoint[] = [];\n\n  /** Which price lines to draw. Each entry becomes one line series. */\n  @Input() series: PriceSeriesConfig[] = [];\n\n  /**\n   * Keys of series to hide, e.g. `['binanceAsk', 'mexSell']`.\n   * Pass an empty array (default) to show all.\n   */\n  @Input() hiddenKeys: string[] = [];\n\n  /**\n   * When `true` the chart will progressively reveal `data` points\n   * one-by-one every 500 ms (streaming mode).\n   * When `false` all data is shown immediately.\n   */\n  @Input() streaming = false;\n\n  options: AgCartesianChartOptions = { series: [] };\n\n  private chartData: PricePoint[] = [];\n  private streamIndex = 0;\n  private intervalId: ReturnType<typeof setInterval> | null = null;\n\n  ngOnInit(): void {\n    this.initChart();\n  }\n\n  ngOnChanges(changes: SimpleChanges): void {\n    if (changes['data'] || changes['streaming'] || changes['series']) {\n      this.initChart();\n    } else if (changes['hiddenKeys']) {\n      this.updateOptions();\n    }\n  }\n\n  ngOnDestroy(): void {\n    this.clearStreamInterval();\n  }\n\n  private initChart(): void {\n    this.clearStreamInterval();\n\n    if (this.streaming && this.data.length > 0) {\n      this.chartData = [];\n      this.streamIndex = 0;\n      this.updateOptions();\n      this.intervalId = setInterval(() => this.tick(), 500);\n    } else {\n      this.chartData = [...this.data];\n      this.updateOptions();\n    }\n  }\n\n  private tick(): void {\n    if (this.streamIndex < this.data.length) {\n      this.chartData = [...this.chartData, this.data[this.streamIndex]];\n      this.streamIndex++;\n      this.updateOptions();\n    } else {\n      this.clearStreamInterval();\n    }\n  }\n\n  private clearStreamInterval(): void {\n    if (this.intervalId !== null) {\n      clearInterval(this.intervalId);\n      this.intervalId = null;\n    }\n  }\n\n  private buildSeries(): AgCartesianChartOptions['series'] {\n    const hidden = new Set(this.hiddenKeys);\n    return this.series\n      .filter((s) => !hidden.has(s.key))\n      .map((s) => ({\n      type: 'line' as const,\n      xKey: 'time',\n      yKey: s.key,\n      yName: s.name,\n      stroke: s.color,\n      strokeWidth: 2,\n      marker: { enabled: false },\n      tooltip: {\n        renderer: (params: any) => ({\n          title: s.name,\n          content: `${Number(params.datum[params.yKey]).toFixed(4)}`,\n        }),\n      },\n    }));\n  }\n\n  private updateOptions(): void {\n    const opts: AgCartesianChartOptions = {\n      background: { fill: '#161a25' },\n      padding: { top: 16, right: 16, bottom: 16, left: 16 },\n      height: 500,\n      data: this.chartData,\n      series: this.buildSeries(),\n      axes: {\n        x: {\n          type: 'number',\n          position: 'bottom',\n          label: {\n            color: '#848e9c',\n            formatter: (params: any) => {\n              const d = new Date(params.value);\n              return `${d.getHours().toString().padStart(2, '0')}:${d\n                .getMinutes()\n                .toString()\n                .padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;\n            },\n          },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n        y: {\n          type: 'number',\n          position: 'right',\n          label: { color: '#848e9c' },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n      },\n      legend: {\n        position: 'top',\n        item: { label: { color: '#eaecef' } },\n      },\n      zoom: {\n        enabled: true,\n        axes: 'x',\n        scrollingStep: 0.3,\n      },\n      navigator: {\n        enabled: true,\n        height: 30,\n      },\n    };\n    this.options = opts;\n  }\n}\n\n\n\n\n\n\n",
+            "styleUrl": "./price-chart.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "implements": [
+                "OnInit",
+                "OnChanges",
+                "OnDestroy"
+            ],
+            "templateData": "<div class=\"price-chart-wrapper\">\n  <ag-charts [options]=\"options\"></ag-charts>\n</div>\n\n"
+        },
+        {
+            "name": "PriceChartContainer",
+            "id": "component-PriceChartContainer-e65da81b560cf8ab66c3b88a6727e207e7d32fa78b445cb9e2117a50c6dc225b4dd1d6b5789791463fc6d07e358df92753a77462998f18c991819b855cc04070",
+            "file": "src/app/containers/price-chart-container/price-chart-container.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-price-chart-container",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./price-chart-container.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "data",
+                    "defaultValue": "[]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "PricePoint[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 25
+                },
+                {
+                    "name": "hiddenKeys",
+                    "defaultValue": "[]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 26
+                },
+                {
+                    "name": "series",
+                    "defaultValue": "[]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "PriceSeriesConfig[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 24
+                },
+                {
+                    "name": "serverDataService",
+                    "defaultValue": "inject(ServerDataService)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "unknown",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 21,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "streaming",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "unknown",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 27
+                },
+                {
+                    "name": "sub",
+                    "defaultValue": "null",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Subscription | null",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 22,
+                    "modifierKind": [
+                        123
+                    ]
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "formatKeyName",
+                    "args": [
+                        {
+                            "name": "rawKey",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "string",
+                    "typeParameters": [],
+                    "line": 106,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\nFormat 'binanceETHUSDCbidPrice' → 'Binance ETHUSDC Bid'",
+                    "description": "<p>Format &#39;binanceETHUSDCbidPrice&#39; → &#39;Binance ETHUSDC Bid&#39;</p>\n",
+                    "modifierKind": [
+                        123
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "rawKey",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "loadPrices",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 37,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "ngOnDestroy",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 33,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "ngOnInit",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 29,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "rawKeyToUrlKey",
+                    "args": [
+                        {
+                            "name": "rawKey",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "string",
+                    "typeParameters": [],
+                    "line": 95,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\n\nTransform raw key like 'binanceETHUSDCbidPrice' to a URL-ready key\nusing the pipe-separated format the API expects: 'binance|ETHUSDC|bidPrice'\n",
+                    "description": "<p>Transform raw key like &#39;binanceETHUSDCbidPrice&#39; to a URL-ready key\nusing the pipe-separated format the API expects: &#39;binance|ETHUSDC|bidPrice&#39;</p>\n",
+                    "modifierKind": [
+                        123
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "rawKey",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "PriceChart"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component, inject, OnDestroy, OnInit } from '@angular/core';\nimport { PriceChart } from '../../components/price-chart/price-chart';\nimport type { PricePoint, PriceSeriesConfig } from '../../components/price-chart/price-chart';\nimport { ServerDataService } from '../../services/server-data.service';\nimport { forkJoin, Subscription } from 'rxjs';\n\n/** Palette used to colour each series automatically */\nconst COLORS = [\n  '#f0b90b', '#f6465d', '#0ecb81', '#ff6838', '#1da2b4',\n  '#b659ff', '#2196f3', '#ff9800', '#e91e63', '#00bcd4',\n];\n\n@Component({\n  selector: 'app-price-chart-container',\n  imports: [PriceChart],\n  standalone: true,\n  templateUrl: './price-chart-container.html',\n  styleUrl: './price-chart-container.scss',\n})\nexport class PriceChartContainer implements OnInit, OnDestroy {\n  private serverDataService = inject(ServerDataService);\n  private sub: Subscription | null = null;\n\n  series: PriceSeriesConfig[] = [];\n  data: PricePoint[] = [];\n  hiddenKeys: string[] = [];\n  streaming = false;\n\n  ngOnInit(): void {\n    this.loadPrices();\n  }\n\n  ngOnDestroy(): void {\n    this.sub?.unsubscribe();\n  }\n\n  private loadPrices(): void {\n    this.sub = this.serverDataService.getPriceKeys().subscribe((keys) => {\n      if (!keys || keys.length === 0) return;\n\n      // Build series config from keys\n      this.series = keys.map((rawKey, i) => ({\n        key: rawKey,\n        name: this.formatKeyName(rawKey),\n        color: COLORS[i % COLORS.length],\n      }));\n\n      // Fetch all price data in parallel\n      const requests = keys.reduce(\n        (acc, key) => {\n          // API expects 'binance|ETHUSDC|bidPrice' format encoded in URL\n          const urlKey = this.rawKeyToUrlKey(key);\n          acc[key] = this.serverDataService.getPriceByKey(urlKey);\n          return acc;\n        },\n        {} as Record<string, ReturnType<ServerDataService['getPriceByKey']>>,\n      );\n\n      forkJoin(requests).subscribe((responses) => {\n        // Collect all unique timestamps\n        const timeSet = new Set<number>();\n        for (const res of Object.values(responses)) {\n          for (const p of res.points) {\n            timeSet.add(p.t);\n          }\n        }\n        const times = [...timeSet].sort((a, b) => a - b);\n\n        // Build lookup: key → Map<timestamp, value>\n        const lookups: Record<string, Map<number, number>> = {};\n        for (const [key, res] of Object.entries(responses)) {\n          const m = new Map<number, number>();\n          for (const p of res.points) {\n            m.set(p.t, p.v);\n          }\n          lookups[key] = m;\n        }\n\n        // Merge into PricePoint[]\n        this.data = times.map((t) => {\n          const point: PricePoint = { time: t };\n          for (const key of keys) {\n            point[key] = lookups[key]?.get(t) ?? NaN;\n          }\n          return point;\n        });\n      });\n    });\n  }\n\n  /**\n   * Transform raw key like 'binanceETHUSDCbidPrice' to a URL-ready key\n   * using the pipe-separated format the API expects: 'binance|ETHUSDC|bidPrice'\n   */\n  private rawKeyToUrlKey(rawKey: string): string {\n    // The API returns keys without separators; reconstruct the pipe format\n    // Pattern: <exchange><PAIR><bidPrice|askPrice>\n    const match = rawKey.match(/^(.+?)((?:ETH|BTC|SOL|DOGE|XRP)[A-Z_-]+)(bidPrice|askPrice)$/);\n    if (match) {\n      return `${match[1]}|${match[2]}|${match[3]}`;\n    }\n    return rawKey;\n  }\n\n  /** Format 'binanceETHUSDCbidPrice' → 'Binance ETHUSDC Bid' */\n  private formatKeyName(rawKey: string): string {\n    const match = rawKey.match(/^(.+?)((?:ETH|BTC|SOL|DOGE|XRP)[A-Z_-]+)(bidPrice|askPrice)$/);\n    if (match) {\n      const exchange = match[1].charAt(0).toUpperCase() + match[1].slice(1);\n      const pair = match[2];\n      const side = match[3] === 'bidPrice' ? 'Bid' : 'Ask';\n      return `${exchange} ${pair} ${side}`;\n    }\n    return rawKey;\n  }\n}\n",
+            "styleUrl": "./price-chart-container.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "implements": [
+                "OnInit",
+                "OnDestroy"
+            ],
+            "templateData": "<app-price-chart\n  [data]=\"data\"\n  [series]=\"series\"\n  [hiddenKeys]=\"hiddenKeys\"\n  [streaming]=\"streaming\"\n></app-price-chart>\n\n"
+        },
+        {
             "name": "QuoteWatcher",
-            "id": "component-QuoteWatcher-8561f1c798dd2b47ee25edea6440a923d4c5b62cc8614f3601407160e4363b9a0a085bfc1f71e33d2aa5f6a4d8cfc35d3676a653e7bb4a345115427806e83f57",
+            "id": "component-QuoteWatcher-c9801e529d5ff8743cbf7d5d559365d05df42a389c7afb624a3d8ca8b8ac3383317e1d8cbc1dfecfaa218ceae812069a03f71465c3c892d03578c30a08ff8906",
             "file": "src/app/containers/quote-watcher/quote-watcher.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -7106,18 +7724,21 @@
                 },
                 {
                     "name": "RouterOutlet"
+                },
+                {
+                    "name": "HeaderContentLayout"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\nimport {ToolbarContainer} from '../toolbar-container/toolbar-container';\nimport {RouterOutlet} from '@angular/router';\n\n@Component({\n  selector: 'app-quote-watcher',\n  imports: [\n    ToolbarContainer,\n    RouterOutlet\n  ],\n  standalone: true,\n  templateUrl: './quote-watcher.html',\n  styleUrl: './quote-watcher.scss'\n})\nexport class QuoteWatcher {\n\n}\n",
+            "sourceCode": "import { Component } from '@angular/core';\nimport {ToolbarContainer} from '../toolbar-container/toolbar-container';\nimport {RouterOutlet} from '@angular/router';\nimport {HeaderContentLayout} from '../../components/header-content-layout/header-content-layout';\n\n@Component({\n  selector: 'app-quote-watcher',\n  imports: [\n    ToolbarContainer,\n    RouterOutlet,\n    HeaderContentLayout\n  ],\n  standalone: true,\n  templateUrl: './quote-watcher.html',\n  styleUrl: './quote-watcher.scss'\n})\nexport class QuoteWatcher {\n\n}\n",
             "styleUrl": "./quote-watcher.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<app-toolbar-container></app-toolbar-container>\n<router-outlet></router-outlet>\n"
+            "templateData": "<app-header-content-layout>\n  <app-toolbar-container title/>\n  <router-outlet content/>\n</app-header-content-layout>\n"
         },
         {
             "name": "RestartBotContainer",
@@ -7669,7 +8290,7 @@
         },
         {
             "name": "SidebarContainer",
-            "id": "component-SidebarContainer-0c5e76e53416779a29e34a76bc384273c7aca95e9bd3dc135e5f23fc5aca8800e42bc4232179a3120f5ac4bfddf101546fe4cde57e69655c464c8ba6a70e81f9",
+            "id": "component-SidebarContainer-342d5f5c3de1daad5cedb8127f38394bb4783ac750b4041048a9a8477438ef46573d2b1559f180334ce433cf4c0a85e983e7b5a0aa56ccbbad0f47ff9d085b30",
             "file": "src/app/containers/sidebar-container/sidebar-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -7918,7 +8539,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, inject, OnInit} from '@angular/core';\nimport {Sidebar} from '../../components/sidebar/sidebar';\nimport {Store} from '@ngrx/store';\nimport {\n  getActiveServerIpPort,\n  getFeatureName,\n  getServerList\n} from '../../+state/servers/servers.selectors';\nimport {AsyncPipe} from '@angular/common';\nimport {TabsContainer} from '../tabs-container/tabs-container';\nimport {clearActiveElementData, setActiveServer} from '../../+state/servers/servers.actions';\nimport {ActivatedRoute, Router} from '@angular/router';\nimport {take} from 'rxjs';\nimport {getActiveTab, getIsSidebarOpen} from '../../+state/view/view.selectors';\nimport {setActiveTab, toggleSidebar} from '../../+state/view/view.actions';\nimport {Actions} from '../../components/actions/actions';\nimport {ApiInfoPanel} from '../../components/api-info-panel/api-info-panel';\nimport {MatDialog} from '@angular/material/dialog';\nimport {ApiListContainer} from '../api-list-container/api-list-container';\n\n@Component({\n  selector: 'app-sidebar-container',\n  imports: [\n    Sidebar,\n    AsyncPipe,\n    TabsContainer,\n    Actions,\n    ApiInfoPanel,\n  ],\n  standalone: true,\n  templateUrl: './sidebar-container.html',\n  styleUrl: './sidebar-container.scss'\n})\nexport class SidebarContainer implements OnInit {\n  private store = inject(Store);\n  private router = inject(Router);\n  private route=inject(ActivatedRoute);\n  readonly dialog = inject(MatDialog);\n\n  featureName$ = this.store.select(getFeatureName);\n  isSidebarOpen$ = this.store.select(getIsSidebarOpen);\n  serverList$ = this.store.select(getServerList);\n  ipPort$ = this.store.select(getActiveServerIpPort);\n  activeTab$ = this.store.select(getActiveTab);\n\n  ngOnInit() {\n    this.route.paramMap.subscribe(params => {\n      const ipPort = params.get('ipPort');\n      const tabId = params.get('tabId');\n\n      if (ipPort && tabId !== null) {\n        const [ip, port] = ipPort.split(':');\n        this.store.dispatch(setActiveTab({ tab: tabId }));\n        this.store.dispatch(clearActiveElementData());\n        this.store.dispatch(setActiveServer({ ip, port }));\n      }\n    });\n  }\n\n  events($event: any) {\n    if ($event.event === 'Sidebar:TOGGLE_CLICKED') {\n      this.store.dispatch(toggleSidebar())\n    } else if ($event.event === 'Sidebar:SET_ACTIVE_ITEM_CLICKED') {\n      const ipPort = $event.data.ipPort;\n      if (ipPort) {\n        const [ip, port] = ipPort.split(':');\n\n        this.activeTab$.pipe(take(1)).subscribe(activeTab => {\n          if (activeTab) {\n            this.router.navigate([`/server/${ip}:${port}/tab/${activeTab}`]);\n          }\n        });\n      }\n    }\n  }\n\n  onAction($event: any, note: string) {\n    if ($event.event === 'Actions:ACTION_CLICKED') {\n      if (note === 'info' ) {\n        this.openEditDialog()\n      }\n    }\n  }\n\n  openEditDialog() {\n    const dialogRef = this.dialog.open(ApiListContainer, {\n      width: '90vw',\n      maxWidth: '100vw',\n      minWidth: '800px',\n      height: '600px',\n      minHeight: '600px',\n      maxHeight: '100vh',\n      panelClass: 'custom-dialog-container',\n      data: {}\n    });\n\n    dialogRef.afterClosed().subscribe((result) => {\n      if (result) {\n        if (result.$event?.data === 'save') {\n          // this.store.dispatch(updateBot({isSendData: result.data, id: rowData.id}));\n        }\n      } else {\n        console.log('Info Closed');\n      }\n    });\n  }\n\n}\n",
+            "sourceCode": "import {Component, inject, OnInit} from '@angular/core';\nimport {Sidebar} from '../../components/sidebar/sidebar';\nimport {Store} from '@ngrx/store';\nimport {\n  getActiveServerIpPort,\n  getFeatureName,\n  getServerList\n} from '../../+state/servers/servers.selectors';\nimport {AsyncPipe} from '@angular/common';\nimport {TabsContainer} from '../tabs-container/tabs-container';\nimport {clearActiveElementData, setActiveServer} from '../../+state/servers/servers.actions';\nimport {ActivatedRoute, Router} from '@angular/router';\nimport {take} from 'rxjs';\nimport {getActiveTab, getIsSidebarOpen} from '../../+state/view/view.selectors';\nimport {setActiveTab, toggleSidebar} from '../../+state/view/view.actions';\nimport {Actions} from '../../components/actions/actions';\nimport {ApiInfoPanel} from '../../components/api-info-panel/api-info-panel';\nimport {MatDialog} from '@angular/material/dialog';\nimport {ApiListContainer} from '../api-list-container/api-list-container';\n\n@Component({\n  selector: 'app-sidebar-container',\n  imports: [\n    Sidebar,\n    AsyncPipe,\n    TabsContainer,\n    Actions,\n    ApiInfoPanel,\n  ],\n  standalone: true,\n  templateUrl: './sidebar-container.html',\n  styleUrl: './sidebar-container.scss'\n})\nexport class SidebarContainer implements OnInit {\n  private store = inject(Store);\n  private router = inject(Router);\n  private route=inject(ActivatedRoute);\n  readonly dialog = inject(MatDialog);\n\n  featureName$ = this.store.select(getFeatureName);\n  isSidebarOpen$ = this.store.select(getIsSidebarOpen);\n  serverList$ = this.store.select(getServerList);\n  ipPort$ = this.store.select(getActiveServerIpPort);\n  activeTab$ = this.store.select(getActiveTab);\n\n  ngOnInit() {\n    this.route.paramMap.subscribe(params => {\n      const ipPort = params.get('ipPort');\n      const tabId = params.get('tabId');\n\n      if (ipPort && tabId !== null) {\n        const [ip, port] = ipPort.split(':');\n        this.store.dispatch(setActiveTab({ tab: tabId }));\n        this.store.dispatch(clearActiveElementData());\n        this.store.dispatch(setActiveServer({ ip, port }));\n      }\n    });\n  }\n\n  events($event: any) {\n    if ($event.event === 'Sidebar:TOGGLE_CLICKED') {\n      this.store.dispatch(toggleSidebar())\n    } else if ($event.event === 'Sidebar:SET_ACTIVE_ITEM_CLICKED') {\n      const ipPort = $event.data.ipPort;\n      if (ipPort) {\n        const [ip, port] = ipPort.split(':');\n\n        this.activeTab$.pipe(take(1)).subscribe(activeTab => {\n          if (activeTab) {\n            this.router.navigate([`/server/${ip}:${port}/tab/${activeTab}`]);\n          }\n        });\n      }\n    }\n  }\n\n  onAction($event: any, note: string) {\n    if ($event.event === 'Actions:ACTION_CLICKED') {\n      if (note === 'info' ) {\n        this.openEditDialog()\n      }\n    }\n  }\n\n  openEditDialog() {\n    const dialogRef = this.dialog.open(ApiListContainer, {\n      width: '90%',\n      maxWidth: '100vw',\n      minWidth: '800px',\n      height: '90%',\n      minHeight: '600px',\n      maxHeight: '100vh',\n      panelClass: 'custom-dialog-container',\n      data: {}\n    });\n\n    dialogRef.afterClosed().subscribe((result) => {\n      if (result) {\n        if (result.$event?.data === 'save') {\n          // this.store.dispatch(updateBot({isSendData: result.data, id: rowData.id}));\n        }\n      } else {\n        console.log('Info Closed');\n      }\n    });\n  }\n\n}\n",
             "styleUrl": "./sidebar-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -9615,6 +10236,18 @@
                 "defaultValue": "createAction('[Servers] clearActiveElementData')"
             },
             {
+                "name": "COLORS",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/containers/price-chart-container/price-chart-container.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "[]",
+                "defaultValue": "[\n  '#f0b90b', '#f6465d', '#0ecb81', '#ff6838', '#1da2b4',\n  '#b659ff', '#2196f3', '#ff9800', '#e91e63', '#00bcd4',\n]",
+                "rawdescription": "Palette used to colour each series automatically",
+                "description": "<p>Palette used to colour each series automatically</p>\n"
+            },
+            {
                 "name": "deletingBot",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
@@ -9993,6 +10626,16 @@
                 "deprecationMessage": "",
                 "type": "unknown",
                 "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.activeElementData.activeBot\n)"
+            },
+            {
+                "name": "getDataActiveBotArbitrage",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/+state/servers/servers.selectors.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "unknown",
+                "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.activeElementData.activeBot.botArbitrageList.response\n)"
             },
             {
                 "name": "getFeatureName",
@@ -10495,6 +11138,76 @@
                 "defaultValue": "createAction(\n  '[Servers] loadServerListSuccess',\n  props<{ response: IServerData }>()\n)"
             },
             {
+                "name": "multiExchangeSeries",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "PriceSeriesConfig[]",
+                "defaultValue": "[\n  { key: 'binanceBid', name: 'Binance Bid', color: '#f0b90b' },\n  { key: 'binanceAsk', name: 'Binance Ask', color: '#f6465d' },\n  { key: 'bybitBid', name: 'Bybit Bid', color: '#0ecb81' },\n  { key: 'bybitAsk', name: 'Bybit Ask', color: '#ff6838' },\n  { key: 'mexSell', name: 'MEX Sell', color: '#1da2b4' },\n]"
+            },
+            {
+                "name": "priceChartStabs_large",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "PricePoint[]",
+                "defaultValue": "generateTwoLineData(1000, 1820, 0.5, 4.0, 1000)"
+            },
+            {
+                "name": "priceChartStabs_medium",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "PricePoint[]",
+                "defaultValue": "generateTwoLineData(300, 1820, 0.35, 2.5, 2000)"
+            },
+            {
+                "name": "priceChartStabs_multiExchange",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "PricePoint[]",
+                "defaultValue": "generateMultiExchangeData(\n  300, 1820, 2.5, 2000,\n)"
+            },
+            {
+                "name": "priceChartStabs_multiExchangeStreaming",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "PricePoint[]",
+                "defaultValue": "generateMultiExchangeData(\n  200, 1820, 2.0, 500,\n)"
+            },
+            {
+                "name": "priceChartStabs_small",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "PricePoint[]",
+                "defaultValue": "generateTwoLineData(50, 1820, 0.35, 1.2, 5000)"
+            },
+            {
+                "name": "priceChartStabs_streaming",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "PricePoint[]",
+                "defaultValue": "generateTwoLineData(200, 1820, 0.35, 2.0, 500)"
+            },
+            {
                 "name": "restartBotFailure",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
@@ -10532,7 +11245,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Routes",
-                "defaultValue": "[\n  {\n    path: '',\n    pathMatch: 'full',\n    redirectTo: 'server/45.135.182.251:1005/tab/gates',\n  },\n  {\n    path: 'server/:ipPort/tab/:tabId',\n    component: SidebarContainer,\n  },\n  {\n    path: 'server/:ipPort/:botId',\n    component: BotInfoPageContainer,\n  },\n  {\n    path: '**',\n    redirectTo: 'server/45.135.182.251:1005/tab/gates',\n  },\n]"
+                "defaultValue": "[\n  {\n    path: '',\n    pathMatch: 'full',\n    redirectTo: 'server/45.135.182.251:1001/tab/bots',\n  },\n  {\n    path: 'server/:ipPort/tab/:tabId',\n    component: SidebarContainer,\n  },\n  {\n    path: 'server/:ipPort/:botId',\n    component: BotInfoPageContainer,\n  },\n  {\n    path: '**',\n    redirectTo: 'server/45.135.182.251:1001/tab/bots',\n  },\n]"
             },
             {
                 "name": "rulesTableColDefs",
@@ -10573,6 +11286,26 @@
                 "deprecationMessage": "",
                 "type": "unknown",
                 "defaultValue": "createFeatureSelector<ViewState>(VIEW_FEATURE_KEY)"
+            },
+            {
+                "name": "serverColDefs",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/+stabs/server-data-stabs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "ColDef[]",
+                "defaultValue": "[\n  {\n    field: 'ip',\n    headerName: 'IP',\n    flex: 1,\n  },\n  {\n    headerName: 'Authorization Data',\n    flex: 1,\n    valueGetter:(params) => {\n      const authorizationData = params.data?.authorizationData;\n      return authorizationData || \"-\";\n    }\n  },\n  {\n    field: 'version',\n    headerName: 'Version',\n    flex: 1,\n  },\n  {\n    headerName: 'Time To Close',\n    cellRenderer: TimerContainer,\n    flex: 1,\n    valueGetter: (params) => {\n      const time = params.data?.timestampFinish;\n      if (!time) return null;\n\n      const finishUTC = Date.parse(time);\n      return finishUTC > Date.now() ? time : null;\n    },\n  },\n  {\n    headerName: 'Time After Close',\n    cellRenderer: TimerContainer,\n    flex: 1,\n    valueGetter: (params) => {\n      const time = params.data?.timestampFinish;\n      if (!time) return null;\n\n      const finishUTC = Date.parse(time);\n      return finishUTC < Date.now() ? time : null;\n    },\n  },\n  {\n    field: 'botsCount',\n    headerName: 'Bots',\n    flex: 1,\n  },\n  {\n    field: 'status',\n    width: 80,\n    headerName: 'Status',\n    cellRenderer: IndicatorContainer,\n    cellRendererParams: {\n      colorMapping: {\n        'active': 'green',\n        'running': 'green',\n        'inactive': 'red',\n        'stopped': 'red',\n        'pending': 'yellow',\n        'error': 'red'\n      }\n    },\n    cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n    headerClass: 'align-center little-width',\n  },\n]"
+            },
+            {
+                "name": "serverDefaultColDef",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/+stabs/server-data-stabs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "ColDef",
+                "defaultValue": "{\n  sortable: false,\n  cellStyle: { textAlign: 'center'},\n  headerClass: 'align-center',\n  suppressMovable: true,\n}"
             },
             {
                 "name": "serverListConfig",
@@ -10815,6 +11548,16 @@
                 "defaultValue": "createAction('[View] toggleSidebar')"
             },
             {
+                "name": "twoLineSeries",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "PriceSeriesConfig[]",
+                "defaultValue": "[\n  { key: 'bidPrice', name: 'Bid (Buy)', color: '#0ecb81' },\n  { key: 'askPrice', name: 'Ask (Sell)', color: '#f6465d' },\n]"
+            },
+            {
                 "name": "updateBot",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
@@ -10845,7 +11588,171 @@
                 "defaultValue": "createReducer(\n  initialState,\n  on(ViewActions.toggleSidebar, (state) => ({\n    ...state,\n    isSidebarOpen: !state.isSidebarOpen\n  })),\n  on(ViewActions.setActiveTab, (state, {tab}) => ({\n    ...state,\n    activeTab: tab\n  })),\n)"
             }
         ],
-        "functions": [],
+        "functions": [
+            {
+                "name": "generateMultiExchangeData",
+                "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                "ctype": "miscellaneous",
+                "subtype": "function",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "args": [
+                    {
+                        "name": "count",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "basePrice",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "volatility",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "intervalMs",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    }
+                ],
+                "returnType": "PricePoint[]",
+                "jsdoctags": [
+                    {
+                        "name": "count",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "basePrice",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "volatility",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "intervalMs",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "generateTwoLineData",
+                "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                "ctype": "miscellaneous",
+                "subtype": "function",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "args": [
+                    {
+                        "name": "count",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "basePrice",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "spread",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "volatility",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    },
+                    {
+                        "name": "intervalMs",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    }
+                ],
+                "returnType": "PricePoint[]",
+                "jsdoctags": [
+                    {
+                        "name": "count",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "basePrice",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "spread",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "volatility",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    },
+                    {
+                        "name": "intervalMs",
+                        "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    }
+                ]
+            }
+        ],
         "typealiases": [],
         "enumerations": [],
         "groupedVariables": {
@@ -10911,6 +11818,26 @@
                     "deprecationMessage": "",
                     "type": "unknown",
                     "defaultValue": "(days: number): string => {\n  const now = new Date();\n  const utcNow = Date.UTC(\n    now.getUTCFullYear(),\n    now.getUTCMonth(),\n    now.getUTCDate() + days,\n    now.getUTCHours(),\n    now.getUTCMinutes(),\n    now.getUTCSeconds()\n  );\n  return new Date(utcNow).toISOString();\n}"
+                },
+                {
+                    "name": "serverColDefs",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/components/+stabs/server-data-stabs.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ColDef[]",
+                    "defaultValue": "[\n  {\n    field: 'ip',\n    headerName: 'IP',\n    flex: 1,\n  },\n  {\n    headerName: 'Authorization Data',\n    flex: 1,\n    valueGetter:(params) => {\n      const authorizationData = params.data?.authorizationData;\n      return authorizationData || \"-\";\n    }\n  },\n  {\n    field: 'version',\n    headerName: 'Version',\n    flex: 1,\n  },\n  {\n    headerName: 'Time To Close',\n    cellRenderer: TimerContainer,\n    flex: 1,\n    valueGetter: (params) => {\n      const time = params.data?.timestampFinish;\n      if (!time) return null;\n\n      const finishUTC = Date.parse(time);\n      return finishUTC > Date.now() ? time : null;\n    },\n  },\n  {\n    headerName: 'Time After Close',\n    cellRenderer: TimerContainer,\n    flex: 1,\n    valueGetter: (params) => {\n      const time = params.data?.timestampFinish;\n      if (!time) return null;\n\n      const finishUTC = Date.parse(time);\n      return finishUTC < Date.now() ? time : null;\n    },\n  },\n  {\n    field: 'botsCount',\n    headerName: 'Bots',\n    flex: 1,\n  },\n  {\n    field: 'status',\n    width: 80,\n    headerName: 'Status',\n    cellRenderer: IndicatorContainer,\n    cellRendererParams: {\n      colorMapping: {\n        'active': 'green',\n        'running': 'green',\n        'inactive': 'red',\n        'stopped': 'red',\n        'pending': 'yellow',\n        'error': 'red'\n      }\n    },\n    cellStyle: { textAlign: 'center', justifyContent: 'center', alignItems: 'center' },\n    headerClass: 'align-center little-width',\n  },\n]"
+                },
+                {
+                    "name": "serverDefaultColDef",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/components/+stabs/server-data-stabs.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ColDef",
+                    "defaultValue": "{\n  sortable: false,\n  cellStyle: { textAlign: 'center'},\n  headerClass: 'align-center',\n  suppressMovable: true,\n}"
                 },
                 {
                     "name": "serverStabs_1",
@@ -11637,6 +12564,20 @@
                     "defaultValue": "createAction(\n  '[Servers] updateBot',\n  props<{ isSendData: boolean, id: string }>()\n)"
                 }
             ],
+            "src/app/containers/price-chart-container/price-chart-container.ts": [
+                {
+                    "name": "COLORS",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/containers/price-chart-container/price-chart-container.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "[]",
+                    "defaultValue": "[\n  '#f0b90b', '#f6465d', '#0ecb81', '#ff6838', '#1da2b4',\n  '#b659ff', '#2196f3', '#ff9800', '#e91e63', '#00bcd4',\n]",
+                    "rawdescription": "Palette used to colour each series automatically",
+                    "description": "<p>Palette used to colour each series automatically</p>\n"
+                }
+            ],
             "src/app/components/drop-menu/stabs.ts": [
                 {
                     "name": "dropMenuStabs_1",
@@ -12019,6 +12960,16 @@
                     "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.activeElementData.activeBot\n)"
                 },
                 {
+                    "name": "getDataActiveBotArbitrage",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/+state/servers/servers.selectors.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "unknown",
+                    "defaultValue": "createSelector(\n  selectFeature,\n  (state: ServersState) => state.activeElementData.activeBot.botArbitrageList.response\n)"
+                },
+                {
                     "name": "getFeatureName",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
@@ -12337,6 +13288,88 @@
                     "defaultValue": "{\n  sortable: false,\n  cellStyle: { textAlign: 'center', border: '1px solid #e0e0e0' },\n  headerClass: 'align-center',\n  suppressMovable: true,\n}"
                 }
             ],
+            "src/app/components/+stabs/price-chart-stabs.ts": [
+                {
+                    "name": "multiExchangeSeries",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "PriceSeriesConfig[]",
+                    "defaultValue": "[\n  { key: 'binanceBid', name: 'Binance Bid', color: '#f0b90b' },\n  { key: 'binanceAsk', name: 'Binance Ask', color: '#f6465d' },\n  { key: 'bybitBid', name: 'Bybit Bid', color: '#0ecb81' },\n  { key: 'bybitAsk', name: 'Bybit Ask', color: '#ff6838' },\n  { key: 'mexSell', name: 'MEX Sell', color: '#1da2b4' },\n]"
+                },
+                {
+                    "name": "priceChartStabs_large",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "PricePoint[]",
+                    "defaultValue": "generateTwoLineData(1000, 1820, 0.5, 4.0, 1000)"
+                },
+                {
+                    "name": "priceChartStabs_medium",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "PricePoint[]",
+                    "defaultValue": "generateTwoLineData(300, 1820, 0.35, 2.5, 2000)"
+                },
+                {
+                    "name": "priceChartStabs_multiExchange",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "PricePoint[]",
+                    "defaultValue": "generateMultiExchangeData(\n  300, 1820, 2.5, 2000,\n)"
+                },
+                {
+                    "name": "priceChartStabs_multiExchangeStreaming",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "PricePoint[]",
+                    "defaultValue": "generateMultiExchangeData(\n  200, 1820, 2.0, 500,\n)"
+                },
+                {
+                    "name": "priceChartStabs_small",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "PricePoint[]",
+                    "defaultValue": "generateTwoLineData(50, 1820, 0.35, 1.2, 5000)"
+                },
+                {
+                    "name": "priceChartStabs_streaming",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "PricePoint[]",
+                    "defaultValue": "generateTwoLineData(200, 1820, 0.35, 2.0, 500)"
+                },
+                {
+                    "name": "twoLineSeries",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "PriceSeriesConfig[]",
+                    "defaultValue": "[\n  { key: 'bidPrice', name: 'Bid (Buy)', color: '#0ecb81' },\n  { key: 'askPrice', name: 'Ask (Sell)', color: '#f6465d' },\n]"
+                }
+            ],
             "src/app/app.routes.ts": [
                 {
                     "name": "routes",
@@ -12346,7 +13379,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Routes",
-                    "defaultValue": "[\n  {\n    path: '',\n    pathMatch: 'full',\n    redirectTo: 'server/45.135.182.251:1005/tab/gates',\n  },\n  {\n    path: 'server/:ipPort/tab/:tabId',\n    component: SidebarContainer,\n  },\n  {\n    path: 'server/:ipPort/:botId',\n    component: BotInfoPageContainer,\n  },\n  {\n    path: '**',\n    redirectTo: 'server/45.135.182.251:1005/tab/gates',\n  },\n]"
+                    "defaultValue": "[\n  {\n    path: '',\n    pathMatch: 'full',\n    redirectTo: 'server/45.135.182.251:1001/tab/bots',\n  },\n  {\n    path: 'server/:ipPort/tab/:tabId',\n    component: SidebarContainer,\n  },\n  {\n    path: 'server/:ipPort/:botId',\n    component: BotInfoPageContainer,\n  },\n  {\n    path: '**',\n    redirectTo: 'server/45.135.182.251:1001/tab/bots',\n  },\n]"
                 }
             ],
             "src/app/+state/view/view.actions.ts": [
@@ -12372,7 +13405,173 @@
                 }
             ]
         },
-        "groupedFunctions": {},
+        "groupedFunctions": {
+            "src/app/components/+stabs/price-chart-stabs.ts": [
+                {
+                    "name": "generateMultiExchangeData",
+                    "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                    "ctype": "miscellaneous",
+                    "subtype": "function",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "args": [
+                        {
+                            "name": "count",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "basePrice",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "volatility",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "intervalMs",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "returnType": "PricePoint[]",
+                    "jsdoctags": [
+                        {
+                            "name": "count",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "basePrice",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "volatility",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "intervalMs",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "generateTwoLineData",
+                    "file": "src/app/components/+stabs/price-chart-stabs.ts",
+                    "ctype": "miscellaneous",
+                    "subtype": "function",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "args": [
+                        {
+                            "name": "count",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "basePrice",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "spread",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "volatility",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "intervalMs",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "returnType": "PricePoint[]",
+                    "jsdoctags": [
+                        {
+                            "name": "count",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "basePrice",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "spread",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "volatility",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "intervalMs",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
         "groupedEnumerations": {},
         "groupedTypeAliases": {}
     },
@@ -12396,19 +13595,19 @@
                 "filename": "src/app/app.routes.ts"
             },
             {
-                "name": "server/45\\.135.182.251:1005/tab/gates",
+                "name": "server/45\\.135.182.251:1001/tab/bots",
                 "kind": "route-redirect",
                 "filename": "src/app/app.routes.ts"
             },
             {
-                "name": "server/45\\.135.182.251:1005/tab/gates",
+                "name": "server/45\\.135.182.251:1001/tab/bots",
                 "kind": "route-redirect",
                 "filename": "src/app/app.routes.ts"
             }
         ]
     },
     "coverage": {
-        "count": 0,
+        "count": 1,
         "status": "low",
         "files": [
             {
@@ -13253,6 +14452,16 @@
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
+                "name": "getDataActiveBotArbitrage",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/+state/servers/servers.selectors.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
                 "name": "getFeatureName",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
@@ -13835,6 +15044,106 @@
                 "status": "low"
             },
             {
+                "filePath": "src/app/components/+stabs/price-chart-stabs.ts",
+                "type": "function",
+                "linktype": "miscellaneous",
+                "linksubtype": "function",
+                "name": "generateMultiExchangeData",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/+stabs/price-chart-stabs.ts",
+                "type": "function",
+                "linktype": "miscellaneous",
+                "linksubtype": "function",
+                "name": "generateTwoLineData",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/+stabs/price-chart-stabs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "multiExchangeSeries",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/+stabs/price-chart-stabs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "priceChartStabs_large",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/+stabs/price-chart-stabs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "priceChartStabs_medium",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/+stabs/price-chart-stabs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "priceChartStabs_multiExchange",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/+stabs/price-chart-stabs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "priceChartStabs_multiExchangeStreaming",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/+stabs/price-chart-stabs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "priceChartStabs_small",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/+stabs/price-chart-stabs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "priceChartStabs_streaming",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/+stabs/price-chart-stabs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "twoLineSeries",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
                 "filePath": "src/app/components/+stabs/rules-table-stabs.ts",
                 "type": "variable",
                 "linktype": "miscellaneous",
@@ -13889,6 +15198,26 @@
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
+                "name": "serverColDefs",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/+stabs/server-data-stabs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "serverDefaultColDef",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/+stabs/server-data-stabs.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
                 "name": "serverStabs_1",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
@@ -13924,15 +15253,6 @@
                 "status": "low"
             },
             {
-                "filePath": "src/app/components/ag-grid-server-data/ag-grid-server-data.ts",
-                "type": "component",
-                "linktype": "component",
-                "name": "AgGridServerData",
-                "coveragePercent": 0,
-                "coverageCount": "0/4",
-                "status": "low"
-            },
-            {
                 "filePath": "src/app/components/ag-grid/ag-grid.ts",
                 "type": "component",
                 "linktype": "component",
@@ -13965,7 +15285,7 @@
                 "linktype": "component",
                 "name": "BotInfoPageTabs",
                 "coveragePercent": 0,
-                "coverageCount": "0/5",
+                "coverageCount": "0/6",
                 "status": "low"
             },
             {
@@ -14013,6 +15333,15 @@
                 "name": "FormLayout",
                 "coveragePercent": 0,
                 "coverageCount": "0/5",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/header-content-layout/header-content-layout.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "HeaderContentLayout",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
                 "status": "low"
             },
             {
@@ -14068,6 +15397,33 @@
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
+            },
+            {
+                "filePath": "src/app/components/price-chart/price-chart.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "PriceChart",
+                "coveragePercent": 23,
+                "coverageCount": "4/17",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/price-chart/price-chart.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "PricePoint",
+                "coveragePercent": 50,
+                "coverageCount": "1/2",
+                "status": "medium"
+            },
+            {
+                "filePath": "src/app/components/price-chart/price-chart.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "PriceSeriesConfig",
+                "coveragePercent": 100,
+                "coverageCount": "4/4",
+                "status": "very-good"
             },
             {
                 "filePath": "src/app/components/select-field/select-field.ts",
@@ -14246,7 +15602,7 @@
                 "linktype": "component",
                 "name": "AgGridServerDataContainer",
                 "coveragePercent": 0,
-                "coverageCount": "0/3",
+                "coverageCount": "0/5",
                 "status": "low"
             },
             {
@@ -14282,7 +15638,7 @@
                 "linktype": "component",
                 "name": "BotInfoPageTabsContainer",
                 "coveragePercent": 0,
-                "coverageCount": "0/5",
+                "coverageCount": "0/6",
                 "status": "low"
             },
             {
@@ -14356,6 +15712,25 @@
                 "coveragePercent": 0,
                 "coverageCount": "0/6",
                 "status": "low"
+            },
+            {
+                "filePath": "src/app/containers/price-chart-container/price-chart-container.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "PriceChartContainer",
+                "coveragePercent": 16,
+                "coverageCount": "2/12",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/containers/price-chart-container/price-chart-container.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "COLORS",
+                "coveragePercent": 100,
+                "coverageCount": "1/1",
+                "status": "very-good"
             },
             {
                 "filePath": "src/app/containers/quote-watcher/quote-watcher.ts",
@@ -14750,7 +16125,7 @@
                 "linktype": "injectable",
                 "name": "ServerDataService",
                 "coveragePercent": 0,
-                "coverageCount": "0/21",
+                "coverageCount": "0/23",
                 "status": "low"
             },
             {

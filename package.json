@@ -37,8 +37,12 @@
     "@ngrx/router-store": "^20.0.1",
     "@ngrx/store": "^20.0.1",
     "@ngrx/store-devtools": "^20.0.1",
+    "ag-charts-angular": "^13.2.0",
+    "ag-charts-community": "^13.2.0",
+    "ag-charts-enterprise": "^13.2.0",
     "ag-grid-angular": "^34.3.0",
     "rxjs": "~7.8.0",
+    "socket.io-client": "^4.8.3",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
