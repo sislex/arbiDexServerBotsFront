@@ -128,6 +128,7 @@ export class PriceChart implements OnInit, OnChanges, OnDestroy {
         yName: s.name,
         stroke: s.color,
         strokeWidth: 2,
+        interpolation: { type: 'step' as const, position: 'end' as const },
         marker: { enabled: false },
         tooltip: {
           renderer: (params: any) => ({
