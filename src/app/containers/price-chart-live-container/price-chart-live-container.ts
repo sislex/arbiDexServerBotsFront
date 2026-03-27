@@ -1,18 +1,18 @@
 import { Component, inject, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { forkJoin, Subscription, take } from 'rxjs';
+import { forkJoin, Subscription, filter, take } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { PriceChart } from '../../components/price-chart/price-chart';
 import type { PricePoint, PriceSeriesConfig } from '../../components/price-chart/price-chart';
 import { ServerDataService } from '../../services/server-data.service';
-import { buildSeriesFromKeys, rawKeyToUrlKey } from '../../services/price-key-utils';
-import { getActiveServerIpPort } from '../../+state/servers/servers.selectors';
+import { buildSeriesFromKeys } from '../../services/price-key-utils';
+import { getActiveServerIpPort, getInfoActiveBot } from '../../+state/servers/servers.selectors';
 
 /** How often (ms) we flush buffered WS ticks into the chart */
 const FLUSH_INTERVAL = 500;
 
 /** Max data points to keep — older points are dropped, creating auto-scroll */
-const MAX_POINTS = 3000;
+const MAX_POINTS = 300;
 
 @Component({
   selector: 'app-price-chart-live-container',
@@ -52,46 +52,63 @@ export class PriceChartLiveContainer implements OnInit, OnDestroy {
     this.socket = null;
   }
 
+  /** Build pipe-separated key: `source|symbol|field` */
+  private static makeKey(source: string, symbol: string, field: 'bidPrice' | 'askPrice'): string {
+    return `${source}|${symbol}|${field}`;
+  }
+
   private init(): void {
-    // 1. Fetch available keys
-    this.sub = this.serverDataService.getPriceKeys().subscribe((keys) => {
-      if (!keys || keys.length === 0) return;
+    // 1. Get source & symbol from the active bot's jobParams
+    this.sub = this.store
+      .select(getInfoActiveBot)
+      .pipe(
+        filter((info) => !!(info?.jobParams as any)?.source && !!(info?.jobParams as any)?.symbol),
+        take(1),
+      )
+      .subscribe((info) => {
+        const { source, symbol } = info.jobParams as any;
 
-      this.keys = keys;
-      this.series = buildSeriesFromKeys(keys);
+        const pipeKeys = [
+          PriceChartLiveContainer.makeKey(source, symbol, 'bidPrice'),
+          PriceChartLiveContainer.makeKey(source, symbol, 'askPrice'),
+        ];
+        const flatKeys = pipeKeys.map((k) => k.replace(/\|/g, ''));
 
-      // 2. Load historical data from REST, then start WebSocket
-      const requests = keys.reduce(
-        (acc, key) => {
-          acc[key] = this.serverDataService.getPriceByKey(rawKeyToUrlKey(key));
-          return acc;
-        },
-        {} as Record<string, ReturnType<ServerDataService['getPriceByKey']>>,
-      );
+        this.keys = flatKeys;
+        this.series = buildSeriesFromKeys(flatKeys);
 
-      forkJoin(requests).subscribe((responses) => {
-        // Build historical data with forward-fill
-        this.data = this.mergeResponses(keys, responses);
+        // 2. Load historical data from REST
+        const requests = pipeKeys.reduce(
+          (acc, pipeKey) => {
+            const flatKey = pipeKey.replace(/\|/g, '');
+            acc[flatKey] = this.serverDataService.getPriceByKey(pipeKey);
+            return acc;
+          },
+          {} as Record<string, ReturnType<ServerDataService['getPriceByKey']>>,
+        );
 
-        // Seed lastKnown from the last historical point
-        if (this.data.length > 0) {
-          const last = this.data[this.data.length - 1];
-          for (const key of keys) {
-            if (last[key] !== undefined && !isNaN(last[key])) {
-              this.lastKnown[key] = last[key];
+        forkJoin(requests).subscribe((responses) => {
+          this.data = this.mergeResponses(flatKeys, responses);
+
+          // Seed lastKnown from the last historical point
+          if (this.data.length > 0) {
+            const last = this.data[this.data.length - 1];
+            for (const key of flatKeys) {
+              if (last[key] !== undefined && !isNaN(last[key])) {
+                this.lastKnown[key] = last[key];
+              }
             }
           }
-        }
 
-        // 3. Now connect WebSocket to append live data on top
-        this.store
-          .select(getActiveServerIpPort)
-          .pipe(take(1))
-          .subscribe((ipPort) => {
-            this.connectSocket(`http://${ipPort}`, keys);
-          });
+          // 3. Connect WebSocket with the pipe-separated keys
+          this.store
+            .select(getActiveServerIpPort)
+            .pipe(take(1))
+            .subscribe((ipPort) => {
+              this.connectSocket(`http://${ipPort}`, pipeKeys);
+            });
+        });
       });
-    });
   }
 
   /* ── REST: merge historical data with forward-fill ── */
@@ -137,7 +154,7 @@ export class PriceChartLiveContainer implements OnInit, OnDestroy {
 
   /* ── WebSocket: live updates ── */
 
-  private connectSocket(baseUrl: string, keys: string[]): void {
+  private connectSocket(baseUrl: string, pipeKeys: string[]): void {
     this.socket?.disconnect();
 
     this.ngZone.runOutsideAngular(() => {
@@ -146,7 +163,6 @@ export class PriceChartLiveContainer implements OnInit, OnDestroy {
       });
 
       this.socket.on('connect', () => {
-        const pipeKeys = keys.map(rawKeyToUrlKey);
         this.socket!.emit('subscribe', { keys: pipeKeys });
       });
 

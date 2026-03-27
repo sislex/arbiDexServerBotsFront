@@ -1473,12 +1473,12 @@
         },
         {
             "name": "PricePoint",
-            "id": "interface-PricePoint-ed0f1cdd5d47838c0777432ec705c213ee00e5bbe9ca46bf3a6bd8ca1c72b2232965a0572f1d4fc1295ad8425d7bcdc68fb8dba5491e36429a45fd5dec7dca8d",
+            "id": "interface-PricePoint-536f6bcf73f5072e6fb12bd7bf47142e283b75dbf765d9f627a1f490cf67cb98bc7657a03c8428002d5c4306514436e82cdd8109ba2cd47c5cc123150f0c5402",
             "file": "src/app/components/price-chart/price-chart.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {\n  Component,\n  Input,\n  OnChanges,\n  OnDestroy,\n  OnInit,\n  SimpleChanges,\n} from '@angular/core';\nimport { AgCharts } from 'ag-charts-angular';\nimport { ModuleRegistry, AllCommunityModule } from 'ag-charts-community';\nimport { ZoomModule, NavigatorModule } from 'ag-charts-enterprise';\nimport type { AgCartesianChartOptions } from 'ag-charts-community';\n\nModuleRegistry.registerModules([AllCommunityModule, ZoomModule, NavigatorModule]);\n\n/** Describes one line on the chart */\nexport interface PriceSeriesConfig {\n  /** Field name in data objects, e.g. 'binanceBid' */\n  key: string;\n  /** Display name shown in legend / tooltip, e.g. 'Binance Bid' */\n  name: string;\n  /** Line colour, e.g. '#0ecb81' */\n  color: string;\n}\n\n/** A single data row — `time` + arbitrary price fields matching PriceSeriesConfig.key */\nexport interface PricePoint {\n  time: number;\n  [key: string]: number;\n}\n\n@Component({\n  selector: 'app-price-chart',\n  imports: [AgCharts],\n  standalone: true,\n  templateUrl: './price-chart.html',\n  styleUrl: './price-chart.scss',\n})\nexport class PriceChart implements OnInit, OnChanges, OnDestroy {\n  /** Full dataset to display */\n  @Input() data: PricePoint[] = [];\n\n  /** Which price lines to draw. Each entry becomes one line series. */\n  @Input() series: PriceSeriesConfig[] = [];\n\n  /**\n   * Keys of series to hide, e.g. `['binanceAsk', 'mexSell']`.\n   * Pass an empty array (default) to show all.\n   */\n  @Input() hiddenKeys: string[] = [];\n\n  /**\n   * When `true` the chart will progressively reveal `data` points\n   * one-by-one every 500 ms (streaming mode).\n   * When `false` all data is shown immediately.\n   */\n  @Input() streaming = false;\n\n  options: AgCartesianChartOptions = { series: [] };\n\n  private chartData: PricePoint[] = [];\n  private streamIndex = 0;\n  private intervalId: ReturnType<typeof setInterval> | null = null;\n\n  ngOnInit(): void {\n    this.initChart();\n  }\n\n  ngOnChanges(changes: SimpleChanges): void {\n    if (changes['data'] || changes['streaming'] || changes['series']) {\n      this.initChart();\n    } else if (changes['hiddenKeys']) {\n      this.updateOptions();\n    }\n  }\n\n  ngOnDestroy(): void {\n    this.clearStreamInterval();\n  }\n\n  private initChart(): void {\n    this.clearStreamInterval();\n\n    if (this.streaming && this.data.length > 0) {\n      this.chartData = [];\n      this.streamIndex = 0;\n      this.updateOptions();\n      this.intervalId = setInterval(() => this.tick(), 500);\n    } else {\n      this.chartData = [...this.data];\n      this.updateOptions();\n    }\n  }\n\n  private tick(): void {\n    if (this.streamIndex < this.data.length) {\n      this.chartData = [...this.chartData, this.data[this.streamIndex]];\n      this.streamIndex++;\n      this.updateOptions();\n    } else {\n      this.clearStreamInterval();\n    }\n  }\n\n  private clearStreamInterval(): void {\n    if (this.intervalId !== null) {\n      clearInterval(this.intervalId);\n      this.intervalId = null;\n    }\n  }\n\n  private buildSeries(): AgCartesianChartOptions['series'] {\n    const hidden = new Set(this.hiddenKeys);\n    return this.series\n      .filter((s) => !hidden.has(s.key))\n      .map((s) => ({\n      type: 'line' as const,\n      xKey: 'time',\n      yKey: s.key,\n      yName: s.name,\n      stroke: s.color,\n      strokeWidth: 2,\n      marker: { enabled: false },\n      tooltip: {\n        renderer: (params: any) => ({\n          title: s.name,\n          content: `${Number(params.datum[params.yKey]).toFixed(4)}`,\n        }),\n      },\n    }));\n  }\n\n  private updateOptions(): void {\n    const opts: AgCartesianChartOptions = {\n      background: { fill: '#161a25' },\n      padding: { top: 16, right: 16, bottom: 16, left: 16 },\n      height: 500,\n      data: this.chartData,\n      series: this.buildSeries(),\n      axes: {\n        x: {\n          type: 'number',\n          position: 'bottom',\n          label: {\n            color: '#848e9c',\n            formatter: (params: any) => {\n              const d = new Date(params.value);\n              return `${d.getHours().toString().padStart(2, '0')}:${d\n                .getMinutes()\n                .toString()\n                .padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;\n            },\n          },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n        y: {\n          type: 'number',\n          position: 'right',\n          label: { color: '#848e9c' },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n      },\n      legend: {\n        position: 'top',\n        item: { label: { color: '#eaecef' } },\n      },\n      zoom: {\n        enabled: true,\n        axes: 'x',\n        scrollingStep: 0.3,\n      },\n      navigator: {\n        enabled: true,\n        height: 30,\n      },\n    };\n    this.options = opts;\n  }\n}\n\n\n\n\n\n\n",
+            "sourceCode": "import {\n  Component,\n  Input,\n  OnChanges,\n  OnDestroy,\n  OnInit,\n  SimpleChanges,\n} from '@angular/core';\nimport { AgCharts } from 'ag-charts-angular';\nimport { ModuleRegistry, AllCommunityModule } from 'ag-charts-community';\nimport { ZoomModule, NavigatorModule, CrosshairModule } from 'ag-charts-enterprise';\nimport type { AgCartesianChartOptions } from 'ag-charts-community';\n\nModuleRegistry.registerModules([AllCommunityModule, ZoomModule, NavigatorModule, CrosshairModule]);\n\n/** Describes one line on the chart */\nexport interface PriceSeriesConfig {\n  /** Field name in data objects, e.g. 'binanceBid' */\n  key: string;\n  /** Display name shown in legend / tooltip, e.g. 'Binance Bid' */\n  name: string;\n  /** Line colour, e.g. '#0ecb81' */\n  color: string;\n}\n\n/** A single data row — `time` + arbitrary price fields matching PriceSeriesConfig.key */\nexport interface PricePoint {\n  time: number;\n  [key: string]: number;\n}\n\n@Component({\n  selector: 'app-price-chart',\n  imports: [AgCharts],\n  standalone: true,\n  templateUrl: './price-chart.html',\n  styleUrl: './price-chart.scss',\n})\nexport class PriceChart implements OnInit, OnChanges, OnDestroy {\n  @Input() data: PricePoint[] = [];\n  @Input() series: PriceSeriesConfig[] = [];\n  @Input() hiddenKeys: string[] = [];\n  @Input() streaming = false;\n\n  options: AgCartesianChartOptions = {};\n\n  private chartData: PricePoint[] = [];\n  private streamIndex = 0;\n  private intervalId: ReturnType<typeof setInterval> | null = null;\n  /** Full config without data — rebuilt only when series/hiddenKeys/streaming change */\n  private baseOptions: AgCartesianChartOptions = {};\n\n  ngOnInit(): void {\n    this.rebuildBaseOptions();\n    this.initChart();\n  }\n\n  ngOnChanges(changes: SimpleChanges): void {\n    const structureChanged =\n      changes['series'] || changes['hiddenKeys'] || changes['streaming'];\n\n    if (structureChanged) {\n      this.rebuildBaseOptions();\n      this.initChart();\n    } else if (changes['data']) {\n      // Fast path — only data changed, keep existing config\n      if (this.streaming) {\n        // In streaming mode initChart manages its own feed; restart it with new source\n        this.initChart();\n      } else {\n        this.chartData = [...this.data];\n        this.applyData();\n      }\n    }\n  }\n\n  ngOnDestroy(): void {\n    this.clearStreamInterval();\n  }\n\n  /* ── streaming ── */\n\n  private initChart(): void {\n    this.clearStreamInterval();\n\n    if (this.streaming && this.data.length > 0) {\n      this.chartData = [];\n      this.streamIndex = 0;\n      this.applyData();\n      this.intervalId = setInterval(() => this.tick(), 500);\n    } else {\n      this.chartData = [...this.data];\n      this.applyData();\n    }\n  }\n\n  private tick(): void {\n    if (this.streamIndex < this.data.length) {\n      this.chartData = [...this.chartData, this.data[this.streamIndex]];\n      this.streamIndex++;\n      this.applyData();\n    } else {\n      this.clearStreamInterval();\n    }\n  }\n\n  private clearStreamInterval(): void {\n    if (this.intervalId !== null) {\n      clearInterval(this.intervalId);\n      this.intervalId = null;\n    }\n  }\n\n  /* ── options management ── */\n\n  /**\n   * Rebuild everything EXCEPT data — series, axes, legend, zoom, navigator.\n   * Called only when series / hiddenKeys / streaming change.\n   */\n  private rebuildBaseOptions(): void {\n    const hidden = new Set(this.hiddenKeys);\n    const seriesDefs = this.series\n      .filter((s) => !hidden.has(s.key))\n      .map((s) => ({\n        type: 'line' as const,\n        xKey: 'time',\n        yKey: s.key,\n        yName: s.name,\n        stroke: s.color,\n        strokeWidth: 2,\n        marker: { enabled: false },\n        tooltip: {\n          renderer: (params: any) => ({\n            title: s.name,\n            content: `${Number(params.datum[params.yKey]).toFixed(4)}`,\n          }),\n        },\n      }));\n\n    this.baseOptions = {\n      background: { fill: '#161a25' },\n      padding: { top: 16, right: 16, bottom: 16, left: 16 },\n      height: 500,\n      series: seriesDefs,\n      axes: {\n        x: {\n          type: 'number',\n          position: 'bottom',\n          label: {\n            color: '#848e9c',\n            formatter: (params: any) => {\n              const d = new Date(params.value);\n              return `${d.getHours().toString().padStart(2, '0')}:${d\n                .getMinutes()\n                .toString()\n                .padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;\n            },\n          },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n        y: {\n          type: 'number',\n          position: 'right',\n          label: { color: '#848e9c' },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n      },\n      legend: {\n        position: 'top',\n        item: { label: { color: '#eaecef' } },\n      },\n      zoom: {\n        enabled: true,\n        axes: 'x',\n        scrollingStep: 0.3,\n      },\n      navigator: {\n        enabled: true,\n        height: 30,\n      },\n    };\n  }\n\n  /**\n   * Lightweight update — only swaps data in the existing config.\n   * Creates a new options reference so ag-charts picks up the change.\n   */\n  private applyData(): void {\n    this.options = { ...this.baseOptions, data: [...this.chartData] };\n  }\n}\n",
             "properties": [
                 {
                     "name": "time",
@@ -1493,7 +1493,7 @@
             ],
             "indexSignatures": [
                 {
-                    "id": "index-declaration-ed0f1cdd5d47838c0777432ec705c213ee00e5bbe9ca46bf3a6bd8ca1c72b2232965a0572f1d4fc1295ad8425d7bcdc68fb8dba5491e36429a45fd5dec7dca8d",
+                    "id": "index-declaration-536f6bcf73f5072e6fb12bd7bf47142e283b75dbf765d9f627a1f490cf67cb98bc7657a03c8428002d5c4306514436e82cdd8109ba2cd47c5cc123150f0c5402",
                     "args": [
                         {
                             "name": "key",
@@ -1516,12 +1516,12 @@
         },
         {
             "name": "PriceSeriesConfig",
-            "id": "interface-PriceSeriesConfig-ed0f1cdd5d47838c0777432ec705c213ee00e5bbe9ca46bf3a6bd8ca1c72b2232965a0572f1d4fc1295ad8425d7bcdc68fb8dba5491e36429a45fd5dec7dca8d",
+            "id": "interface-PriceSeriesConfig-536f6bcf73f5072e6fb12bd7bf47142e283b75dbf765d9f627a1f490cf67cb98bc7657a03c8428002d5c4306514436e82cdd8109ba2cd47c5cc123150f0c5402",
             "file": "src/app/components/price-chart/price-chart.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import {\n  Component,\n  Input,\n  OnChanges,\n  OnDestroy,\n  OnInit,\n  SimpleChanges,\n} from '@angular/core';\nimport { AgCharts } from 'ag-charts-angular';\nimport { ModuleRegistry, AllCommunityModule } from 'ag-charts-community';\nimport { ZoomModule, NavigatorModule } from 'ag-charts-enterprise';\nimport type { AgCartesianChartOptions } from 'ag-charts-community';\n\nModuleRegistry.registerModules([AllCommunityModule, ZoomModule, NavigatorModule]);\n\n/** Describes one line on the chart */\nexport interface PriceSeriesConfig {\n  /** Field name in data objects, e.g. 'binanceBid' */\n  key: string;\n  /** Display name shown in legend / tooltip, e.g. 'Binance Bid' */\n  name: string;\n  /** Line colour, e.g. '#0ecb81' */\n  color: string;\n}\n\n/** A single data row — `time` + arbitrary price fields matching PriceSeriesConfig.key */\nexport interface PricePoint {\n  time: number;\n  [key: string]: number;\n}\n\n@Component({\n  selector: 'app-price-chart',\n  imports: [AgCharts],\n  standalone: true,\n  templateUrl: './price-chart.html',\n  styleUrl: './price-chart.scss',\n})\nexport class PriceChart implements OnInit, OnChanges, OnDestroy {\n  /** Full dataset to display */\n  @Input() data: PricePoint[] = [];\n\n  /** Which price lines to draw. Each entry becomes one line series. */\n  @Input() series: PriceSeriesConfig[] = [];\n\n  /**\n   * Keys of series to hide, e.g. `['binanceAsk', 'mexSell']`.\n   * Pass an empty array (default) to show all.\n   */\n  @Input() hiddenKeys: string[] = [];\n\n  /**\n   * When `true` the chart will progressively reveal `data` points\n   * one-by-one every 500 ms (streaming mode).\n   * When `false` all data is shown immediately.\n   */\n  @Input() streaming = false;\n\n  options: AgCartesianChartOptions = { series: [] };\n\n  private chartData: PricePoint[] = [];\n  private streamIndex = 0;\n  private intervalId: ReturnType<typeof setInterval> | null = null;\n\n  ngOnInit(): void {\n    this.initChart();\n  }\n\n  ngOnChanges(changes: SimpleChanges): void {\n    if (changes['data'] || changes['streaming'] || changes['series']) {\n      this.initChart();\n    } else if (changes['hiddenKeys']) {\n      this.updateOptions();\n    }\n  }\n\n  ngOnDestroy(): void {\n    this.clearStreamInterval();\n  }\n\n  private initChart(): void {\n    this.clearStreamInterval();\n\n    if (this.streaming && this.data.length > 0) {\n      this.chartData = [];\n      this.streamIndex = 0;\n      this.updateOptions();\n      this.intervalId = setInterval(() => this.tick(), 500);\n    } else {\n      this.chartData = [...this.data];\n      this.updateOptions();\n    }\n  }\n\n  private tick(): void {\n    if (this.streamIndex < this.data.length) {\n      this.chartData = [...this.chartData, this.data[this.streamIndex]];\n      this.streamIndex++;\n      this.updateOptions();\n    } else {\n      this.clearStreamInterval();\n    }\n  }\n\n  private clearStreamInterval(): void {\n    if (this.intervalId !== null) {\n      clearInterval(this.intervalId);\n      this.intervalId = null;\n    }\n  }\n\n  private buildSeries(): AgCartesianChartOptions['series'] {\n    const hidden = new Set(this.hiddenKeys);\n    return this.series\n      .filter((s) => !hidden.has(s.key))\n      .map((s) => ({\n      type: 'line' as const,\n      xKey: 'time',\n      yKey: s.key,\n      yName: s.name,\n      stroke: s.color,\n      strokeWidth: 2,\n      marker: { enabled: false },\n      tooltip: {\n        renderer: (params: any) => ({\n          title: s.name,\n          content: `${Number(params.datum[params.yKey]).toFixed(4)}`,\n        }),\n      },\n    }));\n  }\n\n  private updateOptions(): void {\n    const opts: AgCartesianChartOptions = {\n      background: { fill: '#161a25' },\n      padding: { top: 16, right: 16, bottom: 16, left: 16 },\n      height: 500,\n      data: this.chartData,\n      series: this.buildSeries(),\n      axes: {\n        x: {\n          type: 'number',\n          position: 'bottom',\n          label: {\n            color: '#848e9c',\n            formatter: (params: any) => {\n              const d = new Date(params.value);\n              return `${d.getHours().toString().padStart(2, '0')}:${d\n                .getMinutes()\n                .toString()\n                .padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;\n            },\n          },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n        y: {\n          type: 'number',\n          position: 'right',\n          label: { color: '#848e9c' },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n      },\n      legend: {\n        position: 'top',\n        item: { label: { color: '#eaecef' } },\n      },\n      zoom: {\n        enabled: true,\n        axes: 'x',\n        scrollingStep: 0.3,\n      },\n      navigator: {\n        enabled: true,\n        height: 30,\n      },\n    };\n    this.options = opts;\n  }\n}\n\n\n\n\n\n\n",
+            "sourceCode": "import {\n  Component,\n  Input,\n  OnChanges,\n  OnDestroy,\n  OnInit,\n  SimpleChanges,\n} from '@angular/core';\nimport { AgCharts } from 'ag-charts-angular';\nimport { ModuleRegistry, AllCommunityModule } from 'ag-charts-community';\nimport { ZoomModule, NavigatorModule, CrosshairModule } from 'ag-charts-enterprise';\nimport type { AgCartesianChartOptions } from 'ag-charts-community';\n\nModuleRegistry.registerModules([AllCommunityModule, ZoomModule, NavigatorModule, CrosshairModule]);\n\n/** Describes one line on the chart */\nexport interface PriceSeriesConfig {\n  /** Field name in data objects, e.g. 'binanceBid' */\n  key: string;\n  /** Display name shown in legend / tooltip, e.g. 'Binance Bid' */\n  name: string;\n  /** Line colour, e.g. '#0ecb81' */\n  color: string;\n}\n\n/** A single data row — `time` + arbitrary price fields matching PriceSeriesConfig.key */\nexport interface PricePoint {\n  time: number;\n  [key: string]: number;\n}\n\n@Component({\n  selector: 'app-price-chart',\n  imports: [AgCharts],\n  standalone: true,\n  templateUrl: './price-chart.html',\n  styleUrl: './price-chart.scss',\n})\nexport class PriceChart implements OnInit, OnChanges, OnDestroy {\n  @Input() data: PricePoint[] = [];\n  @Input() series: PriceSeriesConfig[] = [];\n  @Input() hiddenKeys: string[] = [];\n  @Input() streaming = false;\n\n  options: AgCartesianChartOptions = {};\n\n  private chartData: PricePoint[] = [];\n  private streamIndex = 0;\n  private intervalId: ReturnType<typeof setInterval> | null = null;\n  /** Full config without data — rebuilt only when series/hiddenKeys/streaming change */\n  private baseOptions: AgCartesianChartOptions = {};\n\n  ngOnInit(): void {\n    this.rebuildBaseOptions();\n    this.initChart();\n  }\n\n  ngOnChanges(changes: SimpleChanges): void {\n    const structureChanged =\n      changes['series'] || changes['hiddenKeys'] || changes['streaming'];\n\n    if (structureChanged) {\n      this.rebuildBaseOptions();\n      this.initChart();\n    } else if (changes['data']) {\n      // Fast path — only data changed, keep existing config\n      if (this.streaming) {\n        // In streaming mode initChart manages its own feed; restart it with new source\n        this.initChart();\n      } else {\n        this.chartData = [...this.data];\n        this.applyData();\n      }\n    }\n  }\n\n  ngOnDestroy(): void {\n    this.clearStreamInterval();\n  }\n\n  /* ── streaming ── */\n\n  private initChart(): void {\n    this.clearStreamInterval();\n\n    if (this.streaming && this.data.length > 0) {\n      this.chartData = [];\n      this.streamIndex = 0;\n      this.applyData();\n      this.intervalId = setInterval(() => this.tick(), 500);\n    } else {\n      this.chartData = [...this.data];\n      this.applyData();\n    }\n  }\n\n  private tick(): void {\n    if (this.streamIndex < this.data.length) {\n      this.chartData = [...this.chartData, this.data[this.streamIndex]];\n      this.streamIndex++;\n      this.applyData();\n    } else {\n      this.clearStreamInterval();\n    }\n  }\n\n  private clearStreamInterval(): void {\n    if (this.intervalId !== null) {\n      clearInterval(this.intervalId);\n      this.intervalId = null;\n    }\n  }\n\n  /* ── options management ── */\n\n  /**\n   * Rebuild everything EXCEPT data — series, axes, legend, zoom, navigator.\n   * Called only when series / hiddenKeys / streaming change.\n   */\n  private rebuildBaseOptions(): void {\n    const hidden = new Set(this.hiddenKeys);\n    const seriesDefs = this.series\n      .filter((s) => !hidden.has(s.key))\n      .map((s) => ({\n        type: 'line' as const,\n        xKey: 'time',\n        yKey: s.key,\n        yName: s.name,\n        stroke: s.color,\n        strokeWidth: 2,\n        marker: { enabled: false },\n        tooltip: {\n          renderer: (params: any) => ({\n            title: s.name,\n            content: `${Number(params.datum[params.yKey]).toFixed(4)}`,\n          }),\n        },\n      }));\n\n    this.baseOptions = {\n      background: { fill: '#161a25' },\n      padding: { top: 16, right: 16, bottom: 16, left: 16 },\n      height: 500,\n      series: seriesDefs,\n      axes: {\n        x: {\n          type: 'number',\n          position: 'bottom',\n          label: {\n            color: '#848e9c',\n            formatter: (params: any) => {\n              const d = new Date(params.value);\n              return `${d.getHours().toString().padStart(2, '0')}:${d\n                .getMinutes()\n                .toString()\n                .padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;\n            },\n          },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n        y: {\n          type: 'number',\n          position: 'right',\n          label: { color: '#848e9c' },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n      },\n      legend: {\n        position: 'top',\n        item: { label: { color: '#eaecef' } },\n      },\n      zoom: {\n        enabled: true,\n        axes: 'x',\n        scrollingStep: 0.3,\n      },\n      navigator: {\n        enabled: true,\n        height: 30,\n      },\n    };\n  }\n\n  /**\n   * Lightweight update — only swaps data in the existing config.\n   * Creates a new options reference so ag-charts picks up the change.\n   */\n  private applyData(): void {\n    this.options = { ...this.baseOptions, data: [...this.chartData] };\n  }\n}\n",
             "properties": [
                 {
                     "name": "color",
@@ -4940,7 +4940,7 @@
         },
         {
             "name": "BotInfoPageTabs",
-            "id": "component-BotInfoPageTabs-8ec32aaeca797ac8cce2c9ec83e44467cc2dbd97eccfc1ec8678a5cde7f1bce8b02759644db97d3373e7191d3c1aff782afbeb26a8709f42f34bf38a9fd5e1b7",
+            "id": "component-BotInfoPageTabs-91c012e2d4ded085a297f1368d281ab57b712797033b12ec2879590964a37d9ad238f7d26bc9198fa819b67cf7a7f5d9b249c844bac9255c11f64000613ee652",
             "file": "src/app/components/bot-info-page-tabs/bot-info-page-tabs.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -4993,6 +4993,15 @@
                     "decorators": []
                 },
                 {
+                    "name": "sixthLabel",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 17,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
                     "name": "thirdLabel",
                     "defaultValue": "''",
                     "deprecated": false,
@@ -5019,17 +5028,17 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, Input} from '@angular/core';\nimport {MatTabsModule} from '@angular/material/tabs';\n\n@Component({\n  selector: 'app-bot-info-page-tabs',\n  imports: [MatTabsModule],\n  standalone: true,\n  templateUrl: './bot-info-page-tabs.html',\n  styleUrl: './bot-info-page-tabs.scss',\n})\nexport class BotInfoPageTabs {\n  @Input() firstLabel = '';\n  @Input() secondLabel = '';\n  @Input() thirdLabel = '';\n  @Input() fourthLabel = '';\n  @Input() fifthLabel = '';\n\n}\n",
+            "sourceCode": "import {Component, Input} from '@angular/core';\nimport {MatTabsModule} from '@angular/material/tabs';\n\n@Component({\n  selector: 'app-bot-info-page-tabs',\n  imports: [MatTabsModule],\n  standalone: true,\n  templateUrl: './bot-info-page-tabs.html',\n  styleUrl: './bot-info-page-tabs.scss',\n})\nexport class BotInfoPageTabs {\n  @Input() firstLabel = '';\n  @Input() secondLabel = '';\n  @Input() thirdLabel = '';\n  @Input() fourthLabel = '';\n  @Input() fifthLabel = '';\n  @Input() sixthLabel = '';\n\n}\n",
             "styleUrl": "./bot-info-page-tabs.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<mat-tab-group>\n  <mat-tab label=\"{{ firstLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[first]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n\n  <mat-tab label=\"{{ secondLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[second]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n\n  <mat-tab label=\"{{ thirdLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[third]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n\n  <mat-tab label=\"{{ fourthLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[fourth]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n\n  <mat-tab label=\"{{ fifthLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[fifth]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n</mat-tab-group>\n"
+            "templateData": "<mat-tab-group>\n  <mat-tab label=\"{{ firstLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[first]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n\n  <mat-tab label=\"{{ secondLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[second]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n\n  <mat-tab label=\"{{ thirdLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[third]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n\n  <mat-tab label=\"{{ fourthLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[fourth]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n\n  <mat-tab label=\"{{ fifthLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[fifth]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n\n  <mat-tab label=\"{{ sixthLabel }}\">\n    <ng-template matTabContent>\n      <div class=\"content\">\n        <ng-content select=\"[sixth]\"></ng-content>\n      </div>\n    </ng-template>\n  </mat-tab>\n</mat-tab-group>\n"
         },
         {
             "name": "BotInfoPageTabsContainer",
-            "id": "component-BotInfoPageTabsContainer-2a7d9a6b138c71c0399dd206960cb0554325f2f6b9ae262a6dfed78c1b1083880e91056cc817263dd4b4eafa6eb027777cdc63f369867dc9fbd594f5cb698782",
+            "id": "component-BotInfoPageTabsContainer-ce57d3e46398512cd440a30826d12c216cc7150ead033f0a1332cc4c1a5cfaff479bb10d80fccb085807f57dd79fb9078b88e7c9ce77ad5fee5e41b03f874d4e",
             "file": "src/app/containers/bot-info-page-tabs-container/bot-info-page-tabs-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -5056,7 +5065,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 49
+                    "line": 51
                 },
                 {
                     "name": "activeBotIsLoading$",
@@ -5067,7 +5076,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 50
+                    "line": 52
                 },
                 {
                     "name": "dataActiveBot$",
@@ -5078,7 +5087,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 46
+                    "line": 48
                 },
                 {
                     "name": "getDataActiveBotArbitrage$",
@@ -5089,7 +5098,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 47
+                    "line": 49
                 },
                 {
                     "name": "store",
@@ -5100,7 +5109,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 44,
+                    "line": 46,
                     "modifierKind": [
                         123
                     ]
@@ -5150,18 +5159,21 @@
                 },
                 {
                     "name": "PriceChartContainer"
+                },
+                {
+                    "name": "PriceChartLiveContainer"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {BotInfoPageTabs} from '../../components/bot-info-page-tabs/bot-info-page-tabs';\nimport {\n  getActiveBotIsLoaded,\n  getActiveBotIsLoading,\n  getDataActiveBot,\n  getDataActiveBotArbitrage\n} from '../../+state/servers/servers.selectors';\nimport {Store} from '@ngrx/store';\nimport {TitleTableLayout} from '../../components/title-table-layout/title-table-layout';\nimport {\n  AgGridBotControlPanelContainer\n} from '../ag-grid-bot-control-panel-container/ag-grid-bot-control-panel-container';\nimport {LoaderContainer} from '../loader-container/loader-container';\nimport {AsyncPipe} from '@angular/common';\nimport {JobContainer} from '../job-container/job-container';\nimport {TransformObjectToKeyValuePipe} from '../../custom-pipes/transform-object-to-key-value.pipe';\nimport {TitleTableButton} from '../../components/title-table-button/title-table-button';\nimport {AgGridArbitrageListContainer} from '../ag-grid-arbitrage-list-container/ag-grid-arbitrage-list-container';\nimport {AgGridBotDataListContainer} from '../ag-grid-bot-data-list-container/ag-grid-bot-data-list-container';\nimport {AgGridErrorListContainer} from '../ag-grid-error-list-container/ag-grid-error-list-container';\nimport {PriceChartContainer} from '../price-chart-container/price-chart-container';\n\n@Component({\n  selector: 'app-bot-info-page-tabs-container',\n  imports: [\n    BotInfoPageTabs,\n    TitleTableLayout,\n    AgGridBotControlPanelContainer,\n    LoaderContainer,\n    AsyncPipe,\n    JobContainer,\n    TransformObjectToKeyValuePipe,\n    TitleTableButton,\n    AgGridArbitrageListContainer,\n    AgGridBotDataListContainer,\n    AgGridErrorListContainer,\n    PriceChartContainer,\n  ],\n  templateUrl: './bot-info-page-tabs-container.html',\n  styleUrl: './bot-info-page-tabs-container.scss',\n})\nexport class BotInfoPageTabsContainer {\n  private store = inject(Store);\n\n  dataActiveBot$ = this.store.select(getDataActiveBot);\n  getDataActiveBotArbitrage$ = this.store.select(getDataActiveBotArbitrage);\n\n  activeBotIsLoaded$ = this.store.select(getActiveBotIsLoaded);\n  activeBotIsLoading$ = this.store.select(getActiveBotIsLoading);\n}\n",
+            "sourceCode": "import {Component, inject} from '@angular/core';\nimport {BotInfoPageTabs} from '../../components/bot-info-page-tabs/bot-info-page-tabs';\nimport {\n  getActiveBotIsLoaded,\n  getActiveBotIsLoading,\n  getDataActiveBot,\n  getDataActiveBotArbitrage\n} from '../../+state/servers/servers.selectors';\nimport {Store} from '@ngrx/store';\nimport {TitleTableLayout} from '../../components/title-table-layout/title-table-layout';\nimport {\n  AgGridBotControlPanelContainer\n} from '../ag-grid-bot-control-panel-container/ag-grid-bot-control-panel-container';\nimport {LoaderContainer} from '../loader-container/loader-container';\nimport {AsyncPipe} from '@angular/common';\nimport {JobContainer} from '../job-container/job-container';\nimport {TransformObjectToKeyValuePipe} from '../../custom-pipes/transform-object-to-key-value.pipe';\nimport {TitleTableButton} from '../../components/title-table-button/title-table-button';\nimport {AgGridArbitrageListContainer} from '../ag-grid-arbitrage-list-container/ag-grid-arbitrage-list-container';\nimport {AgGridBotDataListContainer} from '../ag-grid-bot-data-list-container/ag-grid-bot-data-list-container';\nimport {AgGridErrorListContainer} from '../ag-grid-error-list-container/ag-grid-error-list-container';\nimport {PriceChartContainer} from '../price-chart-container/price-chart-container';\nimport {PriceChartLiveContainer} from '../price-chart-live-container/price-chart-live-container';\n\n@Component({\n  selector: 'app-bot-info-page-tabs-container',\n  imports: [\n    BotInfoPageTabs,\n    TitleTableLayout,\n    AgGridBotControlPanelContainer,\n    LoaderContainer,\n    AsyncPipe,\n    JobContainer,\n    TransformObjectToKeyValuePipe,\n    TitleTableButton,\n    AgGridArbitrageListContainer,\n    AgGridBotDataListContainer,\n    AgGridErrorListContainer,\n    PriceChartContainer,\n    PriceChartLiveContainer,\n  ],\n  templateUrl: './bot-info-page-tabs-container.html',\n  styleUrl: './bot-info-page-tabs-container.scss',\n})\nexport class BotInfoPageTabsContainer {\n  private store = inject(Store);\n\n  dataActiveBot$ = this.store.select(getDataActiveBot);\n  getDataActiveBotArbitrage$ = this.store.select(getDataActiveBotArbitrage);\n\n  activeBotIsLoaded$ = this.store.select(getActiveBotIsLoaded);\n  activeBotIsLoading$ = this.store.select(getActiveBotIsLoading);\n}\n",
             "styleUrl": "./bot-info-page-tabs-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "@if (dataActiveBot$ | async; as list) {\n  @if ((activeBotIsLoaded$ | async) && !(activeBotIsLoading$ | async)) {\n    <app-bot-info-page-tabs\n      [firstLabel]=\"'Control and params'\"\n      [secondLabel]=\"'Arbitrage' + ' (' + (getDataActiveBotArbitrage$ | async)?.length + ')'\"\n      [thirdLabel]=\"'Errors'\"\n      [fourthLabel]=\"'Job'\"\n      [fifthLabel]=\"'Chart'\"\n    >\n      <div second class=\"tab-content\">\n        <app-title-table-layout class=\"bot-control\">\n          <app-title-table-button title [title]=\"'Arbitrage' + ' (' + (getDataActiveBotArbitrage$ | async)?.length + ')'\"></app-title-table-button>\n          <app-ag-grid-arbitrage-list-container content></app-ag-grid-arbitrage-list-container>\n        </app-title-table-layout>\n      </div>\n\n      <div first  class=\"tab-content\">\n        <app-title-table-layout>\n          <app-title-table-button\n            title\n            [title]=\"'Bot control'\"\n          ></app-title-table-button>\n          <app-ag-grid-bot-control-panel-container\n            content\n          ></app-ag-grid-bot-control-panel-container>\n        </app-title-table-layout>\n\n        <app-title-table-layout class=\"bot-control\">\n          <app-title-table-button\n            title\n            [title]=\"'Results'\"\n          ></app-title-table-button>\n\n          <app-ag-grid-bot-data-list-container\n            content\n            [rowData]=\"(dataActiveBot$ | async)?.botResultList?.response | transformObjectToKeyValue\"\n          ></app-ag-grid-bot-data-list-container>\n        </app-title-table-layout>\n      </div>\n\n      <div third class=\"tab-content\">\n        <app-title-table-layout class=\"bot-control\">\n          <app-title-table-button\n            title\n            [title]=\"'Errors'\"\n          ></app-title-table-button>\n          <app-ag-grid-error-list-container\n            content\n          ></app-ag-grid-error-list-container>\n        </app-title-table-layout>\n      </div>\n\n      <div fourth class=\"set-margin-top\">\n        <app-job-container></app-job-container>\n      </div>\n\n      <div fifth class=\"tab-content\">\n        <app-price-chart-container></app-price-chart-container>\n      </div>\n\n    </app-bot-info-page-tabs>\n  } @else {\n    <app-loader-container></app-loader-container>\n  }\n}\n"
+            "templateData": "@if (dataActiveBot$ | async; as list) {\n  @if ((activeBotIsLoaded$ | async) && !(activeBotIsLoading$ | async)) {\n    <app-bot-info-page-tabs\n      [firstLabel]=\"'Control and params'\"\n      [secondLabel]=\"'Arbitrage' + ' (' + (getDataActiveBotArbitrage$ | async)?.length + ')'\"\n      [thirdLabel]=\"'Errors'\"\n      [fourthLabel]=\"'Job'\"\n      [fifthLabel]=\"'Chart'\"\n      [sixthLabel]=\"'Live Chart'\"\n    >\n      <div second class=\"tab-content\">\n        <app-title-table-layout class=\"bot-control\">\n          <app-title-table-button title [title]=\"'Arbitrage' + ' (' + (getDataActiveBotArbitrage$ | async)?.length + ')'\"></app-title-table-button>\n          <app-ag-grid-arbitrage-list-container content></app-ag-grid-arbitrage-list-container>\n        </app-title-table-layout>\n      </div>\n\n      <div first  class=\"tab-content\">\n        <app-title-table-layout>\n          <app-title-table-button\n            title\n            [title]=\"'Bot control'\"\n          ></app-title-table-button>\n          <app-ag-grid-bot-control-panel-container\n            content\n          ></app-ag-grid-bot-control-panel-container>\n        </app-title-table-layout>\n\n        <app-title-table-layout class=\"bot-control\">\n          <app-title-table-button\n            title\n            [title]=\"'Results'\"\n          ></app-title-table-button>\n\n          <app-ag-grid-bot-data-list-container\n            content\n            [rowData]=\"(dataActiveBot$ | async)?.botResultList?.response | transformObjectToKeyValue\"\n          ></app-ag-grid-bot-data-list-container>\n        </app-title-table-layout>\n      </div>\n\n      <div third class=\"tab-content\">\n        <app-title-table-layout class=\"bot-control\">\n          <app-title-table-button\n            title\n            [title]=\"'Errors'\"\n          ></app-title-table-button>\n          <app-ag-grid-error-list-container\n            content\n          ></app-ag-grid-error-list-container>\n        </app-title-table-layout>\n      </div>\n\n      <div fourth class=\"set-margin-top\">\n        <app-job-container></app-job-container>\n      </div>\n\n      <div fifth class=\"tab-content\">\n        <app-price-chart-container></app-price-chart-container>\n      </div>\n\n      <div sixth class=\"tab-content\">\n        <app-price-chart-live-container></app-price-chart-live-container>\n      </div>\n\n    </app-bot-info-page-tabs>\n  } @else {\n    <app-loader-container></app-loader-container>\n  }\n}\n"
         },
         {
             "name": "ButtonComponent",
@@ -7215,7 +7227,7 @@
         },
         {
             "name": "PriceChart",
-            "id": "component-PriceChart-ed0f1cdd5d47838c0777432ec705c213ee00e5bbe9ca46bf3a6bd8ca1c72b2232965a0572f1d4fc1295ad8425d7bcdc68fb8dba5491e36429a45fd5dec7dca8d",
+            "id": "component-PriceChart-536f6bcf73f5072e6fb12bd7bf47142e283b75dbf765d9f627a1f490cf67cb98bc7657a03c8428002d5c4306514436e82cdd8109ba2cd47c5cc123150f0c5402",
             "file": "src/app/components/price-chart/price-chart.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -7236,9 +7248,7 @@
                     "defaultValue": "[]",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "rawdescription": "\nFull dataset to display",
-                    "description": "<p>Full dataset to display</p>\n",
-                    "line": 41,
+                    "line": 40,
                     "type": "PricePoint[]",
                     "decorators": []
                 },
@@ -7247,9 +7257,7 @@
                     "defaultValue": "[]",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "rawdescription": "\n\nKeys of series to hide, e.g. `['binanceAsk', 'mexSell']`.\nPass an empty array (default) to show all.\n",
-                    "description": "<p>Keys of series to hide, e.g. <code>[&#39;binanceAsk&#39;, &#39;mexSell&#39;]</code>.\nPass an empty array (default) to show all.</p>\n",
-                    "line": 50,
+                    "line": 42,
                     "type": "string[]",
                     "decorators": []
                 },
@@ -7258,9 +7266,7 @@
                     "defaultValue": "[]",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "rawdescription": "\nWhich price lines to draw. Each entry becomes one line series.",
-                    "description": "<p>Which price lines to draw. Each entry becomes one line series.</p>\n",
-                    "line": 44,
+                    "line": 41,
                     "type": "PriceSeriesConfig[]",
                     "decorators": []
                 },
@@ -7269,15 +7275,28 @@
                     "defaultValue": "false",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "rawdescription": "\n\nWhen `true` the chart will progressively reveal `data` points\none-by-one every 500 ms (streaming mode).\nWhen `false` all data is shown immediately.\n",
-                    "description": "<p>When <code>true</code> the chart will progressively reveal <code>data</code> points\none-by-one every 500 ms (streaming mode).\nWhen <code>false</code> all data is shown immediately.</p>\n",
-                    "line": 57,
+                    "line": 43,
                     "type": "boolean",
                     "decorators": []
                 }
             ],
             "outputsClass": [],
             "propertiesClass": [
+                {
+                    "name": "baseOptions",
+                    "defaultValue": "{}",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "AgCartesianChartOptions",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "<p>Full config without data — rebuilt only when series/hiddenKeys/streaming change</p>\n",
+                    "line": 51,
+                    "rawdescription": "\nFull config without data — rebuilt only when series/hiddenKeys/streaming change",
+                    "modifierKind": [
+                        123
+                    ]
+                },
                 {
                     "name": "chartData",
                     "defaultValue": "[]",
@@ -7287,7 +7306,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 61,
+                    "line": 47,
                     "modifierKind": [
                         123
                     ]
@@ -7301,21 +7320,21 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 63,
+                    "line": 49,
                     "modifierKind": [
                         123
                     ]
                 },
                 {
                     "name": "options",
-                    "defaultValue": "{ series: [] }",
+                    "defaultValue": "{}",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "AgCartesianChartOptions",
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 59
+                    "line": 45
                 },
                 {
                     "name": "streamIndex",
@@ -7326,7 +7345,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 62,
+                    "line": 48,
                     "modifierKind": [
                         123
                     ]
@@ -7334,14 +7353,16 @@
             ],
             "methodsClass": [
                 {
-                    "name": "buildSeries",
+                    "name": "applyData",
                     "args": [],
                     "optional": false,
-                    "returnType": "unknown",
+                    "returnType": "void",
                     "typeParameters": [],
-                    "line": 112,
+                    "line": 192,
                     "deprecated": false,
                     "deprecationMessage": "",
+                    "rawdescription": "\n\nLightweight update — only swaps data in the existing config.\nCreates a new options reference so ag-charts picks up the change.\n",
+                    "description": "<p>Lightweight update — only swaps data in the existing config.\nCreates a new options reference so ag-charts picks up the change.</p>\n",
                     "modifierKind": [
                         123
                     ]
@@ -7352,7 +7373,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 105,
+                    "line": 107,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -7365,7 +7386,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 81,
+                    "line": 83,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -7385,7 +7406,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 69,
+                    "line": 58,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -7416,9 +7437,24 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 65,
+                    "line": 53,
                     "deprecated": false,
                     "deprecationMessage": ""
+                },
+                {
+                    "name": "rebuildBaseOptions",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 120,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\n\nRebuild everything EXCEPT data — series, axes, legend, zoom, navigator.\nCalled only when series / hiddenKeys / streaming change.\n",
+                    "description": "<p>Rebuild everything EXCEPT data — series, axes, legend, zoom, navigator.\nCalled only when series / hiddenKeys / streaming change.</p>\n",
+                    "modifierKind": [
+                        123
+                    ]
                 },
                 {
                     "name": "tick",
@@ -7426,20 +7462,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 95,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "modifierKind": [
-                        123
-                    ]
-                },
-                {
-                    "name": "updateOptions",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 133,
+                    "line": 97,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -7460,7 +7483,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import {\n  Component,\n  Input,\n  OnChanges,\n  OnDestroy,\n  OnInit,\n  SimpleChanges,\n} from '@angular/core';\nimport { AgCharts } from 'ag-charts-angular';\nimport { ModuleRegistry, AllCommunityModule } from 'ag-charts-community';\nimport { ZoomModule, NavigatorModule } from 'ag-charts-enterprise';\nimport type { AgCartesianChartOptions } from 'ag-charts-community';\n\nModuleRegistry.registerModules([AllCommunityModule, ZoomModule, NavigatorModule]);\n\n/** Describes one line on the chart */\nexport interface PriceSeriesConfig {\n  /** Field name in data objects, e.g. 'binanceBid' */\n  key: string;\n  /** Display name shown in legend / tooltip, e.g. 'Binance Bid' */\n  name: string;\n  /** Line colour, e.g. '#0ecb81' */\n  color: string;\n}\n\n/** A single data row — `time` + arbitrary price fields matching PriceSeriesConfig.key */\nexport interface PricePoint {\n  time: number;\n  [key: string]: number;\n}\n\n@Component({\n  selector: 'app-price-chart',\n  imports: [AgCharts],\n  standalone: true,\n  templateUrl: './price-chart.html',\n  styleUrl: './price-chart.scss',\n})\nexport class PriceChart implements OnInit, OnChanges, OnDestroy {\n  /** Full dataset to display */\n  @Input() data: PricePoint[] = [];\n\n  /** Which price lines to draw. Each entry becomes one line series. */\n  @Input() series: PriceSeriesConfig[] = [];\n\n  /**\n   * Keys of series to hide, e.g. `['binanceAsk', 'mexSell']`.\n   * Pass an empty array (default) to show all.\n   */\n  @Input() hiddenKeys: string[] = [];\n\n  /**\n   * When `true` the chart will progressively reveal `data` points\n   * one-by-one every 500 ms (streaming mode).\n   * When `false` all data is shown immediately.\n   */\n  @Input() streaming = false;\n\n  options: AgCartesianChartOptions = { series: [] };\n\n  private chartData: PricePoint[] = [];\n  private streamIndex = 0;\n  private intervalId: ReturnType<typeof setInterval> | null = null;\n\n  ngOnInit(): void {\n    this.initChart();\n  }\n\n  ngOnChanges(changes: SimpleChanges): void {\n    if (changes['data'] || changes['streaming'] || changes['series']) {\n      this.initChart();\n    } else if (changes['hiddenKeys']) {\n      this.updateOptions();\n    }\n  }\n\n  ngOnDestroy(): void {\n    this.clearStreamInterval();\n  }\n\n  private initChart(): void {\n    this.clearStreamInterval();\n\n    if (this.streaming && this.data.length > 0) {\n      this.chartData = [];\n      this.streamIndex = 0;\n      this.updateOptions();\n      this.intervalId = setInterval(() => this.tick(), 500);\n    } else {\n      this.chartData = [...this.data];\n      this.updateOptions();\n    }\n  }\n\n  private tick(): void {\n    if (this.streamIndex < this.data.length) {\n      this.chartData = [...this.chartData, this.data[this.streamIndex]];\n      this.streamIndex++;\n      this.updateOptions();\n    } else {\n      this.clearStreamInterval();\n    }\n  }\n\n  private clearStreamInterval(): void {\n    if (this.intervalId !== null) {\n      clearInterval(this.intervalId);\n      this.intervalId = null;\n    }\n  }\n\n  private buildSeries(): AgCartesianChartOptions['series'] {\n    const hidden = new Set(this.hiddenKeys);\n    return this.series\n      .filter((s) => !hidden.has(s.key))\n      .map((s) => ({\n      type: 'line' as const,\n      xKey: 'time',\n      yKey: s.key,\n      yName: s.name,\n      stroke: s.color,\n      strokeWidth: 2,\n      marker: { enabled: false },\n      tooltip: {\n        renderer: (params: any) => ({\n          title: s.name,\n          content: `${Number(params.datum[params.yKey]).toFixed(4)}`,\n        }),\n      },\n    }));\n  }\n\n  private updateOptions(): void {\n    const opts: AgCartesianChartOptions = {\n      background: { fill: '#161a25' },\n      padding: { top: 16, right: 16, bottom: 16, left: 16 },\n      height: 500,\n      data: this.chartData,\n      series: this.buildSeries(),\n      axes: {\n        x: {\n          type: 'number',\n          position: 'bottom',\n          label: {\n            color: '#848e9c',\n            formatter: (params: any) => {\n              const d = new Date(params.value);\n              return `${d.getHours().toString().padStart(2, '0')}:${d\n                .getMinutes()\n                .toString()\n                .padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;\n            },\n          },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n        y: {\n          type: 'number',\n          position: 'right',\n          label: { color: '#848e9c' },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n      },\n      legend: {\n        position: 'top',\n        item: { label: { color: '#eaecef' } },\n      },\n      zoom: {\n        enabled: true,\n        axes: 'x',\n        scrollingStep: 0.3,\n      },\n      navigator: {\n        enabled: true,\n        height: 30,\n      },\n    };\n    this.options = opts;\n  }\n}\n\n\n\n\n\n\n",
+            "sourceCode": "import {\n  Component,\n  Input,\n  OnChanges,\n  OnDestroy,\n  OnInit,\n  SimpleChanges,\n} from '@angular/core';\nimport { AgCharts } from 'ag-charts-angular';\nimport { ModuleRegistry, AllCommunityModule } from 'ag-charts-community';\nimport { ZoomModule, NavigatorModule, CrosshairModule } from 'ag-charts-enterprise';\nimport type { AgCartesianChartOptions } from 'ag-charts-community';\n\nModuleRegistry.registerModules([AllCommunityModule, ZoomModule, NavigatorModule, CrosshairModule]);\n\n/** Describes one line on the chart */\nexport interface PriceSeriesConfig {\n  /** Field name in data objects, e.g. 'binanceBid' */\n  key: string;\n  /** Display name shown in legend / tooltip, e.g. 'Binance Bid' */\n  name: string;\n  /** Line colour, e.g. '#0ecb81' */\n  color: string;\n}\n\n/** A single data row — `time` + arbitrary price fields matching PriceSeriesConfig.key */\nexport interface PricePoint {\n  time: number;\n  [key: string]: number;\n}\n\n@Component({\n  selector: 'app-price-chart',\n  imports: [AgCharts],\n  standalone: true,\n  templateUrl: './price-chart.html',\n  styleUrl: './price-chart.scss',\n})\nexport class PriceChart implements OnInit, OnChanges, OnDestroy {\n  @Input() data: PricePoint[] = [];\n  @Input() series: PriceSeriesConfig[] = [];\n  @Input() hiddenKeys: string[] = [];\n  @Input() streaming = false;\n\n  options: AgCartesianChartOptions = {};\n\n  private chartData: PricePoint[] = [];\n  private streamIndex = 0;\n  private intervalId: ReturnType<typeof setInterval> | null = null;\n  /** Full config without data — rebuilt only when series/hiddenKeys/streaming change */\n  private baseOptions: AgCartesianChartOptions = {};\n\n  ngOnInit(): void {\n    this.rebuildBaseOptions();\n    this.initChart();\n  }\n\n  ngOnChanges(changes: SimpleChanges): void {\n    const structureChanged =\n      changes['series'] || changes['hiddenKeys'] || changes['streaming'];\n\n    if (structureChanged) {\n      this.rebuildBaseOptions();\n      this.initChart();\n    } else if (changes['data']) {\n      // Fast path — only data changed, keep existing config\n      if (this.streaming) {\n        // In streaming mode initChart manages its own feed; restart it with new source\n        this.initChart();\n      } else {\n        this.chartData = [...this.data];\n        this.applyData();\n      }\n    }\n  }\n\n  ngOnDestroy(): void {\n    this.clearStreamInterval();\n  }\n\n  /* ── streaming ── */\n\n  private initChart(): void {\n    this.clearStreamInterval();\n\n    if (this.streaming && this.data.length > 0) {\n      this.chartData = [];\n      this.streamIndex = 0;\n      this.applyData();\n      this.intervalId = setInterval(() => this.tick(), 500);\n    } else {\n      this.chartData = [...this.data];\n      this.applyData();\n    }\n  }\n\n  private tick(): void {\n    if (this.streamIndex < this.data.length) {\n      this.chartData = [...this.chartData, this.data[this.streamIndex]];\n      this.streamIndex++;\n      this.applyData();\n    } else {\n      this.clearStreamInterval();\n    }\n  }\n\n  private clearStreamInterval(): void {\n    if (this.intervalId !== null) {\n      clearInterval(this.intervalId);\n      this.intervalId = null;\n    }\n  }\n\n  /* ── options management ── */\n\n  /**\n   * Rebuild everything EXCEPT data — series, axes, legend, zoom, navigator.\n   * Called only when series / hiddenKeys / streaming change.\n   */\n  private rebuildBaseOptions(): void {\n    const hidden = new Set(this.hiddenKeys);\n    const seriesDefs = this.series\n      .filter((s) => !hidden.has(s.key))\n      .map((s) => ({\n        type: 'line' as const,\n        xKey: 'time',\n        yKey: s.key,\n        yName: s.name,\n        stroke: s.color,\n        strokeWidth: 2,\n        marker: { enabled: false },\n        tooltip: {\n          renderer: (params: any) => ({\n            title: s.name,\n            content: `${Number(params.datum[params.yKey]).toFixed(4)}`,\n          }),\n        },\n      }));\n\n    this.baseOptions = {\n      background: { fill: '#161a25' },\n      padding: { top: 16, right: 16, bottom: 16, left: 16 },\n      height: 500,\n      series: seriesDefs,\n      axes: {\n        x: {\n          type: 'number',\n          position: 'bottom',\n          label: {\n            color: '#848e9c',\n            formatter: (params: any) => {\n              const d = new Date(params.value);\n              return `${d.getHours().toString().padStart(2, '0')}:${d\n                .getMinutes()\n                .toString()\n                .padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;\n            },\n          },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n        y: {\n          type: 'number',\n          position: 'right',\n          label: { color: '#848e9c' },\n          gridLine: { style: [{ stroke: '#2b3139', lineDash: [4, 4] }] },\n          line: { stroke: '#2b3139' },\n          crosshair: { enabled: true, stroke: '#848e9c', lineDash: [4, 4] },\n        },\n      },\n      legend: {\n        position: 'top',\n        item: { label: { color: '#eaecef' } },\n      },\n      zoom: {\n        enabled: true,\n        axes: 'x',\n        scrollingStep: 0.3,\n      },\n      navigator: {\n        enabled: true,\n        height: 30,\n      },\n    };\n  }\n\n  /**\n   * Lightweight update — only swaps data in the existing config.\n   * Creates a new options reference so ag-charts picks up the change.\n   */\n  private applyData(): void {\n    this.options = { ...this.baseOptions, data: [...this.chartData] };\n  }\n}\n",
             "styleUrl": "./price-chart.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -7475,7 +7498,7 @@
         },
         {
             "name": "PriceChartContainer",
-            "id": "component-PriceChartContainer-e65da81b560cf8ab66c3b88a6727e207e7d32fa78b445cb9e2117a50c6dc225b4dd1d6b5789791463fc6d07e358df92753a77462998f18c991819b855cc04070",
+            "id": "component-PriceChartContainer-9da301bb7dada851e29d82ecb45e7e7c07bc9972c1cba736c1dba95225cea58375a96951fdeb017b4eddbf33717ce99f010cef95bb02d288d507d3c81dc41948",
             "file": "src/app/containers/price-chart-container/price-chart-container.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -7502,7 +7525,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 25
+                    "line": 23
                 },
                 {
                     "name": "hiddenKeys",
@@ -7513,7 +7536,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 26
+                    "line": 24
                 },
                 {
                     "name": "series",
@@ -7524,7 +7547,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 24
+                    "line": 22
                 },
                 {
                     "name": "serverDataService",
@@ -7535,7 +7558,21 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 21,
+                    "line": 19,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "store",
+                    "defaultValue": "inject(Store)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "unknown",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 18,
                     "modifierKind": [
                         123
                     ]
@@ -7549,7 +7586,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 27
+                    "line": 25
                 },
                 {
                     "name": "sub",
@@ -7560,7 +7597,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 22,
+                    "line": 20,
                     "modifierKind": [
                         123
                     ]
@@ -7568,11 +7605,36 @@
             ],
             "methodsClass": [
                 {
-                    "name": "formatKeyName",
+                    "name": "loadPrices",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 40,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "makeKey",
                     "args": [
                         {
-                            "name": "rawKey",
+                            "name": "source",
                             "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "symbol",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "field",
+                            "type": "\"bidPrice\" | \"askPrice\"",
                             "deprecated": false,
                             "deprecationMessage": ""
                         }
@@ -7580,11 +7642,519 @@
                     "optional": false,
                     "returnType": "string",
                     "typeParameters": [],
-                    "line": 106,
+                    "line": 36,
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "rawdescription": "\nFormat 'binanceETHUSDCbidPrice' → 'Binance ETHUSDC Bid'",
-                    "description": "<p>Format &#39;binanceETHUSDCbidPrice&#39; → &#39;Binance ETHUSDC Bid&#39;</p>\n",
+                    "rawdescription": "\nBuild pipe-separated keys from the active bot's jobParams",
+                    "description": "<p>Build pipe-separated keys from the active bot&#39;s jobParams</p>\n",
+                    "modifierKind": [
+                        123,
+                        126
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "source",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "symbol",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "field",
+                            "type": "\"bidPrice\" | \"askPrice\"",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "ngOnDestroy",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 31,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "ngOnInit",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 27,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "PriceChart"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component, inject, OnDestroy, OnInit } from '@angular/core';\nimport { Store } from '@ngrx/store';\nimport { PriceChart } from '../../components/price-chart/price-chart';\nimport type { PricePoint, PriceSeriesConfig } from '../../components/price-chart/price-chart';\nimport { ServerDataService } from '../../services/server-data.service';\nimport { buildSeriesFromKeys } from '../../services/price-key-utils';\nimport { getInfoActiveBot } from '../../+state/servers/servers.selectors';\nimport { forkJoin, Subscription, filter, take } from 'rxjs';\n\n@Component({\n  selector: 'app-price-chart-container',\n  imports: [PriceChart],\n  standalone: true,\n  templateUrl: './price-chart-container.html',\n  styleUrl: './price-chart-container.scss',\n})\nexport class PriceChartContainer implements OnInit, OnDestroy {\n  private store = inject(Store);\n  private serverDataService = inject(ServerDataService);\n  private sub: Subscription | null = null;\n\n  series: PriceSeriesConfig[] = [];\n  data: PricePoint[] = [];\n  hiddenKeys: string[] = [];\n  streaming = false;\n\n  ngOnInit(): void {\n    this.loadPrices();\n  }\n\n  ngOnDestroy(): void {\n    this.sub?.unsubscribe();\n  }\n\n  /** Build pipe-separated keys from the active bot's jobParams */\n  private static makeKey(source: string, symbol: string, field: 'bidPrice' | 'askPrice'): string {\n    return `${source}|${symbol}|${field}`;\n  }\n\n  private loadPrices(): void {\n    this.sub = this.store\n      .select(getInfoActiveBot)\n      .pipe(\n        filter((info) => !!(info?.jobParams as any)?.source && !!(info?.jobParams as any)?.symbol),\n        take(1),\n      )\n      .subscribe((info) => {\n        const { source, symbol } = info.jobParams as any;\n\n        // Build exactly the keys this bot needs\n        const pipeKeys = [\n          PriceChartContainer.makeKey(source, symbol, 'bidPrice'),\n          PriceChartContainer.makeKey(source, symbol, 'askPrice'),\n        ];\n\n        this.series = buildSeriesFromKeys(\n          pipeKeys.map((k) => k.replace(/\\|/g, '')),\n        );\n\n        const requests = pipeKeys.reduce(\n          (acc, pipeKey) => {\n            const flatKey = pipeKey.replace(/\\|/g, '');\n            acc[flatKey] = this.serverDataService.getPriceByKey(pipeKey);\n            return acc;\n          },\n          {} as Record<string, ReturnType<ServerDataService['getPriceByKey']>>,\n        );\n\n        const keys = Object.keys(requests);\n\n        forkJoin(requests).subscribe((responses) => {\n          const timeSet = new Set<number>();\n          for (const res of Object.values(responses)) {\n            for (const p of res.points) {\n              timeSet.add(p.t);\n            }\n          }\n          const times = [...timeSet].sort((a, b) => a - b);\n\n          const sorted: Record<string, { t: number; v: number }[]> = {};\n          for (const [key, res] of Object.entries(responses)) {\n            sorted[key] = [...res.points].sort((a, b) => a.t - b.t);\n          }\n\n          const lastKnown: Record<string, number | undefined> = {};\n          const cursors: Record<string, number> = {};\n          for (const key of keys) {\n            cursors[key] = 0;\n          }\n\n          this.data = times.map((t) => {\n            const point: PricePoint = { time: t };\n            for (const key of keys) {\n              const pts = sorted[key];\n              while (cursors[key] < pts.length && pts[cursors[key]].t <= t) {\n                lastKnown[key] = pts[cursors[key]].v;\n                cursors[key]++;\n              }\n              if (lastKnown[key] !== undefined) {\n                point[key] = lastKnown[key]!;\n              }\n            }\n            return point;\n          });\n        });\n      });\n  }\n}\n",
+            "styleUrl": "./price-chart-container.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "implements": [
+                "OnInit",
+                "OnDestroy"
+            ],
+            "templateData": "<app-price-chart\n  [data]=\"data\"\n  [series]=\"series\"\n  [hiddenKeys]=\"hiddenKeys\"\n  [streaming]=\"streaming\"\n></app-price-chart>\n\n"
+        },
+        {
+            "name": "PriceChartLiveContainer",
+            "id": "component-PriceChartLiveContainer-66ce398ac8e4e159c26d9c5e389973526d13c6883e51b7c5d59266b2a8a1ac0d2aab304a7266f47fccc5d0061f1aab8c20cc787e3d8691c78795a72c1cc9af8c",
+            "file": "src/app/containers/price-chart-live-container/price-chart-live-container.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-price-chart-live-container",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./price-chart-live-container.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "buffer",
+                    "defaultValue": "[]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "PricePoint[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "<p>Buffer: points collected between flush intervals</p>\n",
+                    "line": 41,
+                    "rawdescription": "\nBuffer: points collected between flush intervals",
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "data",
+                    "defaultValue": "[]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "PricePoint[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 33
+                },
+                {
+                    "name": "dirty",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "unknown",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 42,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "flushTimer",
+                    "defaultValue": "null",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ReturnType<unknown> | null",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 30,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "hiddenKeys",
+                    "defaultValue": "[]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 34
+                },
+                {
+                    "name": "keys",
+                    "defaultValue": "[]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "<p>All keys we&#39;re tracking</p>\n",
+                    "line": 39,
+                    "rawdescription": "\nAll keys we're tracking",
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "lastKnown",
+                    "defaultValue": "{}",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Record<string | number>",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "<p>Forward-fill: last known value per key</p>\n",
+                    "line": 37,
+                    "rawdescription": "\nForward-fill: last known value per key",
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "ngZone",
+                    "defaultValue": "inject(NgZone)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "unknown",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 27,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "series",
+                    "defaultValue": "[]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "PriceSeriesConfig[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 32
+                },
+                {
+                    "name": "serverDataService",
+                    "defaultValue": "inject(ServerDataService)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "unknown",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 26,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "socket",
+                    "defaultValue": "null",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Socket | null",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 29,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "store",
+                    "defaultValue": "inject(Store)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "unknown",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 25,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "sub",
+                    "defaultValue": "null",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Subscription | null",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 28,
+                    "modifierKind": [
+                        123
+                    ]
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "connectSocket",
+                    "args": [
+                        {
+                            "name": "baseUrl",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "pipeKeys",
+                            "type": "string[]",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 157,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "baseUrl",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "pipeKeys",
+                            "type": "string[]",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "flush",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 197,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "init",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 60,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "makeKey",
+                    "args": [
+                        {
+                            "name": "source",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "symbol",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "field",
+                            "type": "\"bidPrice\" | \"askPrice\"",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "string",
+                    "typeParameters": [],
+                    "line": 56,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\nBuild pipe-separated key: `source|symbol|field`",
+                    "description": "<p>Build pipe-separated key: <code>source|symbol|field</code></p>\n",
+                    "modifierKind": [
+                        123,
+                        126
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "source",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "symbol",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "field",
+                            "type": "\"bidPrice\" | \"askPrice\"",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "mergeResponses",
+                    "args": [
+                        {
+                            "name": "keys",
+                            "type": "string[]",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "responses",
+                            "type": "Record<string | literal type>",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "PricePoint[]",
+                    "typeParameters": [],
+                    "line": 116,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "keys",
+                            "type": "string[]",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "responses",
+                            "type": "Record<string | literal type>",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "ngOnDestroy",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 48,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "ngOnInit",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 44,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "onPriceChange",
+                    "args": [
+                        {
+                            "name": "rawKey",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "timestamp",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "value",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 181,
+                    "deprecated": false,
+                    "deprecationMessage": "",
                     "modifierKind": [
                         123
                     ],
@@ -7597,66 +8167,49 @@
                             "tagName": {
                                 "text": "param"
                             }
+                        },
+                        {
+                            "name": "timestamp",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "value",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
                         }
                     ]
                 },
                 {
-                    "name": "loadPrices",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 37,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "modifierKind": [
-                        123
-                    ]
-                },
-                {
-                    "name": "ngOnDestroy",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 33,
-                    "deprecated": false,
-                    "deprecationMessage": ""
-                },
-                {
-                    "name": "ngOnInit",
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 29,
-                    "deprecated": false,
-                    "deprecationMessage": ""
-                },
-                {
-                    "name": "rawKeyToUrlKey",
+                    "name": "resolveKey",
                     "args": [
                         {
-                            "name": "rawKey",
+                            "name": "incoming",
                             "type": "string",
                             "deprecated": false,
                             "deprecationMessage": ""
                         }
                     ],
                     "optional": false,
-                    "returnType": "string",
+                    "returnType": "string | null",
                     "typeParameters": [],
-                    "line": 95,
+                    "line": 207,
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "rawdescription": "\n\nTransform raw key like 'binanceETHUSDCbidPrice' to a URL-ready key\nusing the pipe-separated format the API expects: 'binance|ETHUSDC|bidPrice'\n",
-                    "description": "<p>Transform raw key like &#39;binanceETHUSDCbidPrice&#39; to a URL-ready key\nusing the pipe-separated format the API expects: &#39;binance|ETHUSDC|bidPrice&#39;</p>\n",
                     "modifierKind": [
                         123
                     ],
                     "jsdoctags": [
                         {
-                            "name": "rawKey",
+                            "name": "incoming",
                             "type": "string",
                             "deprecated": false,
                             "deprecationMessage": "",
@@ -7680,8 +8233,8 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, inject, OnDestroy, OnInit } from '@angular/core';\nimport { PriceChart } from '../../components/price-chart/price-chart';\nimport type { PricePoint, PriceSeriesConfig } from '../../components/price-chart/price-chart';\nimport { ServerDataService } from '../../services/server-data.service';\nimport { forkJoin, Subscription } from 'rxjs';\n\n/** Palette used to colour each series automatically */\nconst COLORS = [\n  '#f0b90b', '#f6465d', '#0ecb81', '#ff6838', '#1da2b4',\n  '#b659ff', '#2196f3', '#ff9800', '#e91e63', '#00bcd4',\n];\n\n@Component({\n  selector: 'app-price-chart-container',\n  imports: [PriceChart],\n  standalone: true,\n  templateUrl: './price-chart-container.html',\n  styleUrl: './price-chart-container.scss',\n})\nexport class PriceChartContainer implements OnInit, OnDestroy {\n  private serverDataService = inject(ServerDataService);\n  private sub: Subscription | null = null;\n\n  series: PriceSeriesConfig[] = [];\n  data: PricePoint[] = [];\n  hiddenKeys: string[] = [];\n  streaming = false;\n\n  ngOnInit(): void {\n    this.loadPrices();\n  }\n\n  ngOnDestroy(): void {\n    this.sub?.unsubscribe();\n  }\n\n  private loadPrices(): void {\n    this.sub = this.serverDataService.getPriceKeys().subscribe((keys) => {\n      if (!keys || keys.length === 0) return;\n\n      // Build series config from keys\n      this.series = keys.map((rawKey, i) => ({\n        key: rawKey,\n        name: this.formatKeyName(rawKey),\n        color: COLORS[i % COLORS.length],\n      }));\n\n      // Fetch all price data in parallel\n      const requests = keys.reduce(\n        (acc, key) => {\n          // API expects 'binance|ETHUSDC|bidPrice' format encoded in URL\n          const urlKey = this.rawKeyToUrlKey(key);\n          acc[key] = this.serverDataService.getPriceByKey(urlKey);\n          return acc;\n        },\n        {} as Record<string, ReturnType<ServerDataService['getPriceByKey']>>,\n      );\n\n      forkJoin(requests).subscribe((responses) => {\n        // Collect all unique timestamps\n        const timeSet = new Set<number>();\n        for (const res of Object.values(responses)) {\n          for (const p of res.points) {\n            timeSet.add(p.t);\n          }\n        }\n        const times = [...timeSet].sort((a, b) => a - b);\n\n        // Build lookup: key → Map<timestamp, value>\n        const lookups: Record<string, Map<number, number>> = {};\n        for (const [key, res] of Object.entries(responses)) {\n          const m = new Map<number, number>();\n          for (const p of res.points) {\n            m.set(p.t, p.v);\n          }\n          lookups[key] = m;\n        }\n\n        // Merge into PricePoint[]\n        this.data = times.map((t) => {\n          const point: PricePoint = { time: t };\n          for (const key of keys) {\n            point[key] = lookups[key]?.get(t) ?? NaN;\n          }\n          return point;\n        });\n      });\n    });\n  }\n\n  /**\n   * Transform raw key like 'binanceETHUSDCbidPrice' to a URL-ready key\n   * using the pipe-separated format the API expects: 'binance|ETHUSDC|bidPrice'\n   */\n  private rawKeyToUrlKey(rawKey: string): string {\n    // The API returns keys without separators; reconstruct the pipe format\n    // Pattern: <exchange><PAIR><bidPrice|askPrice>\n    const match = rawKey.match(/^(.+?)((?:ETH|BTC|SOL|DOGE|XRP)[A-Z_-]+)(bidPrice|askPrice)$/);\n    if (match) {\n      return `${match[1]}|${match[2]}|${match[3]}`;\n    }\n    return rawKey;\n  }\n\n  /** Format 'binanceETHUSDCbidPrice' → 'Binance ETHUSDC Bid' */\n  private formatKeyName(rawKey: string): string {\n    const match = rawKey.match(/^(.+?)((?:ETH|BTC|SOL|DOGE|XRP)[A-Z_-]+)(bidPrice|askPrice)$/);\n    if (match) {\n      const exchange = match[1].charAt(0).toUpperCase() + match[1].slice(1);\n      const pair = match[2];\n      const side = match[3] === 'bidPrice' ? 'Bid' : 'Ask';\n      return `${exchange} ${pair} ${side}`;\n    }\n    return rawKey;\n  }\n}\n",
-            "styleUrl": "./price-chart-container.scss",
+            "sourceCode": "import { Component, inject, NgZone, OnDestroy, OnInit } from '@angular/core';\nimport { Store } from '@ngrx/store';\nimport { forkJoin, Subscription, filter, take } from 'rxjs';\nimport { io, Socket } from 'socket.io-client';\nimport { PriceChart } from '../../components/price-chart/price-chart';\nimport type { PricePoint, PriceSeriesConfig } from '../../components/price-chart/price-chart';\nimport { ServerDataService } from '../../services/server-data.service';\nimport { buildSeriesFromKeys } from '../../services/price-key-utils';\nimport { getActiveServerIpPort, getInfoActiveBot } from '../../+state/servers/servers.selectors';\n\n/** How often (ms) we flush buffered WS ticks into the chart */\nconst FLUSH_INTERVAL = 500;\n\n/** Max data points to keep — older points are dropped, creating auto-scroll */\nconst MAX_POINTS = 300;\n\n@Component({\n  selector: 'app-price-chart-live-container',\n  imports: [PriceChart],\n  standalone: true,\n  templateUrl: './price-chart-live-container.html',\n  styleUrl: './price-chart-live-container.scss',\n})\nexport class PriceChartLiveContainer implements OnInit, OnDestroy {\n  private store = inject(Store);\n  private serverDataService = inject(ServerDataService);\n  private ngZone = inject(NgZone);\n  private sub: Subscription | null = null;\n  private socket: Socket | null = null;\n  private flushTimer: ReturnType<typeof setInterval> | null = null;\n\n  series: PriceSeriesConfig[] = [];\n  data: PricePoint[] = [];\n  hiddenKeys: string[] = [];\n\n  /** Forward-fill: last known value per key */\n  private lastKnown: Record<string, number> = {};\n  /** All keys we're tracking */\n  private keys: string[] = [];\n  /** Buffer: points collected between flush intervals */\n  private buffer: PricePoint[] = [];\n  private dirty = false;\n\n  ngOnInit(): void {\n    this.init();\n  }\n\n  ngOnDestroy(): void {\n    this.sub?.unsubscribe();\n    if (this.flushTimer !== null) clearInterval(this.flushTimer);\n    this.socket?.disconnect();\n    this.socket = null;\n  }\n\n  /** Build pipe-separated key: `source|symbol|field` */\n  private static makeKey(source: string, symbol: string, field: 'bidPrice' | 'askPrice'): string {\n    return `${source}|${symbol}|${field}`;\n  }\n\n  private init(): void {\n    // 1. Get source & symbol from the active bot's jobParams\n    this.sub = this.store\n      .select(getInfoActiveBot)\n      .pipe(\n        filter((info) => !!(info?.jobParams as any)?.source && !!(info?.jobParams as any)?.symbol),\n        take(1),\n      )\n      .subscribe((info) => {\n        const { source, symbol } = info.jobParams as any;\n\n        const pipeKeys = [\n          PriceChartLiveContainer.makeKey(source, symbol, 'bidPrice'),\n          PriceChartLiveContainer.makeKey(source, symbol, 'askPrice'),\n        ];\n        const flatKeys = pipeKeys.map((k) => k.replace(/\\|/g, ''));\n\n        this.keys = flatKeys;\n        this.series = buildSeriesFromKeys(flatKeys);\n\n        // 2. Load historical data from REST\n        const requests = pipeKeys.reduce(\n          (acc, pipeKey) => {\n            const flatKey = pipeKey.replace(/\\|/g, '');\n            acc[flatKey] = this.serverDataService.getPriceByKey(pipeKey);\n            return acc;\n          },\n          {} as Record<string, ReturnType<ServerDataService['getPriceByKey']>>,\n        );\n\n        forkJoin(requests).subscribe((responses) => {\n          this.data = this.mergeResponses(flatKeys, responses);\n\n          // Seed lastKnown from the last historical point\n          if (this.data.length > 0) {\n            const last = this.data[this.data.length - 1];\n            for (const key of flatKeys) {\n              if (last[key] !== undefined && !isNaN(last[key])) {\n                this.lastKnown[key] = last[key];\n              }\n            }\n          }\n\n          // 3. Connect WebSocket with the pipe-separated keys\n          this.store\n            .select(getActiveServerIpPort)\n            .pipe(take(1))\n            .subscribe((ipPort) => {\n              this.connectSocket(`http://${ipPort}`, pipeKeys);\n            });\n        });\n      });\n  }\n\n  /* ── REST: merge historical data with forward-fill ── */\n\n  private mergeResponses(\n    keys: string[],\n    responses: Record<string, { key: string; points: { t: number; v: number }[]; count: number; last: { t: number; v: number } }>,\n  ): PricePoint[] {\n    const timeSet = new Set<number>();\n    for (const res of Object.values(responses)) {\n      for (const p of res.points) {\n        timeSet.add(p.t);\n      }\n    }\n    const times = [...timeSet].sort((a, b) => a - b);\n\n    const sorted: Record<string, { t: number; v: number }[]> = {};\n    for (const [key, res] of Object.entries(responses)) {\n      sorted[key] = [...res.points].sort((a, b) => a.t - b.t);\n    }\n\n    const lastKnown: Record<string, number | undefined> = {};\n    const cursors: Record<string, number> = {};\n    for (const key of keys) {\n      cursors[key] = 0;\n    }\n\n    return times.map((t) => {\n      const point: PricePoint = { time: t };\n      for (const key of keys) {\n        const pts = sorted[key];\n        while (cursors[key] < pts.length && pts[cursors[key]].t <= t) {\n          lastKnown[key] = pts[cursors[key]].v;\n          cursors[key]++;\n        }\n        if (lastKnown[key] !== undefined) {\n          point[key] = lastKnown[key]!;\n        }\n      }\n      return point;\n    });\n  }\n\n  /* ── WebSocket: live updates ── */\n\n  private connectSocket(baseUrl: string, pipeKeys: string[]): void {\n    this.socket?.disconnect();\n\n    this.ngZone.runOutsideAngular(() => {\n      this.socket = io(`${baseUrl}/prices`, {\n        transports: ['websocket', 'polling'],\n      });\n\n      this.socket.on('connect', () => {\n        this.socket!.emit('subscribe', { keys: pipeKeys });\n      });\n\n      this.socket.on('priceChange', (payload: { key: string; point: { t: number; v: number } }) => {\n        this.onPriceChange(payload.key, payload.point.t, payload.point.v);\n      });\n\n      this.flushTimer = setInterval(() => {\n        if (this.dirty) {\n          this.ngZone.run(() => this.flush());\n        }\n      }, FLUSH_INTERVAL);\n    });\n  }\n\n  private onPriceChange(rawKey: string, timestamp: number, value: number): void {\n    const key = this.resolveKey(rawKey);\n    if (!key) return;\n\n    this.lastKnown[key] = value;\n\n    const point: PricePoint = { time: timestamp };\n    for (const k of this.keys) {\n      if (this.lastKnown[k] !== undefined) {\n        point[k] = this.lastKnown[k];\n      }\n    }\n    this.buffer.push(point);\n    this.dirty = true;\n  }\n\n  private flush(): void {\n    if (this.buffer.length === 0) return;\n    const combined = [...this.data, ...this.buffer];\n    this.data = combined.length > MAX_POINTS\n      ? combined.slice(combined.length - MAX_POINTS)\n      : combined;\n    this.buffer = [];\n    this.dirty = false;\n  }\n\n  private resolveKey(incoming: string): string | null {\n    if (this.keys.includes(incoming)) return incoming;\n    const stripped = incoming.replace(/\\|/g, '');\n    if (this.keys.includes(stripped)) return stripped;\n    return null;\n  }\n}\n",
+            "styleUrl": "./price-chart-live-container.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
@@ -7690,7 +8243,7 @@
                 "OnInit",
                 "OnDestroy"
             ],
-            "templateData": "<app-price-chart\n  [data]=\"data\"\n  [series]=\"series\"\n  [hiddenKeys]=\"hiddenKeys\"\n  [streaming]=\"streaming\"\n></app-price-chart>\n\n"
+            "templateData": "<app-price-chart\n  [data]=\"data\"\n  [series]=\"series\"\n  [hiddenKeys]=\"hiddenKeys\"\n  [streaming]=\"false\"\n></app-price-chart>\n\n"
         },
         {
             "name": "QuoteWatcher",
@@ -10236,18 +10789,6 @@
                 "defaultValue": "createAction('[Servers] clearActiveElementData')"
             },
             {
-                "name": "COLORS",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
-                "file": "src/app/containers/price-chart-container/price-chart-container.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "[]",
-                "defaultValue": "[\n  '#f0b90b', '#f6465d', '#0ecb81', '#ff6838', '#1da2b4',\n  '#b659ff', '#2196f3', '#ff9800', '#e91e63', '#00bcd4',\n]",
-                "rawdescription": "Palette used to colour each series automatically",
-                "description": "<p>Palette used to colour each series automatically</p>\n"
-            },
-            {
                 "name": "deletingBot",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
@@ -10386,6 +10927,18 @@
                 "deprecationMessage": "",
                 "type": "[]",
                 "defaultValue": "[\n  {\n    id: 1,\n    time: \"2024-01-15T10:30:00Z\",\n    status: \"success\",\n    message: \"Операция выполнена успешно\"\n  },\n  {\n    id: 2,\n    time: \"2024-01-15T10:31:15Z\",\n    status: \"error\",\n    message: \"Ошибка валидации входных данных: поле 'email' обязательно для заполнения\"\n  },\n  {\n    id: 3,\n    time: \"2024-01-15T10:32:45Z\",\n    status: \"warning\",\n    message: \"Внимание: некоторые данные были автоматически исправлены\"\n  },\n  {\n    id: 4,\n    time: \"2024-01-15T10:33:20Z\",\n    status: \"success\",\n    message: \"Данные успешно сохранены в базу данных\"\n  },\n  {\n    id: 5,\n    time: \"2024-01-15T10:34:10Z\",\n    status: \"error\",\n    message: \"Серверная ошибка: превышено время ожидания ответа от сервиса авторизации\"\n  },\n  {\n    id: 6,\n    time: \"2024-01-15T10:35:30Z\",\n    status: \"success\",\n    message: \"Пользователь успешно аутентифицирован\"\n  },\n  {\n    id: 7,\n    time: \"2024-01-15T10:36:45Z\",\n    status: \"error\",\n    message: \"Ошибка базы данных: нарушение уникальности ключа при попытке вставки дублирующей записи\"\n  },\n  {\n    id: 8,\n    time: \"2024-01-15T10:37:20Z\",\n    status: \"warning\",\n    message: \"Не все обязательные поля заполнены, но операция продолжена\"\n  },\n  {\n    id: 9,\n    time: \"2024-01-15T10:38:15Z\",\n    status: \"success\",\n    message: \"Отчет сгенерирован и отправлен на почту\"\n  },\n  {\n    id: 10,\n    time: \"2024-01-15T10:39:05Z\",\n    status: \"error\",\n    message: \"Критическая ошибка: недостаточно прав для выполнения данной операции. Обратитесь к администратору системы\"\n  }\n]"
+            },
+            {
+                "name": "FLUSH_INTERVAL",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/containers/price-chart-live-container/price-chart-live-container.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "number",
+                "defaultValue": "500",
+                "rawdescription": "How often (ms) we flush buffered WS ticks into the chart",
+                "description": "<p>How often (ms) we flush buffered WS ticks into the chart</p>\n"
             },
             {
                 "name": "getActionParams",
@@ -11138,6 +11691,18 @@
                 "defaultValue": "createAction(\n  '[Servers] loadServerListSuccess',\n  props<{ response: IServerData }>()\n)"
             },
             {
+                "name": "MAX_POINTS",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/containers/price-chart-live-container/price-chart-live-container.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "number",
+                "defaultValue": "300",
+                "rawdescription": "Max data points to keep — older points are dropped, creating auto-scroll",
+                "description": "<p>Max data points to keep — older points are dropped, creating auto-scroll</p>\n"
+            },
+            {
                 "name": "multiExchangeSeries",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
@@ -11146,6 +11711,18 @@
                 "deprecationMessage": "",
                 "type": "PriceSeriesConfig[]",
                 "defaultValue": "[\n  { key: 'binanceBid', name: 'Binance Bid', color: '#f0b90b' },\n  { key: 'binanceAsk', name: 'Binance Ask', color: '#f6465d' },\n  { key: 'bybitBid', name: 'Bybit Bid', color: '#0ecb81' },\n  { key: 'bybitAsk', name: 'Bybit Ask', color: '#ff6838' },\n  { key: 'mexSell', name: 'MEX Sell', color: '#1da2b4' },\n]"
+            },
+            {
+                "name": "PRICE_COLORS",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/services/price-key-utils.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "[]",
+                "defaultValue": "[\n  '#f0b90b', '#f6465d', '#0ecb81', '#ff6838', '#1da2b4',\n  '#b659ff', '#2196f3', '#ff9800', '#e91e63', '#00bcd4',\n]",
+                "rawdescription": "Palette used to colour each series automatically",
+                "description": "<p>Palette used to colour each series automatically</p>\n"
             },
             {
                 "name": "priceChartStabs_large",
@@ -11590,6 +12167,62 @@
         ],
         "functions": [
             {
+                "name": "buildSeriesFromKeys",
+                "file": "src/app/services/price-key-utils.ts",
+                "ctype": "miscellaneous",
+                "subtype": "function",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "<p>Build PriceSeriesConfig[] from an array of raw key strings</p>\n",
+                "args": [
+                    {
+                        "name": "keys",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    }
+                ],
+                "returnType": "PriceSeriesConfig[]",
+                "jsdoctags": [
+                    {
+                        "name": "keys",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "formatKeyName",
+                "file": "src/app/services/price-key-utils.ts",
+                "ctype": "miscellaneous",
+                "subtype": "function",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "<p>Format &#39;binanceETHUSDCbidPrice&#39; → &#39;Binance ETHUSDC Bid&#39;</p>\n",
+                "args": [
+                    {
+                        "name": "rawKey",
+                        "type": "string",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    }
+                ],
+                "returnType": "string",
+                "jsdoctags": [
+                    {
+                        "name": "rawKey",
+                        "type": "string",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    }
+                ]
+            },
+            {
                 "name": "generateMultiExchangeData",
                 "file": "src/app/components/+stabs/price-chart-stabs.ts",
                 "ctype": "miscellaneous",
@@ -11744,6 +12377,35 @@
                     {
                         "name": "intervalMs",
                         "type": "number",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "rawKeyToUrlKey",
+                "file": "src/app/services/price-key-utils.ts",
+                "ctype": "miscellaneous",
+                "subtype": "function",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "<p>Transform raw key like &#39;binanceETHUSDCbidPrice&#39; to a pipe-separated\nformat the API expects: &#39;binance|ETHUSDC|bidPrice&#39;</p>\n",
+                "args": [
+                    {
+                        "name": "rawKey",
+                        "type": "string",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    }
+                ],
+                "returnType": "string",
+                "jsdoctags": [
+                    {
+                        "name": "rawKey",
+                        "type": "string",
                         "deprecated": false,
                         "deprecationMessage": "",
                         "tagName": {
@@ -12564,20 +13226,6 @@
                     "defaultValue": "createAction(\n  '[Servers] updateBot',\n  props<{ isSendData: boolean, id: string }>()\n)"
                 }
             ],
-            "src/app/containers/price-chart-container/price-chart-container.ts": [
-                {
-                    "name": "COLORS",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/containers/price-chart-container/price-chart-container.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "[]",
-                    "defaultValue": "[\n  '#f0b90b', '#f6465d', '#0ecb81', '#ff6838', '#1da2b4',\n  '#b659ff', '#2196f3', '#ff9800', '#e91e63', '#00bcd4',\n]",
-                    "rawdescription": "Palette used to colour each series automatically",
-                    "description": "<p>Palette used to colour each series automatically</p>\n"
-                }
-            ],
             "src/app/components/drop-menu/stabs.ts": [
                 {
                     "name": "dropMenuStabs_1",
@@ -12726,6 +13374,32 @@
                     "deprecationMessage": "",
                     "type": "[]",
                     "defaultValue": "[\n  {\n    id: 1,\n    time: \"2024-01-15T10:30:00Z\",\n    status: \"success\",\n    message: \"Операция выполнена успешно\"\n  },\n  {\n    id: 2,\n    time: \"2024-01-15T10:31:15Z\",\n    status: \"error\",\n    message: \"Ошибка валидации входных данных: поле 'email' обязательно для заполнения\"\n  },\n  {\n    id: 3,\n    time: \"2024-01-15T10:32:45Z\",\n    status: \"warning\",\n    message: \"Внимание: некоторые данные были автоматически исправлены\"\n  },\n  {\n    id: 4,\n    time: \"2024-01-15T10:33:20Z\",\n    status: \"success\",\n    message: \"Данные успешно сохранены в базу данных\"\n  },\n  {\n    id: 5,\n    time: \"2024-01-15T10:34:10Z\",\n    status: \"error\",\n    message: \"Серверная ошибка: превышено время ожидания ответа от сервиса авторизации\"\n  },\n  {\n    id: 6,\n    time: \"2024-01-15T10:35:30Z\",\n    status: \"success\",\n    message: \"Пользователь успешно аутентифицирован\"\n  },\n  {\n    id: 7,\n    time: \"2024-01-15T10:36:45Z\",\n    status: \"error\",\n    message: \"Ошибка базы данных: нарушение уникальности ключа при попытке вставки дублирующей записи\"\n  },\n  {\n    id: 8,\n    time: \"2024-01-15T10:37:20Z\",\n    status: \"warning\",\n    message: \"Не все обязательные поля заполнены, но операция продолжена\"\n  },\n  {\n    id: 9,\n    time: \"2024-01-15T10:38:15Z\",\n    status: \"success\",\n    message: \"Отчет сгенерирован и отправлен на почту\"\n  },\n  {\n    id: 10,\n    time: \"2024-01-15T10:39:05Z\",\n    status: \"error\",\n    message: \"Критическая ошибка: недостаточно прав для выполнения данной операции. Обратитесь к администратору системы\"\n  }\n]"
+                }
+            ],
+            "src/app/containers/price-chart-live-container/price-chart-live-container.ts": [
+                {
+                    "name": "FLUSH_INTERVAL",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/containers/price-chart-live-container/price-chart-live-container.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "defaultValue": "500",
+                    "rawdescription": "How often (ms) we flush buffered WS ticks into the chart",
+                    "description": "<p>How often (ms) we flush buffered WS ticks into the chart</p>\n"
+                },
+                {
+                    "name": "MAX_POINTS",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/containers/price-chart-live-container/price-chart-live-container.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "defaultValue": "300",
+                    "rawdescription": "Max data points to keep — older points are dropped, creating auto-scroll",
+                    "description": "<p>Max data points to keep — older points are dropped, creating auto-scroll</p>\n"
                 }
             ],
             "src/app/+state/servers/servers.selectors.ts": [
@@ -13370,6 +14044,20 @@
                     "defaultValue": "[\n  { key: 'bidPrice', name: 'Bid (Buy)', color: '#0ecb81' },\n  { key: 'askPrice', name: 'Ask (Sell)', color: '#f6465d' },\n]"
                 }
             ],
+            "src/app/services/price-key-utils.ts": [
+                {
+                    "name": "PRICE_COLORS",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/services/price-key-utils.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "[]",
+                    "defaultValue": "[\n  '#f0b90b', '#f6465d', '#0ecb81', '#ff6838', '#1da2b4',\n  '#b659ff', '#2196f3', '#ff9800', '#e91e63', '#00bcd4',\n]",
+                    "rawdescription": "Palette used to colour each series automatically",
+                    "description": "<p>Palette used to colour each series automatically</p>\n"
+                }
+            ],
             "src/app/app.routes.ts": [
                 {
                     "name": "routes",
@@ -13406,6 +14094,93 @@
             ]
         },
         "groupedFunctions": {
+            "src/app/services/price-key-utils.ts": [
+                {
+                    "name": "buildSeriesFromKeys",
+                    "file": "src/app/services/price-key-utils.ts",
+                    "ctype": "miscellaneous",
+                    "subtype": "function",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "<p>Build PriceSeriesConfig[] from an array of raw key strings</p>\n",
+                    "args": [
+                        {
+                            "name": "keys",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "returnType": "PriceSeriesConfig[]",
+                    "jsdoctags": [
+                        {
+                            "name": "keys",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "formatKeyName",
+                    "file": "src/app/services/price-key-utils.ts",
+                    "ctype": "miscellaneous",
+                    "subtype": "function",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "<p>Format &#39;binanceETHUSDCbidPrice&#39; → &#39;Binance ETHUSDC Bid&#39;</p>\n",
+                    "args": [
+                        {
+                            "name": "rawKey",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "returnType": "string",
+                    "jsdoctags": [
+                        {
+                            "name": "rawKey",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "rawKeyToUrlKey",
+                    "file": "src/app/services/price-key-utils.ts",
+                    "ctype": "miscellaneous",
+                    "subtype": "function",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "<p>Transform raw key like &#39;binanceETHUSDCbidPrice&#39; to a pipe-separated\nformat the API expects: &#39;binance|ETHUSDC|bidPrice&#39;</p>\n",
+                    "args": [
+                        {
+                            "name": "rawKey",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "returnType": "string",
+                    "jsdoctags": [
+                        {
+                            "name": "rawKey",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
             "src/app/components/+stabs/price-chart-stabs.ts": [
                 {
                     "name": "generateMultiExchangeData",
@@ -13607,7 +14382,7 @@
         ]
     },
     "coverage": {
-        "count": 1,
+        "count": 3,
         "status": "low",
         "files": [
             {
@@ -15285,7 +16060,7 @@
                 "linktype": "component",
                 "name": "BotInfoPageTabs",
                 "coveragePercent": 0,
-                "coverageCount": "0/6",
+                "coverageCount": "0/7",
                 "status": "low"
             },
             {
@@ -15403,8 +16178,8 @@
                 "type": "component",
                 "linktype": "component",
                 "name": "PriceChart",
-                "coveragePercent": 23,
-                "coverageCount": "4/17",
+                "coveragePercent": 16,
+                "coverageCount": "3/18",
                 "status": "low"
             },
             {
@@ -15718,16 +16493,35 @@
                 "type": "component",
                 "linktype": "component",
                 "name": "PriceChartContainer",
-                "coveragePercent": 16,
-                "coverageCount": "2/12",
+                "coveragePercent": 8,
+                "coverageCount": "1/12",
                 "status": "low"
             },
             {
-                "filePath": "src/app/containers/price-chart-container/price-chart-container.ts",
+                "filePath": "src/app/containers/price-chart-live-container/price-chart-live-container.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "PriceChartLiveContainer",
+                "coveragePercent": 17,
+                "coverageCount": "4/23",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/containers/price-chart-live-container/price-chart-live-container.ts",
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
-                "name": "COLORS",
+                "name": "FLUSH_INTERVAL",
+                "coveragePercent": 100,
+                "coverageCount": "1/1",
+                "status": "very-good"
+            },
+            {
+                "filePath": "src/app/containers/price-chart-live-container/price-chart-live-container.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "MAX_POINTS",
                 "coveragePercent": 100,
                 "coverageCount": "1/1",
                 "status": "very-good"
@@ -16118,6 +16912,46 @@
                 "coveragePercent": 0,
                 "coverageCount": "0/3",
                 "status": "low"
+            },
+            {
+                "filePath": "src/app/services/price-key-utils.ts",
+                "type": "function",
+                "linktype": "miscellaneous",
+                "linksubtype": "function",
+                "name": "buildSeriesFromKeys",
+                "coveragePercent": 100,
+                "coverageCount": "1/1",
+                "status": "very-good"
+            },
+            {
+                "filePath": "src/app/services/price-key-utils.ts",
+                "type": "function",
+                "linktype": "miscellaneous",
+                "linksubtype": "function",
+                "name": "formatKeyName",
+                "coveragePercent": 100,
+                "coverageCount": "1/1",
+                "status": "very-good"
+            },
+            {
+                "filePath": "src/app/services/price-key-utils.ts",
+                "type": "function",
+                "linktype": "miscellaneous",
+                "linksubtype": "function",
+                "name": "rawKeyToUrlKey",
+                "coveragePercent": 100,
+                "coverageCount": "1/1",
+                "status": "very-good"
+            },
+            {
+                "filePath": "src/app/services/price-key-utils.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "PRICE_COLORS",
+                "coveragePercent": 100,
+                "coverageCount": "1/1",
+                "status": "very-good"
             },
             {
                 "filePath": "src/app/services/server-data.service.ts",

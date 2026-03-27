@@ -8,10 +8,10 @@ import {
 } from '@angular/core';
 import { AgCharts } from 'ag-charts-angular';
 import { ModuleRegistry, AllCommunityModule } from 'ag-charts-community';
-import { ZoomModule, NavigatorModule } from 'ag-charts-enterprise';
+import { AllEnterpriseModule } from 'ag-charts-enterprise';
 import type { AgCartesianChartOptions } from 'ag-charts-community';
 
-ModuleRegistry.registerModules([AllCommunityModule, ZoomModule, NavigatorModule]);
+ModuleRegistry.registerModules([AllCommunityModule, AllEnterpriseModule]);
 
 /** Describes one line on the chart */
 export interface PriceSeriesConfig {
