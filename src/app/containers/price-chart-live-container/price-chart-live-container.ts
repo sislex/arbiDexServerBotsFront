@@ -5,7 +5,7 @@ import { io, Socket } from 'socket.io-client';
 import { PriceChart } from '../../components/price-chart/price-chart';
 import type { PricePoint, PriceSeriesConfig } from '../../components/price-chart/price-chart';
 import { ServerDataService } from '../../services/server-data.service';
-import { buildSeriesFromKeys } from '../../services/price-key-utils';
+import { buildSeriesFromKeys, PRICE_COLORS } from '../../services/price-key-utils';
 import { getActiveServerIpPort, getInfoActiveBot } from '../../+state/servers/servers.selectors';
 
 /** How often (ms) we flush buffered WS ticks into the chart */
@@ -35,11 +35,14 @@ export class PriceChartLiveContainer implements OnInit, OnDestroy {
 
   /** Forward-fill: last known value per key */
   private lastKnown: Record<string, number> = {};
-  /** All keys we're tracking */
+  /** All flat keys we're tracking (bid + ask) */
   private keys: string[] = [];
   /** Buffer: points collected between flush intervals */
   private buffer: PricePoint[] = [];
   private dirty = false;
+  /** Whether to show single mid-price line */
+  private isCexQuotes = false;
+  private midKey = '';
 
   ngOnInit(): void {
     this.init();
@@ -66,7 +69,8 @@ export class PriceChartLiveContainer implements OnInit, OnDestroy {
         take(1),
       )
       .subscribe((info) => {
-        const { source, symbol } = info.jobParams as any;
+        const { jobType, source, symbol } = info.jobParams as any;
+        this.isCexQuotes = jobType === 'get_Cex_Quotes';
 
         const pipeKeys = [
           PriceChartLiveContainer.makeKey(source, symbol, 'bidPrice'),
@@ -75,7 +79,15 @@ export class PriceChartLiveContainer implements OnInit, OnDestroy {
         const flatKeys = pipeKeys.map((k) => k.replace(/\|/g, ''));
 
         this.keys = flatKeys;
-        this.series = buildSeriesFromKeys(flatKeys);
+        this.midKey = `${source}${symbol}mid`;
+
+        if (this.isCexQuotes) {
+          this.series = [
+            { key: this.midKey, name: `${source.charAt(0).toUpperCase() + source.slice(1)} ${symbol} Mid`, color: PRICE_COLORS[2] },
+          ];
+        } else {
+          this.series = buildSeriesFromKeys(flatKeys);
+        }
 
         // 2. Load historical data from REST
         const requests = pipeKeys.reduce(
@@ -144,10 +156,22 @@ export class PriceChartLiveContainer implements OnInit, OnDestroy {
           lastKnown[key] = pts[cursors[key]].v;
           cursors[key]++;
         }
-        if (lastKnown[key] !== undefined) {
-          point[key] = lastKnown[key]!;
+      }
+
+      if (this.isCexQuotes) {
+        const bid = lastKnown[keys[0]];
+        const ask = lastKnown[keys[1]];
+        if (bid !== undefined && ask !== undefined) {
+          point[this.midKey] = (bid + ask) / 2;
+        }
+      } else {
+        for (const key of keys) {
+          if (lastKnown[key] !== undefined) {
+            point[key] = lastKnown[key]!;
+          }
         }
       }
+
       return point;
     });
   }
@@ -185,11 +209,23 @@ export class PriceChartLiveContainer implements OnInit, OnDestroy {
     this.lastKnown[key] = value;
 
     const point: PricePoint = { time: timestamp };
-    for (const k of this.keys) {
-      if (this.lastKnown[k] !== undefined) {
-        point[k] = this.lastKnown[k];
+
+    if (this.isCexQuotes) {
+      const bid = this.lastKnown[this.keys[0]];
+      const ask = this.lastKnown[this.keys[1]];
+      if (bid !== undefined && ask !== undefined) {
+        point[this.midKey] = (bid + ask) / 2;
+      } else {
+        return; // wait until both bid and ask are known
+      }
+    } else {
+      for (const k of this.keys) {
+        if (this.lastKnown[k] !== undefined) {
+          point[k] = this.lastKnown[k];
+        }
       }
     }
+
     this.buffer.push(point);
     this.dirty = true;
   }

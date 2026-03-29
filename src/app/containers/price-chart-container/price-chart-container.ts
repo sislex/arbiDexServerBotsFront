@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { PriceChart } from '../../components/price-chart/price-chart';
 import type { PricePoint, PriceSeriesConfig } from '../../components/price-chart/price-chart';
 import { ServerDataService } from '../../services/server-data.service';
-import { buildSeriesFromKeys } from '../../services/price-key-utils';
+import { PRICE_COLORS } from '../../services/price-key-utils';
 import { getInfoActiveBot } from '../../+state/servers/servers.selectors';
 import { forkJoin, Subscription, filter, take } from 'rxjs';
 
@@ -45,17 +45,27 @@ export class PriceChartContainer implements OnInit, OnDestroy {
         take(1),
       )
       .subscribe((info) => {
-        const { source, symbol } = info.jobParams as any;
+        const { jobType, source, symbol } = info.jobParams as any;
+        const isCexQuotes = jobType === 'get_Cex_Quotes';
 
-        // Build exactly the keys this bot needs
         const pipeKeys = [
           PriceChartContainer.makeKey(source, symbol, 'bidPrice'),
           PriceChartContainer.makeKey(source, symbol, 'askPrice'),
         ];
 
-        this.series = buildSeriesFromKeys(
-          pipeKeys.map((k) => k.replace(/\|/g, '')),
-        );
+        const midKey = `${source}${symbol}mid`;
+
+        if (isCexQuotes) {
+          this.series = [
+            { key: midKey, name: `${source.charAt(0).toUpperCase() + source.slice(1)} ${symbol} Mid`, color: PRICE_COLORS[2] },
+          ];
+        } else {
+          this.series = pipeKeys.map((k, i) => ({
+            key: k.replace(/\|/g, ''),
+            name: `${source.charAt(0).toUpperCase() + source.slice(1)} ${symbol} ${i === 0 ? 'Bid' : 'Ask'}`,
+            color: PRICE_COLORS[i],
+          }));
+        }
 
         const requests = pipeKeys.reduce(
           (acc, pipeKey) => {
@@ -66,7 +76,7 @@ export class PriceChartContainer implements OnInit, OnDestroy {
           {} as Record<string, ReturnType<ServerDataService['getPriceByKey']>>,
         );
 
-        const keys = Object.keys(requests);
+        const flatKeys = pipeKeys.map((k) => k.replace(/\|/g, ''));
 
         forkJoin(requests).subscribe((responses) => {
           const timeSet = new Set<number>();
@@ -84,22 +94,34 @@ export class PriceChartContainer implements OnInit, OnDestroy {
 
           const lastKnown: Record<string, number | undefined> = {};
           const cursors: Record<string, number> = {};
-          for (const key of keys) {
+          for (const key of flatKeys) {
             cursors[key] = 0;
           }
 
           this.data = times.map((t) => {
             const point: PricePoint = { time: t };
-            for (const key of keys) {
+            for (const key of flatKeys) {
               const pts = sorted[key];
               while (cursors[key] < pts.length && pts[cursors[key]].t <= t) {
                 lastKnown[key] = pts[cursors[key]].v;
                 cursors[key]++;
               }
-              if (lastKnown[key] !== undefined) {
-                point[key] = lastKnown[key]!;
+            }
+
+            if (isCexQuotes) {
+              const bid = lastKnown[flatKeys[0]];
+              const ask = lastKnown[flatKeys[1]];
+              if (bid !== undefined && ask !== undefined) {
+                point[midKey] = (bid + ask) / 2;
+              }
+            } else {
+              for (const key of flatKeys) {
+                if (lastKnown[key] !== undefined) {
+                  point[key] = lastKnown[key]!;
+                }
               }
             }
+
             return point;
           });
         });
