@@ -13,5 +13,7 @@ export class BotInfoPageTabs {
   @Input() secondLabel = '';
   @Input() thirdLabel = '';
   @Input() fourthLabel = '';
+  @Input() fifthLabel = '';
+  @Input() sixthLabel = '';
 
 }

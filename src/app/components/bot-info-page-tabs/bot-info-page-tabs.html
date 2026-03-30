@@ -30,4 +30,20 @@
       </div>
     </ng-template>
   </mat-tab>
+
+  <mat-tab label="{{ fifthLabel }}">
+    <ng-template matTabContent>
+      <div class="content">
+        <ng-content select="[fifth]"></ng-content>
+      </div>
+    </ng-template>
+  </mat-tab>
+
+  <mat-tab label="{{ sixthLabel }}">
+    <ng-template matTabContent>
+      <div class="content">
+        <ng-content select="[sixth]"></ng-content>
+      </div>
+    </ng-template>
+  </mat-tab>
 </mat-tab-group>

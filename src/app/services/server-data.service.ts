@@ -112,4 +112,14 @@ export class ServerDataService {
   getRulesList(): Observable<any> {
     return this.get('/rules/get-all');
   }
+
+  // Получить список доступных ключей цен
+  getPriceKeys(): Observable<string[]> {
+    return this.get<string[]>('/prices/keys');
+  }
+
+  // Получить точки цены по ключу, например 'binance|ETHUSDC|bidPrice'
+  getPriceByKey(key: string): Observable<{ key: string; points: { t: number; v: number }[]; count: number; last: { t: number; v: number } }> {
+    return this.get(`/prices/key/${encodeURIComponent(key)}`);
+  }
 }

@@ -19,6 +19,8 @@ import {TitleTableButton} from '../../components/title-table-button/title-table-
 import {AgGridArbitrageListContainer} from '../ag-grid-arbitrage-list-container/ag-grid-arbitrage-list-container';
 import {AgGridBotDataListContainer} from '../ag-grid-bot-data-list-container/ag-grid-bot-data-list-container';
 import {AgGridErrorListContainer} from '../ag-grid-error-list-container/ag-grid-error-list-container';
+import {PriceChartContainer} from '../price-chart-container/price-chart-container';
+import {PriceChartLiveContainer} from '../price-chart-live-container/price-chart-live-container';
 
 @Component({
   selector: 'app-bot-info-page-tabs-container',
@@ -33,7 +35,9 @@ import {AgGridErrorListContainer} from '../ag-grid-error-list-container/ag-grid-
     TitleTableButton,
     AgGridArbitrageListContainer,
     AgGridBotDataListContainer,
-    AgGridErrorListContainer
+    AgGridErrorListContainer,
+    PriceChartContainer,
+    PriceChartLiveContainer,
   ],
   templateUrl: './bot-info-page-tabs-container.html',
   styleUrl: './bot-info-page-tabs-container.scss',

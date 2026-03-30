@@ -5,6 +5,8 @@
       [secondLabel]="'Arbitrage' + ' (' + (getDataActiveBotArbitrage$ | async)?.length + ')'"
       [thirdLabel]="'Errors'"
       [fourthLabel]="'Job'"
+      [fifthLabel]="'Chart'"
+      [sixthLabel]="'Live Chart'"
     >
       <div second class="tab-content">
         <app-title-table-layout class="bot-control">
@@ -53,6 +55,13 @@
         <app-job-container></app-job-container>
       </div>
 
+      <div fifth class="tab-content">
+        <app-price-chart-container></app-price-chart-container>
+      </div>
+
+      <div sixth class="tab-content">
+        <app-price-chart-live-container></app-price-chart-live-container>
+      </div>
 
     </app-bot-info-page-tabs>
   } @else {
