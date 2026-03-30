@@ -4,7 +4,7 @@ import {
   getActiveBotIsLoaded,
   getActiveBotIsLoading,
   getDataActiveBot,
-  getDataActiveBotArbitrage
+  getDataActiveBotArbitrage, getInfoActiveBot
 } from '../../+state/servers/servers.selectors';
 import {Store} from '@ngrx/store';
 import {TitleTableLayout} from '../../components/title-table-layout/title-table-layout';
@@ -21,6 +21,8 @@ import {AgGridBotDataListContainer} from '../ag-grid-bot-data-list-container/ag-
 import {AgGridErrorListContainer} from '../ag-grid-error-list-container/ag-grid-error-list-container';
 import {PriceChartContainer} from '../price-chart-container/price-chart-container';
 import {PriceChartLiveContainer} from '../price-chart-live-container/price-chart-live-container';
+import {GraphPage} from '../graph-page/graph-page';
+import {JsonParsePipe} from '../../pipes/json-parse.pipe';
 
 @Component({
   selector: 'app-bot-info-page-tabs-container',
@@ -38,6 +40,8 @@ import {PriceChartLiveContainer} from '../price-chart-live-container/price-chart
     AgGridErrorListContainer,
     PriceChartContainer,
     PriceChartLiveContainer,
+    GraphPage,
+    JsonParsePipe
   ],
   templateUrl: './bot-info-page-tabs-container.html',
   styleUrl: './bot-info-page-tabs-container.scss',
@@ -50,4 +54,6 @@ export class BotInfoPageTabsContainer {
 
   activeBotIsLoaded$ = this.store.select(getActiveBotIsLoaded);
   activeBotIsLoading$ = this.store.select(getActiveBotIsLoading);
+
+  jobInfo$ = this.store.select(getInfoActiveBot);
 }

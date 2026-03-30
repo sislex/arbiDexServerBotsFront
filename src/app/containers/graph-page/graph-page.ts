@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, OnInit} from "@angular/core";
+import {Component, inject, Input, OnDestroy, OnInit} from "@angular/core";
 import { AgCharts } from "ag-charts-angular";
 import {
   AgChartOptions,
@@ -35,6 +35,7 @@ ModuleRegistry.registerModules([
   styleUrl: './graph-page.scss',
 })
 export class GraphPage implements OnDestroy, OnInit {
+  @Input() pair: any;
   private store = inject(Store);
   public options: any;
   private router = inject(Router);
@@ -44,7 +45,7 @@ export class GraphPage implements OnDestroy, OnInit {
   constructor(
     private wsService: WsService
   ) {
-    this.store.dispatch(setQuotesCostData());
+    // this.store.dispatch(setQuotesCostData());
 
     this.options = {
       data: [],
@@ -175,12 +176,12 @@ export class GraphPage implements OnDestroy, OnInit {
 
   ngOnInit() {
     this.wsService.connect();
+    console.log('1', this.pair)
     const mySubs = [
       {
         chain: 1,
         pairs: [
-          { token0Id: 2, token1Id: 10 },
-          { token0Id: 3, token1Id: 11 }
+          { token0Id: this.pair![0].token0, token1Id: this.pair![0].token1 },
         ]
       },
     ];
@@ -199,9 +200,5 @@ export class GraphPage implements OnDestroy, OnInit {
     // 3. Закрываем при уходе со страницы
     this.wsService.disconnect();
     console.log('🔌 Соединение закрыто при уничтожении компонента');
-  }
-  nav() {
-    this.router.navigate([`/server/localhost:3001/tab/bots`]);
-
   }
 }

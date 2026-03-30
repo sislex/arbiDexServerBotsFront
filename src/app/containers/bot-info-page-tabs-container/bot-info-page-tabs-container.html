@@ -7,6 +7,8 @@
       [fourthLabel]="'Job'"
       [fifthLabel]="'Chart'"
       [sixthLabel]="'Live Chart'"
+      [fifthLabel]="((jobInfo$ | async)?.jobParams?.extraSettings | jsonParse)?.configData.graph ? 'Graph' : ''"
+      [seventhLabel]="((jobInfo$ | async)?.jobParams?.extraSettings | jsonParse)?.configData.graph ? 'Graph' : ''"
     >
       <div second class="tab-content">
         <app-title-table-layout class="bot-control">
@@ -53,6 +55,12 @@
 
       <div fourth class="set-margin-top">
         <app-job-container></app-job-container>
+      </div>
+
+      <div fifth class="set-margin-top">
+        <app-graphs-page
+          [pair]="((jobInfo$ | async)?.jobParams?.pairsToQuote | jsonParse)"
+        ></app-graphs-page>
       </div>
 
       <div fifth class="tab-content">
