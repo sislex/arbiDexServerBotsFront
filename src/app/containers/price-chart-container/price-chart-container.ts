@@ -6,10 +6,11 @@ import { ServerDataService } from '../../services/server-data.service';
 import { PRICE_COLORS } from '../../services/price-key-utils';
 import { getInfoActiveBot } from '../../+state/servers/servers.selectors';
 import { forkJoin, Subscription, filter, take } from 'rxjs';
+import { LoaderContainer } from '../loader-container/loader-container';
 
 @Component({
   selector: 'app-price-chart-container',
-  imports: [PriceChart],
+  imports: [PriceChart, LoaderContainer],
   standalone: true,
   templateUrl: './price-chart-container.html',
   styleUrl: './price-chart-container.scss',
@@ -23,6 +24,7 @@ export class PriceChartContainer implements OnInit, OnDestroy {
   data: PricePoint[] = [];
   hiddenKeys: string[] = [];
   streaming = false;
+  isLoading = true;
 
   ngOnInit(): void {
     this.loadPrices();
@@ -124,6 +126,8 @@ export class PriceChartContainer implements OnInit, OnDestroy {
 
             return point;
           });
+
+          this.isLoading = false;
         });
       });
   }

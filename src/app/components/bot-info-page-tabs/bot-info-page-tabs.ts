@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatTabsModule} from '@angular/material/tabs';
 
 @Component({
@@ -16,4 +16,9 @@ export class BotInfoPageTabs {
   @Input() fifthLabel = '';
   @Input() sixthLabel = '';
 
+  @Output() emitter = new EventEmitter<any>();
+
+  onTabChange(index: number): void {
+    this.emitter.emit({ event: 'BotInfoPageTabs:TAB_CHANGED', data: index });
+  }
 }

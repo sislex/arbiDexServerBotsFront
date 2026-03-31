@@ -7,6 +7,7 @@ import type { PricePoint, PriceSeriesConfig } from '../../components/price-chart
 import { ServerDataService } from '../../services/server-data.service';
 import { buildSeriesFromKeys, PRICE_COLORS } from '../../services/price-key-utils';
 import { getActiveServerIpPort, getInfoActiveBot } from '../../+state/servers/servers.selectors';
+import { LoaderContainer } from '../loader-container/loader-container';
 
 /** How often (ms) we flush buffered WS ticks into the chart */
 const FLUSH_INTERVAL = 500;
@@ -16,7 +17,7 @@ const MAX_POINTS = 300;
 
 @Component({
   selector: 'app-price-chart-live-container',
-  imports: [PriceChart],
+  imports: [PriceChart, LoaderContainer],
   standalone: true,
   templateUrl: './price-chart-live-container.html',
   styleUrl: './price-chart-live-container.scss',
@@ -32,6 +33,7 @@ export class PriceChartLiveContainer implements OnInit, OnDestroy {
   series: PriceSeriesConfig[] = [];
   data: PricePoint[] = [];
   hiddenKeys: string[] = [];
+  isLoading = true;
 
   /** Forward-fill: last known value per key */
   private lastKnown: Record<string, number> = {};
@@ -111,6 +113,8 @@ export class PriceChartLiveContainer implements OnInit, OnDestroy {
               }
             }
           }
+
+          this.isLoading = false;
 
           // 3. Connect WebSocket with the pipe-separated keys
           this.store

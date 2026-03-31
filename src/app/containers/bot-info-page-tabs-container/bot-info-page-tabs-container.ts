@@ -50,4 +50,12 @@ export class BotInfoPageTabsContainer {
 
   activeBotIsLoaded$ = this.store.select(getActiveBotIsLoaded);
   activeBotIsLoading$ = this.store.select(getActiveBotIsLoading);
+
+  activeTabIndex = 0;
+
+  onEvent($event: any): void {
+    if ($event.event === 'BotInfoPageTabs:TAB_CHANGED') {
+      this.activeTabIndex = $event.data;
+    }
+  }
 }
