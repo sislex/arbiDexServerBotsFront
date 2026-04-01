@@ -150,11 +150,19 @@ Reusable dumb component. Inputs:
 Uses dark Binance-style theme (`#161a25` background). Lines use `interpolation: { type: 'step', position: 'end' }` for perpendicular steps (no diagonal lines). Zoom + navigator enabled on X axis.
 
 ### Price key system
-Keys follow the pattern `source|symbol|field` (e.g. `binance|ETHUSDC|bidPrice`).
+Keys follow the pattern `source|symbol|field` (e.g. `binance|ETHUSDC|bidPrice`, `kucoin|ETH-USDT|askPrice`).
+The symbol format varies by exchange, so keys are **discovered at runtime** via `GET /prices/keys`.
+
+Job config provides `source`, `token0`, `token1` (e.g. `{ source: "kucoin", token0: "ETH", token1: "USDT" }`).
+Use `findPriceKeys(allKeys, source, token0, token1)` from `price-key-utils.ts` to resolve actual pipe-separated keys.
+
 Utility functions in `src/app/services/price-key-utils.ts`:
-- `rawKeyToUrlKey()` — flat key → pipe-separated for API
-- `formatKeyName()` — flat key → human-readable name
-- `buildSeriesFromKeys()` — flat keys → `PriceSeriesConfig[]`
+- `findPriceKeys()` — discover bid/ask keys from available keys by source + tokens
+- `formatPipeKeyName()` — pipe key → human-readable name (e.g. `'Kucoin ETH-USDT Bid'`)
+- `buildSeriesFromPipeKeys()` — pipe keys → `PriceSeriesConfig[]`
+- `rawKeyToUrlKey()` — flat key → pipe-separated for API (legacy)
+- `formatKeyName()` — flat key → human-readable name (legacy)
+- `buildSeriesFromKeys()` — flat keys → `PriceSeriesConfig[]` (legacy)
 - `PRICE_COLORS` — color palette array
 
 ### Two chart containers
@@ -243,4 +251,4 @@ When `jobType === 'get_Cex_Quotes'`, show **one line** — the mid-price `(bid +
 1. Reuse `PriceChart` component (`src/app/components/price-chart/`)
 2. Create container that loads historical data from REST, then connects socket.io
 3. Use `PriceChartLiveContainer` as a reference implementation
-4. Build keys with `makeKey(source, symbol, field)` → `source|symbol|field`
+4. Discover keys with `findPriceKeys(allKeys, source, token0, token1)` from `price-key-utils.ts`

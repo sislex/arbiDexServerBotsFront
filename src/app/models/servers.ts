@@ -6,6 +6,9 @@ interface IJobParams {
   poolAddress: string;
   wordsAround: number;
   maxTicks: number;
+  source?: string;
+  token0?: string;
+  token1?: string;
 }
 
 interface IBotParams {

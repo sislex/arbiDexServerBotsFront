@@ -1,11 +1,16 @@
 import { Component, inject, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { forkJoin, Subscription, filter, take } from 'rxjs';
+import { forkJoin, Subscription, filter, take, switchMap, map } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { PriceChart } from '../../components/price-chart/price-chart';
 import type { PricePoint, PriceSeriesConfig } from '../../components/price-chart/price-chart';
 import { ServerDataService } from '../../services/server-data.service';
-import { buildSeriesFromKeys, PRICE_COLORS } from '../../services/price-key-utils';
+import {
+  buildSeriesFromPipeKeys,
+  findPriceKeys,
+  formatPipeKeyName,
+  PRICE_COLORS,
+} from '../../services/price-key-utils';
 import { getActiveServerIpPort, getInfoActiveBot } from '../../+state/servers/servers.selectors';
 import { LoaderContainer } from '../loader-container/loader-container';
 
@@ -39,6 +44,8 @@ export class PriceChartLiveContainer implements OnInit, OnDestroy {
   private lastKnown: Record<string, number> = {};
   /** All flat keys we're tracking (bid + ask) */
   private keys: string[] = [];
+  /** Pipe-separated keys for WebSocket subscription */
+  private pipeKeys: string[] = [];
   /** Buffer: points collected between flush intervals */
   private buffer: PricePoint[] = [];
   private dirty = false;
@@ -57,38 +64,48 @@ export class PriceChartLiveContainer implements OnInit, OnDestroy {
     this.socket = null;
   }
 
-  /** Build pipe-separated key: `source|symbol|field` */
-  private static makeKey(source: string, symbol: string, field: 'bidPrice' | 'askPrice'): string {
-    return `${source}|${symbol}|${field}`;
-  }
-
   private init(): void {
-    // 1. Get source & symbol from the active bot's jobParams
+    // 1. Get source, token0, token1 from the active bot's jobParams, then discover keys
     this.sub = this.store
       .select(getInfoActiveBot)
       .pipe(
-        filter((info) => !!(info?.jobParams as any)?.source && !!(info?.jobParams as any)?.symbol),
+        filter((info) => {
+          const jp = info?.jobParams as any;
+          return !!jp?.source && !!jp?.token0 && !!jp?.token1;
+        }),
         take(1),
+        switchMap((info) =>
+          this.serverDataService.getPriceKeys().pipe(map((keys) => ({ info, keys }))),
+        ),
       )
-      .subscribe((info) => {
-        const { jobType, source, symbol } = info.jobParams as any;
+      .subscribe(({ info, keys: allKeys }) => {
+        const { jobType, source, token0, token1 } = info.jobParams as any;
         this.isCexQuotes = jobType === 'get_Cex_Quotes';
 
-        const pipeKeys = [
-          PriceChartLiveContainer.makeKey(source, symbol, 'bidPrice'),
-          PriceChartLiveContainer.makeKey(source, symbol, 'askPrice'),
-        ];
+        const found = findPriceKeys(allKeys, source, token0, token1);
+        if (!found) {
+          this.isLoading = false;
+          return;
+        }
+
+        const pipeKeys = [found.bidKey, found.askKey];
+        this.pipeKeys = pipeKeys;
         const flatKeys = pipeKeys.map((k) => k.replace(/\|/g, ''));
 
         this.keys = flatKeys;
+        const symbol = found.bidKey.split('|')[1];
         this.midKey = `${source}${symbol}mid`;
 
         if (this.isCexQuotes) {
           this.series = [
-            { key: this.midKey, name: `${source.charAt(0).toUpperCase() + source.slice(1)} ${symbol} Mid`, color: PRICE_COLORS[2] },
+            {
+              key: this.midKey,
+              name: `${source.charAt(0).toUpperCase() + source.slice(1)} ${symbol} Mid`,
+              color: PRICE_COLORS[2],
+            },
           ];
         } else {
-          this.series = buildSeriesFromKeys(flatKeys);
+          this.series = buildSeriesFromPipeKeys(pipeKeys);
         }
 
         // 2. Load historical data from REST
