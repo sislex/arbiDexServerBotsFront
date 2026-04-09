@@ -1,7 +1,11 @@
-<app-price-chart
-  [data]="data"
-  [series]="series"
-  [hiddenKeys]="hiddenKeys"
-  [streaming]="false"
-></app-price-chart>
+@if (isLoading) {
+  <app-loader-container></app-loader-container>
+} @else {
+  <app-price-chart
+    [data]="data"
+    [series]="series"
+    [hiddenKeys]="hiddenKeys"
+    [streaming]="false"
+  ></app-price-chart>
+}
 

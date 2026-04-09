@@ -3,13 +3,14 @@ import { Store } from '@ngrx/store';
 import { PriceChart } from '../../components/price-chart/price-chart';
 import type { PricePoint, PriceSeriesConfig } from '../../components/price-chart/price-chart';
 import { ServerDataService } from '../../services/server-data.service';
-import { PRICE_COLORS } from '../../services/price-key-utils';
+import { findPriceKeys, formatPipeKeyName, PRICE_COLORS } from '../../services/price-key-utils';
 import { getInfoActiveBot } from '../../+state/servers/servers.selectors';
-import { forkJoin, Subscription, filter, take } from 'rxjs';
+import { forkJoin, Subscription, filter, take, switchMap, map } from 'rxjs';
+import { LoaderContainer } from '../loader-container/loader-container';
 
 @Component({
   selector: 'app-price-chart-container',
-  imports: [PriceChart],
+  imports: [PriceChart, LoaderContainer],
   standalone: true,
   templateUrl: './price-chart-container.html',
   styleUrl: './price-chart-container.scss',
@@ -23,6 +24,7 @@ export class PriceChartContainer implements OnInit, OnDestroy {
   data: PricePoint[] = [];
   hiddenKeys: string[] = [];
   streaming = false;
+  isLoading = true;
 
   ngOnInit(): void {
     this.loadPrices();
@@ -32,37 +34,46 @@ export class PriceChartContainer implements OnInit, OnDestroy {
     this.sub?.unsubscribe();
   }
 
-  /** Build pipe-separated keys from the active bot's jobParams */
-  private static makeKey(source: string, symbol: string, field: 'bidPrice' | 'askPrice'): string {
-    return `${source}|${symbol}|${field}`;
-  }
-
   private loadPrices(): void {
     this.sub = this.store
       .select(getInfoActiveBot)
       .pipe(
-        filter((info) => !!(info?.jobParams as any)?.source && !!(info?.jobParams as any)?.symbol),
+        filter((info) => {
+          const jp = info?.jobParams as any;
+          return !!jp?.source && !!jp?.token0 && !!jp?.token1;
+        }),
         take(1),
+        switchMap((info) =>
+          this.serverDataService.getPriceKeys().pipe(map((keys) => ({ info, keys }))),
+        ),
       )
-      .subscribe((info) => {
-        const { jobType, source, symbol } = info.jobParams as any;
+      .subscribe(({ info, keys: allKeys }) => {
+        const { jobType, source, token0, token1 } = info.jobParams as any;
         const isCexQuotes = jobType === 'get_Cex_Quotes';
 
-        const pipeKeys = [
-          PriceChartContainer.makeKey(source, symbol, 'bidPrice'),
-          PriceChartContainer.makeKey(source, symbol, 'askPrice'),
-        ];
+        const found = findPriceKeys(allKeys, source, token0, token1);
+        if (!found) {
+          this.isLoading = false;
+          return;
+        }
 
+        const pipeKeys = [found.bidKey, found.askKey];
+        const flatKeys = pipeKeys.map((k) => k.replace(/\|/g, ''));
+        const symbol = found.bidKey.split('|')[1];
         const midKey = `${source}${symbol}mid`;
 
         if (isCexQuotes) {
           this.series = [
-            { key: midKey, name: `${source.charAt(0).toUpperCase() + source.slice(1)} ${symbol} Mid`, color: PRICE_COLORS[2] },
+            {
+              key: midKey,
+              name: `${source.charAt(0).toUpperCase() + source.slice(1)} ${symbol} Mid`,
+              color: PRICE_COLORS[2],
+            },
           ];
         } else {
           this.series = pipeKeys.map((k, i) => ({
-            key: k.replace(/\|/g, ''),
-            name: `${source.charAt(0).toUpperCase() + source.slice(1)} ${symbol} ${i === 0 ? 'Bid' : 'Ask'}`,
+            key: flatKeys[i],
+            name: formatPipeKeyName(k),
             color: PRICE_COLORS[i],
           }));
         }
@@ -76,7 +87,6 @@ export class PriceChartContainer implements OnInit, OnDestroy {
           {} as Record<string, ReturnType<ServerDataService['getPriceByKey']>>,
         );
 
-        const flatKeys = pipeKeys.map((k) => k.replace(/\|/g, ''));
 
         forkJoin(requests).subscribe((responses) => {
           const timeSet = new Set<number>();
@@ -124,6 +134,8 @@ export class PriceChartContainer implements OnInit, OnDestroy {
 
             return point;
           });
+
+          this.isLoading = false;
         });
       });
   }
