@@ -1,5 +1,7 @@
 import {createReducer, on} from '@ngrx/store';
 import * as ViewActions from './view.actions';
+import {IServersAPI} from '../../models/view';
+import {emptyAsyncResponse} from './stabs';
 
 export const VIEW_FEATURE_KEY = 'view';
 
@@ -7,6 +9,7 @@ export interface ViewState {
   isSidebarOpen: boolean;
   activeTab: string;
   tabList: string[];
+  servers: IServersAPI;
 }
 
 export interface ViewPartialState {
@@ -19,6 +22,7 @@ export const initialState: ViewState = {
   tabList: ['bots', 'rules',
     // 'gates',
     'server data'],
+  servers: emptyAsyncResponse([]),
 };
 
 export const viewReducer = createReducer(
@@ -30,5 +34,35 @@ export const viewReducer = createReducer(
   on(ViewActions.setActiveTab, (state, {tab}) => ({
     ...state,
     activeTab: tab
+  })),
+
+  on(ViewActions.setServersData, (state) => ({
+    ...state,
+    servers: {
+      ...state.servers,
+      startTime:  Date.now(),
+      isLoading: true,
+      isLoaded: false,
+    }
+  })),
+  on(ViewActions.setServersDataSuccess, (state, {response}) => ({
+    ...state,
+    servers: {
+      ...state.servers,
+      loadingTime: Date.now() - state.servers.startTime!,
+      isLoading: false,
+      isLoaded: true,
+      response
+    }
+  })),
+  on(ViewActions.setServersDataFailure, (state, {error}) => ({
+    ...state,
+    servers: {
+      ...state.servers,
+      loadingTime: Date.now() - state.servers.startTime!,
+      isLoading: false,
+      isLoaded: true,
+      error
+    }
   })),
 );

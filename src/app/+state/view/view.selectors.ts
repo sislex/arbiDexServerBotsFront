@@ -17,3 +17,8 @@ export const getIsSidebarOpen = createSelector(
   selectFeature,
   (state: ViewState) => state.isSidebarOpen
 );
+
+export const getServersDataResponse = createSelector(
+  selectFeature,
+  (state: ViewState) => state.servers.response
+);

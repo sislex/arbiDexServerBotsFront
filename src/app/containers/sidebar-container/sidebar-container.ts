@@ -11,8 +11,8 @@ import {TabsContainer} from '../tabs-container/tabs-container';
 import {clearActiveElementData, setActiveServer} from '../../+state/servers/servers.actions';
 import {ActivatedRoute, Router} from '@angular/router';
 import {take} from 'rxjs';
-import {getActiveTab, getIsSidebarOpen} from '../../+state/view/view.selectors';
-import {setActiveTab, toggleSidebar} from '../../+state/view/view.actions';
+import {getActiveTab, getIsSidebarOpen, getServersDataResponse} from '../../+state/view/view.selectors';
+import {setActiveTab, setServersData, toggleSidebar} from '../../+state/view/view.actions';
 import {Actions} from '../../components/actions/actions';
 import {ApiInfoPanel} from '../../components/api-info-panel/api-info-panel';
 import {MatDialog} from '@angular/material/dialog';
@@ -39,11 +39,13 @@ export class SidebarContainer implements OnInit {
 
   featureName$ = this.store.select(getFeatureName);
   isSidebarOpen$ = this.store.select(getIsSidebarOpen);
-  serverList$ = this.store.select(getServerList);
+  serverList$ = this.store.select(getServersDataResponse);
   ipPort$ = this.store.select(getActiveServerIpPort);
   activeTab$ = this.store.select(getActiveTab);
 
   ngOnInit() {
+    this.store.dispatch(setServersData());
+
     this.route.paramMap.subscribe(params => {
       const ipPort = params.get('ipPort');
       const tabId = params.get('tabId');
