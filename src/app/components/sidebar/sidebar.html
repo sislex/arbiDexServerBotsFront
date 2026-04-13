@@ -28,7 +28,7 @@
             >
               @for (item of list; track item) {
                 <mat-button-toggle [value]="item.ip + ':' + item.port">
-                  {{ item.serverName | titlecase }}
+                  {{ item.ip + ':' + item.port | titlecase }}
                 </mat-button-toggle>
               }
             </mat-button-toggle-group>
