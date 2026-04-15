@@ -171,6 +171,7 @@ interface IBotControl {
   lastJobTimeFinish: string;
   lastLatency: number;
   lastJobResult: LastJobResult;
+  botParams?: any
 }
 
 export interface IActiveBot {

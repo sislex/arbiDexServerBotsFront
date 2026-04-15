@@ -43,6 +43,14 @@ export class AgGridBotsControlContainer {
       cellClass: 'selectable-text',
     },
     {
+      headerName: 'Description',
+      width: 120,
+      cellClass: 'selectable-text',
+      valueGetter: params => {
+        return params.data.botParams.description;
+      },
+    },
+    {
       field: "createdAt",
       headerName: 'Created',
       flex: 1,
