@@ -198,3 +198,22 @@ $border-color: #e0e0e0;
   width: 100%;
   color: var(--none-color);
 }
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+
+  background-color: #ffc107;
+
+  &.online { background-color: #4caf50; }
+  &.offline { background-color: #f44336; }
+}
+
+.indicator-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

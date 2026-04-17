@@ -24,11 +24,19 @@
             <mat-button-toggle-group
               class="custom-toggle-group"
               [value]="activeItem"
-              (change)="setActiveItem($event.value)"
+              (change)="(setActiveItem($event.value))"
             >
-              @for (item of list; track item) {
+              @for (item of list; track item.ip + ':' + item.port) {
                 <mat-button-toggle [value]="item.ip + ':' + item.port">
-                  {{ item.ip + ':' + item.port | titlecase }}
+                  <div class="indicator-group">
+                    <span
+                      class="status-indicator"
+                      [class.online]="item.status === 'online'"
+                      [class.offline]="item.status === 'offline'">
+
+                    </span>
+                    {{ item.ip + ':' + item.port }}
+                  </div>
                 </mat-button-toggle>
               }
             </mat-button-toggle-group>
