@@ -4,6 +4,7 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectActiveBotParamsState, selectBotControlActionState } from '../store/selectors';
 import { restartBot, saveBotSettings } from '../store/slices/servers-slice';
+import { showToast } from '../services/toast';
 
 const defaultJobConfig = `{
   "jobId": "job-arb-001",
@@ -69,10 +70,26 @@ export function BotJobTab({ botId }: BotJobTabProps) {
     setJobConfig(initialFromApi);
   };
 
-  const handleSave = () => dispatch(saveBotSettings({ botId, data: jobConfig }));
+  const handleSave = async () => {
+    const result = await dispatch(saveBotSettings({ botId, data: jobConfig }));
+    if (saveBotSettings.fulfilled.match(result)) {
+      showToast('success', t.botDetail.jobTab.savedSuccess);
+      return;
+    }
+    showToast('error', result.error.message ?? t.botDetail.jobTab.savedError);
+  };
   const handleRerun = async () => {
-    await dispatch(saveBotSettings({ botId, data: jobConfig }));
-    await dispatch(restartBot(botId));
+    const saveResult = await dispatch(saveBotSettings({ botId, data: jobConfig }));
+    if (!saveBotSettings.fulfilled.match(saveResult)) {
+      showToast('error', saveResult.error.message ?? t.botDetail.jobTab.savedError);
+      return;
+    }
+    const restartResult = await dispatch(restartBot(botId));
+    if (restartBot.fulfilled.match(restartResult)) {
+      showToast('success', t.botDetail.jobTab.rerunSuccess);
+    } else {
+      showToast('error', restartResult.error.message ?? t.botDetail.jobTab.rerunError);
+    }
   };
   const handleDelete = () => {
     if (window.confirm(t.botDetail.jobTab.deleteConfirm)) {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Route, Routes, useNavigate, useParams } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import { Header } from './components/Header';
 import { Tabs } from './components/Tabs';
 import { BotsTab } from './components/BotsTab';
@@ -90,6 +91,7 @@ function MainLayout() {
 
   return (
     <div className="size-full flex flex-col bg-background text-foreground">
+      <Toaster position="bottom-right" richColors />
       <Header onLogout={() => {
         sessionStorage.removeItem('bots-control-auth-user');
         window.location.reload();
@@ -132,6 +134,7 @@ function BotPageRoute() {
 
   return (
     <div className="size-full flex flex-col bg-background text-foreground">
+      <Toaster position="bottom-right" richColors />
       <Header onLogout={() => {
         sessionStorage.removeItem('bots-control-auth-user');
         window.location.reload();

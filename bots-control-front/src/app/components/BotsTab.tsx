@@ -10,6 +10,7 @@ import {
   selectServerList,
 } from '../store/selectors';
 import { restartAllBots, setActiveServer, setAllBotsPaused } from '../store/slices/servers-slice';
+import { showToast } from '../services/toast';
 import { AppGrid } from './shared/AppGrid';
 
 interface BotRow {
@@ -225,7 +226,14 @@ export function BotsTab({
           <h2 className="text-sm text-foreground">{t.botsTab.title}</h2>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => void dispatch(setAllBotsPaused({ pause: false }))}
+              onClick={async () => {
+                const result = await dispatch(setAllBotsPaused({ pause: false }));
+                if (setAllBotsPaused.fulfilled.match(result)) {
+                  showToast('success', t.botsTab.startAllSuccess);
+                } else {
+                  showToast('error', result.error.message ?? t.botsTab.startAllError);
+                }
+              }}
               disabled={isBulkActionLoading || rows.length === 0}
               className={`px-3 py-1.5 rounded text-sm transition-colors ${
                 isBulkActionLoading || rows.length === 0
@@ -236,7 +244,14 @@ export function BotsTab({
               {t.botsTab.startAll}
             </button>
             <button
-              onClick={() => void dispatch(setAllBotsPaused({ pause: true }))}
+              onClick={async () => {
+                const result = await dispatch(setAllBotsPaused({ pause: true }));
+                if (setAllBotsPaused.fulfilled.match(result)) {
+                  showToast('success', t.botsTab.stopAllSuccess);
+                } else {
+                  showToast('error', result.error.message ?? t.botsTab.stopAllError);
+                }
+              }}
               disabled={isBulkActionLoading || rows.length === 0}
               className={`px-3 py-1.5 rounded text-sm transition-colors ${
                 isBulkActionLoading || rows.length === 0
@@ -247,7 +262,14 @@ export function BotsTab({
               {t.botsTab.stopAll}
             </button>
             <button
-              onClick={() => void dispatch(restartAllBots())}
+              onClick={async () => {
+                const result = await dispatch(restartAllBots());
+                if (restartAllBots.fulfilled.match(result)) {
+                  showToast('success', t.botsTab.restartAllSuccess);
+                } else {
+                  showToast('error', result.error.message ?? t.botsTab.restartAllError);
+                }
+              }}
               disabled={isBulkActionLoading || rows.length === 0}
               className={`px-3 py-1.5 rounded text-sm transition-colors ${
                 isBulkActionLoading || rows.length === 0

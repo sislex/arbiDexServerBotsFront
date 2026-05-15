@@ -15,6 +15,21 @@ const buildUrl = (activeServer: string, endpoint: string) => {
   return `http://${activeServer}${cleanedEndpoint}`;
 };
 
+const normalizeResponseError = async (response: Response) => {
+  const raw = (await response.text()).trim();
+  if (!raw) {
+    return `HTTP ${response.status}`;
+  }
+
+  try {
+    const parsed = JSON.parse(raw) as { message?: string; error?: string; details?: string };
+    const message = parsed.message ?? parsed.error ?? parsed.details ?? raw;
+    return `HTTP ${response.status}: ${message}`;
+  } catch {
+    return `HTTP ${response.status}: ${raw}`;
+  }
+};
+
 async function request<T>(
   activeServer: string,
   endpoint: string,
@@ -24,16 +39,22 @@ async function request<T>(
     throw new Error('Active server is not selected');
   }
 
-  const response = await fetch(buildUrl(activeServer, endpoint), {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    ...init,
-  });
+  let response: Response;
+  try {
+    response = await fetch(buildUrl(activeServer, endpoint), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...init,
+    });
+  } catch (error) {
+    throw new Error(
+      `Network error: ${error instanceof Error ? error.message : 'request failed'}`,
+    );
+  }
 
   if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || `Request failed with status ${response.status}`);
+    throw new Error(await normalizeResponseError(response));
   }
 
   return (await response.json()) as T;
@@ -43,8 +64,7 @@ export const serverApi = {
   getServersFromDb(): Promise<DbServerItem[]> {
     return fetch('http://45.135.182.251:3001/servers').then(async (response) => {
       if (!response.ok) {
-        const message = await response.text();
-        throw new Error(message || `Request failed with status ${response.status}`);
+        throw new Error(await normalizeResponseError(response));
       }
       return response.json() as Promise<DbServerItem[]>;
     });

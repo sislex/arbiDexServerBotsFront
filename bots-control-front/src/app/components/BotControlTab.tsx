@@ -13,6 +13,7 @@ import {
   setBotPaused,
   setBotSendData,
 } from '../store/slices/servers-slice';
+import { showToast } from '../services/toast';
 
 interface BotControlTabProps {
   botId: string;
@@ -46,6 +47,9 @@ const defaultJobParams = `{
 
 const pretty = (value: unknown) =>
   typeof value === 'object' && value !== null ? JSON.stringify(value, null, 2) : String(value ?? '-');
+
+const getActionErrorMessage = (result: { error?: { message?: string } }, fallback: string) =>
+  result.error?.message ?? fallback;
 
 export function BotControlTab({ botId }: BotControlTabProps) {
   const { t } = useLanguage();
@@ -98,7 +102,13 @@ export function BotControlTab({ botId }: BotControlTabProps) {
       null,
       2,
     );
-    await dispatch(saveBotSettings({ botId, data: merged }));
+    const result = await dispatch(saveBotSettings({ botId, data: merged }));
+    if (saveBotSettings.fulfilled.match(result)) {
+      showToast('success', t.botDetail.controlTab.settingsSaved);
+    } else {
+      showToast('error', getActionErrorMessage(result, t.botDetail.controlTab.settingsSaveError));
+      return;
+    }
     setBotParams(tempBotParams);
     setJobParams(tempJobParams);
     setIsModalOpen(false);
@@ -116,19 +126,28 @@ export function BotControlTab({ botId }: BotControlTabProps) {
   const botParamsData = (botParamsState.data as Record<string, unknown> | null) ?? {};
   const botInfoData = (botInfoState.data as Record<string, unknown> | null) ?? {};
   const parameters = [
-    { name: 'id', value: botId },
-    { name: 'status', value: isRunning ? 'active' : 'paused' },
-    { name: 'running', value: pretty(botParamsData.running) },
-    { name: 'createdAt', value: pretty(botParamsData.createdAt ?? botInfoData.createdAt) },
-    { name: 'jobCount', value: pretty(botParamsData.jobCount) },
-    { name: 'errorCount', value: pretty(botParamsData.errorCount) },
-    { name: 'lastLatency', value: pretty(botParamsData.lastLatency) },
-    { name: 'lastJobTimeStart', value: pretty(botParamsData.lastJobTimeStart) },
-    { name: 'lastJobTimeFinish', value: pretty(botParamsData.lastJobTimeFinish) },
-    { name: 'sendData', value: pretty(isSendData) },
-    { name: 'lastJobResult', value: pretty(botParamsData.lastJobResult) },
-    { name: 'botName', value: currentBotParamsJson || botParams },
-    { name: 'jobParams', value: currentJobParamsJson || jobParams },
+    { name: t.botDetail.controlTab.fields.id, value: botId },
+    { name: t.botDetail.controlTab.fields.status, value: isRunning ? 'active' : 'paused' },
+    { name: t.botDetail.controlTab.fields.running, value: pretty(botParamsData.running) },
+    {
+      name: t.botDetail.controlTab.fields.createdAt,
+      value: pretty(botParamsData.createdAt ?? botInfoData.createdAt),
+    },
+    { name: t.botDetail.controlTab.fields.jobCount, value: pretty(botParamsData.jobCount) },
+    { name: t.botDetail.controlTab.fields.errorCount, value: pretty(botParamsData.errorCount) },
+    { name: t.botDetail.controlTab.fields.lastLatency, value: pretty(botParamsData.lastLatency) },
+    {
+      name: t.botDetail.controlTab.fields.lastJobTimeStart,
+      value: pretty(botParamsData.lastJobTimeStart),
+    },
+    {
+      name: t.botDetail.controlTab.fields.lastJobTimeFinish,
+      value: pretty(botParamsData.lastJobTimeFinish),
+    },
+    { name: t.botDetail.controlTab.fields.sendData, value: pretty(isSendData) },
+    { name: t.botDetail.controlTab.fields.lastJobResult, value: pretty(botParamsData.lastJobResult) },
+    { name: t.botDetail.controlTab.fields.botParams, value: currentBotParamsJson || botParams },
+    { name: t.botDetail.controlTab.fields.jobParams, value: currentJobParamsJson || jobParams },
   ];
 
   return (
@@ -144,7 +163,14 @@ export function BotControlTab({ botId }: BotControlTabProps) {
 
               {/* Status/Start Button */}
               <button
-                onClick={() => dispatch(setBotPaused({ botId, pause: false }))}
+                onClick={async () => {
+                  const result = await dispatch(setBotPaused({ botId, pause: false }));
+                  if (setBotPaused.fulfilled.match(result)) {
+                    showToast('success', t.botDetail.controlTab.startedSuccess);
+                  } else {
+                    showToast('error', getActionErrorMessage(result, t.botDetail.controlTab.startedError));
+                  }
+                }}
                 disabled={isRunning}
                 className={`flex items-center gap-2 px-4 py-2 rounded transition-colors ${
                   isRunning
@@ -159,7 +185,14 @@ export function BotControlTab({ botId }: BotControlTabProps) {
 
               {/* Pause Button */}
               <button
-                onClick={() => dispatch(setBotPaused({ botId, pause: true }))}
+                onClick={async () => {
+                  const result = await dispatch(setBotPaused({ botId, pause: true }));
+                  if (setBotPaused.fulfilled.match(result)) {
+                    showToast('success', t.botDetail.controlTab.pausedSuccess);
+                  } else {
+                    showToast('error', getActionErrorMessage(result, t.botDetail.controlTab.pausedError));
+                  }
+                }}
                 disabled={!isRunning}
                 className={`p-2.5 rounded transition-colors ${
                   !isRunning
@@ -176,7 +209,14 @@ export function BotControlTab({ botId }: BotControlTabProps) {
 
               {/* Send Data toggle */}
               <button
-                onClick={() => dispatch(setBotSendData({ botId, isSendData: !isSendData }))}
+                onClick={async () => {
+                  const result = await dispatch(setBotSendData({ botId, isSendData: !isSendData }));
+                  if (setBotSendData.fulfilled.match(result)) {
+                    showToast('success', t.botDetail.controlTab.sendDataSuccess);
+                  } else {
+                    showToast('error', getActionErrorMessage(result, t.botDetail.controlTab.sendDataError));
+                  }
+                }}
                 className={`flex items-center gap-2 px-3 py-2 rounded transition-colors ${
                   isSendData
                     ? 'bg-primary/15 text-primary'
@@ -192,7 +232,14 @@ export function BotControlTab({ botId }: BotControlTabProps) {
 
               {/* Restart Button */}
               <button
-                onClick={() => dispatch(restartBot(botId))}
+                onClick={async () => {
+                  const result = await dispatch(restartBot(botId));
+                  if (restartBot.fulfilled.match(result)) {
+                    showToast('success', t.botDetail.controlTab.restartedSuccess);
+                  } else {
+                    showToast('error', getActionErrorMessage(result, t.botDetail.controlTab.restartedError));
+                  }
+                }}
                 className="p-2.5 rounded bg-muted hover:bg-accent text-foreground transition-colors"
                 title={t.botDetail.controlTab.restart}
               >
@@ -227,7 +274,8 @@ export function BotControlTab({ botId }: BotControlTabProps) {
                   <tr key={param.name} className="border-b border-border last:border-b-0">
                     <td className="px-4 py-3 text-sm text-muted-foreground">{param.name}</td>
                     <td className="px-4 py-3 text-sm text-foreground">
-                      {param.name === 'botName' || param.name === 'jobParams' ? (
+                      {param.name === t.botDetail.controlTab.fields.botParams ||
+                      param.name === t.botDetail.controlTab.fields.jobParams ? (
                         <pre className="bg-muted text-foreground border border-border rounded p-3 text-xs font-mono whitespace-pre overflow-x-auto">
                           {param.value}
                         </pre>
