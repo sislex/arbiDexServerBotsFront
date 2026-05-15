@@ -11,6 +11,15 @@ export interface ServerItem {
   name: string;
 }
 
+export interface DbServerItem {
+  serverId?: string;
+  ip?: string;
+  port?: string;
+  serverName?: string;
+  ipPort?: string;
+  [key: string]: unknown;
+}
+
 export interface ServerData {
   ip: string;
   port: string;

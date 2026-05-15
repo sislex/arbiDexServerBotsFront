@@ -30,7 +30,7 @@ export function Header({ userName = 'John Doe', userRole = 'Administrator' }: He
       <div className="flex items-center justify-between">
         <h1 className="text-xl text-gray-900">{t.header.title}</h1>
 
-        <div className="relative">
+        <div className="relative flex items-center gap-3">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center gap-3 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors"

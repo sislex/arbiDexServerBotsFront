@@ -4,6 +4,7 @@ import { DEFAULT_SERVER_LIST } from '../constants';
 import { createAsyncState } from '../utils';
 import type {
   ServerItem,
+  DbServerItem,
   ServerData,
   TypeListItem,
   BotControlItem,
@@ -47,6 +48,34 @@ const initialState: ServersState = {
 const getActiveServerKey = (state: { servers: ServersState }) =>
   `${state.servers.activeServer.ip}:${state.servers.activeServer.port}`;
 
+const parseIpPort = (ipPort: string): ServerItem | null => {
+  const [ip = '', port = ''] = ipPort.split(':');
+  if (!ip || !port) {
+    return null;
+  }
+  return { ip, port, name: `SERVER_${ip}:${port}` };
+};
+
+const parseDbServerItem = (item: DbServerItem): ServerItem | null => {
+  const ip = String(item.ip ?? '').trim();
+  const port = String(item.port ?? '').trim();
+  const serverName = String(item.serverName ?? '').trim();
+
+  if (ip && port) {
+    return {
+      ip,
+      port,
+      name: serverName || `SERVER_${ip}:${port}`,
+    };
+  }
+
+  if (item.ipPort) {
+    return parseIpPort(String(item.ipPort));
+  }
+
+  return null;
+};
+
 export const loadServerData = createAsyncThunk(
   'servers/loadServerData',
   async (_, { getState }) => {
@@ -56,6 +85,14 @@ export const loadServerData = createAsyncThunk(
     return response;
   },
 );
+
+export const loadServersFromDb = createAsyncThunk('servers/loadServersFromDb', async () => {
+  const response = await serverApi.getServersFromDb();
+  const parsed = response
+    .map((item) => parseDbServerItem(item))
+    .filter((item): item is ServerItem => Boolean(item));
+  return parsed;
+});
 
 export const loadBotTypes = createAsyncThunk('servers/loadBotTypes', async (_, { getState }) => {
   return serverApi.getBotTypes(getActiveServerKey(getState() as { servers: ServersState }));
@@ -121,6 +158,20 @@ export const restartBot = createAsyncThunk(
   },
 );
 
+export const setBotSendData = createAsyncThunk(
+  'servers/setBotSendData',
+  async (
+    { botId, isSendData }: { botId: string; isSendData: boolean },
+    { getState, dispatch },
+  ) => {
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
+    const response = await serverApi.setBotSendData(activeServer, botId, isSendData);
+    await dispatch(loadActiveBotAll(botId));
+    await dispatch(loadBotControlList());
+    return response;
+  },
+);
+
 export const saveBotSettings = createAsyncThunk(
   'servers/saveBotSettings',
   async ({ botId, data }: { botId: string; data: string }, { getState, dispatch }) => {
@@ -160,6 +211,17 @@ const serversSlice = createSlice({
         state.serverData.isLoading = false;
         state.serverData.isLoaded = true;
         state.serverData.error = action.error.message ?? 'Failed to load server data';
+      })
+      .addCase(loadServersFromDb.fulfilled, (state, action) => {
+        if (action.payload.length > 0) {
+          state.serverList = action.payload;
+          const activeExists = action.payload.some(
+            (s) => s.ip === state.activeServer.ip && s.port === state.activeServer.port,
+          );
+          if (!activeExists) {
+            state.activeServer = action.payload[0];
+          }
+        }
       })
       .addCase(loadBotTypes.pending, (state) => {
         state.botTypes.isLoading = true;
@@ -291,6 +353,20 @@ const serversSlice = createSlice({
         state.botControlAction.isLoading = false;
         state.botControlAction.isLoaded = true;
         state.botControlAction.error = action.error.message ?? 'Failed to restart bot';
+      })
+      .addCase(setBotSendData.pending, (state) => {
+        state.botControlAction.isLoading = true;
+        state.botControlAction.error = null;
+      })
+      .addCase(setBotSendData.fulfilled, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.data = action.payload;
+      })
+      .addCase(setBotSendData.rejected, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.error = action.error.message ?? 'Failed to toggle send-data';
       })
       .addCase(saveBotSettings.pending, (state) => {
         state.botControlAction.isLoading = true;

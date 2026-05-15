@@ -1,4 +1,11 @@
-import type { ServerData, TypeListItem, BotControlItem, RuleItem, BotInfo } from '../store/types';
+import type {
+  ServerData,
+  TypeListItem,
+  BotControlItem,
+  RuleItem,
+  BotInfo,
+  DbServerItem,
+} from '../store/types';
 
 const isValidServer = (value: string | null | undefined) =>
   Boolean(value && value.trim() && !value.includes('undefined') && value !== ':');
@@ -33,6 +40,16 @@ async function request<T>(
 }
 
 export const serverApi = {
+  getServersFromDb(): Promise<DbServerItem[]> {
+    return fetch('http://45.135.182.251:3001/servers').then(async (response) => {
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || `Request failed with status ${response.status}`);
+      }
+      return response.json() as Promise<DbServerItem[]>;
+    });
+  },
+
   getServerInfo(activeServer: string): Promise<ServerData> {
     return request<ServerData>(activeServer, '/info');
   },
@@ -90,6 +107,17 @@ export const serverApi = {
   restartBot(activeServer: string, botId: string): Promise<Record<string, unknown>> {
     return request<Record<string, unknown>>(activeServer, `/bot/${botId}/restart`, {
       method: 'POST',
+    });
+  },
+
+  setBotSendData(
+    activeServer: string,
+    botId: string,
+    isSend: boolean,
+  ): Promise<Record<string, unknown>> {
+    return request<Record<string, unknown>>(activeServer, `/bot/${botId}/send-data`, {
+      method: 'POST',
+      body: JSON.stringify({ isSend }),
     });
   },
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Play, Pause, RotateCw, Pencil, X, Circle } from 'lucide-react';
+import { Play, Pause, RotateCw, Pencil, X, Circle, Database } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
@@ -7,7 +7,12 @@ import {
   selectActiveBotParamsState,
   selectBotControlActionState,
 } from '../store/selectors';
-import { restartBot, saveBotSettings, setBotPaused } from '../store/slices/servers-slice';
+import {
+  restartBot,
+  saveBotSettings,
+  setBotPaused,
+  setBotSendData,
+} from '../store/slices/servers-slice';
 
 interface BotControlTabProps {
   botId: string;
@@ -39,6 +44,9 @@ const defaultJobParams = `{
   }
 }`;
 
+const pretty = (value: unknown) =>
+  typeof value === 'object' && value !== null ? JSON.stringify(value, null, 2) : String(value ?? '-');
+
 export function BotControlTab({ botId }: BotControlTabProps) {
   const { t } = useLanguage();
   const dispatch = useAppDispatch();
@@ -52,6 +60,11 @@ export function BotControlTab({ botId }: BotControlTabProps) {
       false,
   );
   const isRunning = !paused;
+  const isSendData = Boolean(
+    (botParamsState.data as Record<string, unknown> | null)?.isSendData ??
+      (botInfoState.data as Record<string, unknown> | null)?.isSendData ??
+      false,
+  );
 
   const currentBotParamsJson = JSON.stringify(
     (botInfoState.data?.botParams as Record<string, unknown> | undefined) ?? {},
@@ -100,18 +113,20 @@ export function BotControlTab({ botId }: BotControlTabProps) {
     setIsModalOpen(false);
   };
 
+  const botParamsData = (botParamsState.data as Record<string, unknown> | null) ?? {};
+  const botInfoData = (botInfoState.data as Record<string, unknown> | null) ?? {};
   const parameters = [
     { name: 'id', value: botId },
     { name: 'status', value: isRunning ? 'active' : 'paused' },
-    { name: 'serverId', value: '1' },
-    { name: 'typeId', value: '2' },
-    { name: 'description', value: String((botInfoState.data as Record<string, unknown> | null)?.description ?? '-') },
-    { name: 'created', value: String((botInfoState.data as Record<string, unknown> | null)?.createdAt ?? '-') },
-    { name: 'jobs', value: String((botParamsState.data as Record<string, unknown> | null)?.jobCount ?? '-') },
-    { name: 'arbitrages', value: String((botParamsState.data as Record<string, unknown> | null)?.arbitragesCount ?? '-') },
-    { name: 'errors', value: String((botParamsState.data as Record<string, unknown> | null)?.errorCount ?? '-') },
-    { name: 'avgRequestTime', value: String((botParamsState.data as Record<string, unknown> | null)?.averageLatency ?? '-') },
-    { name: 'lastRequestTime', value: String((botParamsState.data as Record<string, unknown> | null)?.lastLatency ?? '-') },
+    { name: 'running', value: pretty(botParamsData.running) },
+    { name: 'createdAt', value: pretty(botParamsData.createdAt ?? botInfoData.createdAt) },
+    { name: 'jobCount', value: pretty(botParamsData.jobCount) },
+    { name: 'errorCount', value: pretty(botParamsData.errorCount) },
+    { name: 'lastLatency', value: pretty(botParamsData.lastLatency) },
+    { name: 'lastJobTimeStart', value: pretty(botParamsData.lastJobTimeStart) },
+    { name: 'lastJobTimeFinish', value: pretty(botParamsData.lastJobTimeFinish) },
+    { name: 'sendData', value: pretty(isSendData) },
+    { name: 'lastJobResult', value: pretty(botParamsData.lastJobResult) },
     { name: 'botName', value: currentBotParamsJson || botParams },
     { name: 'jobParams', value: currentJobParamsJson || jobParams },
   ];
@@ -158,6 +173,22 @@ export function BotControlTab({ botId }: BotControlTabProps) {
 
               {/* Spacer */}
               <div className="flex-1"></div>
+
+              {/* Send Data toggle */}
+              <button
+                onClick={() => dispatch(setBotSendData({ botId, isSendData: !isSendData }))}
+                className={`flex items-center gap-2 px-3 py-2 rounded transition-colors ${
+                  isSendData
+                    ? 'bg-blue-50 text-blue-700'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+                title={isSendData ? t.botDetail.controlTab.sendDataDisable : t.botDetail.controlTab.sendDataEnable}
+              >
+                <Database size={16} />
+                <span className="text-xs">
+                  {isSendData ? t.botDetail.controlTab.sendDataOn : t.botDetail.controlTab.sendDataOff}
+                </span>
+              </button>
 
               {/* Restart Button */}
               <button
@@ -214,7 +245,7 @@ export function BotControlTab({ botId }: BotControlTabProps) {
           <div className="text-sm text-red-600">{botControlActionState.error}</div>
         )}
         {botControlActionState.isLoading && (
-          <div className="text-sm text-gray-500">Applying action...</div>
+          <div className="text-sm text-gray-500">{t.botDetail.controlTab.applyingAction}</div>
         )}
       </div>
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { ColDef } from 'ag-grid-community';
-import { Check, Circle } from 'lucide-react';
+import { Check, Circle, RefreshCw } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectActiveServer, selectBotControlListState, selectServerList } from '../store/selectors';
@@ -16,45 +16,115 @@ interface BotRow {
   errors: number;
   avgReqTime: string;
   lastReqTime: string;
-  isRunning: boolean;
   status: string;
 }
 
 interface ServerUiItem {
   ip: string;
   port: string;
+  name?: string;
 }
+
+type ServerHealthStatus = 'loading' | 'online' | 'offline';
 
 interface BotsTabProps {
   onBotSelect?: (botId: string) => void;
   onServerSelect?: (ipPort: string) => void;
+  onRefresh?: () => void;
+  isRefreshing?: boolean;
 }
 
-export function BotsTab({ onBotSelect, onServerSelect }: BotsTabProps) {
+export function BotsTab({
+  onBotSelect,
+  onServerSelect,
+  onRefresh,
+  isRefreshing = false,
+}: BotsTabProps) {
   const { t } = useLanguage();
   const dispatch = useAppDispatch();
   const servers = useAppSelector(selectServerList) as ServerUiItem[];
   const activeServer = useAppSelector(selectActiveServer);
   const botControlListState = useAppSelector(selectBotControlListState);
   const [selectedServer, setSelectedServer] = useState(`${activeServer.ip}:${activeServer.port}`);
+  const [serverStatuses, setServerStatuses] = useState<Record<string, ServerHealthStatus>>({});
+  const hasServers = servers.length > 0;
 
   useEffect(() => {
     setSelectedServer(`${activeServer.ip}:${activeServer.port}`);
   }, [activeServer.ip, activeServer.port]);
 
+  useEffect(() => {
+    if (servers.length === 0) {
+      setServerStatuses({});
+      return;
+    }
+
+    let isCancelled = false;
+    const nextStatuses: Record<string, ServerHealthStatus> = {};
+    servers.forEach((server) => {
+      nextStatuses[`${server.ip}:${server.port}`] = 'loading';
+    });
+    setServerStatuses(nextStatuses);
+
+    const checkServerHealth = async (server: ServerUiItem) => {
+      const key = `${server.ip}:${server.port}`;
+      try {
+        const response = await fetch(`http://${key}/bots/get-all`);
+        if (isCancelled) {
+          return;
+        }
+
+        setServerStatuses((prev) => ({
+          ...prev,
+          [key]: response.ok ? 'online' : 'offline',
+        }));
+      } catch {
+        if (isCancelled) {
+          return;
+        }
+
+        setServerStatuses((prev) => ({
+          ...prev,
+          [key]: 'offline',
+        }));
+      }
+    };
+
+    servers.forEach((server) => {
+      void checkServerHealth(server);
+    });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [servers]);
+
   const rows: BotRow[] = botControlListState.data.map((item) => ({
     id: String(item.id ?? ''),
-    description:
-      (item.description as string | undefined) ??
-      t.botsTab.botDescriptions[String(item.id) as keyof typeof t.botsTab.botDescriptions] ??
-      '-',
+    description: (() => {
+      const fromBotParams = String(
+        ((item as Record<string, unknown>).botParams as Record<string, unknown> | undefined)
+          ?.description ?? '',
+      ).trim();
+      if (fromBotParams) {
+        return fromBotParams;
+      }
+
+      const fromItemDescription = (item.description as string | undefined)?.trim();
+      if (fromItemDescription) {
+        return fromItemDescription;
+      }
+
+      return (
+        t.botsTab.botDescriptions[String(item.id) as keyof typeof t.botsTab.botDescriptions] ?? '-'
+      );
+    })(),
     created: String(item.createdAt ?? '-'),
     jobs: Number(item.jobCount ?? 0),
     arbitrages: Number((item as Record<string, unknown>).arbitragesCount ?? 0),
     errors: Number(item.errorCount ?? 0),
     avgReqTime: `${Number((item as Record<string, unknown>).averageLatency ?? item.lastLatency ?? 0)}ms`,
     lastReqTime: `${Number(item.lastLatency ?? 0)}ms`,
-    isRunning: String(item.status ?? 'pause') === 'active',
     status: String(item.status ?? 'pause'),
   }));
 
@@ -72,19 +142,6 @@ export function BotsTab({ onBotSelect, onServerSelect }: BotsTabProps) {
     { field: 'errors', headerName: t.botsTab.table.errors, minWidth: 100 },
     { field: 'avgReqTime', headerName: t.botsTab.table.avgRequestTime, minWidth: 160 },
     { field: 'lastReqTime', headerName: t.botsTab.table.lastRequestTime, minWidth: 160 },
-    {
-      field: 'isRunning',
-      headerName: t.botsTab.active,
-      minWidth: 120,
-      cellRenderer: (params: { value: boolean }) => {
-        const running = Boolean(params.value);
-        return (
-          <span className={running ? 'text-green-600 text-sm' : 'text-gray-500 text-sm'}>
-            {running ? t.botsTab.running : t.botsTab.stopped}
-          </span>
-        );
-      },
-    },
     {
       field: 'status',
       headerName: t.botsTab.table.status,
@@ -108,6 +165,9 @@ export function BotsTab({ onBotSelect, onServerSelect }: BotsTabProps) {
       {/* Sidebar */}
       <div className="w-80 bg-gray-50 border-r border-gray-200 flex flex-col">
         <div className="flex-1 overflow-y-auto p-4">
+          {!hasServers && (
+            <div className="text-sm text-gray-500 px-2 py-1">Loading servers from DB...</div>
+          )}
           <div className="space-y-1">
             {servers.map((server) => (
               <button
@@ -127,9 +187,11 @@ export function BotsTab({ onBotSelect, onServerSelect }: BotsTabProps) {
                 <Circle
                   size={8}
                   className={`${
-                    `${server.ip}:${server.port}` === `${activeServer.ip}:${activeServer.port}`
+                    serverStatuses[`${server.ip}:${server.port}`] === 'online'
                       ? 'fill-green-500 text-green-500'
-                      : 'fill-yellow-500 text-yellow-500'
+                      : serverStatuses[`${server.ip}:${server.port}`] === 'offline'
+                        ? 'fill-red-500 text-red-500'
+                        : 'fill-yellow-500 text-yellow-500'
                   }`}
                 />
                 <div className="flex-1">
@@ -152,7 +214,22 @@ export function BotsTab({ onBotSelect, onServerSelect }: BotsTabProps) {
 
       {/* Main Content */}
       <div className="flex-1 overflow-auto p-6">
-        <h2 className="text-xl text-gray-900 mb-6">{t.botsTab.title}</h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl text-gray-900">{t.botsTab.title}</h2>
+          <button
+            onClick={onRefresh}
+            disabled={!onRefresh || isRefreshing}
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
+              isRefreshing
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
+            }`}
+            title={t.header.refresh}
+          >
+            <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
+            <span className="text-sm">{t.header.refresh}</span>
+          </button>
+        </div>
 
         <div className="bg-white border border-gray-200 rounded-lg overflow-hidden h-[calc(100vh-220px)]">
           {botControlListState.error ? (

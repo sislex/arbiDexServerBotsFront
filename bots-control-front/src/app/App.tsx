@@ -8,9 +8,16 @@ import { ServerDataTab } from './components/ServerDataTab';
 import { BotDetailPage } from './components/BotDetailPage';
 import { LanguageProvider } from './i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from './store/hooks';
-import { selectActiveServer, selectActiveTab } from './store/selectors';
+import {
+  selectActiveServer,
+  selectActiveTab,
+  selectBotControlListState,
+  selectRulesListState,
+  selectServerDataState,
+} from './store/selectors';
 import { setActiveTab } from './store/slices/view-slice';
 import {
+  loadServersFromDb,
   loadBotControlList,
   loadBotTypes,
   loadJobTypes,
@@ -24,8 +31,33 @@ function MainLayout() {
   const navigate = useNavigate();
   const activeTab = useAppSelector(selectActiveTab);
   const activeServer = useAppSelector(selectActiveServer);
+  const botControlListState = useAppSelector(selectBotControlListState);
+  const rulesListState = useAppSelector(selectRulesListState);
+  const serverDataState = useAppSelector(selectServerDataState);
 
   const activeServerIpPort = `${activeServer.ip}:${activeServer.port}`;
+  const isRefreshing =
+    activeTab === 'bots'
+      ? botControlListState.isLoading
+      : activeTab === 'rules'
+        ? rulesListState.isLoading
+        : serverDataState.isLoading;
+
+  const refreshActiveTabData = () => {
+    if (activeTab === 'bots') {
+      dispatch(loadBotControlList());
+    } else if (activeTab === 'rules') {
+      dispatch(loadRulesList());
+    } else if (activeTab === 'server-data') {
+      dispatch(loadServerData());
+      dispatch(loadBotTypes());
+      dispatch(loadJobTypes());
+    }
+  };
+
+  useEffect(() => {
+    dispatch(loadServersFromDb());
+  }, [dispatch]);
 
   useEffect(() => {
     if (activeTab === 'bots') {
@@ -63,7 +95,12 @@ function MainLayout() {
       />
 
       {activeTab === 'bots' && (
-        <BotsTab onBotSelect={handleBotSelect} onServerSelect={handleServerSelect} />
+        <BotsTab
+          onBotSelect={handleBotSelect}
+          onServerSelect={handleServerSelect}
+          onRefresh={refreshActiveTabData}
+          isRefreshing={isRefreshing}
+        />
       )}
       {activeTab === 'rules' && <RulesTab />}
       {activeTab === 'server-data' && <ServerDataTab />}

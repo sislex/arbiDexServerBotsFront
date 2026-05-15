@@ -4,6 +4,7 @@ export const translations = {
       title: 'SERVER MANAGER',
       language: 'Language',
       theme: 'Theme',
+      refresh: 'Refresh',
       logout: 'Logout',
       lightTheme: 'Light',
       darkTheme: 'Dark',
@@ -118,6 +119,11 @@ export const translations = {
       controlTab: {
         title: 'Bot control',
         status: 'Running',
+        sendDataOn: 'Send data: ON',
+        sendDataOff: 'Send data: OFF',
+        sendDataEnable: 'Enable send-data',
+        sendDataDisable: 'Disable send-data',
+        applyingAction: 'Applying action...',
         pause: 'Pause',
         restart: 'Restart',
         edit: 'Edit',
@@ -156,7 +162,9 @@ export const translations = {
         launch: 'Launch',
         rerun: 'Rerun',
         delete: 'Delete',
-        return: 'Return'
+        return: 'Return',
+        saving: 'Saving...',
+        deleteConfirm: 'Clear current editor content?'
       },
       chartTab: {
         loading: 'Loading chart...',
@@ -176,6 +184,7 @@ export const translations = {
       title: 'МЕНЕДЖЕР СЕРВЕРОВ',
       language: 'Язык',
       theme: 'Тема',
+      refresh: 'Обновить',
       logout: 'Выход',
       lightTheme: 'Светлая',
       darkTheme: 'Тёмная',
@@ -290,6 +299,11 @@ export const translations = {
       controlTab: {
         title: 'Управление ботом',
         status: 'Работает',
+        sendDataOn: 'Отправка данных: ВКЛ',
+        sendDataOff: 'Отправка данных: ВЫКЛ',
+        sendDataEnable: 'Включить отправку данных',
+        sendDataDisable: 'Отключить отправку данных',
+        applyingAction: 'Применение действия...',
         pause: 'Пауза',
         restart: 'Перезапуск',
         edit: 'Изменить',
@@ -328,7 +342,9 @@ export const translations = {
         launch: 'Запустить',
         rerun: 'Перезапустить',
         delete: 'Удалить',
-        return: 'Вернуть'
+        return: 'Вернуть',
+        saving: 'Сохранение...',
+        deleteConfirm: 'Очистить текущий текст в редакторе?'
       },
       chartTab: {
         loading: 'Загрузка графика...',

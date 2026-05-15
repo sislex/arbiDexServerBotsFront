@@ -3,7 +3,7 @@ import { Plus, RotateCw, Trash2, RotateCcw } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectActiveBotParamsState, selectBotControlActionState } from '../store/selectors';
-import { saveBotSettings } from '../store/slices/servers-slice';
+import { restartBot, saveBotSettings } from '../store/slices/servers-slice';
 
 const defaultJobConfig = `{
   "jobId": "job-arb-001",
@@ -69,6 +69,17 @@ export function BotJobTab({ botId }: BotJobTabProps) {
     setJobConfig(initialFromApi);
   };
 
+  const handleSave = () => dispatch(saveBotSettings({ botId, data: jobConfig }));
+  const handleRerun = async () => {
+    await dispatch(saveBotSettings({ botId, data: jobConfig }));
+    await dispatch(restartBot(botId));
+  };
+  const handleDelete = () => {
+    if (window.confirm(t.botDetail.jobTab.deleteConfirm)) {
+      setJobConfig('');
+    }
+  };
+
   return (
     <div className="p-6 h-[calc(100vh-176px)]">
       <h3 className="text-lg text-gray-900 mb-4">{t.botDetail.jobTab.title}</h3>
@@ -87,14 +98,14 @@ export function BotJobTab({ botId }: BotJobTabProps) {
         {/* Action Buttons */}
         <div className="flex flex-col justify-end gap-3">
           <button
-            onClick={() => dispatch(saveBotSettings({ botId, data: jobConfig }))}
+            onClick={handleSave}
             className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             <Plus size={18} />
             <span>{t.botDetail.jobTab.launch}</span>
           </button>
           <button
-            onClick={() => dispatch(saveBotSettings({ botId, data: jobConfig }))}
+            onClick={handleRerun}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <RotateCw size={18} />
@@ -107,7 +118,10 @@ export function BotJobTab({ botId }: BotJobTabProps) {
             <RotateCcw size={18} />
             <span>{t.botDetail.jobTab.return}</span>
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+          <button
+            onClick={handleDelete}
+            className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
             <Trash2 size={18} />
             <span>{t.botDetail.jobTab.delete}</span>
           </button>
@@ -117,7 +131,7 @@ export function BotJobTab({ botId }: BotJobTabProps) {
         <div className="text-sm text-red-600 mt-2">{botControlActionState.error}</div>
       )}
       {botControlActionState.isLoading && (
-        <div className="text-sm text-gray-500 mt-2">Saving...</div>
+        <div className="text-sm text-gray-500 mt-2">{t.botDetail.jobTab.saving}</div>
       )}
     </div>
   );
