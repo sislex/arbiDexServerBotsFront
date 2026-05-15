@@ -19,6 +19,11 @@ export const translations = {
     botsTab: {
       title: 'Bots info',
       apiInfo: 'API info',
+      active: 'Active',
+      running: 'Running',
+      stopped: 'Stopped',
+      openBotHint: 'Click a row to open bot details',
+      loading: 'Loading...',
       port: 'Port',
       table: {
         id: 'ID',
@@ -152,6 +157,17 @@ export const translations = {
         rerun: 'Rerun',
         delete: 'Delete',
         return: 'Return'
+      },
+      chartTab: {
+        loading: 'Loading chart...',
+        noData: 'No chart data',
+        noLiveData: 'No live data',
+        missingJobParams: 'Missing source/token parameters in bot job config',
+        keysNotFound: 'Price keys for source/token pair were not found',
+        noHistoricalPoints: 'No historical points returned by price API',
+        loadError: 'Failed to load chart data',
+        liveLoadError: 'Failed to load live chart data',
+        socketErrorPrefix: 'Live socket connection failed'
       }
     }
   },
@@ -175,6 +191,11 @@ export const translations = {
     botsTab: {
       title: 'Информация о ботах',
       apiInfo: 'Информация API',
+      active: 'Активность',
+      running: 'Запущен',
+      stopped: 'Остановлен',
+      openBotHint: 'Нажмите на строку для открытия бота',
+      loading: 'Загрузка...',
       port: 'Порт',
       table: {
         id: 'ID',
@@ -308,6 +329,17 @@ export const translations = {
         rerun: 'Перезапустить',
         delete: 'Удалить',
         return: 'Вернуть'
+      },
+      chartTab: {
+        loading: 'Загрузка графика...',
+        noData: 'Нет данных графика',
+        noLiveData: 'Нет live-данных',
+        missingJobParams: 'В конфигурации задачи отсутствуют source/token параметры',
+        keysNotFound: 'Ключи цен для выбранной пары не найдены',
+        noHistoricalPoints: 'API цен не вернул исторические точки',
+        loadError: 'Не удалось загрузить данные графика',
+        liveLoadError: 'Не удалось загрузить live-данные графика',
+        socketErrorPrefix: 'Ошибка подключения к live-сокету'
       }
     }
   }

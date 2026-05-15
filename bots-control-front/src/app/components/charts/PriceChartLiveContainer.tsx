@@ -7,6 +7,7 @@ import {
   PRICE_COLORS,
   type PriceSeriesConfig,
 } from '../../services/price-key-utils';
+import { useLanguage } from '../../i18n/LanguageContext';
 import { useAppSelector } from '../../store/hooks';
 import { selectActiveBotInfoState, selectActiveServer } from '../../store/selectors';
 import { PriceChart, type PricePoint } from './PriceChart';
@@ -15,11 +16,13 @@ const FLUSH_INTERVAL = 500;
 const MAX_POINTS = 300;
 
 export function PriceChartLiveContainer() {
+  const { t } = useLanguage();
   const activeBotInfoState = useAppSelector(selectActiveBotInfoState);
   const activeServer = useAppSelector(selectActiveServer);
   const [data, setData] = useState<PricePoint[]>([]);
   const [series, setSeries] = useState<PriceSeriesConfig[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const socketRef = useRef<Socket | null>(null);
   const flushRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -48,6 +51,7 @@ export function PriceChartLiveContainer() {
     const load = async () => {
       try {
         setIsLoading(true);
+        setError(null);
         const jobParams = (activeBotInfoState.data?.jobParams as Record<string, unknown>) ?? {};
         const source = String(jobParams.source ?? '');
         const token0 = String(jobParams.token0 ?? '');
@@ -59,6 +63,7 @@ export function PriceChartLiveContainer() {
         if (!source || !token0 || !token1) {
           setData([]);
           setSeries([]);
+          setError(t.botDetail.chartTab.missingJobParams);
           return;
         }
 
@@ -67,6 +72,7 @@ export function PriceChartLiveContainer() {
         if (!found) {
           setData([]);
           setSeries([]);
+          setError(t.botDetail.chartTab.keysNotFound);
           return;
         }
 
@@ -165,6 +171,9 @@ export function PriceChartLiveContainer() {
         socketRef.current.on('connect', () => {
           socketRef.current?.emit('subscribe', { keys: pipeKeys });
         });
+        socketRef.current.on('connect_error', (e) => {
+          setError(`${t.botDetail.chartTab.socketErrorPrefix}: ${e.message}`);
+        });
         socketRef.current.on('priceChange', (payload: { key: string; point: { t: number; v: number } }) => {
           const stripped = payload.key.replace(/\|/g, '');
           const key = keysRef.current.includes(payload.key)
@@ -211,22 +220,31 @@ export function PriceChartLiveContainer() {
               : combined;
           });
         }, FLUSH_INTERVAL);
+      } catch (e) {
+        const message = e instanceof Error ? e.message : t.botDetail.chartTab.liveLoadError;
+        setError(message);
+        setData([]);
+        setSeries([]);
       } finally {
         setIsLoading(false);
       }
     };
 
     void load();
-  }, [activeBotInfoState.data, activeServerIpPort]);
+  }, [activeBotInfoState.data, activeServerIpPort, t.botDetail.chartTab.keysNotFound, t.botDetail.chartTab.liveLoadError, t.botDetail.chartTab.missingJobParams, t.botDetail.chartTab.socketErrorPrefix]);
 
   if (isLoading) {
     return (
-      <div className="h-full flex items-center justify-center text-gray-500">Loading live chart...</div>
+      <div className="h-full flex items-center justify-center text-gray-500">{t.botDetail.chartTab.loading}</div>
     );
   }
 
+  if (error) {
+    return <div className="h-full flex items-center justify-center text-red-600 px-6">{error}</div>;
+  }
+
   if (series.length === 0) {
-    return <div className="h-full flex items-center justify-center text-gray-400">No live data</div>;
+    return <div className="h-full flex items-center justify-center text-gray-400">{t.botDetail.chartTab.noLiveData}</div>;
   }
 
   return (

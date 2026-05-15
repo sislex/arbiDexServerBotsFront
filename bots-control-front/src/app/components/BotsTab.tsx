@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { ColDef } from 'ag-grid-community';
 import { Check, Circle } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -27,15 +27,20 @@ interface ServerUiItem {
 
 interface BotsTabProps {
   onBotSelect?: (botId: string) => void;
+  onServerSelect?: (ipPort: string) => void;
 }
 
-export function BotsTab({ onBotSelect }: BotsTabProps) {
+export function BotsTab({ onBotSelect, onServerSelect }: BotsTabProps) {
   const { t } = useLanguage();
   const dispatch = useAppDispatch();
   const servers = useAppSelector(selectServerList) as ServerUiItem[];
   const activeServer = useAppSelector(selectActiveServer);
   const botControlListState = useAppSelector(selectBotControlListState);
   const [selectedServer, setSelectedServer] = useState(`${activeServer.ip}:${activeServer.port}`);
+
+  useEffect(() => {
+    setSelectedServer(`${activeServer.ip}:${activeServer.port}`);
+  }, [activeServer.ip, activeServer.port]);
 
   const rows: BotRow[] = botControlListState.data.map((item) => ({
     id: String(item.id ?? ''),
@@ -69,13 +74,13 @@ export function BotsTab({ onBotSelect }: BotsTabProps) {
     { field: 'lastReqTime', headerName: t.botsTab.table.lastRequestTime, minWidth: 160 },
     {
       field: 'isRunning',
-      headerName: 'Active',
+      headerName: t.botsTab.active,
       minWidth: 120,
       cellRenderer: (params: { value: boolean }) => {
         const running = Boolean(params.value);
         return (
           <span className={running ? 'text-green-600 text-sm' : 'text-gray-500 text-sm'}>
-            {running ? 'Running' : 'Stopped'}
+            {running ? t.botsTab.running : t.botsTab.stopped}
           </span>
         );
       },
@@ -111,6 +116,7 @@ export function BotsTab({ onBotSelect }: BotsTabProps) {
                   const key = `${server.ip}:${server.port}`;
                   setSelectedServer(key);
                   dispatch(setActiveServer(server));
+                  onServerSelect?.(key);
                 }}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
                   selectedServer === `${server.ip}:${server.port}`
@@ -169,7 +175,7 @@ export function BotsTab({ onBotSelect }: BotsTabProps) {
         )}
         {!botControlListState.isLoading && rows.length > 0 && (
           <div className="text-xs text-gray-500 mt-2">
-            Click a row to open bot details
+            {t.botsTab.openBotHint}
           </div>
         )}
       </div>

@@ -37,14 +37,18 @@ function MainLayout() {
       dispatch(loadBotTypes());
       dispatch(loadJobTypes());
     }
-  }, [activeTab, dispatch]);
+  }, [activeTab, activeServerIpPort, dispatch]);
 
   useEffect(() => {
     dispatch(loadBotControlList());
-  }, [dispatch]);
+  }, [activeServerIpPort, dispatch]);
 
   const handleBotSelect = (botId: string) => {
     navigate(`/server/${activeServerIpPort}/${botId}`);
+  };
+
+  const handleServerSelect = (ipPort: string) => {
+    navigate(`/server/${ipPort}/tab/${activeTab}`);
   };
 
   return (
@@ -58,7 +62,9 @@ function MainLayout() {
         }}
       />
 
-      {activeTab === 'bots' && <BotsTab onBotSelect={handleBotSelect} />}
+      {activeTab === 'bots' && (
+        <BotsTab onBotSelect={handleBotSelect} onServerSelect={handleServerSelect} />
+      )}
       {activeTab === 'rules' && <RulesTab />}
       {activeTab === 'server-data' && <ServerDataTab />}
     </div>
@@ -66,10 +72,18 @@ function MainLayout() {
 }
 
 function BotPageRoute() {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const params = useParams<{ ipPort: string; botId: string }>();
   const botId = params.botId ?? '';
   const ipPort = params.ipPort ?? '';
+
+  useEffect(() => {
+    const [ip = '', port = ''] = ipPort.split(':');
+    if (ip && port) {
+      dispatch(setActiveServer({ ip, port, name: `SERVER_${ip}:${port}` }));
+    }
+  }, [dispatch, ipPort]);
 
   return (
     <BotDetailPage

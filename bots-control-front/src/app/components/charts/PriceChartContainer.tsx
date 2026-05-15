@@ -6,16 +6,19 @@ import {
   PRICE_COLORS,
   type PriceSeriesConfig,
 } from '../../services/price-key-utils';
+import { useLanguage } from '../../i18n/LanguageContext';
 import { useAppSelector } from '../../store/hooks';
 import { selectActiveBotInfoState, selectActiveServer } from '../../store/selectors';
 import { PriceChart, type PricePoint } from './PriceChart';
 
 export function PriceChartContainer() {
+  const { t } = useLanguage();
   const activeBotInfoState = useAppSelector(selectActiveBotInfoState);
   const activeServer = useAppSelector(selectActiveServer);
   const [data, setData] = useState<PricePoint[]>([]);
   const [series, setSeries] = useState<PriceSeriesConfig[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const activeServerIpPort = useMemo(
     () => `${activeServer.ip}:${activeServer.port}`,
@@ -26,6 +29,7 @@ export function PriceChartContainer() {
     const load = async () => {
       try {
         setIsLoading(true);
+        setError(null);
         const jobParams = (activeBotInfoState.data?.jobParams as Record<string, unknown>) ?? {};
         const source = String(jobParams.source ?? '');
         const token0 = String(jobParams.token0 ?? '');
@@ -36,6 +40,7 @@ export function PriceChartContainer() {
         if (!source || !token0 || !token1) {
           setData([]);
           setSeries([]);
+          setError(t.botDetail.chartTab.missingJobParams);
           return;
         }
 
@@ -44,6 +49,7 @@ export function PriceChartContainer() {
         if (!found) {
           setData([]);
           setSeries([]);
+          setError(t.botDetail.chartTab.keysNotFound);
           return;
         }
 
@@ -126,20 +132,32 @@ export function PriceChartContainer() {
         });
 
         setData(merged);
+        if (merged.length === 0) {
+          setError(t.botDetail.chartTab.noHistoricalPoints);
+        }
+      } catch (e) {
+        const message = e instanceof Error ? e.message : t.botDetail.chartTab.loadError;
+        setError(message);
+        setData([]);
+        setSeries([]);
       } finally {
         setIsLoading(false);
       }
     };
 
     void load();
-  }, [activeBotInfoState.data, activeServerIpPort]);
+  }, [activeBotInfoState.data, activeServerIpPort, t.botDetail.chartTab.keysNotFound, t.botDetail.chartTab.loadError, t.botDetail.chartTab.missingJobParams, t.botDetail.chartTab.noHistoricalPoints]);
 
   if (isLoading) {
-    return <div className="h-full flex items-center justify-center text-gray-500">Loading chart...</div>;
+    return <div className="h-full flex items-center justify-center text-gray-500">{t.botDetail.chartTab.loading}</div>;
+  }
+
+  if (error) {
+    return <div className="h-full flex items-center justify-center text-red-600 px-6">{error}</div>;
   }
 
   if (series.length === 0) {
-    return <div className="h-full flex items-center justify-center text-gray-400">No chart data</div>;
+    return <div className="h-full flex items-center justify-center text-gray-400">{t.botDetail.chartTab.noData}</div>;
   }
 
   return (
