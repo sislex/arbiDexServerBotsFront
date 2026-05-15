@@ -14,6 +14,8 @@ import { PriceChart, type PricePoint } from './PriceChart';
 
 const FLUSH_INTERVAL = 500;
 const MAX_POINTS = 300;
+const MAX_RECONNECT_ATTEMPTS = 5;
+const RECONNECT_BASE_DELAY_MS = 1000;
 
 export function PriceChartLiveContainer() {
   const { t } = useLanguage();
@@ -23,9 +25,13 @@ export function PriceChartLiveContainer() {
   const [series, setSeries] = useState<PriceSeriesConfig[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hiddenKeys, setHiddenKeys] = useState<string[]>([]);
+  const [isReconnecting, setIsReconnecting] = useState(false);
 
   const socketRef = useRef<Socket | null>(null);
   const flushRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const reconnectAttemptRef = useRef(0);
   const keysRef = useRef<string[]>([]);
   const midKeyRef = useRef('');
   const isCexQuotesRef = useRef(false);
@@ -44,6 +50,9 @@ export function PriceChartLiveContainer() {
       }
       socketRef.current?.disconnect();
       socketRef.current = null;
+      if (reconnectTimerRef.current) {
+        clearTimeout(reconnectTimerRef.current);
+      }
     };
   }, []);
 
@@ -85,15 +94,19 @@ export function PriceChartLiveContainer() {
         midKeyRef.current = midKey;
 
         if (isCexQuotes) {
-          setSeries([
+          const nextSeries = [
             {
               key: midKey,
               name: `${source.charAt(0).toUpperCase() + source.slice(1)} ${symbol} Mid`,
               color: PRICE_COLORS[2],
             },
-          ]);
+          ];
+          setSeries(nextSeries);
+          setHiddenKeys((prev) => prev.filter((key) => nextSeries.some((item) => item.key === key)));
         } else {
-          setSeries(buildSeriesFromPipeKeys(pipeKeys));
+          const nextSeries = buildSeriesFromPipeKeys(pipeKeys);
+          setSeries(nextSeries);
+          setHiddenKeys((prev) => prev.filter((key) => nextSeries.some((item) => item.key === key)));
         }
 
         const responses = await Promise.all(
@@ -164,46 +177,77 @@ export function PriceChartLiveContainer() {
         lastKnownRef.current = lk;
         bufferRef.current = [];
 
-        socketRef.current?.disconnect();
-        socketRef.current = io(`http://${activeServerIpPort}/prices`, {
-          transports: ['websocket', 'polling'],
-        });
-        socketRef.current.on('connect', () => {
-          socketRef.current?.emit('subscribe', { keys: pipeKeys });
-        });
-        socketRef.current.on('connect_error', (e) => {
-          setError(`${t.botDetail.chartTab.socketErrorPrefix}: ${e.message}`);
-        });
-        socketRef.current.on('priceChange', (payload: { key: string; point: { t: number; v: number } }) => {
-          const stripped = payload.key.replace(/\|/g, '');
-          const key = keysRef.current.includes(payload.key)
-            ? payload.key
-            : keysRef.current.includes(stripped)
-              ? stripped
-              : null;
-          if (!key) {
-            return;
-          }
-          lastKnownRef.current[key] = payload.point.v;
+        const connectSocket = () => {
+          socketRef.current?.disconnect();
+          socketRef.current = io(`http://${activeServerIpPort}/prices`, {
+            transports: ['websocket', 'polling'],
+            reconnection: false,
+          });
 
-          const p: PricePoint = { time: payload.point.t };
-          if (isCexQuotesRef.current) {
-            const bid = lastKnownRef.current[keysRef.current[0]];
-            const ask = lastKnownRef.current[keysRef.current[1]];
-            if (bid !== undefined && ask !== undefined) {
-              p[midKeyRef.current] = (bid + ask) / 2;
+          socketRef.current.on('connect', () => {
+            reconnectAttemptRef.current = 0;
+            setIsReconnecting(false);
+            setError(null);
+            socketRef.current?.emit('subscribe', { keys: pipeKeys });
+          });
+
+          socketRef.current.on('disconnect', () => {
+            if (reconnectAttemptRef.current < MAX_RECONNECT_ATTEMPTS) {
+              reconnectAttemptRef.current += 1;
+              const delay = RECONNECT_BASE_DELAY_MS * 2 ** (reconnectAttemptRef.current - 1);
+              setIsReconnecting(true);
+              reconnectTimerRef.current = setTimeout(connectSocket, delay);
             } else {
+              setIsReconnecting(false);
+              setError(t.botDetail.chartTab.reconnectFailed);
+            }
+          });
+
+          socketRef.current.on('connect_error', (e) => {
+            if (reconnectAttemptRef.current < MAX_RECONNECT_ATTEMPTS) {
+              reconnectAttemptRef.current += 1;
+              const delay = RECONNECT_BASE_DELAY_MS * 2 ** (reconnectAttemptRef.current - 1);
+              setIsReconnecting(true);
+              reconnectTimerRef.current = setTimeout(connectSocket, delay);
+            } else {
+              setIsReconnecting(false);
+              setError(`${t.botDetail.chartTab.socketErrorPrefix}: ${e.message}`);
+            }
+          });
+
+          socketRef.current.on('priceChange', (payload: { key: string; point: { t: number; v: number } }) => {
+            const stripped = payload.key.replace(/\|/g, '');
+            const key = keysRef.current.includes(payload.key)
+              ? payload.key
+              : keysRef.current.includes(stripped)
+                ? stripped
+                : null;
+            if (!key) {
               return;
             }
-          } else {
-            keysRef.current.forEach((k) => {
-              if (lastKnownRef.current[k] !== undefined) {
-                p[k] = lastKnownRef.current[k];
+            lastKnownRef.current[key] = payload.point.v;
+
+            const p: PricePoint = { time: payload.point.t };
+            if (isCexQuotesRef.current) {
+              const bid = lastKnownRef.current[keysRef.current[0]];
+              const ask = lastKnownRef.current[keysRef.current[1]];
+              if (bid !== undefined && ask !== undefined) {
+                p[midKeyRef.current] = (bid + ask) / 2;
+              } else {
+                return;
               }
-            });
-          }
-          bufferRef.current.push(p);
-        });
+            } else {
+              keysRef.current.forEach((k) => {
+                if (lastKnownRef.current[k] !== undefined) {
+                  p[k] = lastKnownRef.current[k];
+                }
+              });
+            }
+            bufferRef.current.push(p);
+          });
+        };
+
+        connectSocket();
 
         if (flushRef.current) {
           clearInterval(flushRef.current);
@@ -249,7 +293,34 @@ export function PriceChartLiveContainer() {
 
   return (
     <div className="p-4 h-[calc(100vh-176px)]">
-      <PriceChart data={data} series={series} />
+      <div className="flex flex-wrap gap-2 mb-3">
+        {series.map((item) => {
+          const hidden = hiddenKeys.includes(item.key);
+          return (
+            <button
+              key={item.key}
+              onClick={() =>
+                setHiddenKeys((prev) =>
+                  prev.includes(item.key)
+                    ? prev.filter((key) => key !== item.key)
+                    : [...prev, item.key],
+                )
+              }
+              className={`px-2 py-1 text-xs rounded border ${
+                hidden
+                  ? 'bg-muted text-muted-foreground border-border'
+                  : 'bg-card text-foreground border-border'
+              }`}
+            >
+              {item.name}
+            </button>
+          );
+        })}
+      </div>
+      {isReconnecting ? (
+        <div className="text-xs text-warning mb-2">{t.botDetail.chartTab.reconnecting}</div>
+      ) : null}
+      <PriceChart data={data} series={series} hiddenKeys={hiddenKeys} />
     </div>
   );
 }

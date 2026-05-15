@@ -19,6 +19,7 @@ export function PriceChartContainer() {
   const [series, setSeries] = useState<PriceSeriesConfig[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hiddenKeys, setHiddenKeys] = useState<string[]>([]);
 
   const activeServerIpPort = useMemo(
     () => `${activeServer.ip}:${activeServer.port}`,
@@ -59,21 +60,23 @@ export function PriceChartContainer() {
         const midKey = `${source}${symbol}mid`;
 
         if (isCexQuotes) {
-          setSeries([
+          const nextSeries = [
             {
               key: midKey,
               name: `${source.charAt(0).toUpperCase() + source.slice(1)} ${symbol} Mid`,
               color: PRICE_COLORS[2],
             },
-          ]);
+          ];
+          setSeries(nextSeries);
+          setHiddenKeys((prev) => prev.filter((key) => nextSeries.some((item) => item.key === key)));
         } else {
-          setSeries(
-            pipeKeys.map((k, i) => ({
-              key: flatKeys[i],
-              name: formatPipeKeyName(k),
-              color: PRICE_COLORS[i % PRICE_COLORS.length],
-            })),
-          );
+          const nextSeries = pipeKeys.map((k, i) => ({
+            key: flatKeys[i],
+            name: formatPipeKeyName(k),
+            color: PRICE_COLORS[i % PRICE_COLORS.length],
+          }));
+          setSeries(nextSeries);
+          setHiddenKeys((prev) => prev.filter((key) => nextSeries.some((item) => item.key === key)));
         }
 
         const responses = await Promise.all(
@@ -162,7 +165,31 @@ export function PriceChartContainer() {
 
   return (
     <div className="p-4 h-[calc(100vh-176px)]">
-      <PriceChart data={data} series={series} />
+      <div className="flex flex-wrap gap-2 mb-3">
+        {series.map((item) => {
+          const hidden = hiddenKeys.includes(item.key);
+          return (
+            <button
+              key={item.key}
+              onClick={() =>
+                setHiddenKeys((prev) =>
+                  prev.includes(item.key)
+                    ? prev.filter((key) => key !== item.key)
+                    : [...prev, item.key],
+                )
+              }
+              className={`px-2 py-1 text-xs rounded border ${
+                hidden
+                  ? 'bg-muted text-muted-foreground border-border'
+                  : 'bg-card text-foreground border-border'
+              }`}
+            >
+              {item.name}
+            </button>
+          );
+        })}
+      </div>
+      <PriceChart data={data} series={series} hiddenKeys={hiddenKeys} />
     </div>
   );
 }
