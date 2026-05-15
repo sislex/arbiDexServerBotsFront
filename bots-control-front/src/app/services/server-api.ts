@@ -69,6 +69,17 @@ export const serverApi = {
     return request<Record<string, unknown>[]>(activeServer, `/bot/${botId}/arbitrage`);
   },
 
+  getPriceKeys(activeServer: string): Promise<string[]> {
+    return request<string[]>(activeServer, '/prices/keys');
+  },
+
+  getPriceByKey(
+    activeServer: string,
+    key: string,
+  ): Promise<{ key: string; points: { t: number; v: number }[]; count: number; last: { t: number; v: number } }> {
+    return request(activeServer, `/prices/key/${encodeURIComponent(key)}`);
+  },
+
   setBotPause(activeServer: string, botId: string, pause: boolean): Promise<Record<string, unknown>> {
     return request<Record<string, unknown>>(activeServer, `/bot/${botId}/pause`, {
       method: 'POST',

@@ -1,0 +1,150 @@
+import { useEffect, useMemo, useState } from 'react';
+import { serverApi } from '../../services/server-api';
+import {
+  findPriceKeys,
+  formatPipeKeyName,
+  PRICE_COLORS,
+  type PriceSeriesConfig,
+} from '../../services/price-key-utils';
+import { useAppSelector } from '../../store/hooks';
+import { selectActiveBotInfoState, selectActiveServer } from '../../store/selectors';
+import { PriceChart, type PricePoint } from './PriceChart';
+
+export function PriceChartContainer() {
+  const activeBotInfoState = useAppSelector(selectActiveBotInfoState);
+  const activeServer = useAppSelector(selectActiveServer);
+  const [data, setData] = useState<PricePoint[]>([]);
+  const [series, setSeries] = useState<PriceSeriesConfig[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const activeServerIpPort = useMemo(
+    () => `${activeServer.ip}:${activeServer.port}`,
+    [activeServer.ip, activeServer.port],
+  );
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        setIsLoading(true);
+        const jobParams = (activeBotInfoState.data?.jobParams as Record<string, unknown>) ?? {};
+        const source = String(jobParams.source ?? '');
+        const token0 = String(jobParams.token0 ?? '');
+        const token1 = String(jobParams.token1 ?? '');
+        const jobType = String(jobParams.jobType ?? '');
+        const isCexQuotes = jobType === 'get_Cex_Quotes';
+
+        if (!source || !token0 || !token1) {
+          setData([]);
+          setSeries([]);
+          return;
+        }
+
+        const allKeys = await serverApi.getPriceKeys(activeServerIpPort);
+        const found = findPriceKeys(allKeys, source, token0, token1);
+        if (!found) {
+          setData([]);
+          setSeries([]);
+          return;
+        }
+
+        const pipeKeys = [found.bidKey, found.askKey];
+        const flatKeys = pipeKeys.map((k) => k.replace(/\|/g, ''));
+        const symbol = found.bidKey.split('|')[1];
+        const midKey = `${source}${symbol}mid`;
+
+        if (isCexQuotes) {
+          setSeries([
+            {
+              key: midKey,
+              name: `${source.charAt(0).toUpperCase() + source.slice(1)} ${symbol} Mid`,
+              color: PRICE_COLORS[2],
+            },
+          ]);
+        } else {
+          setSeries(
+            pipeKeys.map((k, i) => ({
+              key: flatKeys[i],
+              name: formatPipeKeyName(k),
+              color: PRICE_COLORS[i % PRICE_COLORS.length],
+            })),
+          );
+        }
+
+        const responses = await Promise.all(
+          pipeKeys.map(async (pipeKey) => {
+            const result = await serverApi.getPriceByKey(activeServerIpPort, pipeKey);
+            return { flatKey: pipeKey.replace(/\|/g, ''), result };
+          }),
+        );
+
+        const responseMap = Object.fromEntries(
+          responses.map((item) => [item.flatKey, item.result]),
+        ) as Record<string, { points: { t: number; v: number }[] }>;
+
+        const timeSet = new Set<number>();
+        Object.values(responseMap).forEach((res) => {
+          res.points.forEach((p) => timeSet.add(p.t));
+        });
+        const times = Array.from(timeSet).sort((a, b) => a - b);
+
+        const sorted: Record<string, { t: number; v: number }[]> = {};
+        Object.entries(responseMap).forEach(([key, res]) => {
+          sorted[key] = [...res.points].sort((a, b) => a.t - b.t);
+        });
+
+        const lastKnown: Record<string, number | undefined> = {};
+        const cursors: Record<string, number> = {};
+        flatKeys.forEach((key) => {
+          cursors[key] = 0;
+        });
+
+        const merged = times.map((t) => {
+          const point: PricePoint = { time: t };
+          flatKeys.forEach((key) => {
+            const pts = sorted[key] ?? [];
+            while (cursors[key] < pts.length && pts[cursors[key]].t <= t) {
+              lastKnown[key] = pts[cursors[key]].v;
+              cursors[key] += 1;
+            }
+          });
+
+          if (isCexQuotes) {
+            const bid = lastKnown[flatKeys[0]];
+            const ask = lastKnown[flatKeys[1]];
+            if (bid !== undefined && ask !== undefined) {
+              point[midKey] = (bid + ask) / 2;
+            }
+          } else {
+            flatKeys.forEach((key) => {
+              if (lastKnown[key] !== undefined) {
+                point[key] = lastKnown[key] as number;
+              }
+            });
+          }
+
+          return point;
+        });
+
+        setData(merged);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void load();
+  }, [activeBotInfoState.data, activeServerIpPort]);
+
+  if (isLoading) {
+    return <div className="h-full flex items-center justify-center text-gray-500">Loading chart...</div>;
+  }
+
+  if (series.length === 0) {
+    return <div className="h-full flex items-center justify-center text-gray-400">No chart data</div>;
+  }
+
+  return (
+    <div className="p-4 h-[calc(100vh-176px)]">
+      <PriceChart data={data} series={series} />
+    </div>
+  );
+}

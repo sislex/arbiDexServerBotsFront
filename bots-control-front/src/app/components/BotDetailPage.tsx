@@ -5,6 +5,8 @@ import { BotControlTab } from './BotControlTab';
 import { BotArbitrageTab } from './BotArbitrageTab';
 import { BotErrorsTab } from './BotErrorsTab';
 import { BotJobTab } from './BotJobTab';
+import { PriceChartContainer } from './charts/PriceChartContainer';
+import { PriceChartLiveContainer } from './charts/PriceChartLiveContainer';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectActiveBotArbitrageState } from '../store/selectors';
 import { clearActiveBotData, loadActiveBotAll } from '../store/slices/servers-slice';
@@ -39,16 +41,8 @@ export function BotDetailPage({ botId, onBack }: BotDetailPageProps) {
       {activeSubTab === 'arbitrage' && <BotArbitrageTab />}
       {activeSubTab === 'errors' && <BotErrorsTab />}
       {activeSubTab === 'job' && <BotJobTab botId={botId} />}
-      {activeSubTab === 'chart' && (
-        <div className="flex-1 flex items-center justify-center text-gray-400">
-          Chart view - Coming soon
-        </div>
-      )}
-      {activeSubTab === 'live-chart' && (
-        <div className="flex-1 flex items-center justify-center text-gray-400">
-          Live chart view - Coming soon
-        </div>
-      )}
+      {activeSubTab === 'chart' && <PriceChartContainer />}
+      {activeSubTab === 'live-chart' && <PriceChartLiveContainer />}
     </div>
   );
 }

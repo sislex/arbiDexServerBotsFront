@@ -16,6 +16,7 @@ interface BotRow {
   errors: number;
   avgReqTime: string;
   lastReqTime: string;
+  isRunning: boolean;
   status: string;
 }
 
@@ -48,6 +49,7 @@ export function BotsTab({ onBotSelect }: BotsTabProps) {
     errors: Number(item.errorCount ?? 0),
     avgReqTime: `${Number((item as Record<string, unknown>).averageLatency ?? item.lastLatency ?? 0)}ms`,
     lastReqTime: `${Number(item.lastLatency ?? 0)}ms`,
+    isRunning: String(item.status ?? 'pause') === 'active',
     status: String(item.status ?? 'pause'),
   }));
 
@@ -65,6 +67,19 @@ export function BotsTab({ onBotSelect }: BotsTabProps) {
     { field: 'errors', headerName: t.botsTab.table.errors, minWidth: 100 },
     { field: 'avgReqTime', headerName: t.botsTab.table.avgRequestTime, minWidth: 160 },
     { field: 'lastReqTime', headerName: t.botsTab.table.lastRequestTime, minWidth: 160 },
+    {
+      field: 'isRunning',
+      headerName: 'Active',
+      minWidth: 120,
+      cellRenderer: (params: { value: boolean }) => {
+        const running = Boolean(params.value);
+        return (
+          <span className={running ? 'text-green-600 text-sm' : 'text-gray-500 text-sm'}>
+            {running ? 'Running' : 'Stopped'}
+          </span>
+        );
+      },
+    },
     {
       field: 'status',
       headerName: t.botsTab.table.status,
