@@ -1,0 +1,313 @@
+import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
+import { serverApi } from '../../services/server-api';
+import { DEFAULT_SERVER_LIST } from '../constants';
+import { createAsyncState } from '../utils';
+import type {
+  ServerItem,
+  ServerData,
+  TypeListItem,
+  BotControlItem,
+  RuleItem,
+  BotInfo,
+  AsyncState,
+} from '../types';
+
+interface ServersState {
+  serverList: ServerItem[];
+  activeServer: ServerItem;
+  serverData: AsyncState<ServerData | null>;
+  botTypes: AsyncState<TypeListItem[]>;
+  jobTypes: AsyncState<TypeListItem[]>;
+  botControlList: AsyncState<BotControlItem[]>;
+  rulesList: AsyncState<RuleItem[]>;
+  activeBotInfo: AsyncState<BotInfo | null>;
+  activeBotParams: AsyncState<Record<string, unknown> | null>;
+  activeBotErrors: AsyncState<Record<string, unknown>[]>;
+  activeBotArbitrage: AsyncState<Record<string, unknown>[]>;
+  botControlAction: AsyncState<Record<string, unknown> | null>;
+}
+
+const initialServer = DEFAULT_SERVER_LIST[1] ?? DEFAULT_SERVER_LIST[0];
+
+const initialState: ServersState = {
+  serverList: DEFAULT_SERVER_LIST,
+  activeServer: initialServer,
+  serverData: createAsyncState<ServerData | null>(null),
+  botTypes: createAsyncState<TypeListItem[]>([]),
+  jobTypes: createAsyncState<TypeListItem[]>([]),
+  botControlList: createAsyncState<BotControlItem[]>([]),
+  rulesList: createAsyncState<RuleItem[]>([]),
+  activeBotInfo: createAsyncState<BotInfo | null>(null),
+  activeBotParams: createAsyncState<Record<string, unknown> | null>(null),
+  activeBotErrors: createAsyncState<Record<string, unknown>[]>([]),
+  activeBotArbitrage: createAsyncState<Record<string, unknown>[]>([]),
+  botControlAction: createAsyncState<Record<string, unknown> | null>(null),
+};
+
+const getActiveServerKey = (state: { servers: ServersState }) =>
+  `${state.servers.activeServer.ip}:${state.servers.activeServer.port}`;
+
+export const loadServerData = createAsyncThunk(
+  'servers/loadServerData',
+  async (_, { getState }) => {
+    const response = await serverApi.getServerInfo(
+      getActiveServerKey(getState() as { servers: ServersState }),
+    );
+    return response;
+  },
+);
+
+export const loadBotTypes = createAsyncThunk('servers/loadBotTypes', async (_, { getState }) => {
+  return serverApi.getBotTypes(getActiveServerKey(getState() as { servers: ServersState }));
+});
+
+export const loadJobTypes = createAsyncThunk('servers/loadJobTypes', async (_, { getState }) => {
+  return serverApi.getJobTypes(getActiveServerKey(getState() as { servers: ServersState }));
+});
+
+export const loadBotControlList = createAsyncThunk(
+  'servers/loadBotControlList',
+  async (_, { getState }) => {
+    const items = await serverApi.getBots(getActiveServerKey(getState() as { servers: ServersState }));
+    if (!Array.isArray(items)) {
+      return [];
+    }
+
+    return items.map((item) => ({
+      ...item,
+      status: item.running ? 'active' : 'pause',
+    }));
+  },
+);
+
+export const loadRulesList = createAsyncThunk('servers/loadRulesList', async (_, { getState }) => {
+  return serverApi.getRules(getActiveServerKey(getState() as { servers: ServersState }));
+});
+
+export const loadActiveBotAll = createAsyncThunk(
+  'servers/loadActiveBotAll',
+  async (botId: string, { getState }) => {
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
+    const [info, params, errors, arbitrage] = await Promise.all([
+      serverApi.getBotInfo(activeServer, botId),
+      serverApi.getBotParams(activeServer, botId),
+      serverApi.getBotErrors(activeServer, botId),
+      serverApi.getBotArbitrage(activeServer, botId),
+    ]);
+
+    return { info, params, errors, arbitrage };
+  },
+);
+
+export const setBotPaused = createAsyncThunk(
+  'servers/setBotPaused',
+  async ({ botId, pause }: { botId: string; pause: boolean }, { getState, dispatch }) => {
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
+    const response = await serverApi.setBotPause(activeServer, botId, pause);
+    await dispatch(loadActiveBotAll(botId));
+    await dispatch(loadBotControlList());
+    return response;
+  },
+);
+
+export const restartBot = createAsyncThunk(
+  'servers/restartBot',
+  async (botId: string, { getState, dispatch }) => {
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
+    const response = await serverApi.restartBot(activeServer, botId);
+    await dispatch(loadActiveBotAll(botId));
+    await dispatch(loadBotControlList());
+    return response;
+  },
+);
+
+export const saveBotSettings = createAsyncThunk(
+  'servers/saveBotSettings',
+  async ({ botId, data }: { botId: string; data: string }, { getState, dispatch }) => {
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
+    const response = await serverApi.setBotSettings(activeServer, botId, data);
+    await dispatch(loadActiveBotAll(botId));
+    return response;
+  },
+);
+
+const serversSlice = createSlice({
+  name: 'servers',
+  initialState,
+  reducers: {
+    setActiveServer(state, action: PayloadAction<ServerItem>) {
+      state.activeServer = action.payload;
+    },
+    clearActiveBotData(state) {
+      state.activeBotInfo = createAsyncState<BotInfo | null>(null);
+      state.activeBotParams = createAsyncState<Record<string, unknown> | null>(null);
+      state.activeBotErrors = createAsyncState<Record<string, unknown>[]>([]);
+      state.activeBotArbitrage = createAsyncState<Record<string, unknown>[]>([]);
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loadServerData.pending, (state) => {
+        state.serverData.isLoading = true;
+        state.serverData.error = null;
+      })
+      .addCase(loadServerData.fulfilled, (state, action) => {
+        state.serverData.isLoading = false;
+        state.serverData.isLoaded = true;
+        state.serverData.data = action.payload;
+      })
+      .addCase(loadServerData.rejected, (state, action) => {
+        state.serverData.isLoading = false;
+        state.serverData.isLoaded = true;
+        state.serverData.error = action.error.message ?? 'Failed to load server data';
+      })
+      .addCase(loadBotTypes.pending, (state) => {
+        state.botTypes.isLoading = true;
+        state.botTypes.error = null;
+      })
+      .addCase(loadBotTypes.fulfilled, (state, action) => {
+        state.botTypes.isLoading = false;
+        state.botTypes.isLoaded = true;
+        state.botTypes.data = action.payload ?? [];
+      })
+      .addCase(loadBotTypes.rejected, (state, action) => {
+        state.botTypes.isLoading = false;
+        state.botTypes.isLoaded = true;
+        state.botTypes.error = action.error.message ?? 'Failed to load bot types';
+      })
+      .addCase(loadJobTypes.pending, (state) => {
+        state.jobTypes.isLoading = true;
+        state.jobTypes.error = null;
+      })
+      .addCase(loadJobTypes.fulfilled, (state, action) => {
+        state.jobTypes.isLoading = false;
+        state.jobTypes.isLoaded = true;
+        state.jobTypes.data = action.payload ?? [];
+      })
+      .addCase(loadJobTypes.rejected, (state, action) => {
+        state.jobTypes.isLoading = false;
+        state.jobTypes.isLoaded = true;
+        state.jobTypes.error = action.error.message ?? 'Failed to load job types';
+      })
+      .addCase(loadBotControlList.pending, (state) => {
+        state.botControlList.isLoading = true;
+        state.botControlList.error = null;
+      })
+      .addCase(loadBotControlList.fulfilled, (state, action) => {
+        state.botControlList.isLoading = false;
+        state.botControlList.isLoaded = true;
+        state.botControlList.data = action.payload;
+      })
+      .addCase(loadBotControlList.rejected, (state, action) => {
+        state.botControlList.isLoading = false;
+        state.botControlList.isLoaded = true;
+        state.botControlList.error = action.error.message ?? 'Failed to load bots';
+      })
+      .addCase(loadRulesList.pending, (state) => {
+        state.rulesList.isLoading = true;
+        state.rulesList.error = null;
+      })
+      .addCase(loadRulesList.fulfilled, (state, action) => {
+        state.rulesList.isLoading = false;
+        state.rulesList.isLoaded = true;
+        state.rulesList.data = action.payload ?? [];
+      })
+      .addCase(loadRulesList.rejected, (state, action) => {
+        state.rulesList.isLoading = false;
+        state.rulesList.isLoaded = true;
+        state.rulesList.error = action.error.message ?? 'Failed to load rules';
+      })
+      .addCase(loadActiveBotAll.pending, (state) => {
+        state.activeBotInfo.isLoading = true;
+        state.activeBotParams.isLoading = true;
+        state.activeBotErrors.isLoading = true;
+        state.activeBotArbitrage.isLoading = true;
+
+        state.activeBotInfo.error = null;
+        state.activeBotParams.error = null;
+        state.activeBotErrors.error = null;
+        state.activeBotArbitrage.error = null;
+      })
+      .addCase(loadActiveBotAll.fulfilled, (state, action) => {
+        state.activeBotInfo.isLoading = false;
+        state.activeBotInfo.isLoaded = true;
+        state.activeBotInfo.data = action.payload.info;
+
+        state.activeBotParams.isLoading = false;
+        state.activeBotParams.isLoaded = true;
+        state.activeBotParams.data = action.payload.params;
+
+        state.activeBotErrors.isLoading = false;
+        state.activeBotErrors.isLoaded = true;
+        state.activeBotErrors.data = action.payload.errors ?? [];
+
+        state.activeBotArbitrage.isLoading = false;
+        state.activeBotArbitrage.isLoaded = true;
+        state.activeBotArbitrage.data = action.payload.arbitrage ?? [];
+      })
+      .addCase(loadActiveBotAll.rejected, (state, action) => {
+        const message = action.error.message ?? 'Failed to load bot details';
+
+        state.activeBotInfo.isLoading = false;
+        state.activeBotInfo.isLoaded = true;
+        state.activeBotInfo.error = message;
+
+        state.activeBotParams.isLoading = false;
+        state.activeBotParams.isLoaded = true;
+        state.activeBotParams.error = message;
+
+        state.activeBotErrors.isLoading = false;
+        state.activeBotErrors.isLoaded = true;
+        state.activeBotErrors.error = message;
+
+        state.activeBotArbitrage.isLoading = false;
+        state.activeBotArbitrage.isLoaded = true;
+        state.activeBotArbitrage.error = message;
+      })
+      .addCase(setBotPaused.pending, (state) => {
+        state.botControlAction.isLoading = true;
+        state.botControlAction.error = null;
+      })
+      .addCase(setBotPaused.fulfilled, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.data = action.payload;
+      })
+      .addCase(setBotPaused.rejected, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.error = action.error.message ?? 'Failed to set bot pause state';
+      })
+      .addCase(restartBot.pending, (state) => {
+        state.botControlAction.isLoading = true;
+        state.botControlAction.error = null;
+      })
+      .addCase(restartBot.fulfilled, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.data = action.payload;
+      })
+      .addCase(restartBot.rejected, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.error = action.error.message ?? 'Failed to restart bot';
+      })
+      .addCase(saveBotSettings.pending, (state) => {
+        state.botControlAction.isLoading = true;
+        state.botControlAction.error = null;
+      })
+      .addCase(saveBotSettings.fulfilled, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.data = action.payload;
+      })
+      .addCase(saveBotSettings.rejected, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.error = action.error.message ?? 'Failed to save bot settings';
+      });
+  },
+});
+
+export const { setActiveServer, clearActiveBotData } = serversSlice.actions;
+export const serversReducer = serversSlice.reducer;
