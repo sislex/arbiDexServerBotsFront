@@ -35,7 +35,7 @@ export function AppGrid<T extends object>({
   );
 
   return (
-    <div className={`ag-theme-alpine w-full h-full ${className ?? ''}`}>
+    <div className={`ag-theme-alpine arb-dex-grid w-full h-full ${className ?? ''}`}>
       <AgGridReact<T>
         rowData={rowData}
         columnDefs={columnDefs}

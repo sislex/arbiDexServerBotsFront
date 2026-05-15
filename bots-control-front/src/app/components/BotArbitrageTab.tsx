@@ -46,19 +46,19 @@ export function BotArbitrageTab() {
   ];
 
   return (
-    <div className="p-6 h-[calc(100vh-176px)] flex flex-col">
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden flex-1">
+    <div className="p-4 h-[calc(100vh-122px)] flex flex-col">
+      <div className="bg-card border border-border rounded overflow-hidden flex-1">
         {arbitrageState.error ? (
-          <div className="p-4 text-sm text-red-600">{arbitrageState.error}</div>
+          <div className="p-4 text-sm text-destructive">{arbitrageState.error}</div>
         ) : rows.length === 0 ? (
-          <div className="h-full flex items-center justify-center text-gray-400 text-lg">
+          <div className="h-full flex items-center justify-center text-muted-foreground text-lg">
             {t.botDetail.arbitrageTab.noData}
           </div>
         ) : (
           <AppGrid<ArbitrageRow> rowData={rows} columnDefs={colDefs} className="h-full" />
         )}
       </div>
-      {arbitrageState.isLoading && <div className="text-sm text-gray-500 mt-2">Loading...</div>}
+      {arbitrageState.isLoading && <div className="text-sm text-muted-foreground mt-2">Loading...</div>}
     </div>
   );
 }

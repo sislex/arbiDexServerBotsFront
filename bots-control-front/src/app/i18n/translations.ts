@@ -1,5 +1,15 @@
 export const translations = {
   en: {
+    auth: {
+      title: 'Crypto Arbitrage',
+      subtitle: 'Bots Control',
+      login: 'Login',
+      password: 'Password',
+      loginPlaceholder: 'Enter login',
+      passwordPlaceholder: 'Enter password',
+      signIn: 'Sign In',
+      invalidCredentials: 'Enter login and password'
+    },
     header: {
       title: 'SERVER MANAGER',
       language: 'Language',
@@ -20,6 +30,10 @@ export const translations = {
     botsTab: {
       title: 'Bots info',
       apiInfo: 'API info',
+      startAll: 'Start all',
+      stopAll: 'Stop all',
+      restartAll: 'Restart all',
+      applyingAll: 'Applying action to all bots...',
       active: 'Active',
       running: 'Running',
       stopped: 'Stopped',
@@ -180,6 +194,16 @@ export const translations = {
     }
   },
   ru: {
+    auth: {
+      title: 'Crypto Arbitrage',
+      subtitle: 'Управление ботами',
+      login: 'Логин',
+      password: 'Пароль',
+      loginPlaceholder: 'Введите логин',
+      passwordPlaceholder: 'Введите пароль',
+      signIn: 'Войти',
+      invalidCredentials: 'Введите логин и пароль'
+    },
     header: {
       title: 'МЕНЕДЖЕР СЕРВЕРОВ',
       language: 'Язык',
@@ -200,6 +224,10 @@ export const translations = {
     botsTab: {
       title: 'Информация о ботах',
       apiInfo: 'Информация API',
+      startAll: 'Старт всех',
+      stopAll: 'Стоп всех',
+      restartAll: 'Перезапуск всех',
+      applyingAll: 'Применение действия ко всем ботам...',
       active: 'Активность',
       running: 'Запущен',
       stopped: 'Остановлен',

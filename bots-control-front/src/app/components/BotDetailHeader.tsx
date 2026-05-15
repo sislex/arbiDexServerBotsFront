@@ -9,15 +9,15 @@ export function BotDetailHeader({ botId, onBack }: BotDetailHeaderProps) {
   const { t } = useLanguage();
 
   return (
-    <header className="bg-white border-b border-gray-200 px-6 py-4">
-      <div className="flex items-center justify-between">
+    <header className="h-14 bg-card border-b border-border px-4">
+      <div className="h-full flex items-center justify-between">
         <button
           onClick={onBack}
-          className="text-blue-600 hover:text-blue-700 text-sm"
+          className="text-primary hover:opacity-80 text-sm transition-opacity"
         >
           ← {t.tabs.bots}
         </button>
-        <h1 className="text-2xl text-gray-900 absolute left-1/2 -translate-x-1/2">{botId}</h1>
+        <h1 className="text-foreground absolute left-1/2 -translate-x-1/2">{botId}</h1>
         <div className="w-20"></div>
       </div>
     </header>

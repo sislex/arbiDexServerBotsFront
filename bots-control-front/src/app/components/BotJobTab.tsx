@@ -81,16 +81,16 @@ export function BotJobTab({ botId }: BotJobTabProps) {
   };
 
   return (
-    <div className="p-6 h-[calc(100vh-176px)]">
-      <h3 className="text-lg text-gray-900 mb-4">{t.botDetail.jobTab.title}</h3>
+    <div className="p-4 h-[calc(100vh-122px)]">
+      <h3 className="text-sm text-foreground mb-2">{t.botDetail.jobTab.title}</h3>
 
-      <div className="flex gap-6 h-[calc(100%-48px)]">
+      <div className="flex gap-4 h-[calc(100%-28px)]">
         {/* Code Editor */}
         <div className="flex-1">
           <textarea
             value={jobConfig}
             onChange={(e) => setJobConfig(e.target.value)}
-            className="w-full h-full bg-gray-900 text-gray-100 rounded-lg p-4 text-sm font-mono resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full h-full bg-muted text-foreground border border-border rounded p-4 text-sm font-mono resize-none focus:outline-none focus:ring-1 focus:ring-primary"
             spellCheck={false}
           />
         </div>
@@ -99,28 +99,28 @@ export function BotJobTab({ botId }: BotJobTabProps) {
         <div className="flex flex-col justify-end gap-3">
           <button
             onClick={handleSave}
-            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-success text-success-foreground rounded hover:opacity-90 transition-opacity"
           >
             <Plus size={18} />
             <span>{t.botDetail.jobTab.launch}</span>
           </button>
           <button
             onClick={handleRerun}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded hover:opacity-90 transition-opacity"
           >
             <RotateCw size={18} />
             <span>{t.botDetail.jobTab.rerun}</span>
           </button>
           <button
             onClick={handleReset}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-muted text-foreground rounded hover:bg-accent transition-colors"
           >
             <RotateCcw size={18} />
             <span>{t.botDetail.jobTab.return}</span>
           </button>
           <button
             onClick={handleDelete}
-            className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-destructive text-destructive-foreground rounded hover:opacity-90 transition-opacity"
           >
             <Trash2 size={18} />
             <span>{t.botDetail.jobTab.delete}</span>
@@ -128,10 +128,10 @@ export function BotJobTab({ botId }: BotJobTabProps) {
         </div>
       </div>
       {botControlActionState.error && (
-        <div className="text-sm text-red-600 mt-2">{botControlActionState.error}</div>
+        <div className="text-sm text-destructive mt-2">{botControlActionState.error}</div>
       )}
       {botControlActionState.isLoading && (
-        <div className="text-sm text-gray-500 mt-2">{t.botDetail.jobTab.saving}</div>
+        <div className="text-sm text-muted-foreground mt-2">{t.botDetail.jobTab.saving}</div>
       )}
     </div>
   );

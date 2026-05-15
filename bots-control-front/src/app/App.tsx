@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Tabs } from './components/Tabs';
@@ -6,6 +6,7 @@ import { BotsTab } from './components/BotsTab';
 import { RulesTab } from './components/RulesTab';
 import { ServerDataTab } from './components/ServerDataTab';
 import { BotDetailPage } from './components/BotDetailPage';
+import { LoginForm } from './components/LoginForm';
 import { LanguageProvider } from './i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import {
@@ -56,6 +57,10 @@ function MainLayout() {
   };
 
   useEffect(() => {
+    document.documentElement.classList.add('dark');
+  }, []);
+
+  useEffect(() => {
     dispatch(loadServersFromDb());
   }, [dispatch]);
 
@@ -84,8 +89,11 @@ function MainLayout() {
   };
 
   return (
-    <div className="size-full flex flex-col bg-gray-50">
-      <Header />
+    <div className="size-full flex flex-col bg-background text-foreground">
+      <Header onLogout={() => {
+        sessionStorage.removeItem('bots-control-auth-user');
+        window.location.reload();
+      }} />
       <Tabs
         activeTab={activeTab}
         onTabChange={(tab) => {
@@ -123,10 +131,16 @@ function BotPageRoute() {
   }, [dispatch, ipPort]);
 
   return (
-    <BotDetailPage
-      botId={botId}
-      onBack={() => navigate(`/server/${ipPort}/tab/bots`)}
-    />
+    <div className="size-full flex flex-col bg-background text-foreground">
+      <Header onLogout={() => {
+        sessionStorage.removeItem('bots-control-auth-user');
+        window.location.reload();
+      }} />
+      <BotDetailPage
+        botId={botId}
+        onBack={() => navigate(`/server/${ipPort}/tab/bots`)}
+      />
+    </div>
   );
 }
 
@@ -148,6 +162,21 @@ function TabRouteSync() {
 }
 
 export default function App() {
+  const [authUser, setAuthUser] = useState(() => sessionStorage.getItem('bots-control-auth-user'));
+
+  if (!authUser) {
+    return (
+      <LanguageProvider>
+        <LoginForm
+          onLogin={(login) => {
+            sessionStorage.setItem('bots-control-auth-user', login);
+            setAuthUser(login);
+          }}
+        />
+      </LanguageProvider>
+    );
+  }
+
   return (
     <LanguageProvider>
       <Routes>

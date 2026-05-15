@@ -133,14 +133,14 @@ export function BotControlTab({ botId }: BotControlTabProps) {
 
   return (
     <>
-      <div className="p-6 space-y-6 overflow-auto h-[calc(100vh-176px)]">
+      <div className="p-4 space-y-4 overflow-auto h-[calc(100vh-122px)]">
         {/* Bot Control Panel */}
         <div>
-          <h3 className="text-lg text-gray-900 mb-4">{t.botDetail.controlTab.title}</h3>
-          <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <h3 className="text-sm text-foreground mb-2">{t.botDetail.controlTab.title}</h3>
+          <div className="bg-card border border-border rounded overflow-hidden">
             <div className="flex items-center px-6 py-4 gap-4">
               {/* ID Cell */}
-              <div className="text-sm text-gray-600 min-w-[80px]">ID: {botId}</div>
+              <div className="text-sm text-muted-foreground min-w-[80px]">ID: {botId}</div>
 
               {/* Status/Start Button */}
               <button
@@ -148,12 +148,12 @@ export function BotControlTab({ botId }: BotControlTabProps) {
                 disabled={isRunning}
                 className={`flex items-center gap-2 px-4 py-2 rounded transition-colors ${
                   isRunning
-                    ? 'bg-green-50 text-green-700 cursor-default'
-                    : 'bg-gray-100 text-gray-700 hover:bg-green-50 hover:text-green-700'
+                    ? 'bg-success/20 text-success cursor-default'
+                    : 'bg-muted text-foreground hover:bg-success/20 hover:text-success'
                 }`}
               >
-                <Circle size={8} className={isRunning ? 'fill-green-500 text-green-500' : 'fill-gray-400 text-gray-400'} />
-                <Play size={14} className={isRunning ? 'fill-green-700' : ''} />
+                <Circle size={8} className={isRunning ? 'fill-success text-success' : 'fill-muted-foreground text-muted-foreground'} />
+                <Play size={14} className={isRunning ? 'fill-success' : ''} />
                 <span className="text-sm">{t.botDetail.controlTab.status}</span>
               </button>
 
@@ -163,8 +163,8 @@ export function BotControlTab({ botId }: BotControlTabProps) {
                 disabled={!isRunning}
                 className={`p-2.5 rounded transition-colors ${
                   !isRunning
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                    ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                    : 'bg-muted hover:bg-accent text-foreground'
                 }`}
                 title={t.botDetail.controlTab.pause}
               >
@@ -179,8 +179,8 @@ export function BotControlTab({ botId }: BotControlTabProps) {
                 onClick={() => dispatch(setBotSendData({ botId, isSendData: !isSendData }))}
                 className={`flex items-center gap-2 px-3 py-2 rounded transition-colors ${
                   isSendData
-                    ? 'bg-blue-50 text-blue-700'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    ? 'bg-primary/15 text-primary'
+                    : 'bg-muted text-muted-foreground hover:bg-accent'
                 }`}
                 title={isSendData ? t.botDetail.controlTab.sendDataDisable : t.botDetail.controlTab.sendDataEnable}
               >
@@ -193,7 +193,7 @@ export function BotControlTab({ botId }: BotControlTabProps) {
               {/* Restart Button */}
               <button
                 onClick={() => dispatch(restartBot(botId))}
-                className="p-2.5 rounded bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors"
+                className="p-2.5 rounded bg-muted hover:bg-accent text-foreground transition-colors"
                 title={t.botDetail.controlTab.restart}
               >
                 <RotateCw size={18} />
@@ -202,7 +202,7 @@ export function BotControlTab({ botId }: BotControlTabProps) {
               {/* Edit Button */}
               <button
                 onClick={handleEditClick}
-                className="p-2.5 rounded bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors"
+                className="p-2.5 rounded bg-primary/15 hover:bg-primary/25 text-primary transition-colors"
                 title={t.botDetail.controlTab.edit}
               >
                 <Pencil size={18} />
@@ -213,22 +213,22 @@ export function BotControlTab({ botId }: BotControlTabProps) {
 
         {/* Results Table */}
         <div>
-          <h3 className="text-lg text-gray-900 mb-4">{t.botDetail.controlTab.results}</h3>
-          <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <h3 className="text-sm text-foreground mb-2">{t.botDetail.controlTab.results}</h3>
+          <div className="bg-card border border-border rounded overflow-hidden">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-muted border-b border-border">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs text-gray-600 w-1/3">{t.botDetail.controlTab.parameter}</th>
-                  <th className="px-4 py-3 text-left text-xs text-gray-600">{t.botDetail.controlTab.value}</th>
+                  <th className="px-4 py-3 text-left text-xs text-muted-foreground w-1/3">{t.botDetail.controlTab.parameter}</th>
+                  <th className="px-4 py-3 text-left text-xs text-muted-foreground">{t.botDetail.controlTab.value}</th>
                 </tr>
               </thead>
               <tbody>
                 {parameters.map((param) => (
-                  <tr key={param.name} className="border-b border-gray-100 last:border-b-0">
-                    <td className="px-4 py-3 text-sm text-gray-600">{param.name}</td>
-                    <td className="px-4 py-3 text-sm text-gray-900">
+                  <tr key={param.name} className="border-b border-border last:border-b-0">
+                    <td className="px-4 py-3 text-sm text-muted-foreground">{param.name}</td>
+                    <td className="px-4 py-3 text-sm text-foreground">
                       {param.name === 'botName' || param.name === 'jobParams' ? (
-                        <pre className="bg-gray-900 text-gray-100 rounded p-3 text-xs font-mono whitespace-pre overflow-x-auto">
+                        <pre className="bg-muted text-foreground border border-border rounded p-3 text-xs font-mono whitespace-pre overflow-x-auto">
                           {param.value}
                         </pre>
                       ) : (
@@ -242,10 +242,10 @@ export function BotControlTab({ botId }: BotControlTabProps) {
           </div>
         </div>
         {botControlActionState.error && (
-          <div className="text-sm text-red-600">{botControlActionState.error}</div>
+          <div className="text-sm text-destructive">{botControlActionState.error}</div>
         )}
         {botControlActionState.isLoading && (
-          <div className="text-sm text-gray-500">{t.botDetail.controlTab.applyingAction}</div>
+          <div className="text-sm text-muted-foreground">{t.botDetail.controlTab.applyingAction}</div>
         )}
       </div>
 
@@ -254,20 +254,20 @@ export function BotControlTab({ botId }: BotControlTabProps) {
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           {/* Overlay */}
           <div
-            className="absolute inset-0 bg-black bg-opacity-50"
+            className="absolute inset-0 bg-black/50"
             onClick={handleCancel}
           />
 
           {/* Modal Window */}
-          <div className="relative bg-white rounded-lg shadow-xl w-[800px] max-h-[90vh] flex flex-col">
+          <div className="relative bg-card border border-border rounded shadow-xl w-[800px] max-h-[90vh] flex flex-col">
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-              <h2 className="text-xl text-gray-900">{t.botDetail.controlTab.modal.title}</h2>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+              <h2 className="text-foreground">{t.botDetail.controlTab.modal.title}</h2>
               <button
                 onClick={handleCancel}
-                className="p-1 hover:bg-gray-100 rounded transition-colors"
+                className="p-1 hover:bg-muted rounded transition-colors"
               >
-                <X size={20} className="text-gray-600" />
+                <X size={20} className="text-muted-foreground" />
               </button>
             </div>
 
@@ -276,22 +276,22 @@ export function BotControlTab({ botId }: BotControlTabProps) {
               <div className="flex gap-6 h-full">
                 {/* Bot Params Column */}
                 <div className="flex-1 flex flex-col">
-                  <label className="text-sm text-gray-700 mb-2">{t.botDetail.controlTab.modal.botParams}</label>
+                  <label className="text-sm text-foreground mb-2">{t.botDetail.controlTab.modal.botParams}</label>
                   <textarea
                     value={tempBotParams}
                     onChange={(e) => setTempBotParams(e.target.value)}
-                    className="flex-1 bg-gray-900 text-gray-100 rounded-lg p-4 text-sm font-mono resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 bg-muted text-foreground border border-border rounded p-4 text-sm font-mono resize-none focus:outline-none focus:ring-1 focus:ring-primary"
                     spellCheck={false}
                   />
                 </div>
 
                 {/* Job Params Column */}
                 <div className="flex-1 flex flex-col">
-                  <label className="text-sm text-gray-700 mb-2">{t.botDetail.controlTab.modal.jobParams}</label>
+                  <label className="text-sm text-foreground mb-2">{t.botDetail.controlTab.modal.jobParams}</label>
                   <textarea
                     value={tempJobParams}
                     onChange={(e) => setTempJobParams(e.target.value)}
-                    className="flex-1 bg-gray-900 text-gray-100 rounded-lg p-4 text-sm font-mono resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 bg-muted text-foreground border border-border rounded p-4 text-sm font-mono resize-none focus:outline-none focus:ring-1 focus:ring-primary"
                     spellCheck={false}
                   />
                 </div>
@@ -299,23 +299,23 @@ export function BotControlTab({ botId }: BotControlTabProps) {
             </div>
 
             {/* Modal Footer */}
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200">
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border">
               <button
                 onClick={handleCancel}
-                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded transition-colors"
+                className="px-4 py-2 text-foreground hover:bg-muted rounded transition-colors"
               >
                 {t.botDetail.controlTab.modal.cancel}
               </button>
               <button
                 onClick={handleReset}
-                className="px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded transition-colors"
+                className="px-4 py-2 bg-muted text-foreground hover:bg-accent rounded transition-colors"
               >
                 {t.botDetail.controlTab.modal.reset}
               </button>
               <button
                 onClick={handleSave}
                 disabled={botControlActionState.isLoading}
-                className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded transition-colors"
+                className="px-4 py-2 bg-primary text-primary-foreground hover:opacity-90 rounded transition-opacity"
               >
                 {t.botDetail.controlTab.modal.save}
               </button>

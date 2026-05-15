@@ -3,8 +3,13 @@ import type { ColDef } from 'ag-grid-community';
 import { Check, Circle, RefreshCw } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { selectActiveServer, selectBotControlListState, selectServerList } from '../store/selectors';
-import { setActiveServer } from '../store/slices/servers-slice';
+import {
+  selectActiveServer,
+  selectBotControlActionState,
+  selectBotControlListState,
+  selectServerList,
+} from '../store/selectors';
+import { restartAllBots, setActiveServer, setAllBotsPaused } from '../store/slices/servers-slice';
 import { AppGrid } from './shared/AppGrid';
 
 interface BotRow {
@@ -45,9 +50,11 @@ export function BotsTab({
   const servers = useAppSelector(selectServerList) as ServerUiItem[];
   const activeServer = useAppSelector(selectActiveServer);
   const botControlListState = useAppSelector(selectBotControlListState);
+  const botControlActionState = useAppSelector(selectBotControlActionState);
   const [selectedServer, setSelectedServer] = useState(`${activeServer.ip}:${activeServer.port}`);
   const [serverStatuses, setServerStatuses] = useState<Record<string, ServerHealthStatus>>({});
   const hasServers = servers.length > 0;
+  const isBulkActionLoading = botControlActionState.isLoading;
 
   useEffect(() => {
     setSelectedServer(`${activeServer.ip}:${activeServer.port}`);
@@ -161,12 +168,12 @@ export function BotsTab({
   ];
 
   return (
-    <div className="flex h-[calc(100vh-128px)]">
+    <div className="flex h-[calc(100vh-100px)] bg-background">
       {/* Sidebar */}
-      <div className="w-80 bg-gray-50 border-r border-gray-200 flex flex-col">
+      <div className="w-80 bg-card border-r border-border flex flex-col">
         <div className="flex-1 overflow-y-auto p-4">
           {!hasServers && (
-            <div className="text-sm text-gray-500 px-2 py-1">Loading servers from DB...</div>
+            <div className="text-sm text-muted-foreground px-2 py-1">Loading servers from DB...</div>
           )}
           <div className="space-y-1">
             {servers.map((server) => (
@@ -178,10 +185,10 @@ export function BotsTab({
                   dispatch(setActiveServer(server));
                   onServerSelect?.(key);
                 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded text-left transition-colors ${
                   selectedServer === `${server.ip}:${server.port}`
-                    ? 'bg-blue-50 border border-blue-200'
-                    : 'hover:bg-gray-100'
+                    ? 'bg-accent border border-border'
+                    : 'hover:bg-muted'
                 }`}
               >
                 <Circle
@@ -195,45 +202,80 @@ export function BotsTab({
                   }`}
                 />
                 <div className="flex-1">
-                  <div className="text-sm text-gray-900">{server.ip}</div>
-                  <div className="text-xs text-gray-500">{t.botsTab.port}: {server.port}</div>
+                  <div className="text-sm text-foreground">{server.ip}</div>
+                  <div className="text-xs text-muted-foreground">{t.botsTab.port}: {server.port}</div>
                 </div>
                 {selectedServer === `${server.ip}:${server.port}` && (
-                  <Check size={16} className="text-blue-600" />
+                  <Check size={16} className="text-primary" />
                 )}
               </button>
             ))}
           </div>
         </div>
-        <div className="p-4 border-t border-gray-200">
-          <a href="#" className="text-sm text-blue-600 hover:underline">
+        <div className="p-4 border-t border-border">
+          <a href="#" className="text-sm text-primary hover:underline">
             {t.botsTab.apiInfo}
           </a>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl text-gray-900">{t.botsTab.title}</h2>
-          <button
-            onClick={onRefresh}
-            disabled={!onRefresh || isRefreshing}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-              isRefreshing
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
-            }`}
-            title={t.header.refresh}
-          >
-            <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
-            <span className="text-sm">{t.header.refresh}</span>
-          </button>
+      <div className="flex-1 min-w-0 min-h-0 flex flex-col overflow-hidden">
+        <div className="h-11 shrink-0 border-b border-border bg-background flex items-center justify-between gap-3 px-4">
+          <h2 className="text-sm text-foreground">{t.botsTab.title}</h2>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => void dispatch(setAllBotsPaused({ pause: false }))}
+              disabled={isBulkActionLoading || rows.length === 0}
+              className={`px-3 py-1.5 rounded text-sm transition-colors ${
+                isBulkActionLoading || rows.length === 0
+                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                  : 'bg-success text-success-foreground hover:opacity-90'
+              }`}
+            >
+              {t.botsTab.startAll}
+            </button>
+            <button
+              onClick={() => void dispatch(setAllBotsPaused({ pause: true }))}
+              disabled={isBulkActionLoading || rows.length === 0}
+              className={`px-3 py-1.5 rounded text-sm transition-colors ${
+                isBulkActionLoading || rows.length === 0
+                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                  : 'bg-warning text-warning-foreground hover:opacity-90'
+              }`}
+            >
+              {t.botsTab.stopAll}
+            </button>
+            <button
+              onClick={() => void dispatch(restartAllBots())}
+              disabled={isBulkActionLoading || rows.length === 0}
+              className={`px-3 py-1.5 rounded text-sm transition-colors ${
+                isBulkActionLoading || rows.length === 0
+                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                  : 'bg-primary text-primary-foreground hover:opacity-90'
+              }`}
+            >
+              {t.botsTab.restartAll}
+            </button>
+            <button
+              onClick={onRefresh}
+              disabled={!onRefresh || isRefreshing}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded transition-colors text-sm ${
+                isRefreshing
+                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                  : 'bg-primary text-primary-foreground hover:opacity-90'
+              }`}
+              title={t.header.refresh}
+            >
+              <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
+              <span className="text-sm">{t.header.refresh}</span>
+            </button>
+          </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden h-[calc(100vh-220px)]">
+        <div className="flex-1 min-h-0 min-w-0 overflow-hidden">
           {botControlListState.error ? (
-            <div className="p-4 text-sm text-red-600">{botControlListState.error}</div>
+            <div className="p-4 text-sm text-destructive">{botControlListState.error}</div>
           ) : (
             <AppGrid<BotRow>
               rowData={rows}
@@ -248,10 +290,16 @@ export function BotsTab({
           )}
         </div>
         {botControlListState.isLoading && (
-          <div className="text-sm text-gray-500 mt-2">{t.botsTab.loading ?? 'Loading...'}</div>
+          <div className="text-sm text-muted-foreground mt-2 px-4">{t.botsTab.loading ?? 'Loading...'}</div>
+        )}
+        {!botControlListState.isLoading && isBulkActionLoading && (
+          <div className="text-sm text-muted-foreground mt-2 px-4">{t.botsTab.applyingAll}</div>
+        )}
+        {botControlActionState.error && (
+          <div className="text-sm text-destructive mt-2 px-4">{botControlActionState.error}</div>
         )}
         {!botControlListState.isLoading && rows.length > 0 && (
-          <div className="text-xs text-gray-500 mt-2">
+          <div className="text-xs text-muted-foreground mt-2 px-4">
             {t.botsTab.openBotHint}
           </div>
         )}

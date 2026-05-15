@@ -118,17 +118,18 @@ export function ServerDataTab() {
   ];
 
   return (
-    <div className="p-6 overflow-auto h-[calc(100vh-128px)] space-y-8">
-      <div>
-        <h2 className="text-xl text-gray-900 mb-2">{t.serverDataTab.title}</h2>
+    <div className="h-[calc(100vh-100px)] flex flex-col bg-background">
+      <div className="h-11 shrink-0 border-b border-border bg-background flex items-center px-4">
+        <h2 className="text-sm text-foreground">{t.serverDataTab.title}</h2>
       </div>
+      <div className="flex-1 min-h-0 overflow-auto p-4 space-y-6">
 
       {/* Server Data Table */}
       <div>
-        <h3 className="text-lg text-gray-700 mb-4">{t.serverDataTab.serverData.title}</h3>
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden h-56">
+        <h3 className="text-sm text-muted-foreground mb-2">{t.serverDataTab.serverData.title}</h3>
+        <div className="bg-card border border-border rounded overflow-hidden h-56">
           {serverDataState.error ? (
-            <div className="p-4 text-sm text-red-600">{serverDataState.error}</div>
+            <div className="p-4 text-sm text-destructive">{serverDataState.error}</div>
           ) : (
             <AppGrid<ServerDataRow> rowData={serverRows} columnDefs={serverColDefs} className="h-full" />
           )}
@@ -137,10 +138,10 @@ export function ServerDataTab() {
 
       {/* Bot Types Table */}
       <div>
-        <h3 className="text-lg text-gray-700 mb-4">{t.serverDataTab.botTypes.title}</h3>
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden h-72">
+        <h3 className="text-sm text-muted-foreground mb-2">{t.serverDataTab.botTypes.title}</h3>
+        <div className="bg-card border border-border rounded overflow-hidden h-72">
           {botTypesState.error ? (
-            <div className="p-4 text-sm text-red-600">{botTypesState.error}</div>
+            <div className="p-4 text-sm text-destructive">{botTypesState.error}</div>
           ) : (
             <AppGrid<TypeRow>
               rowData={botTypes}
@@ -153,10 +154,10 @@ export function ServerDataTab() {
 
       {/* Job Types Table */}
       <div>
-        <h3 className="text-lg text-gray-700 mb-4">{t.serverDataTab.jobTypes.title}</h3>
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden h-72">
+        <h3 className="text-sm text-muted-foreground mb-2">{t.serverDataTab.jobTypes.title}</h3>
+        <div className="bg-card border border-border rounded overflow-hidden h-72">
           {jobTypesState.error ? (
-            <div className="p-4 text-sm text-red-600">{jobTypesState.error}</div>
+            <div className="p-4 text-sm text-destructive">{jobTypesState.error}</div>
           ) : (
             <AppGrid<TypeRow>
               rowData={jobTypes}
@@ -167,8 +168,9 @@ export function ServerDataTab() {
         </div>
       </div>
       {(serverDataState.isLoading || botTypesState.isLoading || jobTypesState.isLoading) && (
-        <div className="text-sm text-gray-500">Loading...</div>
+        <div className="text-sm text-muted-foreground">Loading...</div>
       )}
+      </div>
     </div>
   );
 }

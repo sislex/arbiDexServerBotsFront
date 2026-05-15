@@ -29,7 +29,7 @@ export function BotDetailPage({ botId, onBack }: BotDetailPageProps) {
   }, [botId, dispatch]);
 
   return (
-    <div className="size-full flex flex-col bg-gray-50">
+    <div className="size-full flex flex-col bg-background text-foreground">
       <BotDetailHeader botId={botId} onBack={onBack} />
       <BotSubTabs
         activeTab={activeSubTab}

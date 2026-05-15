@@ -147,6 +147,37 @@ export const setBotPaused = createAsyncThunk(
   },
 );
 
+export const setAllBotsPaused = createAsyncThunk(
+  'servers/setAllBotsPaused',
+  async ({ pause }: { pause: boolean }, { getState, dispatch }) => {
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
+    const bots = await serverApi.getBots(activeServer);
+    const botIds = (Array.isArray(bots) ? bots : [])
+      .map((bot) => String(bot.id ?? (bot as Record<string, unknown>).botId ?? ''))
+      .filter((id) => id.trim().length > 0);
+
+    const results = await Promise.allSettled(
+      botIds.map((botId) => serverApi.setBotPause(activeServer, botId, pause)),
+    );
+    const failedCount = results.filter((result) => result.status === 'rejected').length;
+
+    await dispatch(loadBotControlList());
+
+    if (failedCount > 0) {
+      throw new Error(
+        `Failed to ${pause ? 'stop' : 'start'} ${failedCount} of ${botIds.length} bots`,
+      );
+    }
+
+    return {
+      action: pause ? 'stop-all' : 'start-all',
+      total: botIds.length,
+      success: botIds.length - failedCount,
+      failed: failedCount,
+    };
+  },
+);
+
 export const restartBot = createAsyncThunk(
   'servers/restartBot',
   async (botId: string, { getState, dispatch }) => {
@@ -155,6 +186,35 @@ export const restartBot = createAsyncThunk(
     await dispatch(loadActiveBotAll(botId));
     await dispatch(loadBotControlList());
     return response;
+  },
+);
+
+export const restartAllBots = createAsyncThunk(
+  'servers/restartAllBots',
+  async (_, { getState, dispatch }) => {
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
+    const bots = await serverApi.getBots(activeServer);
+    const botIds = (Array.isArray(bots) ? bots : [])
+      .map((bot) => String(bot.id ?? (bot as Record<string, unknown>).botId ?? ''))
+      .filter((id) => id.trim().length > 0);
+
+    const results = await Promise.allSettled(
+      botIds.map((botId) => serverApi.restartBot(activeServer, botId)),
+    );
+    const failedCount = results.filter((result) => result.status === 'rejected').length;
+
+    await dispatch(loadBotControlList());
+
+    if (failedCount > 0) {
+      throw new Error(`Failed to restart ${failedCount} of ${botIds.length} bots`);
+    }
+
+    return {
+      action: 'restart-all',
+      total: botIds.length,
+      success: botIds.length - failedCount,
+      failed: failedCount,
+    };
   },
 );
 
@@ -340,6 +400,20 @@ const serversSlice = createSlice({
         state.botControlAction.isLoaded = true;
         state.botControlAction.error = action.error.message ?? 'Failed to set bot pause state';
       })
+      .addCase(setAllBotsPaused.pending, (state) => {
+        state.botControlAction.isLoading = true;
+        state.botControlAction.error = null;
+      })
+      .addCase(setAllBotsPaused.fulfilled, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.data = action.payload;
+      })
+      .addCase(setAllBotsPaused.rejected, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.error = action.error.message ?? 'Failed to set all bots pause state';
+      })
       .addCase(restartBot.pending, (state) => {
         state.botControlAction.isLoading = true;
         state.botControlAction.error = null;
@@ -353,6 +427,20 @@ const serversSlice = createSlice({
         state.botControlAction.isLoading = false;
         state.botControlAction.isLoaded = true;
         state.botControlAction.error = action.error.message ?? 'Failed to restart bot';
+      })
+      .addCase(restartAllBots.pending, (state) => {
+        state.botControlAction.isLoading = true;
+        state.botControlAction.error = null;
+      })
+      .addCase(restartAllBots.fulfilled, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.data = action.payload;
+      })
+      .addCase(restartAllBots.rejected, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.error = action.error.message ?? 'Failed to restart all bots';
       })
       .addCase(setBotSendData.pending, (state) => {
         state.botControlAction.isLoading = true;

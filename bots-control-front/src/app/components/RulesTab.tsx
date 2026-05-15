@@ -54,18 +54,20 @@ export function RulesTab() {
   ];
 
   return (
-    <div className="p-6 overflow-auto h-[calc(100vh-128px)]">
-      <h2 className="text-xl text-gray-900 mb-2">{t.rulesTab.title}</h2>
-      <h3 className="text-lg text-gray-700 mb-6">{t.rulesTab.subtitle}</h3>
+    <div className="h-[calc(100vh-100px)] flex flex-col bg-background">
+      <div className="h-11 shrink-0 border-b border-border bg-background flex items-center px-4">
+        <h2 className="text-sm text-foreground">{t.rulesTab.title}</h2>
+      </div>
+      <div className="px-4 py-2 text-sm text-muted-foreground">{t.rulesTab.subtitle}</div>
 
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden h-[calc(100vh-230px)]">
+      <div className="flex-1 min-h-0 min-w-0 overflow-hidden">
         {rulesState.error ? (
-          <div className="p-4 text-sm text-red-600">{rulesState.error}</div>
+          <div className="p-4 text-sm text-destructive">{rulesState.error}</div>
         ) : (
           <AppGrid<RuleRow> rowData={rows} columnDefs={colDefs} className="h-full" />
         )}
       </div>
-      {rulesState.isLoading && <div className="text-sm text-gray-500 mt-2">Loading...</div>}
+      {rulesState.isLoading && <div className="text-sm text-muted-foreground px-4 py-2">Loading...</div>}
     </div>
   );
 }

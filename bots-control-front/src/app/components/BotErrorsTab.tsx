@@ -45,17 +45,17 @@ export function BotErrorsTab() {
   ];
 
   return (
-    <div className="p-6 overflow-auto h-[calc(100vh-176px)]">
-      <h3 className="text-lg text-gray-900 mb-4">{t.botDetail.errorsTab.title}</h3>
+    <div className="p-4 overflow-auto h-[calc(100vh-122px)]">
+      <h3 className="text-sm text-foreground mb-2">{t.botDetail.errorsTab.title}</h3>
 
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden h-[calc(100vh-250px)]">
+      <div className="bg-card border border-border rounded overflow-hidden h-[calc(100vh-180px)]">
         {errorsState.error ? (
-          <div className="p-4 text-sm text-red-600">{errorsState.error}</div>
+          <div className="p-4 text-sm text-destructive">{errorsState.error}</div>
         ) : (
           <AppGrid<ErrorRow> rowData={rows} columnDefs={colDefs} className="h-full" />
         )}
       </div>
-      {errorsState.isLoading && <div className="text-sm text-gray-500 mt-2">Loading...</div>}
+      {errorsState.isLoading && <div className="text-sm text-muted-foreground mt-2">Loading...</div>}
     </div>
   );
 }
