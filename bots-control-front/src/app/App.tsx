@@ -1,13 +1,19 @@
-import { useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { Navigate, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { Header } from './components/Header';
 import { Tabs } from './components/Tabs';
-import { BotsTab } from './components/BotsTab';
-import { RulesTab } from './components/RulesTab';
-import { ServerDataTab } from './components/ServerDataTab';
-import { BotDetailPage } from './components/BotDetailPage';
-import { LoginForm } from './components/LoginForm';
+const BotsTab = lazy(async () => import('./components/BotsTab').then((module) => ({ default: module.BotsTab })));
+const RulesTab = lazy(async () => import('./components/RulesTab').then((module) => ({ default: module.RulesTab })));
+const ServerDataTab = lazy(async () =>
+  import('./components/ServerDataTab').then((module) => ({ default: module.ServerDataTab })),
+);
+const BotDetailPage = lazy(async () =>
+  import('./components/BotDetailPage').then((module) => ({ default: module.BotDetailPage })),
+);
+const LoginForm = lazy(async () =>
+  import('./components/LoginForm').then((module) => ({ default: module.LoginForm })),
+);
 import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import {
@@ -45,6 +51,12 @@ const parseIpPort = (ipPort: string) => {
   }
   return { ip, port };
 };
+
+const PageLoader = () => (
+  <div className="flex-1 min-h-0 flex items-center justify-center text-muted-foreground text-sm">
+    Loading...
+  </div>
+);
 
 function MainLayout() {
   const dispatch = useAppDispatch();
@@ -123,15 +135,25 @@ function MainLayout() {
       />
 
       {activeTab === 'bots' && (
-        <BotsTab
-          onBotSelect={handleBotSelect}
-          onServerSelect={handleServerSelect}
-          onRefresh={refreshActiveTabData}
-          isRefreshing={isRefreshing}
-        />
+        <Suspense fallback={<PageLoader />}>
+          <BotsTab
+            onBotSelect={handleBotSelect}
+            onServerSelect={handleServerSelect}
+            onRefresh={refreshActiveTabData}
+            isRefreshing={isRefreshing}
+          />
+        </Suspense>
       )}
-      {activeTab === 'rules' && <RulesTab />}
-      {activeTab === 'server-data' && <ServerDataTab />}
+      {activeTab === 'rules' && (
+        <Suspense fallback={<PageLoader />}>
+          <RulesTab />
+        </Suspense>
+      )}
+      {activeTab === 'server-data' && (
+        <Suspense fallback={<PageLoader />}>
+          <ServerDataTab />
+        </Suspense>
+      )}
     </div>
   );
 }
@@ -168,10 +190,12 @@ function BotPageRoute() {
         sessionStorage.removeItem('bots-control-auth-user');
         window.location.reload();
       }} />
-      <BotDetailPage
-        botId={botId}
-        onBack={() => navigate(`/server/${ipPort}/tab/bots`)}
-      />
+      <Suspense fallback={<PageLoader />}>
+        <BotDetailPage
+          botId={botId}
+          onBack={() => navigate(`/server/${ipPort}/tab/bots`)}
+        />
+      </Suspense>
     </div>
   );
 }
@@ -212,12 +236,14 @@ export default function App() {
   if (!authUser) {
     return (
       <LanguageProvider>
-        <LoginForm
-          onLogin={(login) => {
-            sessionStorage.setItem('bots-control-auth-user', login);
-            setAuthUser(login);
-          }}
-        />
+        <Suspense fallback={<PageLoader />}>
+          <LoginForm
+            onLogin={(login) => {
+              sessionStorage.setItem('bots-control-auth-user', login);
+              setAuthUser(login);
+            }}
+          />
+        </Suspense>
       </LanguageProvider>
     );
   }

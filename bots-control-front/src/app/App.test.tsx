@@ -14,7 +14,7 @@ vi.mock('sonner', () => ({
 }));
 
 describe('App routing smoke', () => {
-  it('renders login form when not authenticated', () => {
+  it('renders login form when not authenticated', async () => {
     sessionStorage.removeItem('bots-control-auth-user');
 
     render(
@@ -25,7 +25,7 @@ describe('App routing smoke', () => {
       </Provider>,
     );
 
-    expect(screen.getByText(/Crypto Arbitrage/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Login|Логин/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Crypto Arbitrage/i)).toBeInTheDocument();
+    expect(await screen.findByLabelText(/Login|Логин/i)).toBeInTheDocument();
   });
 });
