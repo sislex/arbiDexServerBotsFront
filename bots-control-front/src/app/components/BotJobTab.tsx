@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectActiveBotParamsState, selectBotControlActionState } from '../store/selectors';
 import { restartBot, saveBotSettings } from '../store/slices/servers-slice';
 import { showToast } from '../services/toast';
+import { getEmptySettingsPayload } from '../services/bot-control-adapter';
 
 const defaultJobConfig = `{
   "jobId": "job-arb-001",
@@ -93,7 +94,7 @@ export function BotJobTab({ botId }: BotJobTabProps) {
   };
   const handleDelete = () => {
     if (window.confirm(t.botDetail.jobTab.deleteConfirm)) {
-      setJobConfig('');
+      setJobConfig(getEmptySettingsPayload(botId));
     }
   };
 

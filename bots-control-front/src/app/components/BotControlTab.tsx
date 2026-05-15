@@ -14,6 +14,7 @@ import {
   setBotSendData,
 } from '../store/slices/servers-slice';
 import { showToast } from '../services/toast';
+import { mapBotDetailsToViewModel } from '../services/bot-control-adapter';
 
 interface BotControlTabProps {
   botId: string;
@@ -58,28 +59,12 @@ export function BotControlTab({ botId }: BotControlTabProps) {
   const botParamsState = useAppSelector(selectActiveBotParamsState);
   const botControlActionState = useAppSelector(selectBotControlActionState);
 
-  const paused = Boolean(
-    (botParamsState.data as Record<string, unknown> | null)?.paused ??
-      (botInfoState.data?.botParams as Record<string, unknown> | undefined)?.paused ??
-      false,
-  );
-  const isRunning = !paused;
-  const isSendData = Boolean(
-    (botParamsState.data as Record<string, unknown> | null)?.isSendData ??
-      (botInfoState.data as Record<string, unknown> | null)?.isSendData ??
-      false,
-  );
+  const controlVm = mapBotDetailsToViewModel(botId, botInfoState.data, botParamsState.data);
+  const isRunning = controlVm.status === 'active';
+  const isSendData = controlVm.isSendData;
 
-  const currentBotParamsJson = JSON.stringify(
-    (botInfoState.data?.botParams as Record<string, unknown> | undefined) ?? {},
-    null,
-    2,
-  );
-  const currentJobParamsJson = JSON.stringify(
-    (botInfoState.data?.jobParams as Record<string, unknown> | undefined) ?? {},
-    null,
-    2,
-  );
+  const currentBotParamsJson = controlVm.botParamsJson;
+  const currentJobParamsJson = controlVm.jobParamsJson;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [botParams, setBotParams] = useState(defaultBotParams);
@@ -123,29 +108,18 @@ export function BotControlTab({ botId }: BotControlTabProps) {
     setIsModalOpen(false);
   };
 
-  const botParamsData = (botParamsState.data as Record<string, unknown> | null) ?? {};
-  const botInfoData = (botInfoState.data as Record<string, unknown> | null) ?? {};
   const parameters = [
     { name: t.botDetail.controlTab.fields.id, value: botId },
-    { name: t.botDetail.controlTab.fields.status, value: isRunning ? 'active' : 'paused' },
-    { name: t.botDetail.controlTab.fields.running, value: pretty(botParamsData.running) },
-    {
-      name: t.botDetail.controlTab.fields.createdAt,
-      value: pretty(botParamsData.createdAt ?? botInfoData.createdAt),
-    },
-    { name: t.botDetail.controlTab.fields.jobCount, value: pretty(botParamsData.jobCount) },
-    { name: t.botDetail.controlTab.fields.errorCount, value: pretty(botParamsData.errorCount) },
-    { name: t.botDetail.controlTab.fields.lastLatency, value: pretty(botParamsData.lastLatency) },
-    {
-      name: t.botDetail.controlTab.fields.lastJobTimeStart,
-      value: pretty(botParamsData.lastJobTimeStart),
-    },
-    {
-      name: t.botDetail.controlTab.fields.lastJobTimeFinish,
-      value: pretty(botParamsData.lastJobTimeFinish),
-    },
+    { name: t.botDetail.controlTab.fields.status, value: controlVm.status },
+    { name: t.botDetail.controlTab.fields.running, value: pretty(controlVm.running) },
+    { name: t.botDetail.controlTab.fields.createdAt, value: pretty(controlVm.createdAt) },
+    { name: t.botDetail.controlTab.fields.jobCount, value: pretty(controlVm.jobCount) },
+    { name: t.botDetail.controlTab.fields.errorCount, value: pretty(controlVm.errorCount) },
+    { name: t.botDetail.controlTab.fields.lastLatency, value: pretty(controlVm.lastLatency) },
+    { name: t.botDetail.controlTab.fields.lastJobTimeStart, value: pretty(controlVm.lastJobTimeStart) },
+    { name: t.botDetail.controlTab.fields.lastJobTimeFinish, value: pretty(controlVm.lastJobTimeFinish) },
     { name: t.botDetail.controlTab.fields.sendData, value: pretty(isSendData) },
-    { name: t.botDetail.controlTab.fields.lastJobResult, value: pretty(botParamsData.lastJobResult) },
+    { name: t.botDetail.controlTab.fields.lastJobResult, value: pretty(controlVm.lastJobResult) },
     { name: t.botDetail.controlTab.fields.botParams, value: currentBotParamsJson || botParams },
     { name: t.botDetail.controlTab.fields.jobParams, value: currentJobParamsJson || jobParams },
   ];

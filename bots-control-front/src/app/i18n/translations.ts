@@ -1,5 +1,10 @@
 export const translations = {
   en: {
+    routing: {
+      invalidServer: 'Invalid server address in URL. Fallback to default server.',
+      invalidTab: 'Invalid tab in URL. Fallback to Bots tab.',
+      invalidBot: 'Invalid bot identifier in URL.'
+    },
     auth: {
       title: 'Crypto Arbitrage',
       subtitle: 'Bots Control',
@@ -229,6 +234,11 @@ export const translations = {
     }
   },
   ru: {
+    routing: {
+      invalidServer: 'Невалидный адрес сервера в URL. Выполнен переход на сервер по умолчанию.',
+      invalidTab: 'Невалидная вкладка в URL. Выполнен переход на вкладку Боты.',
+      invalidBot: 'Невалидный идентификатор бота в URL.'
+    },
     auth: {
       title: 'Crypto Arbitrage',
       subtitle: 'Управление ботами',

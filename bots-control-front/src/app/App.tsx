@@ -8,7 +8,7 @@ import { RulesTab } from './components/RulesTab';
 import { ServerDataTab } from './components/ServerDataTab';
 import { BotDetailPage } from './components/BotDetailPage';
 import { LoginForm } from './components/LoginForm';
-import { LanguageProvider } from './i18n/LanguageContext';
+import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import {
   selectActiveServer,
@@ -27,6 +27,24 @@ import {
   loadServerData,
   setActiveServer,
 } from './store/slices/servers-slice';
+import { showToast } from './services/toast';
+
+const VALID_TABS = new Set(['bots', 'rules', 'server-data']);
+
+const parseIpPort = (ipPort: string) => {
+  const [ip = '', port = ''] = ipPort.split(':');
+  const isValidPort = Number.isInteger(Number(port)) && Number(port) > 0 && Number(port) <= 65535;
+  const isValidIp =
+    /^(\d{1,3}\.){3}\d{1,3}$/.test(ip) &&
+    ip.split('.').every((segment) => {
+      const value = Number(segment);
+      return value >= 0 && value <= 255;
+    });
+  if (!isValidIp || !isValidPort) {
+    return null;
+  }
+  return { ip, port };
+};
 
 function MainLayout() {
   const dispatch = useAppDispatch();
@@ -121,16 +139,27 @@ function MainLayout() {
 function BotPageRoute() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const params = useParams<{ ipPort: string; botId: string }>();
   const botId = params.botId ?? '';
   const ipPort = params.ipPort ?? '';
 
   useEffect(() => {
-    const [ip = '', port = ''] = ipPort.split(':');
-    if (ip && port) {
-      dispatch(setActiveServer({ ip, port, name: `SERVER_${ip}:${port}` }));
+    const parsed = parseIpPort(ipPort);
+    if (!parsed) {
+      showToast('error', t.routing.invalidServer);
+      navigate('/server/45.135.182.251:1001/tab/bots', { replace: true });
+      return;
     }
-  }, [dispatch, ipPort]);
+    dispatch(setActiveServer({ ...parsed, name: `SERVER_${parsed.ip}:${parsed.port}` }));
+  }, [dispatch, ipPort, navigate, t.routing.invalidServer]);
+
+  useEffect(() => {
+    if (!botId.trim()) {
+      showToast('error', t.routing.invalidBot);
+      navigate(`/server/${ipPort}/tab/bots`, { replace: true });
+    }
+  }, [botId, ipPort, navigate, t.routing.invalidBot]);
 
   return (
     <div className="size-full flex flex-col bg-background text-foreground">
@@ -149,17 +178,30 @@ function BotPageRoute() {
 
 function TabRouteSync() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { t } = useLanguage();
   const params = useParams<{ ipPort: string; tabId: string }>();
   const tabId = params.tabId ?? 'bots';
   const ipPort = params.ipPort ?? '';
 
   useEffect(() => {
-    const [ip = '', port = ''] = ipPort.split(':');
-    if (ip && port) {
-      dispatch(setActiveServer({ ip, port, name: `SERVER_${ip}:${port}` }));
+    const parsed = parseIpPort(ipPort);
+    if (!parsed) {
+      showToast('error', t.routing.invalidServer);
+      navigate('/server/45.135.182.251:1001/tab/bots', { replace: true });
+      return;
     }
-    dispatch(setActiveTab(tabId));
-  }, [dispatch, ipPort, tabId]);
+
+    const normalizedTabId = VALID_TABS.has(tabId) ? tabId : 'bots';
+    if (normalizedTabId !== tabId) {
+      showToast('error', t.routing.invalidTab);
+      navigate(`/server/${ipPort}/tab/${normalizedTabId}`, { replace: true });
+      return;
+    }
+
+    dispatch(setActiveServer({ ...parsed, name: `SERVER_${parsed.ip}:${parsed.port}` }));
+    dispatch(setActiveTab(normalizedTabId));
+  }, [dispatch, ipPort, navigate, tabId, t.routing.invalidServer, t.routing.invalidTab]);
 
   return <MainLayout />;
 }

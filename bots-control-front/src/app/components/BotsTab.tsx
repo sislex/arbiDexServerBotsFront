@@ -11,6 +11,7 @@ import {
 } from '../store/selectors';
 import { restartAllBots, setActiveServer, setAllBotsPaused } from '../store/slices/servers-slice';
 import { showToast } from '../services/toast';
+import { mapBotItemToListRow } from '../services/bot-control-adapter';
 import { AppGrid } from './shared/AppGrid';
 
 interface BotRow {
@@ -107,34 +108,12 @@ export function BotsTab({
     };
   }, [servers]);
 
-  const rows: BotRow[] = botControlListState.data.map((item) => ({
-    id: String(item.id ?? ''),
-    description: (() => {
-      const fromBotParams = String(
-        ((item as Record<string, unknown>).botParams as Record<string, unknown> | undefined)
-          ?.description ?? '',
-      ).trim();
-      if (fromBotParams) {
-        return fromBotParams;
-      }
-
-      const fromItemDescription = (item.description as string | undefined)?.trim();
-      if (fromItemDescription) {
-        return fromItemDescription;
-      }
-
-      return (
-        t.botsTab.botDescriptions[String(item.id) as keyof typeof t.botsTab.botDescriptions] ?? '-'
-      );
-    })(),
-    created: String(item.createdAt ?? '-'),
-    jobs: Number(item.jobCount ?? 0),
-    arbitrages: Number((item as Record<string, unknown>).arbitragesCount ?? 0),
-    errors: Number(item.errorCount ?? 0),
-    avgReqTime: `${Number((item as Record<string, unknown>).averageLatency ?? item.lastLatency ?? 0)}ms`,
-    lastReqTime: `${Number(item.lastLatency ?? 0)}ms`,
-    status: String(item.status ?? 'pause'),
-  }));
+  const rows: BotRow[] = botControlListState.data.map((item) =>
+    mapBotItemToListRow(
+      item,
+      t.botsTab.botDescriptions[String(item.id) as keyof typeof t.botsTab.botDescriptions] ?? '-',
+    ),
+  );
 
   const colDefs: ColDef<BotRow>[] = [
     {
