@@ -44,3 +44,12 @@ Thumbs.db
 
 *storybook.log
 storybook-static
+
+# Nested React app (bots-control-front)
+/bots-control-front/node_modules
+/bots-control-front/dist
+/bots-control-front/.vite
+/bots-control-front/*.tsbuildinfo
+/bots-control-front/.env
+/bots-control-front/.env.local
+/bots-control-front/.env.*.local
