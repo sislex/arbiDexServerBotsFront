@@ -4,6 +4,12 @@ export interface PriceSeriesConfig {
   color: string;
 }
 
+export interface PricePairFromJob {
+  source: string;
+  token0: string;
+  token1: string;
+}
+
 export const PRICE_COLORS = [
   '#f0b90b',
   '#f6465d',
@@ -28,31 +34,38 @@ export function formatPipeKeyName(pipeKey: string): string {
   return pipeKey;
 }
 
-export function findPriceKeys(
-  allKeys: string[],
+export function buildPricePipeKeysFromJob(
   source: string,
   token0: string,
   token1: string,
-): { bidKey: string; askKey: string } | null {
-  const t0 = token0.toUpperCase();
-  const t1 = token1.toUpperCase();
-
-  const match = (k: string) => {
-    const parts = k.split('|');
-    if (parts.length !== 3 || parts[0] !== source) {
-      return false;
-    }
-    const sym = parts[1].toUpperCase();
-    return sym.includes(t0) && sym.includes(t1);
+): { bidKey: string; askKey: string; symbol: string } {
+  const symbol = `${token0}/${token1}`;
+  return {
+    symbol,
+    bidKey: `${source}|${symbol}|bidPrice`,
+    askKey: `${source}|${symbol}|askPrice`,
   };
+}
 
-  const bidKey = allKeys.find((k) => match(k) && k.endsWith('|bidPrice'));
-  const askKey = allKeys.find((k) => match(k) && k.endsWith('|askPrice'));
+export function getPricePairFromJob(jobParams: Record<string, unknown>): PricePairFromJob | null {
+  const source = String(jobParams['source'] ?? '').trim();
+  const isDex = source.startsWith('dex:');
+  const opts = jobParams['opts'] as Record<string, unknown> | undefined;
+  const tokenIn = opts?.['tokenIn'] as Record<string, unknown> | undefined;
+  const tokenOut = opts?.['tokenOut'] as Record<string, unknown> | undefined;
 
-  if (bidKey && askKey) {
-    return { bidKey, askKey };
+  const token0 = isDex
+    ? String(jobParams['token0'] ?? tokenIn?.['address'] ?? '').trim()
+    : String(jobParams['token0'] ?? tokenIn?.['symbol'] ?? '').trim();
+  const token1 = isDex
+    ? String(jobParams['token1'] ?? tokenOut?.['address'] ?? '').trim()
+    : String(jobParams['token1'] ?? tokenOut?.['symbol'] ?? '').trim();
+
+  if (!source || !token0 || !token1) {
+    return null;
   }
-  return null;
+
+  return { source, token0, token1 };
 }
 
 export function buildSeriesFromPipeKeys(pipeKeys: string[]): PriceSeriesConfig[] {

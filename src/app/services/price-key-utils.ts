@@ -1,5 +1,11 @@
 import type { PriceSeriesConfig } from '../components/price-chart/price-chart';
 
+export interface PricePairFromJob {
+  source: string;
+  token0: string;
+  token1: string;
+}
+
 /** Palette used to colour each series automatically */
 export const PRICE_COLORS = [
   '#f0b90b', '#f6465d', '#0ecb81', '#ff6838', '#1da2b4',
@@ -44,31 +50,40 @@ export function formatPipeKeyName(pipeKey: string): string {
   return pipeKey;
 }
 
-/**
- * Find matching price keys from the available keys list by source and tokens.
- * Handles any symbol format (binance: 'ETHUSDC', kucoin: 'ETH-USDT', etc.)
- */
-export function findPriceKeys(
-  allKeys: string[],
+/** Build deterministic bid/ask pipe keys directly from bot job params */
+export function buildPricePipeKeysFromJob(
   source: string,
   token0: string,
   token1: string,
-): { bidKey: string; askKey: string } | null {
-  const t0 = token0.toUpperCase();
-  const t1 = token1.toUpperCase();
-
-  const match = (k: string) => {
-    const parts = k.split('|');
-    if (parts.length !== 3 || parts[0] !== source) return false;
-    const sym = parts[1].toUpperCase();
-    return sym.includes(t0) && sym.includes(t1);
+): { bidKey: string; askKey: string; symbol: string } {
+  const symbol = `${token0}/${token1}`;
+  return {
+    symbol,
+    bidKey: `${source}|${symbol}|bidPrice`,
+    askKey: `${source}|${symbol}|askPrice`,
   };
+}
 
-  const bidKey = allKeys.find((k) => match(k) && k.endsWith('|bidPrice'));
-  const askKey = allKeys.find((k) => match(k) && k.endsWith('|askPrice'));
+/**
+ * Resolve source/token pair from job params.
+ * Supports both flat token0/token1 and dex opts.tokenIn/tokenOut addresses.
+ */
+export function getPricePairFromJob(jobParams: any): PricePairFromJob | null {
+  const source = String(jobParams?.source ?? '').trim();
+  const isDex = source.startsWith('dex:');
 
-  if (bidKey && askKey) return { bidKey, askKey };
-  return null;
+  const token0 = isDex
+    ? String(jobParams?.token0 ?? jobParams?.opts?.tokenIn?.address ?? '').trim()
+    : String(jobParams?.token0 ?? jobParams?.opts?.tokenIn?.symbol ?? '').trim();
+  const token1 = isDex
+    ? String(jobParams?.token1 ?? jobParams?.opts?.tokenOut?.address ?? '').trim()
+    : String(jobParams?.token1 ?? jobParams?.opts?.tokenOut?.symbol ?? '').trim();
+
+  if (!source || !token0 || !token1) {
+    return null;
+  }
+
+  return { source, token0, token1 };
 }
 
 /** Build PriceSeriesConfig[] from an array of raw key strings */

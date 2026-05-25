@@ -150,15 +150,22 @@ Reusable dumb component. Inputs:
 Uses dark Binance-style theme (`#161a25` background). Lines use `interpolation: { type: 'step', position: 'end' }` for perpendicular steps (no diagonal lines). Zoom + navigator enabled on X axis.
 
 ### Price key system
-Keys follow the pattern `source|symbol|field` (e.g. `binance|ETHUSDC|bidPrice`, `kucoin|ETH-USDT|askPrice`).
-The symbol format varies by exchange, so keys are **discovered at runtime** via `GET /prices/keys`.
+Keys follow the pattern `source|symbol|field`.
 
-Job config provides `source`, `token0`, `token1` (e.g. `{ source: "kucoin", token0: "ETH", token1: "USDT" }`).
-Use `findPriceKeys(allKeys, source, token0, token1)` from `price-key-utils.ts` to resolve actual pipe-separated keys.
+Job config provides `source`, `token0`, `token1` (e.g. `{ source: "binance", token0: "LINK", token1: "ETH" }`).
+UI builds keys directly from job params:
+- non-DEX sources:
+  - bid: `source|token0/token1|bidPrice`
+  - ask: `source|token0/token1|askPrice`
+- DEX sources (`source` starts with `dex:`):
+  - bid: `source|tokenIn.address/tokenOut.address|bidPrice`
+  - ask: `source|tokenIn.address/tokenOut.address|askPrice`
+
+For DEX jobs where `token0/token1` are absent, UI falls back to `opts.tokenIn.address` and `opts.tokenOut.address`.
 
 Utility functions in `src/app/services/price-key-utils.ts`:
-- `findPriceKeys()` — discover bid/ask keys from available keys by source + tokens
-- `formatPipeKeyName()` — pipe key → human-readable name (e.g. `'Kucoin ETH-USDT Bid'`)
+- `buildPricePipeKeysFromJob()` — build deterministic bid/ask keys from job params
+- `formatPipeKeyName()` — pipe key → human-readable name (e.g. `'Binance LINK/ETH Bid'`)
 - `buildSeriesFromPipeKeys()` — pipe keys → `PriceSeriesConfig[]`
 - `rawKeyToUrlKey()` — flat key → pipe-separated for API (legacy)
 - `formatKeyName()` — flat key → human-readable name (legacy)
@@ -174,15 +181,12 @@ Utility functions in `src/app/services/price-key-utils.ts`:
 #### WebSocket protocol (socket.io)
 ```ts
 const socket = io('http://<ip>:<port>/prices');
-socket.emit('subscribe', { keys: ['binance|ETHUSDC|bidPrice', 'mexc|ETHUSDT|askPrice'] });
+socket.emit('subscribe', { keys: ['binance|LINK/ETH|bidPrice', 'binance|LINK/ETH|askPrice'] });
 socket.on('priceChange', ({ key, point }: { key: string; point: { t: number; v: number } }) => {
-  // key = 'kucoin|ETH-USDT|bidPrice', point.t = timestamp ms, point.v = price
+  // key = 'binance|LINK/ETH|bidPrice', point.t = timestamp ms, point.v = price
 });
 ```
 Live container buffers ticks and flushes every 500ms, keeping max 300 points with auto-scroll.
-
-#### CEX Quotes special case
-When `jobType === 'get_Cex_Quotes'`, show **one line** — the mid-price `(bid + ask) / 2` instead of separate bid/ask lines.
 
 ---
 
@@ -203,7 +207,6 @@ When `jobType === 'get_Cex_Quotes'`, show **one line** — the mid-price `(bid +
 | PUT | `/bot/:botId/settings` | Update bot settings `{ data: string }` |
 | POST | `/bot/:botId/restart` | Restart bot |
 | GET | `/rules/get-all` | All rules |
-| GET | `/prices/keys` | Available price keys |
 | GET | `/prices/key/:key` | Historical price points by key |
 
 ---
@@ -251,4 +254,4 @@ When `jobType === 'get_Cex_Quotes'`, show **one line** — the mid-price `(bid +
 1. Reuse `PriceChart` component (`src/app/components/price-chart/`)
 2. Create container that loads historical data from REST, then connects socket.io
 3. Use `PriceChartLiveContainer` as a reference implementation
-4. Discover keys with `findPriceKeys(allKeys, source, token0, token1)` from `price-key-utils.ts`
+4. Build bid/ask keys with `buildPricePipeKeysFromJob(source, token0, token1)` from `price-key-utils.ts`
