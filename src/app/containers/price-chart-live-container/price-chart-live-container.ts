@@ -71,7 +71,9 @@ export class PriceChartLiveContainer implements OnInit, OnDestroy {
       .pipe(
         filter((info) => {
           const jp = info?.jobParams as any;
-          return !!jp?.source && !!jp?.token0 && !!jp?.token1;
+          const token0 = jp?.token0 ?? jp?.opts?.tokenIn?.symbol;
+          const token1 = jp?.token1 ?? jp?.opts?.tokenOut?.symbol;
+          return !!jp?.source && !!token0 && !!token1;
         }),
         take(1),
         switchMap((info) =>
@@ -79,7 +81,11 @@ export class PriceChartLiveContainer implements OnInit, OnDestroy {
         ),
       )
       .subscribe(({ info, keys: allKeys }) => {
-        const { jobType, source, token0, token1 } = info.jobParams as any;
+        const jp = info.jobParams as any;
+        const jobType = String(jp?.jobType ?? '');
+        const source = String(jp?.source ?? '');
+        const token0 = String(jp?.token0 ?? jp?.opts?.tokenIn?.symbol ?? '');
+        const token1 = String(jp?.token1 ?? jp?.opts?.tokenOut?.symbol ?? '');
         this.isCexQuotes = jobType === 'get_Cex_Quotes';
 
         const found = findPriceKeys(allKeys, source, token0, token1);
