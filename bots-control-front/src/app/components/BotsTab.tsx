@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { ColDef } from 'ag-grid-community';
-import { Check, Circle, RefreshCw } from 'lucide-react';
+import { Check, Circle, Pause, Play, RefreshCw } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
@@ -13,6 +13,7 @@ import { restartAllBots, setActiveServer, setAllBotsPaused } from '../store/slic
 import { showToast } from '../services/toast';
 import { mapBotItemToListRow } from '../services/bot-control-adapter';
 import { AppGrid } from './shared/AppGrid';
+import { ApiInfoModal } from './ApiInfoModal';
 
 interface BotRow {
   id: string;
@@ -55,6 +56,7 @@ export function BotsTab({
   const botControlActionState = useAppSelector(selectBotControlActionState);
   const [selectedServer, setSelectedServer] = useState(`${activeServer.ip}:${activeServer.port}`);
   const [serverStatuses, setServerStatuses] = useState<Record<string, ServerHealthStatus>>({});
+  const [isApiInfoOpen, setIsApiInfoOpen] = useState(false);
   const hasServers = servers.length > 0;
   const isBulkActionLoading = botControlActionState.isLoading;
 
@@ -120,6 +122,62 @@ export function BotsTab({
       headerName: '#',
       maxWidth: 70,
       valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
+    },
+    {
+      headerName: '',
+      colId: 'control',
+      minWidth: 120,
+      maxWidth: 140,
+      sortable: false,
+      resizable: false,
+      suppressMovable: true,
+      cellRenderer: (params: { data?: BotRow }) => {
+        const row = params.data;
+        if (!row) {
+          return null;
+        }
+
+        const isActive = row.status === 'active';
+        const isDisabled = botControlActionState.isLoading;
+        const title = isActive ? t.botDetail.controlTab.pause : t.botsTab.startAll;
+
+        return (
+          <div className="w-full h-full flex items-center justify-center">
+            <button
+              type="button"
+              title={title}
+              disabled={isDisabled}
+              onClick={async (event) => {
+                event.stopPropagation();
+                const result = await dispatch(setBotPaused({ botId: row.id, pause: isActive }));
+                if (setBotPaused.fulfilled.match(result)) {
+                  showToast(
+                    'success',
+                    isActive ? t.botDetail.controlTab.pausedSuccess : t.botDetail.controlTab.startedSuccess,
+                  );
+                } else {
+                  showToast(
+                    'error',
+                    result.error.message ??
+                      (isActive ? t.botDetail.controlTab.pausedError : t.botDetail.controlTab.startedError),
+                  );
+                }
+              }}
+              onDoubleClick={(event) => event.stopPropagation()}
+              className={`inline-flex h-7 w-20 items-center justify-center gap-1 rounded text-xs transition-colors ${
+                isDisabled
+                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                  : isActive
+                    ? 'bg-warning text-warning-foreground hover:opacity-90'
+                    : 'bg-success text-success-foreground hover:opacity-90'
+              }`}
+            >
+              {isActive ? <Pause size={12} /> : <Play size={12} />}
+              <span>{isActive ? t.botsTab.stopAll : t.botsTab.startAll}</span>
+            </button>
+          </div>
+        );
+      },
     },
     { field: 'id', headerName: t.botsTab.table.id, minWidth: 130 },
     { field: 'description', headerName: t.botsTab.table.description, minWidth: 220, flex: 1 },
@@ -193,9 +251,12 @@ export function BotsTab({
           </div>
         </div>
         <div className="p-4 border-t border-border">
-          <a href="#" className="text-sm text-primary hover:underline">
+          <button
+            onClick={() => setIsApiInfoOpen(true)}
+            className="text-sm text-primary hover:underline"
+          >
             {t.botsTab.apiInfo}
-          </a>
+          </button>
         </div>
       </div>
 
@@ -282,7 +343,7 @@ export function BotsTab({
               rowData={rows}
               columnDefs={colDefs}
               className="h-full"
-              onRowClicked={(event) => {
+              onRowDoubleClicked={(event) => {
                 if (event.data?.id) {
                   onBotSelect?.(event.data.id);
                 }
@@ -301,10 +362,11 @@ export function BotsTab({
         )}
         {!botControlListState.isLoading && rows.length > 0 && (
           <div className="text-xs text-muted-foreground mt-2 px-4">
-            {t.botsTab.openBotHint}
+            {t.botsTab.openBotHintDoubleClick ?? t.botsTab.openBotHint}
           </div>
         )}
       </div>
+      <ApiInfoModal open={isApiInfoOpen} onOpenChange={setIsApiInfoOpen} />
     </div>
   );
 }

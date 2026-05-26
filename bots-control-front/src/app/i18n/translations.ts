@@ -70,6 +70,14 @@ export const translations = {
         'BOT-005': 'Liquidity provider BNB chain'
       }
     },
+    apiInfo: {
+      title: 'Available API Endpoints',
+      method: 'Type',
+      path: 'Address API',
+      description: 'Description',
+      loading: 'Loading API list...',
+      errorLoad: 'Failed to load API list'
+    },
     rulesTab: {
       title: 'RULES',
       subtitle: 'Rules info',
@@ -133,9 +141,10 @@ export const translations = {
       }
     },
     botDetail: {
+      refreshSuccess: 'Bot tab refreshed',
+      refreshError: 'Failed to refresh bot tab',
       subTabs: {
         controlAndParams: 'Control and paramtrs',
-        arbitrageId: 'Arbitrage ID',
         errors: 'Errors',
         job: 'Job',
         chart: 'Chart',
@@ -306,6 +315,14 @@ export const translations = {
         'BOT-005': 'Провайдер ликвидности BNB chain'
       }
     },
+    apiInfo: {
+      title: 'Доступные API эндпоинты',
+      method: 'Тип',
+      path: 'Адрес API',
+      description: 'Описание',
+      loading: 'Загрузка списка API...',
+      errorLoad: 'Не удалось загрузить список API'
+    },
     rulesTab: {
       title: 'ПРАВИЛА',
       subtitle: 'Информация о правилах',
@@ -369,9 +386,10 @@ export const translations = {
       }
     },
     botDetail: {
+      refreshSuccess: 'Данные вкладки бота обновлены',
+      refreshError: 'Не удалось обновить данные вкладки бота',
       subTabs: {
         controlAndParams: 'Управление и параметры',
-        arbitrageId: 'ID Арбитража',
         errors: 'Ошибки',
         job: 'Задача',
         chart: 'График',

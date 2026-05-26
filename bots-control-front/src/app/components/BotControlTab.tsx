@@ -281,7 +281,7 @@ export function BotControlTab({ botId }: BotControlTabProps) {
           />
 
           {/* Modal Window */}
-          <div className="relative bg-card border border-border rounded shadow-xl w-[800px] max-h-[90vh] flex flex-col">
+          <div className="relative bg-card border border-border rounded shadow-xl w-[800px] max-h-[90vh] mb-[8vh] flex flex-col">
             {/* Modal Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-border">
               <h2 className="text-foreground">{t.botDetail.controlTab.modal.title}</h2>
@@ -294,15 +294,15 @@ export function BotControlTab({ botId }: BotControlTabProps) {
             </div>
 
             {/* Modal Body */}
-            <div className="flex-1 overflow-hidden p-6">
-              <div className="flex gap-6 h-full">
+            <div className="flex-1 overflow-auto p-6 min-h-0">
+              <div className="flex gap-6 min-h-[50vh] max-h-[calc(90vh-180px)]">
                 {/* Bot Params Column */}
                 <div className="flex-1 flex flex-col">
                   <label className="text-sm text-foreground mb-2">{t.botDetail.controlTab.modal.botParams}</label>
                   <textarea
                     value={tempBotParams}
                     onChange={(e) => setTempBotParams(e.target.value)}
-                    className="flex-1 bg-muted text-foreground border border-border rounded p-4 text-sm font-mono resize-none focus:outline-none focus:ring-1 focus:ring-primary"
+                    className="flex-1 min-h-[300px] bg-muted text-foreground border border-border rounded p-4 text-sm font-mono resize-y focus:outline-none focus:ring-1 focus:ring-primary"
                     spellCheck={false}
                   />
                 </div>
@@ -313,7 +313,7 @@ export function BotControlTab({ botId }: BotControlTabProps) {
                   <textarea
                     value={tempJobParams}
                     onChange={(e) => setTempJobParams(e.target.value)}
-                    className="flex-1 bg-muted text-foreground border border-border rounded p-4 text-sm font-mono resize-none focus:outline-none focus:ring-1 focus:ring-primary"
+                    className="flex-1 min-h-[300px] bg-muted text-foreground border border-border rounded p-4 text-sm font-mono resize-y focus:outline-none focus:ring-1 focus:ring-primary"
                     spellCheck={false}
                   />
                 </div>

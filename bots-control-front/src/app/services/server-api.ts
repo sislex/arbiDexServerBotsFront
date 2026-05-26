@@ -74,6 +74,10 @@ export const serverApi = {
     return request<ServerData>(activeServer, '/info');
   },
 
+  getApiList(activeServer: string): Promise<Record<string, unknown>[]> {
+    return request<Record<string, unknown>[]>(activeServer, '/info/apis');
+  },
+
   getBotTypes(activeServer: string): Promise<TypeListItem[]> {
     return request<TypeListItem[]>(activeServer, '/info/bots-types-list');
   },

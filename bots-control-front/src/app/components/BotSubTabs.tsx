@@ -3,15 +3,13 @@ import { useLanguage } from '../i18n/LanguageContext';
 interface BotSubTabsProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
-  arbitrageCount?: number;
 }
 
-export function BotSubTabs({ activeTab, onTabChange, arbitrageCount = 0 }: BotSubTabsProps) {
+export function BotSubTabs({ activeTab, onTabChange }: BotSubTabsProps) {
   const { t } = useLanguage();
 
   const tabs = [
     { id: 'control', label: t.botDetail.subTabs.controlAndParams },
-    { id: 'arbitrage', label: `${t.botDetail.subTabs.arbitrageId} (${arbitrageCount})` },
     { id: 'errors', label: t.botDetail.subTabs.errors },
     { id: 'job', label: t.botDetail.subTabs.job },
     { id: 'chart', label: t.botDetail.subTabs.chart },

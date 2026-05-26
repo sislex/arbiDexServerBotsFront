@@ -4,7 +4,10 @@ import {
   ModuleRegistry,
   AllCommunityModule,
   type ColDef,
+  type GridReadyEvent,
+  type FirstDataRenderedEvent,
   type RowClickedEvent,
+  type RowDoubleClickedEvent,
 } from 'ag-grid-community';
 
 import 'ag-grid-community/styles/ag-grid.css';
@@ -17,6 +20,9 @@ interface AppGridProps<T> {
   columnDefs: ColDef<T>[];
   className?: string;
   onRowClicked?: (event: RowClickedEvent<T>) => void;
+  onRowDoubleClicked?: (event: RowDoubleClickedEvent<T>) => void;
+  onGridReady?: (event: GridReadyEvent<T>) => void;
+  onFirstDataRendered?: (event: FirstDataRenderedEvent<T>) => void;
 }
 
 export function AppGrid<T extends object>({
@@ -24,6 +30,9 @@ export function AppGrid<T extends object>({
   columnDefs,
   className,
   onRowClicked,
+  onRowDoubleClicked,
+  onGridReady,
+  onFirstDataRendered,
 }: AppGridProps<T>) {
   const defaultColDef = useMemo<ColDef<T>>(
     () => ({
@@ -41,6 +50,9 @@ export function AppGrid<T extends object>({
         columnDefs={columnDefs}
         defaultColDef={defaultColDef}
         onRowClicked={onRowClicked}
+        onRowDoubleClicked={onRowDoubleClicked}
+        onGridReady={onGridReady}
+        onFirstDataRendered={onFirstDataRendered}
       />
     </div>
   );

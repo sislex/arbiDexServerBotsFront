@@ -2,7 +2,6 @@ import { Suspense, lazy, useEffect, useState } from 'react';
 import { BotDetailHeader } from './BotDetailHeader';
 import { BotSubTabs } from './BotSubTabs';
 import { BotControlTab } from './BotControlTab';
-import { BotArbitrageTab } from './BotArbitrageTab';
 import { BotErrorsTab } from './BotErrorsTab';
 import { BotJobTab } from './BotJobTab';
 const PriceChartContainer = lazy(async () =>
@@ -12,8 +11,14 @@ const PriceChartLiveContainer = lazy(async () =>
   import('./charts/PriceChartLiveContainer').then((module) => ({ default: module.PriceChartLiveContainer })),
 );
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { selectActiveBotArbitrageState } from '../store/selectors';
-import { clearActiveBotData, loadActiveBotAll } from '../store/slices/servers-slice';
+import { selectBotControlActionState } from '../store/selectors';
+import {
+  clearActiveBotData,
+  loadActiveBotAll,
+  refreshActiveBotTabData,
+} from '../store/slices/servers-slice';
+import { showToast } from '../services/toast';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface BotDetailPageProps {
   botId: string;
@@ -21,8 +26,9 @@ interface BotDetailPageProps {
 }
 
 export function BotDetailPage({ botId, onBack }: BotDetailPageProps) {
+  const { t } = useLanguage();
   const dispatch = useAppDispatch();
-  const arbitrageState = useAppSelector(selectActiveBotArbitrageState);
+  const botActionState = useAppSelector(selectBotControlActionState);
   const [activeSubTab, setActiveSubTab] = useState('control');
 
   useEffect(() => {
@@ -40,15 +46,30 @@ export function BotDetailPage({ botId, onBack }: BotDetailPageProps) {
 
   return (
     <div className="size-full flex flex-col bg-background text-foreground">
-      <BotDetailHeader botId={botId} onBack={onBack} />
+      <BotDetailHeader
+        botId={botId}
+        onBack={onBack}
+        onRefresh={async () => {
+          const result = await dispatch(
+            refreshActiveBotTabData({
+              botId,
+              activeTab: activeSubTab as 'control' | 'errors' | 'job' | 'chart' | 'live-chart',
+            }),
+          );
+          if (refreshActiveBotTabData.fulfilled.match(result)) {
+            showToast('success', t.botDetail.refreshSuccess);
+          } else {
+            showToast('error', result.error.message ?? t.botDetail.refreshError);
+          }
+        }}
+        isRefreshing={botActionState.isLoading}
+      />
       <BotSubTabs
         activeTab={activeSubTab}
         onTabChange={setActiveSubTab}
-        arbitrageCount={arbitrageState.data.length}
       />
 
       {activeSubTab === 'control' && <BotControlTab botId={botId} />}
-      {activeSubTab === 'arbitrage' && <BotArbitrageTab />}
       {activeSubTab === 'errors' && <BotErrorsTab />}
       {activeSubTab === 'job' && <BotJobTab botId={botId} />}
       {activeSubTab === 'chart' && (

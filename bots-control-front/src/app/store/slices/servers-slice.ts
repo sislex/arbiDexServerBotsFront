@@ -242,6 +242,27 @@ export const saveBotSettings = createAsyncThunk(
   },
 );
 
+export const refreshActiveBotTabData = createAsyncThunk(
+  'servers/refreshActiveBotTabData',
+  async (
+    { botId, activeTab }: { botId: string; activeTab: 'control' | 'errors' | 'job' | 'chart' | 'live-chart' },
+    { getState },
+  ) => {
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
+
+    if (activeTab === 'control' || activeTab === 'job' || activeTab === 'chart' || activeTab === 'live-chart') {
+      const [info, params] = await Promise.all([
+        serverApi.getBotInfo(activeServer, botId),
+        serverApi.getBotParams(activeServer, botId),
+      ]);
+      return { activeTab, info, params, errors: null };
+    }
+
+    const errors = await serverApi.getBotErrors(activeServer, botId);
+    return { activeTab, info: null, params: null, errors };
+  },
+);
+
 const serversSlice = createSlice({
   name: 'servers',
   initialState,
@@ -469,6 +490,32 @@ const serversSlice = createSlice({
         state.botControlAction.isLoading = false;
         state.botControlAction.isLoaded = true;
         state.botControlAction.error = action.error.message ?? 'Failed to save bot settings';
+      })
+      .addCase(refreshActiveBotTabData.pending, (state) => {
+        state.botControlAction.isLoading = true;
+        state.botControlAction.error = null;
+      })
+      .addCase(refreshActiveBotTabData.fulfilled, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+
+        if (action.payload.info) {
+          state.activeBotInfo.data = action.payload.info;
+          state.activeBotInfo.isLoaded = true;
+        }
+        if (action.payload.params) {
+          state.activeBotParams.data = action.payload.params;
+          state.activeBotParams.isLoaded = true;
+        }
+        if (action.payload.errors) {
+          state.activeBotErrors.data = action.payload.errors;
+          state.activeBotErrors.isLoaded = true;
+        }
+      })
+      .addCase(refreshActiveBotTabData.rejected, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.error = action.error.message ?? 'Failed to refresh bot tab data';
       });
   },
 });
