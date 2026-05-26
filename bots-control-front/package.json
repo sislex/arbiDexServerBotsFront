@@ -6,7 +6,8 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "test": "vitest run"
+    "test": "vitest run",
+    "start:docker": "docker-compose up --build -d"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
