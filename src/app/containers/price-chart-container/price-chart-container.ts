@@ -3,9 +3,13 @@ import { Store } from '@ngrx/store';
 import { PriceChart } from '../../components/price-chart/price-chart';
 import type { PricePoint, PriceSeriesConfig } from '../../components/price-chart/price-chart';
 import { ServerDataService } from '../../services/server-data.service';
-import { findPriceKeys, formatPipeKeyName, PRICE_COLORS } from '../../services/price-key-utils';
+import {
+  buildPricePipeKeysFromJob,
+  buildSeriesFromPipeKeys,
+  getPricePairFromJob,
+} from '../../services/price-key-utils';
 import { getInfoActiveBot } from '../../+state/servers/servers.selectors';
-import { forkJoin, Subscription, filter, take, switchMap, map } from 'rxjs';
+import { forkJoin, Subscription, filter, take } from 'rxjs';
 import { LoaderContainer } from '../loader-container/loader-container';
 
 @Component({
@@ -38,51 +42,21 @@ export class PriceChartContainer implements OnInit, OnDestroy {
     this.sub = this.store
       .select(getInfoActiveBot)
       .pipe(
-        filter((info) => {
-          const jp = info?.jobParams as any;
-          const token0 = jp?.token0 ?? jp?.opts?.tokenIn?.symbol;
-          const token1 = jp?.token1 ?? jp?.opts?.tokenOut?.symbol;
-          return !!jp?.source && !!token0 && !!token1;
-        }),
+        filter((info) => !!getPricePairFromJob(info?.jobParams)),
         take(1),
-        switchMap((info) =>
-          this.serverDataService.getPriceKeys().pipe(map((keys) => ({ info, keys }))),
-        ),
       )
-      .subscribe(({ info, keys: allKeys }) => {
-        const jp = info.jobParams as any;
-        const jobType = String(jp?.jobType ?? '');
-        const source = String(jp?.source ?? '');
-        const token0 = String(jp?.token0 ?? jp?.opts?.tokenIn?.symbol ?? '');
-        const token1 = String(jp?.token1 ?? jp?.opts?.tokenOut?.symbol ?? '');
-        const isCexQuotes = jobType === 'get_Cex_Quotes';
-
-        const found = findPriceKeys(allKeys, source, token0, token1);
-        if (!found) {
+      .subscribe((info) => {
+        const pair = getPricePairFromJob(info.jobParams as any);
+        if (!pair) {
           this.isLoading = false;
           return;
         }
 
-        const pipeKeys = [found.bidKey, found.askKey];
+        const { source, token0, token1 } = pair;
+        const { bidKey, askKey } = buildPricePipeKeysFromJob(source, token0, token1);
+        const pipeKeys = [bidKey, askKey];
         const flatKeys = pipeKeys.map((k) => k.replace(/\|/g, ''));
-        const symbol = found.bidKey.split('|')[1];
-        const midKey = `${source}${symbol}mid`;
-
-        if (isCexQuotes) {
-          this.series = [
-            {
-              key: midKey,
-              name: `${source.charAt(0).toUpperCase() + source.slice(1)} ${symbol} Mid`,
-              color: PRICE_COLORS[2],
-            },
-          ];
-        } else {
-          this.series = pipeKeys.map((k, i) => ({
-            key: flatKeys[i],
-            name: formatPipeKeyName(k),
-            color: PRICE_COLORS[i],
-          }));
-        }
+        this.series = buildSeriesFromPipeKeys(pipeKeys);
 
         const requests = pipeKeys.reduce(
           (acc, pipeKey) => {
@@ -92,8 +66,6 @@ export class PriceChartContainer implements OnInit, OnDestroy {
           },
           {} as Record<string, ReturnType<ServerDataService['getPriceByKey']>>,
         );
-
-
         forkJoin(requests).subscribe((responses) => {
           const timeSet = new Set<number>();
           for (const res of Object.values(responses)) {
@@ -124,17 +96,9 @@ export class PriceChartContainer implements OnInit, OnDestroy {
               }
             }
 
-            if (isCexQuotes) {
-              const bid = lastKnown[flatKeys[0]];
-              const ask = lastKnown[flatKeys[1]];
-              if (bid !== undefined && ask !== undefined) {
-                point[midKey] = (bid + ask) / 2;
-              }
-            } else {
-              for (const key of flatKeys) {
-                if (lastKnown[key] !== undefined) {
-                  point[key] = lastKnown[key]!;
-                }
+            for (const key of flatKeys) {
+              if (lastKnown[key] !== undefined) {
+                point[key] = lastKnown[key]!;
               }
             }
 

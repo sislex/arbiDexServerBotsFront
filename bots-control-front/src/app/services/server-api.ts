@@ -110,9 +110,6 @@ export const serverApi = {
     return request<Record<string, unknown>[]>(activeServer, `/bot/${botId}/arbitrage`);
   },
 
-  getPriceKeys(activeServer: string): Promise<string[]> {
-    return request<string[]>(activeServer, '/prices/keys');
-  },
 
   getPriceByKey(
     activeServer: string,

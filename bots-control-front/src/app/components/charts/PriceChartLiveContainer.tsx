@@ -2,9 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { io, type Socket } from 'socket.io-client';
 import { serverApi } from '../../services/server-api';
 import {
+  buildPricePipeKeysFromJob,
   buildSeriesFromPipeKeys,
-  findPriceKeys,
-  PRICE_COLORS,
+  getPricePairFromJob,
   type PriceSeriesConfig,
 } from '../../services/price-key-utils';
 import { useLanguage } from '../../i18n/LanguageContext';
@@ -33,8 +33,6 @@ export function PriceChartLiveContainer() {
   const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reconnectAttemptRef = useRef(0);
   const keysRef = useRef<string[]>([]);
-  const midKeyRef = useRef('');
-  const isCexQuotesRef = useRef(false);
   const lastKnownRef = useRef<Record<string, number>>({});
   const bufferRef = useRef<PricePoint[]>([]);
 
@@ -62,52 +60,21 @@ export function PriceChartLiveContainer() {
         setIsLoading(true);
         setError(null);
         const jobParams = (activeBotInfoState.data?.jobParams as Record<string, unknown>) ?? {};
-        const source = String(jobParams.source ?? '');
-        const token0 = String(jobParams.token0 ?? '');
-        const token1 = String(jobParams.token1 ?? '');
-        const jobType = String(jobParams.jobType ?? '');
-        const isCexQuotes = jobType === 'get_Cex_Quotes';
-        isCexQuotesRef.current = isCexQuotes;
+        const pair = getPricePairFromJob(jobParams);
 
-        if (!source || !token0 || !token1) {
+        if (!pair) {
           setData([]);
           setSeries([]);
           setError(t.botDetail.chartTab.missingJobParams);
           return;
         }
 
-        const allKeys = await serverApi.getPriceKeys(activeServerIpPort);
-        const found = findPriceKeys(allKeys, source, token0, token1);
-        if (!found) {
-          setData([]);
-          setSeries([]);
-          setError(t.botDetail.chartTab.keysNotFound);
-          return;
-        }
-
-        const pipeKeys = [found.bidKey, found.askKey];
+        const { source, token0, token1 } = pair;
+        const { bidKey, askKey } = buildPricePipeKeysFromJob(source, token0, token1);
+        const pipeKeys = [bidKey, askKey];
         const flatKeys = pipeKeys.map((k) => k.replace(/\|/g, ''));
         keysRef.current = flatKeys;
-
-        const symbol = found.bidKey.split('|')[1];
-        const midKey = `${source}${symbol}mid`;
-        midKeyRef.current = midKey;
-
-        if (isCexQuotes) {
-          const nextSeries = [
-            {
-              key: midKey,
-              name: `${source.charAt(0).toUpperCase() + source.slice(1)} ${symbol} Mid`,
-              color: PRICE_COLORS[2],
-            },
-          ];
-          setSeries(nextSeries);
-          setHiddenKeys((prev) => prev.filter((key) => nextSeries.some((item) => item.key === key)));
-        } else {
-          const nextSeries = buildSeriesFromPipeKeys(pipeKeys);
-          setSeries(nextSeries);
-          setHiddenKeys((prev) => prev.filter((key) => nextSeries.some((item) => item.key === key)));
-        }
+        setSeries(buildSeriesFromPipeKeys(pipeKeys));
 
         const responses = await Promise.all(
           pipeKeys.map(async (pipeKey) => {
@@ -147,19 +114,11 @@ export function PriceChartLiveContainer() {
             }
           });
 
-          if (isCexQuotes) {
-            const bid = lastKnown[flatKeys[0]];
-            const ask = lastKnown[flatKeys[1]];
-            if (bid !== undefined && ask !== undefined) {
-              point[midKey] = (bid + ask) / 2;
+          flatKeys.forEach((key) => {
+            if (lastKnown[key] !== undefined) {
+              point[key] = lastKnown[key] as number;
             }
-          } else {
-            flatKeys.forEach((key) => {
-              if (lastKnown[key] !== undefined) {
-                point[key] = lastKnown[key] as number;
-              }
-            });
-          }
+          });
 
           return point;
         });
@@ -227,27 +186,14 @@ export function PriceChartLiveContainer() {
             }
             lastKnownRef.current[key] = payload.point.v;
 
-            const p: PricePoint = { time: payload.point.t };
-            if (isCexQuotesRef.current) {
-              const bid = lastKnownRef.current[keysRef.current[0]];
-              const ask = lastKnownRef.current[keysRef.current[1]];
-              if (bid !== undefined && ask !== undefined) {
-                p[midKeyRef.current] = (bid + ask) / 2;
-              } else {
-                return;
-              }
-            } else {
-              keysRef.current.forEach((k) => {
-                if (lastKnownRef.current[k] !== undefined) {
-                  p[k] = lastKnownRef.current[k];
-                }
-              });
+          const p: PricePoint = { time: payload.point.t };
+          keysRef.current.forEach((k) => {
+            if (lastKnownRef.current[k] !== undefined) {
+              p[k] = lastKnownRef.current[k];
             }
-            bufferRef.current.push(p);
           });
-        };
-
-        connectSocket();
+          bufferRef.current.push(p);
+        });
 
         if (flushRef.current) {
           clearInterval(flushRef.current);
@@ -275,7 +221,13 @@ export function PriceChartLiveContainer() {
     };
 
     void load();
-  }, [activeBotInfoState.data, activeServerIpPort, t.botDetail.chartTab.keysNotFound, t.botDetail.chartTab.liveLoadError, t.botDetail.chartTab.missingJobParams, t.botDetail.chartTab.socketErrorPrefix]);
+  }, [
+    activeBotInfoState.data,
+    activeServerIpPort,
+    t.botDetail.chartTab.liveLoadError,
+    t.botDetail.chartTab.missingJobParams,
+    t.botDetail.chartTab.socketErrorPrefix,
+  ]);
 
   if (isLoading) {
     return (

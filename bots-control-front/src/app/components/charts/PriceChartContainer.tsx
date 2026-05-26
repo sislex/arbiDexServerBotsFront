@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { serverApi } from '../../services/server-api';
 import {
-  findPriceKeys,
-  formatPipeKeyName,
-  PRICE_COLORS,
+  buildPricePipeKeysFromJob,
+  buildSeriesFromPipeKeys,
+  getPricePairFromJob,
   type PriceSeriesConfig,
 } from '../../services/price-key-utils';
 import { useLanguage } from '../../i18n/LanguageContext';
@@ -32,52 +32,20 @@ export function PriceChartContainer() {
         setIsLoading(true);
         setError(null);
         const jobParams = (activeBotInfoState.data?.jobParams as Record<string, unknown>) ?? {};
-        const source = String(jobParams.source ?? '');
-        const token0 = String(jobParams.token0 ?? '');
-        const token1 = String(jobParams.token1 ?? '');
-        const jobType = String(jobParams.jobType ?? '');
-        const isCexQuotes = jobType === 'get_Cex_Quotes';
+        const pair = getPricePairFromJob(jobParams);
 
-        if (!source || !token0 || !token1) {
+        if (!pair) {
           setData([]);
           setSeries([]);
           setError(t.botDetail.chartTab.missingJobParams);
           return;
         }
 
-        const allKeys = await serverApi.getPriceKeys(activeServerIpPort);
-        const found = findPriceKeys(allKeys, source, token0, token1);
-        if (!found) {
-          setData([]);
-          setSeries([]);
-          setError(t.botDetail.chartTab.keysNotFound);
-          return;
-        }
-
-        const pipeKeys = [found.bidKey, found.askKey];
+        const { source, token0, token1 } = pair;
+        const { bidKey, askKey } = buildPricePipeKeysFromJob(source, token0, token1);
+        const pipeKeys = [bidKey, askKey];
         const flatKeys = pipeKeys.map((k) => k.replace(/\|/g, ''));
-        const symbol = found.bidKey.split('|')[1];
-        const midKey = `${source}${symbol}mid`;
-
-        if (isCexQuotes) {
-          const nextSeries = [
-            {
-              key: midKey,
-              name: `${source.charAt(0).toUpperCase() + source.slice(1)} ${symbol} Mid`,
-              color: PRICE_COLORS[2],
-            },
-          ];
-          setSeries(nextSeries);
-          setHiddenKeys((prev) => prev.filter((key) => nextSeries.some((item) => item.key === key)));
-        } else {
-          const nextSeries = pipeKeys.map((k, i) => ({
-            key: flatKeys[i],
-            name: formatPipeKeyName(k),
-            color: PRICE_COLORS[i % PRICE_COLORS.length],
-          }));
-          setSeries(nextSeries);
-          setHiddenKeys((prev) => prev.filter((key) => nextSeries.some((item) => item.key === key)));
-        }
+        setSeries(buildSeriesFromPipeKeys(pipeKeys));
 
         const responses = await Promise.all(
           pipeKeys.map(async (pipeKey) => {
@@ -117,19 +85,11 @@ export function PriceChartContainer() {
             }
           });
 
-          if (isCexQuotes) {
-            const bid = lastKnown[flatKeys[0]];
-            const ask = lastKnown[flatKeys[1]];
-            if (bid !== undefined && ask !== undefined) {
-              point[midKey] = (bid + ask) / 2;
+          flatKeys.forEach((key) => {
+            if (lastKnown[key] !== undefined) {
+              point[key] = lastKnown[key] as number;
             }
-          } else {
-            flatKeys.forEach((key) => {
-              if (lastKnown[key] !== undefined) {
-                point[key] = lastKnown[key] as number;
-              }
-            });
-          }
+          });
 
           return point;
         });
@@ -149,7 +109,13 @@ export function PriceChartContainer() {
     };
 
     void load();
-  }, [activeBotInfoState.data, activeServerIpPort, t.botDetail.chartTab.keysNotFound, t.botDetail.chartTab.loadError, t.botDetail.chartTab.missingJobParams, t.botDetail.chartTab.noHistoricalPoints]);
+  }, [
+    activeBotInfoState.data,
+    activeServerIpPort,
+    t.botDetail.chartTab.loadError,
+    t.botDetail.chartTab.missingJobParams,
+    t.botDetail.chartTab.noHistoricalPoints,
+  ]);
 
   if (isLoading) {
     return <div className="h-full flex items-center justify-center text-gray-500">{t.botDetail.chartTab.loading}</div>;
