@@ -17,3 +17,4 @@ export const selectActiveBotErrorsState = (state: RootState) => state.servers.ac
 export const selectActiveBotArbitrageState = (state: RootState) =>
   state.servers.activeBotArbitrage;
 export const selectBotControlActionState = (state: RootState) => state.servers.botControlAction;
+export const selectPendingBotPauseId = (state: RootState) => state.servers.pendingBotPauseId;

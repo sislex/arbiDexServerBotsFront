@@ -15,6 +15,7 @@ import {
 } from '../store/slices/servers-slice';
 import { showToast } from '../services/toast';
 import { mapBotDetailsToViewModel } from '../services/bot-control-adapter';
+import { formatLastJobResult } from '../services/format-last-job-result';
 
 interface BotControlTabProps {
   botId: string;
@@ -119,7 +120,7 @@ export function BotControlTab({ botId }: BotControlTabProps) {
     { name: t.botDetail.controlTab.fields.lastJobTimeStart, value: pretty(controlVm.lastJobTimeStart) },
     { name: t.botDetail.controlTab.fields.lastJobTimeFinish, value: pretty(controlVm.lastJobTimeFinish) },
     { name: t.botDetail.controlTab.fields.sendData, value: pretty(isSendData) },
-    { name: t.botDetail.controlTab.fields.lastJobResult, value: pretty(controlVm.lastJobResult) },
+    { name: t.botDetail.controlTab.fields.lastJobResult, value: formatLastJobResult(controlVm.lastJobResult) },
     { name: t.botDetail.controlTab.fields.botParams, value: currentBotParamsJson || botParams },
     { name: t.botDetail.controlTab.fields.jobParams, value: currentJobParamsJson || jobParams },
   ];
@@ -249,7 +250,8 @@ export function BotControlTab({ botId }: BotControlTabProps) {
                     <td className="px-4 py-3 text-sm text-muted-foreground">{param.name}</td>
                     <td className="px-4 py-3 text-sm text-foreground">
                       {param.name === t.botDetail.controlTab.fields.botParams ||
-                      param.name === t.botDetail.controlTab.fields.jobParams ? (
+                      param.name === t.botDetail.controlTab.fields.jobParams ||
+                      param.name === t.botDetail.controlTab.fields.lastJobResult ? (
                         <pre className="bg-muted text-foreground border border-border rounded p-3 text-xs font-mono whitespace-pre overflow-x-auto">
                           {param.value}
                         </pre>

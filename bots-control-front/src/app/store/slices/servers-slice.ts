@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
+import { waitForAllBotsPauseState, waitForBotPauseState } from '../../services/bot-pause-utils';
 import { serverApi } from '../../services/server-api';
 import { DEFAULT_SERVER_LIST } from '../constants';
 import { createAsyncState } from '../utils';
@@ -26,6 +27,7 @@ interface ServersState {
   activeBotErrors: AsyncState<Record<string, unknown>[]>;
   activeBotArbitrage: AsyncState<Record<string, unknown>[]>;
   botControlAction: AsyncState<Record<string, unknown> | null>;
+  pendingBotPauseId: string | null;
 }
 
 const initialServer = DEFAULT_SERVER_LIST[1] ?? DEFAULT_SERVER_LIST[0];
@@ -43,6 +45,7 @@ const initialState: ServersState = {
   activeBotErrors: createAsyncState<Record<string, unknown>[]>([]),
   activeBotArbitrage: createAsyncState<Record<string, unknown>[]>([]),
   botControlAction: createAsyncState<Record<string, unknown> | null>(null),
+  pendingBotPauseId: null,
 };
 
 const getActiveServerKey = (state: { servers: ServersState }) =>
@@ -141,6 +144,7 @@ export const setBotPaused = createAsyncThunk(
   async ({ botId, pause }: { botId: string; pause: boolean }, { getState, dispatch }) => {
     const activeServer = getActiveServerKey(getState() as { servers: ServersState });
     const response = await serverApi.setBotPause(activeServer, botId, pause);
+    await waitForBotPauseState(activeServer, botId, pause);
     await dispatch(loadActiveBotAll(botId));
     await dispatch(loadBotControlList());
     return response;
@@ -160,6 +164,11 @@ export const setAllBotsPaused = createAsyncThunk(
       botIds.map((botId) => serverApi.setBotPause(activeServer, botId, pause)),
     );
     const failedCount = results.filter((result) => result.status === 'rejected').length;
+    const successfulBotIds = botIds.filter((_, index) => results[index].status === 'fulfilled');
+
+    if (successfulBotIds.length > 0) {
+      await waitForAllBotsPauseState(activeServer, successfulBotIds, pause);
+    }
 
     await dispatch(loadBotControlList());
 
@@ -183,6 +192,7 @@ export const setSingleBotPaused = createAsyncThunk(
   async ({ botId, pause }: { botId: string; pause: boolean }, { getState, dispatch }) => {
     const activeServer = getActiveServerKey(getState() as { servers: ServersState });
     const response = await serverApi.setBotPause(activeServer, botId, pause);
+    await waitForBotPauseState(activeServer, botId, pause);
     await dispatch(loadBotControlList());
     return response;
   },
@@ -445,19 +455,22 @@ const serversSlice = createSlice({
         state.botControlAction.isLoaded = true;
         state.botControlAction.error = action.error.message ?? 'Failed to set all bots pause state';
       })
-      .addCase(setSingleBotPaused.pending, (state) => {
+      .addCase(setSingleBotPaused.pending, (state, action) => {
         state.botControlAction.isLoading = true;
         state.botControlAction.error = null;
+        state.pendingBotPauseId = action.meta.arg.botId;
       })
       .addCase(setSingleBotPaused.fulfilled, (state, action) => {
         state.botControlAction.isLoading = false;
         state.botControlAction.isLoaded = true;
         state.botControlAction.data = action.payload;
+        state.pendingBotPauseId = null;
       })
       .addCase(setSingleBotPaused.rejected, (state, action) => {
         state.botControlAction.isLoading = false;
         state.botControlAction.isLoaded = true;
         state.botControlAction.error = action.error.message ?? 'Failed to set single bot pause state';
+        state.pendingBotPauseId = null;
       })
       .addCase(restartBot.pending, (state) => {
         state.botControlAction.isLoading = true;

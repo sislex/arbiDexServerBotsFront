@@ -10,7 +10,7 @@ import {
 import { useLanguage } from '../../i18n/LanguageContext';
 import { useAppSelector } from '../../store/hooks';
 import { selectActiveBotInfoState, selectActiveServer } from '../../store/selectors';
-import { PriceChart, type PricePoint } from './PriceChart';
+import { PriceChart, ResizableChartPanel, type PricePoint } from './PriceChart';
 
 const FLUSH_INTERVAL = 500;
 const MAX_POINTS = 300;
@@ -266,7 +266,7 @@ export function PriceChartLiveContainer() {
   }
 
   return (
-    <div className="p-4 h-[calc(100vh-176px)]">
+    <div className="flex-1 min-h-0 overflow-auto p-4">
       <div className="flex flex-wrap gap-2 mb-3">
         {series.map((item) => {
           const hidden = hiddenKeys.includes(item.key);
@@ -294,7 +294,11 @@ export function PriceChartLiveContainer() {
       {isReconnecting ? (
         <div className="text-xs text-warning mb-2">{t.botDetail.chartTab.reconnecting}</div>
       ) : null}
-      <PriceChart data={data} series={series} hiddenKeys={hiddenKeys} />
+      <ResizableChartPanel>
+        {(height) => (
+          <PriceChart data={data} series={series} hiddenKeys={hiddenKeys} height={height} streaming />
+        )}
+      </ResizableChartPanel>
     </div>
   );
 }

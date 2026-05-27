@@ -74,12 +74,16 @@ export function BotDetailPage({ botId, onBack }: BotDetailPageProps) {
       {activeSubTab === 'job' && <BotJobTab botId={botId} />}
       {activeSubTab === 'chart' && (
         <Suspense fallback={tabLoader}>
-          <PriceChartContainer />
+          <div className="flex-1 min-h-0 flex flex-col">
+            <PriceChartContainer />
+          </div>
         </Suspense>
       )}
       {activeSubTab === 'live-chart' && (
         <Suspense fallback={tabLoader}>
-          <PriceChartLiveContainer />
+          <div className="flex-1 min-h-0 flex flex-col">
+            <PriceChartLiveContainer />
+          </div>
         </Suspense>
       )}
     </div>

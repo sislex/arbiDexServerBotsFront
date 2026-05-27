@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { AgCharts } from 'ag-charts-react';
 import type { AgCartesianChartOptions } from 'ag-charts-community';
 import { ModuleRegistry, AllCommunityModule } from 'ag-charts-community';
@@ -17,6 +17,79 @@ interface PriceChartProps {
   series: PriceSeriesConfig[];
   hiddenKeys?: string[];
   streaming?: boolean;
+  height?: number;
+}
+
+export const DEFAULT_CHART_HEIGHT = 500;
+const MIN_CHART_HEIGHT = 300;
+
+export function ResizableChartPanel({
+  children,
+  defaultHeight = DEFAULT_CHART_HEIGHT,
+}: {
+  children: (height: number) => ReactNode;
+  defaultHeight?: number;
+}) {
+  const [height, setHeight] = useState(defaultHeight);
+  const dragStateRef = useRef<{ startY: number; startHeight: number } | null>(null);
+
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      if (!dragStateRef.current) {
+        return;
+      }
+
+      const delta = event.clientY - dragStateRef.current.startY;
+      setHeight(Math.max(MIN_CHART_HEIGHT, dragStateRef.current.startHeight + delta));
+    };
+
+    const handleMouseUp = () => {
+      if (!dragStateRef.current) {
+        return;
+      }
+
+      dragStateRef.current = null;
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+  }, []);
+
+  const handleResizeStart = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    dragStateRef.current = { startY: event.clientY, startHeight: height };
+    document.body.style.cursor = 'ns-resize';
+    document.body.style.userSelect = 'none';
+  };
+
+  return (
+    <div className="flex flex-col">
+      <div
+        className="overflow-hidden border border-border rounded-t bg-[#161a25]"
+        style={{ height }}
+      >
+        {children(height)}
+      </div>
+      <div
+        role="separator"
+        aria-orientation="horizontal"
+        aria-label="Resize chart"
+        onMouseDown={handleResizeStart}
+        className="h-3 shrink-0 cursor-ns-resize border border-t-0 border-border rounded-b bg-muted hover:bg-accent flex items-center justify-center touch-none select-none"
+      >
+        <div className="w-12 h-1 rounded-full bg-border" />
+      </div>
+    </div>
+  );
 }
 
 export function PriceChart({
@@ -24,6 +97,7 @@ export function PriceChart({
   series,
   hiddenKeys = [],
   streaming = false,
+  height = DEFAULT_CHART_HEIGHT,
 }: PriceChartProps) {
   const [chartData, setChartData] = useState<PricePoint[]>([]);
   const streamIndexRef = useRef(0);
@@ -57,7 +131,7 @@ export function PriceChart({
     return {
       data: chartData,
       background: { fill: '#161a25' },
-      height: 500,
+      height,
       padding: { top: 16, right: 16, bottom: 16, left: 16 },
       series: visibleSeries.map((s) => ({
         type: 'line',
@@ -110,7 +184,7 @@ export function PriceChart({
         height: 30,
       },
     };
-  }, [chartData, hiddenKeys, series]);
+  }, [chartData, height, hiddenKeys, series]);
 
   return <AgCharts options={options} />;
 }

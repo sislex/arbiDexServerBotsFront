@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import type { ColDef } from 'ag-grid-community';
-import { Check, Circle, Pause, Play, RefreshCw } from 'lucide-react';
+import { Check, Circle, Loader2, Pause, Play, RefreshCw } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   selectActiveServer,
   selectBotControlActionState,
   selectBotControlListState,
+  selectPendingBotPauseId,
   selectServerList,
 } from '../store/selectors';
 import {
@@ -59,6 +60,7 @@ export function BotsTab({
   const activeServer = useAppSelector(selectActiveServer);
   const botControlListState = useAppSelector(selectBotControlListState);
   const botControlActionState = useAppSelector(selectBotControlActionState);
+  const pendingBotPauseId = useAppSelector(selectPendingBotPauseId);
   const [selectedServer, setSelectedServer] = useState(`${activeServer.ip}:${activeServer.port}`);
   const [serverStatuses, setServerStatuses] = useState<Record<string, ServerHealthStatus>>({});
   const [isApiInfoOpen, setIsApiInfoOpen] = useState(false);
@@ -143,7 +145,8 @@ export function BotsTab({
         }
 
         const isActive = row.status === 'active';
-        const isDisabled = botControlActionState.isLoading;
+        const isPending = pendingBotPauseId === row.id;
+        const isDisabled = isBulkActionLoading || isPending;
         const title = isActive ? t.botDetail.controlTab.pause : t.botsTab.startAll;
 
         return (
@@ -177,7 +180,13 @@ export function BotsTab({
                     : 'bg-success text-success-foreground hover:opacity-90'
               }`}
             >
-              {isActive ? <Pause size={14} /> : <Play size={14} />}
+              {isPending ? (
+                <Loader2 size={14} className="animate-spin" />
+              ) : isActive ? (
+                <Pause size={14} />
+              ) : (
+                <Play size={14} />
+              )}
             </button>
           </div>
         );
