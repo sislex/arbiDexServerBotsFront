@@ -136,6 +136,12 @@ export function PriceChartLiveContainer() {
         lastKnownRef.current = lk;
         bufferRef.current = [];
 
+        if (reconnectTimerRef.current) {
+          clearTimeout(reconnectTimerRef.current);
+          reconnectTimerRef.current = null;
+        }
+        reconnectAttemptRef.current = 0;
+
         const connectSocket = () => {
           socketRef.current?.disconnect();
           socketRef.current = io(`http://${activeServerIpPort}/prices`, {
@@ -186,14 +192,17 @@ export function PriceChartLiveContainer() {
             }
             lastKnownRef.current[key] = payload.point.v;
 
-          const p: PricePoint = { time: payload.point.t };
-          keysRef.current.forEach((k) => {
-            if (lastKnownRef.current[k] !== undefined) {
-              p[k] = lastKnownRef.current[k];
-            }
+            const p: PricePoint = { time: payload.point.t };
+            keysRef.current.forEach((k) => {
+              if (lastKnownRef.current[k] !== undefined) {
+                p[k] = lastKnownRef.current[k];
+              }
+            });
+            bufferRef.current.push(p);
           });
-          bufferRef.current.push(p);
-        });
+        };
+
+        connectSocket();
 
         if (flushRef.current) {
           clearInterval(flushRef.current);
@@ -221,6 +230,19 @@ export function PriceChartLiveContainer() {
     };
 
     void load();
+
+    return () => {
+      if (flushRef.current) {
+        clearInterval(flushRef.current);
+        flushRef.current = null;
+      }
+      if (reconnectTimerRef.current) {
+        clearTimeout(reconnectTimerRef.current);
+        reconnectTimerRef.current = null;
+      }
+      socketRef.current?.disconnect();
+      socketRef.current = null;
+    };
   }, [
     activeBotInfoState.data,
     activeServerIpPort,

@@ -9,7 +9,12 @@ import {
   selectBotControlListState,
   selectServerList,
 } from '../store/selectors';
-import { restartAllBots, setActiveServer, setAllBotsPaused } from '../store/slices/servers-slice';
+import {
+  restartAllBots,
+  setActiveServer,
+  setAllBotsPaused,
+  setSingleBotPaused,
+} from '../store/slices/servers-slice';
 import { showToast } from '../services/toast';
 import { mapBotItemToListRow } from '../services/bot-control-adapter';
 import { AppGrid } from './shared/AppGrid';
@@ -126,8 +131,8 @@ export function BotsTab({
     {
       headerName: '',
       colId: 'control',
-      minWidth: 120,
-      maxWidth: 140,
+      minWidth: 70,
+      maxWidth: 80,
       sortable: false,
       resizable: false,
       suppressMovable: true,
@@ -149,8 +154,8 @@ export function BotsTab({
               disabled={isDisabled}
               onClick={async (event) => {
                 event.stopPropagation();
-                const result = await dispatch(setBotPaused({ botId: row.id, pause: isActive }));
-                if (setBotPaused.fulfilled.match(result)) {
+                const result = await dispatch(setSingleBotPaused({ botId: row.id, pause: isActive }));
+                if (setSingleBotPaused.fulfilled.match(result)) {
                   showToast(
                     'success',
                     isActive ? t.botDetail.controlTab.pausedSuccess : t.botDetail.controlTab.startedSuccess,
@@ -164,7 +169,7 @@ export function BotsTab({
                 }
               }}
               onDoubleClick={(event) => event.stopPropagation()}
-              className={`inline-flex h-7 w-20 items-center justify-center gap-1 rounded text-xs transition-colors ${
+              className={`inline-flex h-8 w-8 items-center justify-center rounded transition-colors ${
                 isDisabled
                   ? 'bg-muted text-muted-foreground cursor-not-allowed'
                   : isActive
@@ -172,8 +177,7 @@ export function BotsTab({
                     : 'bg-success text-success-foreground hover:opacity-90'
               }`}
             >
-              {isActive ? <Pause size={12} /> : <Play size={12} />}
-              <span>{isActive ? t.botsTab.stopAll : t.botsTab.startAll}</span>
+              {isActive ? <Pause size={14} /> : <Play size={14} />}
             </button>
           </div>
         );

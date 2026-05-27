@@ -178,6 +178,16 @@ export const setAllBotsPaused = createAsyncThunk(
   },
 );
 
+export const setSingleBotPaused = createAsyncThunk(
+  'servers/setSingleBotPaused',
+  async ({ botId, pause }: { botId: string; pause: boolean }, { getState, dispatch }) => {
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
+    const response = await serverApi.setBotPause(activeServer, botId, pause);
+    await dispatch(loadBotControlList());
+    return response;
+  },
+);
+
 export const restartBot = createAsyncThunk(
   'servers/restartBot',
   async (botId: string, { getState, dispatch }) => {
@@ -434,6 +444,20 @@ const serversSlice = createSlice({
         state.botControlAction.isLoading = false;
         state.botControlAction.isLoaded = true;
         state.botControlAction.error = action.error.message ?? 'Failed to set all bots pause state';
+      })
+      .addCase(setSingleBotPaused.pending, (state) => {
+        state.botControlAction.isLoading = true;
+        state.botControlAction.error = null;
+      })
+      .addCase(setSingleBotPaused.fulfilled, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.data = action.payload;
+      })
+      .addCase(setSingleBotPaused.rejected, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.error = action.error.message ?? 'Failed to set single bot pause state';
       })
       .addCase(restartBot.pending, (state) => {
         state.botControlAction.isLoading = true;

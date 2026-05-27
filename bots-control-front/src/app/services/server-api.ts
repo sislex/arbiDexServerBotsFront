@@ -1,7 +1,6 @@
 import type {
   ServerData,
   TypeListItem,
-  BotControlItem,
   RuleItem,
   BotInfo,
   DbServerItem,
@@ -86,8 +85,8 @@ export const serverApi = {
     return request<TypeListItem[]>(activeServer, '/info/job-type-list');
   },
 
-  getBots(activeServer: string): Promise<BotControlItem[]> {
-    return request<BotControlItem[]>(activeServer, '/bots/get-all');
+  getBots(activeServer: string): Promise<Record<string, unknown>[]> {
+    return request<Record<string, unknown>[]>(activeServer, '/bots/get-all');
   },
 
   getRules(activeServer: string): Promise<RuleItem[]> {

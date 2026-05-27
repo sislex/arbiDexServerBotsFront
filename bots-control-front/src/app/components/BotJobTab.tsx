@@ -1,50 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Plus, RotateCw, Trash2, RotateCcw } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { selectActiveBotParamsState, selectBotControlActionState } from '../store/selectors';
+import { selectActiveBotInfoState, selectBotControlActionState } from '../store/selectors';
 import { restartBot, saveBotSettings } from '../store/slices/servers-slice';
 import { showToast } from '../services/toast';
-import { getEmptySettingsPayload } from '../services/bot-control-adapter';
-
-const defaultJobConfig = `{
-  "jobId": "job-arb-001",
-  "type": "arbitrage_scanner",
-  "schedule": {
-    "interval": "5s",
-    "enabled": true
-  },
-  "web3Config": {
-    "provider": "https://mainnet.infura.io/v3/YOUR_PROJECT_ID",
-    "chainId": 1,
-    "gasLimit": 300000,
-    "maxGasPrice": "100000000000",
-    "contracts": {
-      "router": "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
-      "factory": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f"
-    }
-  },
-  "tradingParams": {
-    "minProfitPercent": 0.5,
-    "maxSlippage": 1.0,
-    "exchanges": ["uniswap", "sushiswap", "pancakeswap"],
-    "tokens": [
-      "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-      "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-      "0x6B175474E89094C44Da98b954EedeAC495271d0F"
-    ]
-  },
-  "notifications": {
-    "onSuccess": true,
-    "onError": true,
-    "webhook": "https://hooks.slack.com/services/YOUR_WEBHOOK"
-  },
-  "retryPolicy": {
-    "maxAttempts": 3,
-    "backoffMultiplier": 2,
-    "initialDelay": 1000
-  }
-}`;
 
 interface BotJobTabProps {
   botId: string;
@@ -53,34 +13,72 @@ interface BotJobTabProps {
 export function BotJobTab({ botId }: BotJobTabProps) {
   const { t } = useLanguage();
   const dispatch = useAppDispatch();
-  const botParamsState = useAppSelector(selectActiveBotParamsState);
+  const botInfoState = useAppSelector(selectActiveBotInfoState);
   const botControlActionState = useAppSelector(selectBotControlActionState);
-  const initialFromApi =
-    JSON.stringify(botParamsState.data ?? {}, null, 2).trim() === '{}'
-      ? defaultJobConfig
-      : JSON.stringify(botParamsState.data, null, 2);
-  const [jobConfig, setJobConfig] = useState(defaultJobConfig);
+
+  const jobParamsFromApi = useMemo(
+    () => (botInfoState.data?.jobParams as Record<string, unknown> | undefined) ?? {},
+    [botInfoState.data?.jobParams],
+  );
+
+  const initialFromApi = useMemo(
+    () => JSON.stringify(jobParamsFromApi, null, 2),
+    [jobParamsFromApi],
+  );
+
+  const [jobConfig, setJobConfig] = useState('{}');
 
   useEffect(() => {
-    if (initialFromApi !== defaultJobConfig) {
+    if (botInfoState.isLoaded) {
       setJobConfig(initialFromApi);
     }
-  }, [initialFromApi]);
+  }, [botInfoState.isLoaded, initialFromApi]);
+
+  const buildSettingsPayload = (parsedJobParams: Record<string, unknown>) =>
+    JSON.stringify(
+      {
+        ...(botInfoState.data ?? { id: botId }),
+        jobParams: parsedJobParams,
+      },
+      null,
+      2,
+    );
 
   const handleReset = () => {
     setJobConfig(initialFromApi);
   };
 
   const handleSave = async () => {
-    const result = await dispatch(saveBotSettings({ botId, data: jobConfig }));
+    let parsedJobParams: Record<string, unknown>;
+    try {
+      parsedJobParams = JSON.parse(jobConfig || '{}') as Record<string, unknown>;
+    } catch {
+      showToast('error', t.botDetail.jobTab.savedError);
+      return;
+    }
+
+    const result = await dispatch(
+      saveBotSettings({ botId, data: buildSettingsPayload(parsedJobParams) }),
+    );
     if (saveBotSettings.fulfilled.match(result)) {
       showToast('success', t.botDetail.jobTab.savedSuccess);
       return;
     }
     showToast('error', result.error.message ?? t.botDetail.jobTab.savedError);
   };
+
   const handleRerun = async () => {
-    const saveResult = await dispatch(saveBotSettings({ botId, data: jobConfig }));
+    let parsedJobParams: Record<string, unknown>;
+    try {
+      parsedJobParams = JSON.parse(jobConfig || '{}') as Record<string, unknown>;
+    } catch {
+      showToast('error', t.botDetail.jobTab.savedError);
+      return;
+    }
+
+    const saveResult = await dispatch(
+      saveBotSettings({ botId, data: buildSettingsPayload(parsedJobParams) }),
+    );
     if (!saveBotSettings.fulfilled.match(saveResult)) {
       showToast('error', saveResult.error.message ?? t.botDetail.jobTab.savedError);
       return;
@@ -92,11 +90,28 @@ export function BotJobTab({ botId }: BotJobTabProps) {
       showToast('error', restartResult.error.message ?? t.botDetail.jobTab.rerunError);
     }
   };
+
   const handleDelete = () => {
     if (window.confirm(t.botDetail.jobTab.deleteConfirm)) {
-      setJobConfig(getEmptySettingsPayload(botId));
+      setJobConfig('{}');
     }
   };
+
+  if (botInfoState.isLoading && !botInfoState.isLoaded) {
+    return (
+      <div className="p-4 h-[calc(100vh-122px)] flex items-center justify-center text-muted-foreground">
+        {t.botDetail.chartTab.loading}
+      </div>
+    );
+  }
+
+  if (botInfoState.error) {
+    return (
+      <div className="p-4 h-[calc(100vh-122px)] flex items-center justify-center text-destructive px-6">
+        {botInfoState.error}
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 h-[calc(100vh-122px)]">
