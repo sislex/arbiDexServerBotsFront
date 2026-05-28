@@ -68,6 +68,22 @@ export const translations = {
         'BOT-003': 'Market maker SOL/USDT',
         'BOT-004': 'Price aggregator',
         'BOT-005': 'Liquidity provider BNB chain'
+      },
+      setBot: {
+        button: 'Set bot',
+        title: 'Bot config',
+        hint: 'Paste JSON with id, botParams and jobParams fields.',
+        back: 'Back',
+        save: 'Save',
+        invalidJson: 'Invalid JSON config',
+        saveSuccess: 'Local bot added to list',
+        saveError: 'Failed to add local bot'
+      },
+      removeBot: {
+        button: 'Remove from list',
+        confirm: 'Remove this bot from the list?',
+        success: 'Bot removed from list',
+        error: 'Failed to remove bot from list'
       }
     },
     apiInfo: {
@@ -313,6 +329,22 @@ export const translations = {
         'BOT-003': 'Маркет-мейкер SOL/USDT',
         'BOT-004': 'Агрегатор цен',
         'BOT-005': 'Провайдер ликвидности BNB chain'
+      },
+      setBot: {
+        button: 'Set bot',
+        title: 'Конфиг бота',
+        hint: 'Вставьте JSON с полями id, botParams и jobParams.',
+        back: 'Назад',
+        save: 'Сохранить',
+        invalidJson: 'Некорректный JSON конфиг',
+        saveSuccess: 'Локальный бот добавлен в список',
+        saveError: 'Не удалось добавить локального бота'
+      },
+      removeBot: {
+        button: 'Удалить из списка',
+        confirm: 'Удалить этого бота из списка?',
+        success: 'Бот удалён из списка',
+        error: 'Не удалось удалить бота из списка'
       }
     },
     apiInfo: {
