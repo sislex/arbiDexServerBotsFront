@@ -61,7 +61,7 @@ async function request<T>(
 
 export const serverApi = {
   getServersFromDb(): Promise<DbServerItem[]> {
-    return fetch('http://45.135.182.251:3001/servers').then(async (response) => {
+    return fetch('http://45.159.181.39:3001/servers').then(async (response) => {
       if (!response.ok) {
         throw new Error(await normalizeResponseError(response));
       }

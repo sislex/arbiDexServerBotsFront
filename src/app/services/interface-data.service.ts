@@ -9,7 +9,7 @@ export class ServerDataService {
   private store = inject(Store);
 
   getServers(): Observable<any> {
-    return this.http.get(`http://45.135.182.251:3001/servers`);
+    return this.http.get(`http://45.159.181.39:3001/servers`);
   }
 
 }
