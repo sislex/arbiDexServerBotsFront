@@ -296,7 +296,7 @@ export function PriceChartLiveContainer() {
       ) : null}
       <ResizableChartPanel>
         {(height) => (
-          <PriceChart data={data} series={series} hiddenKeys={hiddenKeys} height={height} streaming />
+          <PriceChart data={data} series={series} hiddenKeys={hiddenKeys} height={height} />
         )}
       </ResizableChartPanel>
     </div>

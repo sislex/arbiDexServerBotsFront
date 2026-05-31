@@ -15,6 +15,7 @@ const LoginForm = lazy(async () =>
   import('./components/LoginForm').then((module) => ({ default: module.LoginForm })),
 );
 import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
+import { ThemeProvider } from './theme/ThemeProvider';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import {
   selectActiveServer,
@@ -86,10 +87,6 @@ function MainLayout() {
       dispatch(loadJobTypes());
     }
   };
-
-  useEffect(() => {
-    document.documentElement.classList.add('dark');
-  }, []);
 
   useEffect(() => {
     dispatch(loadServersFromDb());
@@ -236,28 +233,32 @@ export default function App() {
   if (!authUser) {
     return (
       <LanguageProvider>
-        <Suspense fallback={<PageLoader />}>
-          <LoginForm
-            onLogin={(login) => {
-              sessionStorage.setItem('bots-control-auth-user', login);
-              setAuthUser(login);
-            }}
-          />
-        </Suspense>
+        <ThemeProvider>
+          <Suspense fallback={<PageLoader />}>
+            <LoginForm
+              onLogin={(login) => {
+                sessionStorage.setItem('bots-control-auth-user', login);
+                setAuthUser(login);
+              }}
+            />
+          </Suspense>
+        </ThemeProvider>
       </LanguageProvider>
     );
   }
 
   return (
     <LanguageProvider>
-      <Routes>
-        <Route path="/server/:ipPort/tab/:tabId" element={<TabRouteSync />} />
-        <Route path="/server/:ipPort/:botId" element={<BotPageRoute />} />
-        <Route
-          path="*"
-          element={<Navigate to="/server/45.135.182.251:1001/tab/bots" replace />}
-        />
-      </Routes>
+      <ThemeProvider userLogin={authUser}>
+        <Routes>
+          <Route path="/server/:ipPort/tab/:tabId" element={<TabRouteSync />} />
+          <Route path="/server/:ipPort/:botId" element={<BotPageRoute />} />
+          <Route
+            path="*"
+            element={<Navigate to="/server/45.135.182.251:1001/tab/bots" replace />}
+          />
+        </Routes>
+      </ThemeProvider>
     </LanguageProvider>
   );
 }

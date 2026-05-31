@@ -1,5 +1,6 @@
 import { ProfileMenu } from './ProfileMenu';
 import { useLanguage } from '../i18n/LanguageContext';
+import { useTheme } from '../theme/ThemeProvider';
 
 interface HeaderProps {
   userName?: string;
@@ -13,15 +14,7 @@ export function Header({
   onLogout,
 }: HeaderProps) {
   const { language, setLanguage, t } = useLanguage();
-  const isDark = document.documentElement.classList.contains('dark');
-
-  const toggleTheme = () => {
-    if (document.documentElement.classList.contains('dark')) {
-      document.documentElement.classList.remove('dark');
-      return;
-    }
-    document.documentElement.classList.add('dark');
-  };
+  const { isDark, toggleTheme } = useTheme();
 
   return (
     <header className="h-14 bg-card border-b border-border px-4">

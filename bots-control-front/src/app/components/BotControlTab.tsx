@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Play, Pause, RotateCw, Pencil, X, Circle, Database } from 'lucide-react';
+import { Play, Pause, RotateCw, Pencil, X, Circle, Copy } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
@@ -11,7 +11,6 @@ import {
   restartBot,
   saveBotSettings,
   setBotPaused,
-  setBotSendData,
 } from '../store/slices/servers-slice';
 import { showToast } from '../services/toast';
 import { mapBotDetailsToViewModel } from '../services/bot-control-adapter';
@@ -109,6 +108,18 @@ export function BotControlTab({ botId }: BotControlTabProps) {
     setIsModalOpen(false);
   };
 
+  const handleCopyConfig = async () => {
+    try {
+      const botParams = JSON.parse(currentBotParamsJson || '{}') as Record<string, unknown>;
+      const jobParams = JSON.parse(currentJobParamsJson || '{}') as Record<string, unknown>;
+      const configText = JSON.stringify({ botParams, jobParams }, null, 2);
+      await navigator.clipboard.writeText(configText);
+      showToast('success', t.botDetail.controlTab.copyConfigSuccess);
+    } catch {
+      showToast('error', t.botDetail.controlTab.copyConfigError);
+    }
+  };
+
   const parameters = [
     { name: t.botDetail.controlTab.fields.id, value: botId },
     { name: t.botDetail.controlTab.fields.status, value: controlVm.status },
@@ -182,27 +193,15 @@ export function BotControlTab({ botId }: BotControlTabProps) {
               {/* Spacer */}
               <div className="flex-1"></div>
 
-              {/* Send Data toggle */}
+              {/* Copy config */}
               <button
-                onClick={async () => {
-                  const result = await dispatch(setBotSendData({ botId, isSendData: !isSendData }));
-                  if (setBotSendData.fulfilled.match(result)) {
-                    showToast('success', t.botDetail.controlTab.sendDataSuccess);
-                  } else {
-                    showToast('error', getActionErrorMessage(result, t.botDetail.controlTab.sendDataError));
-                  }
-                }}
-                className={`flex items-center gap-2 px-3 py-2 rounded transition-colors ${
-                  isSendData
-                    ? 'bg-primary/15 text-primary'
-                    : 'bg-muted text-muted-foreground hover:bg-accent'
-                }`}
-                title={isSendData ? t.botDetail.controlTab.sendDataDisable : t.botDetail.controlTab.sendDataEnable}
+                type="button"
+                onClick={() => void handleCopyConfig()}
+                className="flex items-center gap-2 px-3 py-2 rounded transition-colors bg-muted text-muted-foreground hover:bg-accent hover:text-foreground"
+                title={t.botDetail.controlTab.copyConfig}
               >
-                <Database size={16} />
-                <span className="text-xs">
-                  {isSendData ? t.botDetail.controlTab.sendDataOn : t.botDetail.controlTab.sendDataOff}
-                </span>
+                <Copy size={16} />
+                <span className="text-xs">{t.botDetail.controlTab.copyConfig}</span>
               </button>
 
               {/* Restart Button */}
