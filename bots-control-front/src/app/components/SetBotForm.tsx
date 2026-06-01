@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
-import { DEFAULT_LOCAL_BOT_CONFIG_TEMPLATE } from '../services/local-bots-service';
+import { DEFAULT_BOT_CONFIG_TEMPLATE } from '../services/bot-control-adapter';
 
 interface SetBotFormProps {
   onSave: (config: string) => void;
@@ -9,7 +9,7 @@ interface SetBotFormProps {
 
 export function SetBotForm({ onSave, onBack }: SetBotFormProps) {
   const { t } = useLanguage();
-  const [config, setConfig] = useState(DEFAULT_LOCAL_BOT_CONFIG_TEMPLATE);
+  const [config, setConfig] = useState(DEFAULT_BOT_CONFIG_TEMPLATE);
   const [error, setError] = useState<string | null>(null);
 
   const handleSave = () => {

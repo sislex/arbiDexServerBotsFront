@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { ColDef } from 'ag-grid-community';
-import { Check, Circle, Loader2, Pause, Play, RefreshCw, Trash2 } from 'lucide-react';
+import { Check, Circle, Loader2, Pause, Play, RefreshCw } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
@@ -15,8 +15,7 @@ import {
   setActiveServer,
   setAllBotsPaused,
   setSingleBotPaused,
-  addLocalBot,
-  removeLocalBot,
+  setBotFromConfig,
 } from '../store/slices/servers-slice';
 import { showToast } from '../services/toast';
 import { mapBotItemToListRow } from '../services/bot-control-adapter';
@@ -34,7 +33,6 @@ interface BotRow {
   avgReqTime: string;
   lastReqTime: string;
   status: string;
-  isLocal: boolean;
 }
 
 interface ServerUiItem {
@@ -53,11 +51,11 @@ interface BotsTabProps {
 }
 
 export function BotsTab({
-  onBotSelect,
-  onServerSelect,
-  onRefresh,
-  isRefreshing = false,
-}: BotsTabProps) {
+                          onBotSelect,
+                          onServerSelect,
+                          onRefresh,
+                          isRefreshing = false,
+                        }: BotsTabProps) {
   const { t } = useLanguage();
   const dispatch = useAppDispatch();
   const servers = useAppSelector(selectServerList) as ServerUiItem[];
@@ -122,13 +120,12 @@ export function BotsTab({
     };
   }, [servers]);
 
-  const rows: BotRow[] = botControlListState.data.map((item) => ({
-    ...mapBotItemToListRow(
+  const rows: BotRow[] = botControlListState.data.map((item) =>
+    mapBotItemToListRow(
       item,
       t.botsTab.botDescriptions[String(item.id) as keyof typeof t.botsTab.botDescriptions] ?? '-',
     ),
-    isLocal: Boolean(item.isLocal),
-  }));
+  );
 
   const colDefs: ColDef<BotRow>[] = [
     {
@@ -173,7 +170,7 @@ export function BotsTab({
                   showToast(
                     'error',
                     result.error.message ??
-                      (isActive ? t.botDetail.controlTab.pausedError : t.botDetail.controlTab.startedError),
+                    (isActive ? t.botDetail.controlTab.pausedError : t.botDetail.controlTab.startedError),
                   );
                 }
               }}
@@ -193,53 +190,6 @@ export function BotsTab({
               ) : (
                 <Play size={14} />
               )}
-            </button>
-          </div>
-        );
-      },
-    },
-    {
-      headerName: '',
-      colId: 'delete',
-      minWidth: 50,
-      maxWidth: 60,
-      sortable: false,
-      resizable: false,
-      suppressMovable: true,
-      cellRenderer: (params: { data?: BotRow }) => {
-        const row = params.data;
-        if (!row?.isLocal) {
-          return null;
-        }
-
-        const isDisabled = isBulkActionLoading;
-
-        return (
-          <div className="w-full h-full flex items-center justify-center">
-            <button
-              type="button"
-              title={t.botsTab.removeBot.button}
-              disabled={isDisabled}
-              onClick={async (event) => {
-                event.stopPropagation();
-                if (!window.confirm(t.botsTab.removeBot.confirm)) {
-                  return;
-                }
-                const result = await dispatch(removeLocalBot(row.id));
-                if (removeLocalBot.fulfilled.match(result)) {
-                  showToast('success', t.botsTab.removeBot.success);
-                } else {
-                  showToast('error', result.error.message ?? t.botsTab.removeBot.error);
-                }
-              }}
-              onDoubleClick={(event) => event.stopPropagation()}
-              className={`inline-flex h-8 w-8 items-center justify-center rounded transition-colors ${
-                isDisabled
-                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                  : 'bg-destructive/15 text-destructive hover:bg-destructive/25'
-              }`}
-            >
-              <Trash2 size={14} />
             </button>
           </div>
         );
@@ -416,8 +366,8 @@ export function BotsTab({
           <SetBotForm
             onBack={() => setIsSetBotFormOpen(false)}
             onSave={async (config) => {
-              const result = await dispatch(addLocalBot(config));
-              if (addLocalBot.fulfilled.match(result)) {
+              const result = await dispatch(setBotFromConfig(config));
+              if (setBotFromConfig.fulfilled.match(result)) {
                 showToast('success', t.botsTab.setBot.saveSuccess);
                 setIsSetBotFormOpen(false);
               } else {

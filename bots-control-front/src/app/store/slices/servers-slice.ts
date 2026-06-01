@@ -1,22 +1,10 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
-import { waitForAllBotsPauseState, waitForBotPauseState } from '../../services/bot-pause-utils';
 import {
-  addLocalBotEntry,
-  findLocalBot,
-  getLocalBotsForServer,
-  isLocalBotId,
-  localBotToControlItem,
-  localBotToInfo,
-  localBotToParams,
-  loadLocalBotsFromStorage,
-  restartLocalBot,
-  removeLocalBotEntry,
-  saveLocalBotsToStorage,
-  setLocalBotPaused,
-  updateLocalBotConfig,
-  updateLocalBotRuntime,
-  type LocalBotsByServer,
-} from '../../services/local-bots-service';
+  mergeBotRuleIntoList,
+  normalizeRulesList,
+  parseBotConfigJson,
+} from '../../services/bot-control-adapter';
+import { waitForAllBotsPauseState, waitForBotPauseState } from '../../services/bot-pause-utils';
 import { serverApi } from '../../services/server-api';
 import { DEFAULT_SERVER_LIST } from '../constants';
 import { createAsyncState } from '../utils';
@@ -45,7 +33,6 @@ interface ServersState {
   activeBotArbitrage: AsyncState<Record<string, unknown>[]>;
   botControlAction: AsyncState<Record<string, unknown> | null>;
   pendingBotPauseId: string | null;
-  localBotsByServer: LocalBotsByServer;
 }
 
 const initialServer = DEFAULT_SERVER_LIST[1] ?? DEFAULT_SERVER_LIST[0];
@@ -64,7 +51,6 @@ const initialState: ServersState = {
   activeBotArbitrage: createAsyncState<Record<string, unknown>[]>([]),
   botControlAction: createAsyncState<Record<string, unknown> | null>(null),
   pendingBotPauseId: null,
-  localBotsByServer: loadLocalBotsFromStorage(),
 };
 
 const getActiveServerKey = (state: { servers: ServersState }) =>
@@ -77,18 +63,6 @@ const mapApiBotsToControlItems = (items: Record<string, unknown>[]): BotControlI
     running: Boolean(item.running),
     status: item.running ? 'active' : 'pause',
   }));
-
-const mergeBotControlItems = (
-  apiBots: BotControlItem[],
-  localBots: BotControlItem[],
-): BotControlItem[] => {
-  const localIds = new Set(localBots.map((bot) => bot.id));
-  return [...apiBots.filter((bot) => !localIds.has(bot.id)), ...localBots];
-};
-
-const persistLocalBots = (localBotsByServer: LocalBotsByServer) => {
-  saveLocalBotsToStorage(localBotsByServer);
-};
 
 const parseIpPort = (ipPort: string): ServerItem | null => {
   const [ip = '', port = ''] = ipPort.split(':');
@@ -147,75 +121,47 @@ export const loadJobTypes = createAsyncThunk('servers/loadJobTypes', async (_, {
 export const loadBotControlList = createAsyncThunk(
   'servers/loadBotControlList',
   async (_, { getState }) => {
-    const state = getState() as { servers: ServersState };
-    const serverKey = getActiveServerKey(state);
-    const localBots = getLocalBotsForServer(state.servers.localBotsByServer, serverKey).map(
-      localBotToControlItem,
-    );
-
-    try {
-      const items = await serverApi.getBots(serverKey);
-      const apiBots = mapApiBotsToControlItems(Array.isArray(items) ? items : []);
-      return mergeBotControlItems(apiBots, localBots);
-    } catch (error) {
-      if (localBots.length > 0) {
-        return localBots;
-      }
-      throw error;
-    }
+    const serverKey = getActiveServerKey(getState() as { servers: ServersState });
+    const items = await serverApi.getBots(serverKey);
+    return mapApiBotsToControlItems(Array.isArray(items) ? items : []);
   },
 );
 
-export const addLocalBot = createAsyncThunk(
-  'servers/addLocalBot',
+export const setBotFromConfig = createAsyncThunk(
+  'servers/setBotFromConfig',
   async (rawConfig: string, { getState, dispatch }) => {
-    const state = getState() as { servers: ServersState };
-    const serverKey = getActiveServerKey(state);
-    const { next, entry } = addLocalBotEntry(state.servers.localBotsByServer, serverKey, rawConfig);
-    persistLocalBots(next);
-    dispatch(setLocalBotsByServer(next));
-    await dispatch(loadBotControlList());
-    return entry;
-  },
-);
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
+    const { id, botParams, jobParams } = parseBotConfigJson(rawConfig);
+    const newRule = { id, botParams, jobParams };
 
-export const removeLocalBot = createAsyncThunk(
-  'servers/removeLocalBot',
-  async (botId: string, { getState, dispatch }) => {
-    const state = getState() as { servers: ServersState };
-    const serverKey = getActiveServerKey(state);
+    const currentRules = normalizeRulesList(await serverApi.getRules(activeServer));
+    const botsRulesList = mergeBotRuleIntoList(currentRules, newRule);
 
-    if (!isLocalBotId(state.servers.localBotsByServer, serverKey, botId)) {
-      throw new Error('Bot not found in local list');
+    await serverApi.setBotsRulesList(activeServer, botsRulesList);
+
+    const paused = Boolean(botParams.paused);
+    await serverApi.setBotPause(activeServer, id, paused);
+    await waitForBotPauseState(activeServer, id, paused);
+
+    if (!paused) {
+      await serverApi.restartBot(activeServer, id);
     }
 
-    const next = removeLocalBotEntry(state.servers.localBotsByServer, serverKey, botId);
-    persistLocalBots(next);
-    dispatch(setLocalBotsByServer(next));
     await dispatch(loadBotControlList());
-    return botId;
+    await dispatch(loadRulesList());
+    return { id, paused };
   },
 );
 
 export const loadRulesList = createAsyncThunk('servers/loadRulesList', async (_, { getState }) => {
-  return serverApi.getRules(getActiveServerKey(getState() as { servers: ServersState }));
+  const response = await serverApi.getRules(getActiveServerKey(getState() as { servers: ServersState }));
+  return normalizeRulesList(response);
 });
 
 export const loadActiveBotAll = createAsyncThunk(
   'servers/loadActiveBotAll',
   async (botId: string, { getState }) => {
-    const state = getState() as { servers: ServersState };
-    const activeServer = getActiveServerKey(state);
-    const localBot = findLocalBot(state.servers.localBotsByServer, activeServer, botId);
-
-    if (localBot) {
-      return {
-        info: localBotToInfo(localBot),
-        params: localBotToParams(localBot),
-        errors: [],
-        arbitrage: [],
-      };
-    }
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
 
     const [info, params, errors, arbitrage] = await Promise.all([
       serverApi.getBotInfo(activeServer, botId),
@@ -231,17 +177,7 @@ export const loadActiveBotAll = createAsyncThunk(
 export const setBotPaused = createAsyncThunk(
   'servers/setBotPaused',
   async ({ botId, pause }: { botId: string; pause: boolean }, { getState, dispatch }) => {
-    const state = getState() as { servers: ServersState };
-    const activeServer = getActiveServerKey(state);
-
-    if (isLocalBotId(state.servers.localBotsByServer, activeServer, botId)) {
-      const next = setLocalBotPaused(state.servers.localBotsByServer, activeServer, botId, pause);
-      persistLocalBots(next);
-      dispatch(setLocalBotsByServer(next));
-      await dispatch(loadActiveBotAll(botId));
-      await dispatch(loadBotControlList());
-      return { pause, botId, isLocal: true };
-    }
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
 
     const response = await serverApi.setBotPause(activeServer, botId, pause);
     await waitForBotPauseState(activeServer, botId, pause);
@@ -254,31 +190,17 @@ export const setBotPaused = createAsyncThunk(
 export const setAllBotsPaused = createAsyncThunk(
   'servers/setAllBotsPaused',
   async ({ pause }: { pause: boolean }, { getState, dispatch }) => {
-    const state = getState() as { servers: ServersState };
-    const activeServer = getActiveServerKey(state);
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
     const bots = await serverApi.getBots(activeServer);
-    const apiBotIds = (Array.isArray(bots) ? bots : [])
+    const botIds = (Array.isArray(bots) ? bots : [])
       .map((bot) => String(bot.id ?? (bot as Record<string, unknown>).botId ?? ''))
       .filter((id) => id.trim().length > 0);
-    const localBotIds = getLocalBotsForServer(state.servers.localBotsByServer, activeServer).map(
-      (bot) => bot.id,
-    );
-    const botIds = [...new Set([...apiBotIds, ...localBotIds])];
-
-    let nextLocalBots = state.servers.localBotsByServer;
-    localBotIds.forEach((botId) => {
-      nextLocalBots = setLocalBotPaused(nextLocalBots, activeServer, botId, pause);
-    });
-    if (localBotIds.length > 0) {
-      persistLocalBots(nextLocalBots);
-      dispatch(setLocalBotsByServer(nextLocalBots));
-    }
 
     const results = await Promise.allSettled(
-      apiBotIds.map((botId) => serverApi.setBotPause(activeServer, botId, pause)),
+      botIds.map((botId) => serverApi.setBotPause(activeServer, botId, pause)),
     );
     const failedCount = results.filter((result) => result.status === 'rejected').length;
-    const successfulBotIds = apiBotIds.filter((_, index) => results[index].status === 'fulfilled');
+    const successfulBotIds = botIds.filter((_, index) => results[index].status === 'fulfilled');
 
     if (successfulBotIds.length > 0) {
       await waitForAllBotsPauseState(activeServer, successfulBotIds, pause);
@@ -304,16 +226,7 @@ export const setAllBotsPaused = createAsyncThunk(
 export const setSingleBotPaused = createAsyncThunk(
   'servers/setSingleBotPaused',
   async ({ botId, pause }: { botId: string; pause: boolean }, { getState, dispatch }) => {
-    const state = getState() as { servers: ServersState };
-    const activeServer = getActiveServerKey(state);
-
-    if (isLocalBotId(state.servers.localBotsByServer, activeServer, botId)) {
-      const next = setLocalBotPaused(state.servers.localBotsByServer, activeServer, botId, pause);
-      persistLocalBots(next);
-      dispatch(setLocalBotsByServer(next));
-      await dispatch(loadBotControlList());
-      return { pause, botId, isLocal: true };
-    }
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
 
     const response = await serverApi.setBotPause(activeServer, botId, pause);
     await waitForBotPauseState(activeServer, botId, pause);
@@ -325,17 +238,7 @@ export const setSingleBotPaused = createAsyncThunk(
 export const restartBot = createAsyncThunk(
   'servers/restartBot',
   async (botId: string, { getState, dispatch }) => {
-    const state = getState() as { servers: ServersState };
-    const activeServer = getActiveServerKey(state);
-
-    if (isLocalBotId(state.servers.localBotsByServer, activeServer, botId)) {
-      const next = restartLocalBot(state.servers.localBotsByServer, activeServer, botId);
-      persistLocalBots(next);
-      dispatch(setLocalBotsByServer(next));
-      await dispatch(loadActiveBotAll(botId));
-      await dispatch(loadBotControlList());
-      return { botId, isLocal: true };
-    }
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
 
     const response = await serverApi.restartBot(activeServer, botId);
     await dispatch(loadActiveBotAll(botId));
@@ -347,28 +250,14 @@ export const restartBot = createAsyncThunk(
 export const restartAllBots = createAsyncThunk(
   'servers/restartAllBots',
   async (_, { getState, dispatch }) => {
-    const state = getState() as { servers: ServersState };
-    const activeServer = getActiveServerKey(state);
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
     const bots = await serverApi.getBots(activeServer);
-    const apiBotIds = (Array.isArray(bots) ? bots : [])
+    const botIds = (Array.isArray(bots) ? bots : [])
       .map((bot) => String(bot.id ?? (bot as Record<string, unknown>).botId ?? ''))
       .filter((id) => id.trim().length > 0);
-    const localBotIds = getLocalBotsForServer(state.servers.localBotsByServer, activeServer).map(
-      (bot) => bot.id,
-    );
-    const botIds = [...new Set([...apiBotIds, ...localBotIds])];
-
-    let nextLocalBots = state.servers.localBotsByServer;
-    localBotIds.forEach((botId) => {
-      nextLocalBots = restartLocalBot(nextLocalBots, activeServer, botId);
-    });
-    if (localBotIds.length > 0) {
-      persistLocalBots(nextLocalBots);
-      dispatch(setLocalBotsByServer(nextLocalBots));
-    }
 
     const results = await Promise.allSettled(
-      apiBotIds.map((botId) => serverApi.restartBot(activeServer, botId)),
+      botIds.map((botId) => serverApi.restartBot(activeServer, botId)),
     );
     const failedCount = results.filter((result) => result.status === 'rejected').length;
 
@@ -393,19 +282,7 @@ export const setBotSendData = createAsyncThunk(
     { botId, isSendData }: { botId: string; isSendData: boolean },
     { getState, dispatch },
   ) => {
-    const state = getState() as { servers: ServersState };
-    const activeServer = getActiveServerKey(state);
-
-    if (isLocalBotId(state.servers.localBotsByServer, activeServer, botId)) {
-      const next = updateLocalBotRuntime(state.servers.localBotsByServer, activeServer, botId, {
-        isSendData,
-      });
-      persistLocalBots(next);
-      dispatch(setLocalBotsByServer(next));
-      await dispatch(loadActiveBotAll(botId));
-      await dispatch(loadBotControlList());
-      return { botId, isSendData, isLocal: true };
-    }
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
 
     const response = await serverApi.setBotSendData(activeServer, botId, isSendData);
     await dispatch(loadActiveBotAll(botId));
@@ -417,23 +294,7 @@ export const setBotSendData = createAsyncThunk(
 export const saveBotSettings = createAsyncThunk(
   'servers/saveBotSettings',
   async ({ botId, data }: { botId: string; data: string }, { getState, dispatch }) => {
-    const state = getState() as { servers: ServersState };
-    const activeServer = getActiveServerKey(state);
-
-    if (isLocalBotId(state.servers.localBotsByServer, activeServer, botId)) {
-      const parsed = JSON.parse(data) as Record<string, unknown>;
-      const botParams = (parsed.botParams ?? {}) as Record<string, unknown>;
-      const jobParams = (parsed.jobParams ?? {}) as Record<string, unknown>;
-      const next = updateLocalBotConfig(state.servers.localBotsByServer, activeServer, botId, {
-        botParams,
-        jobParams,
-      });
-      persistLocalBots(next);
-      dispatch(setLocalBotsByServer(next));
-      await dispatch(loadActiveBotAll(botId));
-      await dispatch(loadBotControlList());
-      return { botId, isLocal: true };
-    }
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
 
     const response = await serverApi.setBotSettings(activeServer, botId, data);
     await dispatch(loadActiveBotAll(botId));
@@ -447,21 +308,7 @@ export const refreshActiveBotTabData = createAsyncThunk(
     { botId, activeTab }: { botId: string; activeTab: 'control' | 'errors' | 'job' | 'chart' | 'live-chart' },
     { getState },
   ) => {
-    const state = getState() as { servers: ServersState };
-    const activeServer = getActiveServerKey(state);
-    const localBot = findLocalBot(state.servers.localBotsByServer, activeServer, botId);
-
-    if (localBot) {
-      if (activeTab === 'control' || activeTab === 'job' || activeTab === 'chart' || activeTab === 'live-chart') {
-        return {
-          activeTab,
-          info: localBotToInfo(localBot),
-          params: localBotToParams(localBot),
-          errors: null,
-        };
-      }
-      return { activeTab, info: null, params: null, errors: [] };
-    }
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
 
     if (activeTab === 'control' || activeTab === 'job' || activeTab === 'chart' || activeTab === 'live-chart') {
       const [info, params] = await Promise.all([
@@ -488,9 +335,6 @@ const serversSlice = createSlice({
       state.activeBotParams = createAsyncState<Record<string, unknown> | null>(null);
       state.activeBotErrors = createAsyncState<Record<string, unknown>[]>([]);
       state.activeBotArbitrage = createAsyncState<Record<string, unknown>[]>([]);
-    },
-    setLocalBotsByServer(state, action: PayloadAction<LocalBotsByServer>) {
-      state.localBotsByServer = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -750,34 +594,21 @@ const serversSlice = createSlice({
         state.botControlAction.isLoaded = true;
         state.botControlAction.error = action.error.message ?? 'Failed to refresh bot tab data';
       })
-      .addCase(addLocalBot.pending, (state) => {
+      .addCase(setBotFromConfig.pending, (state) => {
         state.botControlAction.isLoading = true;
         state.botControlAction.error = null;
       })
-      .addCase(addLocalBot.fulfilled, (state) => {
+      .addCase(setBotFromConfig.fulfilled, (state) => {
         state.botControlAction.isLoading = false;
         state.botControlAction.isLoaded = true;
       })
-      .addCase(addLocalBot.rejected, (state, action) => {
+      .addCase(setBotFromConfig.rejected, (state, action) => {
         state.botControlAction.isLoading = false;
         state.botControlAction.isLoaded = true;
-        state.botControlAction.error = action.error.message ?? 'Failed to add local bot';
-      })
-      .addCase(removeLocalBot.pending, (state) => {
-        state.botControlAction.isLoading = true;
-        state.botControlAction.error = null;
-      })
-      .addCase(removeLocalBot.fulfilled, (state) => {
-        state.botControlAction.isLoading = false;
-        state.botControlAction.isLoaded = true;
-      })
-      .addCase(removeLocalBot.rejected, (state, action) => {
-        state.botControlAction.isLoading = false;
-        state.botControlAction.isLoaded = true;
-        state.botControlAction.error = action.error.message ?? 'Failed to remove local bot';
+        state.botControlAction.error = action.error.message ?? 'Failed to apply bot config on server';
       });
   },
 });
 
-export const { setActiveServer, clearActiveBotData, setLocalBotsByServer } = serversSlice.actions;
+export const { setActiveServer, clearActiveBotData } = serversSlice.actions;
 export const serversReducer = serversSlice.reducer;

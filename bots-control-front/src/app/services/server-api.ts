@@ -1,3 +1,4 @@
+import type { BotRuleItem } from './bot-control-adapter';
 import type {
   ServerData,
   TypeListItem,
@@ -149,6 +150,16 @@ export const serverApi = {
     return request<Record<string, unknown>>(activeServer, `/bot/${botId}/settings`, {
       method: 'PUT',
       body: JSON.stringify({ data }),
+    });
+  },
+
+  setBotsRulesList(
+    activeServer: string,
+    botsRulesList: BotRuleItem[],
+  ): Promise<Record<string, unknown>> {
+    return request<Record<string, unknown>>(activeServer, '/setBotsRulesList', {
+      method: 'POST',
+      body: JSON.stringify({ botsRulesList }),
     });
   },
 };
