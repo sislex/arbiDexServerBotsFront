@@ -225,6 +225,9 @@ export const mergeBotRuleIntoList = (
   return next;
 };
 
+export const removeBotRuleFromList = (rules: BotRuleItem[], botId: string): BotRuleItem[] =>
+  rules.filter((rule) => rule.id !== botId);
+
 export const DEFAULT_BOT_CONFIG_TEMPLATE = JSON.stringify(
   {
     id: '59',

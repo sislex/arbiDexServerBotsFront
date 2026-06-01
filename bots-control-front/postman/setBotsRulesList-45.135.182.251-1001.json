@@ -1,0 +1,536 @@
+{
+  "botsRulesList": [
+    {
+      "id": "32-1",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Gateio_ETH_USDT"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "gateio",
+        "token0": "ETH",
+        "token1": "USDT"
+      }
+    },
+    {
+      "id": "33",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Binance_ETH_USDT"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "binance",
+        "token0": "ETH",
+        "token1": "USDT"
+      }
+    },
+    {
+      "id": "34",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Mexc_ETH_USDT"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "mexc",
+        "token0": "ETH",
+        "token1": "USDT"
+      }
+    },
+    {
+      "id": "35",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Bybit_ETH_USDT"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "bybit",
+        "token0": "ETH",
+        "token1": "USDT"
+      }
+    },
+    {
+      "id": "36",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Okx_ETH_USDT"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "okx",
+        "token0": "ETH",
+        "token1": "USDT"
+      }
+    },
+    {
+      "id": "37",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Kucoin_ETH_USDT"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "kucoin",
+        "token0": "ETH",
+        "token1": "USDT"
+      }
+    },
+    {
+      "id": "38",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Dzengi_ETH_USDT"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "dzengi",
+        "token0": "ETH",
+        "token1": "USDT"
+      }
+    },
+    {
+      "id": "39",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Gateio_ETH_USDC"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "gateio",
+        "token0": "ETH",
+        "token1": "USDC"
+      }
+    },
+    {
+      "id": "40",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Binance_ETH_USDC"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "binance",
+        "token0": "ETH",
+        "token1": "USDC"
+      }
+    },
+    {
+      "id": "41",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Mexc_ETH_USDC"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "mexc",
+        "token0": "ETH",
+        "token1": "USDC"
+      }
+    },
+    {
+      "id": "42",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Bybit_ETH_USDC"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "bybit",
+        "token0": "ETH",
+        "token1": "USDC"
+      }
+    },
+    {
+      "id": "43",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Okx_ETH_USDC"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "okx",
+        "token0": "ETH",
+        "token1": "USDC"
+      }
+    },
+    {
+      "id": "44",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Kucoin_ETH_USDC"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "kucoin",
+        "token0": "ETH",
+        "token1": "USDC"
+      }
+    },
+    {
+      "id": "45",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Dzengi_ETH_USDC"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "dzengi",
+        "token0": "ETH",
+        "token1": "USDC"
+      }
+    },
+    {
+      "id": "46",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Gateio_ETH_USDE"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "gateio",
+        "token0": "ETH",
+        "token1": "USDE"
+      }
+    },
+    {
+      "id": "47",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Binance_ETH_USDE"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "binance",
+        "token0": "ETH",
+        "token1": "USDE"
+      }
+    },
+    {
+      "id": "48",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Mexc_ETH_USDE"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "mexc",
+        "token0": "ETH",
+        "token1": "USDE"
+      }
+    },
+    {
+      "id": "49",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Bybit_ETH_USDE"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "bybit",
+        "token0": "ETH",
+        "token1": "USDE"
+      }
+    },
+    {
+      "id": "50",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Okx_ETH_USDE"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "okx",
+        "token0": "ETH",
+        "token1": "USDE"
+      }
+    },
+    {
+      "id": "51",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Kucoin_ETH_USDE"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "kucoin",
+        "token0": "ETH",
+        "token1": "USDE"
+      }
+    },
+    {
+      "id": "52",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Dzengi_ETH_USDE"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "dzengi",
+        "token0": "ETH",
+        "token1": "USDE"
+      }
+    },
+    {
+      "id": "53",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Gateio_ETH_FDUSD"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "gateio",
+        "token0": "ETH",
+        "token1": "FDUSD"
+      }
+    },
+    {
+      "id": "54",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Binance_ETH_FDUSD"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "binance",
+        "token0": "ETH",
+        "token1": "FDUSD"
+      }
+    },
+    {
+      "id": "55",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Mexc_ETH_FDUSD"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "mexc",
+        "token0": "ETH",
+        "token1": "FDUSD"
+      }
+    },
+    {
+      "id": "56",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Bybit_ETH_FDUSD"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "bybit",
+        "token0": "ETH",
+        "token1": "FDUSD"
+      }
+    },
+    {
+      "id": "57",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Okx_ETH_FDUSD"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "okx",
+        "token0": "ETH",
+        "token1": "FDUSD"
+      }
+    },
+    {
+      "id": "58",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Kucoin_ETH_FDUSD"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "kucoin",
+        "token0": "ETH",
+        "token1": "FDUSD"
+      }
+    },
+    {
+      "id": "59",
+      "botParams": {
+        "botType": "TestBot",
+        "paused": true,
+        "isRepeat": true,
+        "delayBetweenRepeat": 200,
+        "maxJobs": 1000000,
+        "maxErrors": 100,
+        "timeoutMs": 30000,
+        "description": "Dzengi_ETH_FDUSD"
+      },
+      "jobParams": {
+        "jobType": "get_Cex_Quotes",
+        "source": "dzengi",
+        "token0": "ETH",
+        "token1": "FDUSD"
+      }
+    }
+  ]
+}

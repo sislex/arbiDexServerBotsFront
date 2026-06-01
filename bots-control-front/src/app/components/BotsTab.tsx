@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { ColDef } from 'ag-grid-community';
-import { Check, Circle, Loader2, Pause, Play, RefreshCw } from 'lucide-react';
+import { Check, Circle, Loader2, Pause, Play, RefreshCw, Trash2 } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
@@ -8,10 +8,13 @@ import {
   selectBotControlActionState,
   selectBotControlListState,
   selectPendingBotPauseId,
+  selectRulesListState,
   selectServerList,
 } from '../store/selectors';
 import {
+  loadRulesList,
   restartAllBots,
+  removeBotFromServer,
   setActiveServer,
   setAllBotsPaused,
   setSingleBotPaused,
@@ -62,6 +65,7 @@ export function BotsTab({
   const activeServer = useAppSelector(selectActiveServer);
   const botControlListState = useAppSelector(selectBotControlListState);
   const botControlActionState = useAppSelector(selectBotControlActionState);
+  const rulesListState = useAppSelector(selectRulesListState);
   const pendingBotPauseId = useAppSelector(selectPendingBotPauseId);
   const [selectedServer, setSelectedServer] = useState(`${activeServer.ip}:${activeServer.port}`);
   const [serverStatuses, setServerStatuses] = useState<Record<string, ServerHealthStatus>>({});
@@ -69,6 +73,11 @@ export function BotsTab({
   const [isSetBotFormOpen, setIsSetBotFormOpen] = useState(false);
   const hasServers = servers.length > 0;
   const isBulkActionLoading = botControlActionState.isLoading;
+  const ruleIds = new Set(rulesListState.data.map((rule) => String(rule.id)));
+
+  useEffect(() => {
+    dispatch(loadRulesList());
+  }, [activeServer.ip, activeServer.port, dispatch]);
 
   useEffect(() => {
     setSelectedServer(`${activeServer.ip}:${activeServer.port}`);
@@ -190,6 +199,53 @@ export function BotsTab({
               ) : (
                 <Play size={14} />
               )}
+            </button>
+          </div>
+        );
+      },
+    },
+    {
+      headerName: '',
+      colId: 'delete',
+      minWidth: 50,
+      maxWidth: 60,
+      sortable: false,
+      resizable: false,
+      suppressMovable: true,
+      cellRenderer: (params: { data?: BotRow }) => {
+        const row = params.data;
+        if (!row || !ruleIds.has(row.id)) {
+          return null;
+        }
+
+        const isDisabled = isBulkActionLoading;
+
+        return (
+          <div className="w-full h-full flex items-center justify-center">
+            <button
+              type="button"
+              title={t.botsTab.removeBot.button}
+              disabled={isDisabled}
+              onClick={async (event) => {
+                event.stopPropagation();
+                if (!window.confirm(t.botsTab.removeBot.confirm)) {
+                  return;
+                }
+                const result = await dispatch(removeBotFromServer(row.id));
+                if (removeBotFromServer.fulfilled.match(result)) {
+                  showToast('success', t.botsTab.removeBot.success);
+                } else {
+                  showToast('error', result.error.message ?? t.botsTab.removeBot.error);
+                }
+              }}
+              onDoubleClick={(event) => event.stopPropagation()}
+              className={`inline-flex h-8 w-8 items-center justify-center rounded transition-colors ${
+                isDisabled
+                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                  : 'bg-destructive/15 text-destructive hover:bg-destructive/25'
+              }`}
+            >
+              <Trash2 size={14} />
             </button>
           </div>
         );

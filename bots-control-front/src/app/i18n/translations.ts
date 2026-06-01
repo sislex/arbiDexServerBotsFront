@@ -78,6 +78,12 @@ export const translations = {
         invalidJson: 'Invalid JSON config',
         saveSuccess: 'Bot config applied on server',
         saveError: 'Failed to apply bot config on server'
+      },
+      removeBot: {
+        button: 'Remove bot',
+        confirm: 'Remove this bot from server rules? The bot will be paused and deleted from botsRulesList.',
+        success: 'Bot removed from server rules',
+        error: 'Failed to remove bot from server rules'
       }
     },
     apiInfo: {
@@ -336,6 +342,12 @@ export const translations = {
         invalidJson: 'Некорректный JSON конфиг',
         saveSuccess: 'Конфиг бота применён на сервере',
         saveError: 'Не удалось применить конфиг бота на сервере'
+      },
+      removeBot: {
+        button: 'Удалить бота',
+        confirm: 'Удалить этого бота из правил на сервере? Бот будет остановлен и удалён из botsRulesList.',
+        success: 'Бот удалён из правил на сервере',
+        error: 'Не удалось удалить бота из правил на сервере'
       }
     },
     apiInfo: {

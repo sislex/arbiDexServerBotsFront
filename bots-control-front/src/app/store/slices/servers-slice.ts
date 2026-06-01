@@ -3,6 +3,7 @@ import {
   mergeBotRuleIntoList,
   normalizeRulesList,
   parseBotConfigJson,
+  removeBotRuleFromList,
 } from '../../services/bot-control-adapter';
 import { waitForAllBotsPauseState, waitForBotPauseState } from '../../services/bot-pause-utils';
 import { serverApi } from '../../services/server-api';
@@ -150,6 +151,30 @@ export const setBotFromConfig = createAsyncThunk(
     await dispatch(loadBotControlList());
     await dispatch(loadRulesList());
     return { id, paused };
+  },
+);
+
+export const removeBotFromServer = createAsyncThunk(
+  'servers/removeBotFromServer',
+  async (botId: string, { getState, dispatch }) => {
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
+    const currentRules = normalizeRulesList(await serverApi.getRules(activeServer));
+    const botsRulesList = removeBotRuleFromList(currentRules, botId);
+
+    if (botsRulesList.length === currentRules.length) {
+      throw new Error('Bot not found in server rules list');
+    }
+
+    try {
+      await serverApi.setBotPause(activeServer, botId, true);
+    } catch {
+      // Bot may already be stopped or absent from runtime.
+    }
+
+    await serverApi.setBotsRulesList(activeServer, botsRulesList);
+    await dispatch(loadBotControlList());
+    await dispatch(loadRulesList());
+    return botId;
   },
 );
 
@@ -606,6 +631,19 @@ const serversSlice = createSlice({
         state.botControlAction.isLoading = false;
         state.botControlAction.isLoaded = true;
         state.botControlAction.error = action.error.message ?? 'Failed to apply bot config on server';
+      })
+      .addCase(removeBotFromServer.pending, (state) => {
+        state.botControlAction.isLoading = true;
+        state.botControlAction.error = null;
+      })
+      .addCase(removeBotFromServer.fulfilled, (state) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+      })
+      .addCase(removeBotFromServer.rejected, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.error = action.error.message ?? 'Failed to remove bot from server';
       });
   },
 });
