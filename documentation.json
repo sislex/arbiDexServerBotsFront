@@ -10905,7 +10905,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "object",
-                "defaultValue": "{\n  production: false,\n  hostUrl: 'http://45.135.182.251:1001',\n}"
+                "defaultValue": "{\n  production: false,\n  hostUrl: 'http://89.125.68.35:1001',\n}"
             },
             {
                 "name": "errorListColDefs",
@@ -11851,7 +11851,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Routes",
-                "defaultValue": "[\n  {\n    path: '',\n    pathMatch: 'full',\n    redirectTo: 'server/45.135.182.251:1001/tab/bots',\n  },\n  {\n    path: 'server/:ipPort/tab/:tabId',\n    component: SidebarContainer,\n  },\n  {\n    path: 'server/:ipPort/:botId',\n    component: BotInfoPageContainer,\n  },\n  {\n    path: '**',\n    redirectTo: 'server/45.135.182.251:1001/tab/bots',\n  },\n]"
+                "defaultValue": "[\n  {\n    path: '',\n    pathMatch: 'full',\n    redirectTo: 'server/89.125.68.35:1001/tab/bots',\n  },\n  {\n    path: 'server/:ipPort/tab/:tabId',\n    component: SidebarContainer,\n  },\n  {\n    path: 'server/:ipPort/:botId',\n    component: BotInfoPageContainer,\n  },\n  {\n    path: '**',\n    redirectTo: 'server/89.125.68.35:1001/tab/bots',\n  },\n]"
             },
             {
                 "name": "rulesTableColDefs",
@@ -11921,7 +11921,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\n  {\n    ip: '127.0.0.1',\n    port: '3000',\n    name: 'LOCAL_SERVER',\n  },\n  {\n    ip: '45.135.182.251',\n    port: '1001',\n    name: 'FIRST_REAL_SERVER',\n  },\n]"
+                "defaultValue": "[\n  {\n    ip: '127.0.0.1',\n    port: '3000',\n    name: 'LOCAL_SERVER',\n  },\n  {\n    ip: '89.125.68.35',\n    port: '1001',\n    name: 'FIRST_REAL_SERVER',\n  },\n]"
             },
             {
                 "name": "SERVERS_FEATURE_KEY",
@@ -13326,7 +13326,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\n  {\n    ip: '127.0.0.1',\n    port: '3000',\n    name: 'LOCAL_SERVER',\n  },\n  {\n    ip: '45.135.182.251',\n    port: '1001',\n    name: 'FIRST_REAL_SERVER',\n  },\n]"
+                    "defaultValue": "[\n  {\n    ip: '127.0.0.1',\n    port: '3000',\n    name: 'LOCAL_SERVER',\n  },\n  {\n    ip: '89.125.68.35',\n    port: '1001',\n    name: 'FIRST_REAL_SERVER',\n  },\n]"
                 }
             ],
             "src/environments/environment.prod.ts": [
@@ -13350,7 +13350,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "object",
-                    "defaultValue": "{\n  production: false,\n  hostUrl: 'http://45.135.182.251:1001',\n}"
+                    "defaultValue": "{\n  production: false,\n  hostUrl: 'http://89.125.68.35:1001',\n}"
                 }
             ],
             "src/app/components/+stabs/error-list-stabs.ts": [
@@ -14096,7 +14096,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Routes",
-                    "defaultValue": "[\n  {\n    path: '',\n    pathMatch: 'full',\n    redirectTo: 'server/45.135.182.251:1001/tab/bots',\n  },\n  {\n    path: 'server/:ipPort/tab/:tabId',\n    component: SidebarContainer,\n  },\n  {\n    path: 'server/:ipPort/:botId',\n    component: BotInfoPageContainer,\n  },\n  {\n    path: '**',\n    redirectTo: 'server/45.135.182.251:1001/tab/bots',\n  },\n]"
+                    "defaultValue": "[\n  {\n    path: '',\n    pathMatch: 'full',\n    redirectTo: 'server/89.125.68.35:1001/tab/bots',\n  },\n  {\n    path: 'server/:ipPort/tab/:tabId',\n    component: SidebarContainer,\n  },\n  {\n    path: 'server/:ipPort/:botId',\n    component: BotInfoPageContainer,\n  },\n  {\n    path: '**',\n    redirectTo: 'server/89.125.68.35:1001/tab/bots',\n  },\n]"
                 }
             ],
             "src/app/+state/view/view.actions.ts": [

@@ -45,7 +45,7 @@ export const SidebarOpen: Story = {
     isSidebarOpen: true,
     list: [
       {
-        ip: '45.135.182.251',
+        ip: '89.125.68.35',
         port: '1005',
         name: 'UNREAL_SERVER',
       },

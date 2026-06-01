@@ -99,13 +99,13 @@ getMyData(): Observable<MyType> {
 ### 5. Server List
 Hardcoded in `src/app/+state/servers/configs.ts`:
 - `LOCAL_SERVER` → `127.0.0.1:3000`
-- `FIRST_REAL_SERVER` → `45.135.182.251:1001` (default redirect target)
+- `FIRST_REAL_SERVER` → `89.125.68.35:1001` (default redirect target)
 
 ### 6. Routing
 ```
 /server/:ipPort/tab/:tabId   → SidebarContainer (main view with tabs)
 /server/:ipPort/:botId       → BotInfoPageContainer (bot detail page)
-**                           → redirects to /server/45.135.182.251:1001/tab/bots
+**                           → redirects to /server/89.125.68.35:1001/tab/bots
 ```
 `SidebarContainer.ngOnInit` reads route params and dispatches `setActiveTab` + `clearActiveElementData` + `setActiveServer`.
 

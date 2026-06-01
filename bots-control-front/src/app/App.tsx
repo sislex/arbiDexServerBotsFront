@@ -167,7 +167,7 @@ function BotPageRoute() {
     const parsed = parseIpPort(ipPort);
     if (!parsed) {
       showToast('error', t.routing.invalidServer);
-      navigate('/server/45.135.182.251:1001/tab/bots', { replace: true });
+      navigate('/server/89.125.68.35:1001/tab/bots', { replace: true });
       return;
     }
     dispatch(setActiveServer({ ...parsed, name: `SERVER_${parsed.ip}:${parsed.port}` }));
@@ -209,7 +209,7 @@ function TabRouteSync() {
     const parsed = parseIpPort(ipPort);
     if (!parsed) {
       showToast('error', t.routing.invalidServer);
-      navigate('/server/45.135.182.251:1001/tab/bots', { replace: true });
+      navigate('/server/89.125.68.35:1001/tab/bots', { replace: true });
       return;
     }
 
@@ -255,7 +255,7 @@ export default function App() {
           <Route path="/server/:ipPort/:botId" element={<BotPageRoute />} />
           <Route
             path="*"
-            element={<Navigate to="/server/45.135.182.251:1001/tab/bots" replace />}
+            element={<Navigate to="/server/89.125.68.35:1001/tab/bots" replace />}
           />
         </Routes>
       </ThemeProvider>
