@@ -343,6 +343,8 @@ export function LivePriceFeedPanel({
     return <div className="h-full flex items-center justify-center text-gray-400">{noLiveDataLabel}</div>;
   }
 
+  const delayMs = lastTickMeta ? lastTickMeta.receivedAt - lastTickMeta.messageAt : null;
+
   return (
     <ChartPanelFrame
       title={title}
@@ -352,7 +354,9 @@ export function LivePriceFeedPanel({
           <div className="mt-2 flex flex-col gap-1 text-xs text-muted-foreground">
             <div>{receivedAtLabel}: {formatTickDateTime(lastTickMeta.receivedAt)}</div>
             <div>{messageTimeLabel}: {formatTickDateTime(lastTickMeta.messageAt)}</div>
-            <div>{delayLabel}: {Math.max(0, lastTickMeta.receivedAt - lastTickMeta.messageAt)} ms</div>
+            <div className={delayMs !== null && delayMs < 0 ? 'text-red-600 font-medium' : 'text-emerald-600 font-medium'}>
+              {delayLabel}: {delayMs} ms
+            </div>
           </div>
         ) : (
           <div className="mt-2 text-xs text-muted-foreground">{noTickYetLabel}</div>
