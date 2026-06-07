@@ -23,12 +23,30 @@ interface PriceChartProps {
 export const DEFAULT_CHART_HEIGHT = 500;
 const MIN_CHART_HEIGHT = 300;
 
+const formatPriceAxisValue = (value: number) => {
+  if (!Number.isFinite(value)) {
+    return '';
+  }
+
+  if (Math.abs(value) >= 1000) {
+    return value.toFixed(2);
+  }
+
+  if (Math.abs(value) >= 1) {
+    return value.toFixed(4);
+  }
+
+  return value.toFixed(6);
+};
+
 export function ResizableChartPanel({
   children,
   defaultHeight = DEFAULT_CHART_HEIGHT,
+  minHeight = MIN_CHART_HEIGHT,
 }: {
   children: (height: number) => ReactNode;
   defaultHeight?: number;
+  minHeight?: number;
 }) {
   const [height, setHeight] = useState(defaultHeight);
   const dragStateRef = useRef<{ startY: number; startHeight: number } | null>(null);
@@ -40,7 +58,7 @@ export function ResizableChartPanel({
       }
 
       const delta = event.clientY - dragStateRef.current.startY;
-      setHeight(Math.max(MIN_CHART_HEIGHT, dragStateRef.current.startHeight + delta));
+      setHeight(Math.max(minHeight, dragStateRef.current.startHeight + delta));
     };
 
     const handleMouseUp = () => {
@@ -62,7 +80,7 @@ export function ResizableChartPanel({
       document.body.style.cursor = '';
       document.body.style.userSelect = '';
     };
-  }, []);
+  }, [minHeight]);
 
   const handleResizeStart = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -147,6 +165,10 @@ export function PriceChart({
         {
           type: 'number',
           position: 'bottom',
+          title: {
+            text: 'Time',
+            color: '#848e9c',
+          },
           label: {
             color: '#848e9c',
             formatter: (params: { value: number }) => {
@@ -162,7 +184,14 @@ export function PriceChart({
         {
           type: 'number',
           position: 'right',
-          label: { color: '#848e9c' },
+          title: {
+            text: 'Price',
+            color: '#848e9c',
+          },
+          label: {
+            color: '#848e9c',
+            formatter: (params: { value: number }) => formatPriceAxisValue(params.value),
+          },
           line: { stroke: '#2b3139' },
         },
       ],

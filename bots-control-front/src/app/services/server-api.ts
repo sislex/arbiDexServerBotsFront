@@ -7,6 +7,9 @@ import type {
   DbServerItem,
 } from '../store/types';
 
+const SERVER_URL = import.meta.env.VITE_SERVER_URL?.trim() || 'http://89.125.68.35:3001';
+const SERVERS_ENDPOINT = `${SERVER_URL}/servers`;
+
 const isValidServer = (value: string | null | undefined) =>
   Boolean(value && value.trim() && !value.includes('undefined') && value !== ':');
 
@@ -62,7 +65,7 @@ async function request<T>(
 
 export const serverApi = {
   getServersFromDb(): Promise<DbServerItem[]> {
-    return fetch('http://89.125.68.35:3001/servers').then(async (response) => {
+    return fetch(SERVERS_ENDPOINT).then(async (response) => {
       if (!response.ok) {
         throw new Error(await normalizeResponseError(response));
       }

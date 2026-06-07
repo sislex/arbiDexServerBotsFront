@@ -252,6 +252,11 @@ export const translations = {
         loading: 'Loading chart...',
         noData: 'No chart data',
         noLiveData: 'No live data',
+        waitingFirstTick: 'Waiting for first live tick...',
+        noTickYet: 'No live messages received yet',
+        receivedAt: 'Received at',
+        messageTime: 'Message time',
+        delay: 'Delay',
         reconnecting: 'Reconnecting live feed...',
         reconnectFailed: 'Live feed reconnect failed',
         missingJobParams: 'Missing source/token parameters in bot job config',
@@ -259,7 +264,11 @@ export const translations = {
         noHistoricalPoints: 'No historical points returned by price API',
         loadError: 'Failed to load chart data',
         liveLoadError: 'Failed to load live chart data',
-        socketErrorPrefix: 'Live socket connection failed'
+        socketErrorPrefix: 'Live socket connection failed',
+        serverLiveTitle: 'Direct Server Feed',
+        serverLiveDescription: 'Local Socket.IO /store stream from arbiDexServerBots. No replay or history, only new ticks after subscribe.',
+        marketLiveTitle: 'Market Service Feed',
+        marketLiveDescription: 'Proxy Socket.IO /prices stream from market data service. Starts from page open and shows only new ticks.'
       }
     }
   },
@@ -516,6 +525,11 @@ export const translations = {
         loading: 'Загрузка графика...',
         noData: 'Нет данных графика',
         noLiveData: 'Нет live-данных',
+        waitingFirstTick: 'Ожидание первого live-тика...',
+        noTickYet: 'Live-сообщения еще не приходили',
+        receivedAt: 'Получено в',
+        messageTime: 'Время в сообщении',
+        delay: 'Задержка',
         reconnecting: 'Переподключение live-потока...',
         reconnectFailed: 'Не удалось переподключиться к live-потоку',
         missingJobParams: 'В конфигурации задачи отсутствуют source/token параметры',
@@ -523,7 +537,11 @@ export const translations = {
         noHistoricalPoints: 'API цен не вернул исторические точки',
         loadError: 'Не удалось загрузить данные графика',
         liveLoadError: 'Не удалось загрузить live-данные графика',
-        socketErrorPrefix: 'Ошибка подключения к live-сокету'
+        socketErrorPrefix: 'Ошибка подключения к live-сокету',
+        serverLiveTitle: 'Прямой поток с сервера',
+        serverLiveDescription: 'Локальный Socket.IO /store поток из arbiDexServerBots. Без replay и истории, только новые тики после subscribe.',
+        marketLiveTitle: 'Поток market сервиса',
+        marketLiveDescription: 'Проксированный Socket.IO /prices поток из market data сервиса. Стартует с момента открытия страницы и показывает только новые тики.'
       }
     }
   }
