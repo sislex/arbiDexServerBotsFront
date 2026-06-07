@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { BotDetailHeader } from './BotDetailHeader';
 import { BotSubTabs } from './BotSubTabs';
 import { BotControlTab } from './BotControlTab';
@@ -22,14 +22,15 @@ import { useLanguage } from '../i18n/LanguageContext';
 
 interface BotDetailPageProps {
   botId: string;
+  activeSubTab: 'control' | 'errors' | 'job' | 'chart' | 'live-chart';
+  onSubTabChange: (tab: 'control' | 'errors' | 'job' | 'chart' | 'live-chart') => void;
   onBack: () => void;
 }
 
-export function BotDetailPage({ botId, onBack }: BotDetailPageProps) {
+export function BotDetailPage({ botId, activeSubTab, onSubTabChange, onBack }: BotDetailPageProps) {
   const { t } = useLanguage();
   const dispatch = useAppDispatch();
   const botActionState = useAppSelector(selectBotControlActionState);
-  const [activeSubTab, setActiveSubTab] = useState('control');
 
   useEffect(() => {
     dispatch(loadActiveBotAll(botId));
@@ -66,7 +67,7 @@ export function BotDetailPage({ botId, onBack }: BotDetailPageProps) {
       />
       <BotSubTabs
         activeTab={activeSubTab}
-        onTabChange={setActiveSubTab}
+        onTabChange={onSubTabChange}
       />
 
       {activeSubTab === 'control' && <BotControlTab botId={botId} />}

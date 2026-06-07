@@ -37,6 +37,7 @@ import {
 import { showToast } from './services/toast';
 
 const VALID_TABS = new Set(['bots', 'rules', 'server-data']);
+const VALID_BOT_TABS = new Set(['control', 'errors', 'job', 'chart', 'live-chart']);
 
 const parseIpPort = (ipPort: string) => {
   const [ip = '', port = ''] = ipPort.split(':');
@@ -159,9 +160,10 @@ function BotPageRoute() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const params = useParams<{ ipPort: string; botId: string }>();
+  const params = useParams<{ ipPort: string; botId: string; botTab?: string }>();
   const botId = params.botId ?? '';
   const ipPort = params.ipPort ?? '';
+  const botTab = params.botTab ?? 'control';
 
   useEffect(() => {
     const parsed = parseIpPort(ipPort);
@@ -180,6 +182,13 @@ function BotPageRoute() {
     }
   }, [botId, ipPort, navigate, t.routing.invalidBot]);
 
+  useEffect(() => {
+    const normalizedBotTab = VALID_BOT_TABS.has(botTab) ? botTab : 'control';
+    if (normalizedBotTab !== botTab) {
+      navigate(`/server/${ipPort}/${botId}/tab/${normalizedBotTab}`, { replace: true });
+    }
+  }, [botId, botTab, ipPort, navigate]);
+
   return (
     <div className="size-full flex flex-col bg-background text-foreground">
       <Toaster position="bottom-right" richColors />
@@ -190,6 +199,8 @@ function BotPageRoute() {
       <Suspense fallback={<PageLoader />}>
         <BotDetailPage
           botId={botId}
+          activeSubTab={VALID_BOT_TABS.has(botTab) ? botTab : 'control'}
+          onSubTabChange={(nextBotTab) => navigate(`/server/${ipPort}/${botId}/tab/${nextBotTab}`)}
           onBack={() => navigate(`/server/${ipPort}/tab/bots`)}
         />
       </Suspense>
@@ -252,7 +263,11 @@ export default function App() {
       <ThemeProvider userLogin={authUser}>
         <Routes>
           <Route path="/server/:ipPort/tab/:tabId" element={<TabRouteSync />} />
-          <Route path="/server/:ipPort/:botId" element={<BotPageRoute />} />
+          <Route
+            path="/server/:ipPort/:botId"
+            element={<NavigateToDefaultBotTab />}
+          />
+          <Route path="/server/:ipPort/:botId/tab/:botTab" element={<BotPageRoute />} />
           <Route
             path="*"
             element={<Navigate to="/server/89.125.68.35:1001/tab/bots" replace />}
@@ -261,4 +276,12 @@ export default function App() {
       </ThemeProvider>
     </LanguageProvider>
   );
+}
+
+function NavigateToDefaultBotTab() {
+  const params = useParams<{ ipPort: string; botId: string }>();
+  const ipPort = params.ipPort ?? '';
+  const botId = params.botId ?? '';
+
+  return <Navigate to={`/server/${ipPort}/${botId}/tab/control`} replace />;
 }

@@ -1,8 +1,10 @@
 import { useLanguage } from '../i18n/LanguageContext';
 
+type BotSubTab = 'control' | 'errors' | 'job' | 'chart' | 'live-chart';
+
 interface BotSubTabsProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
+  activeTab: BotSubTab;
+  onTabChange: (tab: BotSubTab) => void;
 }
 
 export function BotSubTabs({ activeTab, onTabChange }: BotSubTabsProps) {
