@@ -13,6 +13,7 @@ import {
   setBotPaused,
 } from '../store/slices/servers-slice';
 import { showToast } from '../services/toast';
+import { copyTextToClipboard } from '../services/clipboard';
 import { mapBotDetailsToViewModel } from '../services/bot-control-adapter';
 import { formatLastJobResult } from '../services/format-last-job-result';
 
@@ -113,7 +114,7 @@ export function BotControlTab({ botId }: BotControlTabProps) {
       const botParams = JSON.parse(currentBotParamsJson || '{}') as Record<string, unknown>;
       const jobParams = JSON.parse(currentJobParamsJson || '{}') as Record<string, unknown>;
       const configText = JSON.stringify({ botParams, jobParams }, null, 2);
-      await navigator.clipboard.writeText(configText);
+      await copyTextToClipboard(configText);
       showToast('success', t.botDetail.controlTab.copyConfigSuccess);
     } catch {
       showToast('error', t.botDetail.controlTab.copyConfigError);
