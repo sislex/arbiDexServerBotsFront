@@ -11,6 +11,7 @@ interface BotRuntimeLike {
   jobCount?: number;
   errorCount?: number;
   lastLatency?: number;
+  latency?: number;
   averageLatency?: number;
   lastJobTimeStart?: string;
   lastJobTimeFinish?: string;
@@ -59,6 +60,7 @@ export const mapBotItemToListRow = (
   fallbackDescription: string,
 ): BotListRowViewModel => {
   const asRecord = item as BotRuntimeLike & {
+    arbitrageCount?: number;
     arbitragesCount?: number;
     status?: string;
     botParams?: BotParamsLike;
@@ -78,9 +80,9 @@ export const mapBotItemToListRow = (
     description,
     created: toStringSafe(asRecord.createdAt, '-'),
     jobs: toNumber(asRecord.jobCount),
-    arbitrages: toNumber(asRecord.arbitragesCount),
+    arbitrages: toNumber(asRecord.arbitrageCount ?? asRecord.arbitragesCount),
     errors: toNumber(asRecord.errorCount),
-    avgReqTime: `${toNumber(asRecord.averageLatency ?? asRecord.lastLatency)}ms`,
+    avgReqTime: `${toNumber(asRecord.latency ?? asRecord.averageLatency)}ms`,
     lastReqTime: `${toNumber(asRecord.lastLatency)}ms`,
     status: isActive ? 'active' : 'pause',
   };

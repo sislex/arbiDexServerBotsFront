@@ -47,6 +47,7 @@ export interface BotControlItem {
   jobCount?: number;
   errorCount?: number;
   lastLatency?: number;
+  latency?: number;
   lastJobTimeFinish?: string;
   [key: string]: unknown;
 }
