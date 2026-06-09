@@ -88,14 +88,61 @@ export const mapBotItemToListRow = (
   };
 };
 
+const asConfigObject = (value: unknown): Record<string, unknown> =>
+  value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
+
+export const extractBotConfigParts = (
+  botInfo: BotInfo | null,
+): { botParams: Record<string, unknown>; jobParams: Record<string, unknown> } => {
+  if (!botInfo) {
+    return { botParams: {}, jobParams: {} };
+  }
+
+  if (botInfo.botParams || botInfo.jobParams) {
+    return {
+      botParams: asConfigObject(botInfo.botParams),
+      jobParams: asConfigObject(botInfo.jobParams),
+    };
+  }
+
+  const rawData = (botInfo as Record<string, unknown>).data;
+  if (typeof rawData === 'string' && rawData.trim()) {
+    try {
+      const parsed = JSON.parse(rawData) as Record<string, unknown>;
+      return {
+        botParams: asConfigObject(parsed.botParams),
+        jobParams: asConfigObject(parsed.jobParams),
+      };
+    } catch {
+      return { botParams: {}, jobParams: {} };
+    }
+  }
+
+  if (rawData && typeof rawData === 'object') {
+    const parsed = rawData as Record<string, unknown>;
+    return {
+      botParams: asConfigObject(parsed.botParams),
+      jobParams: asConfigObject(parsed.jobParams),
+    };
+  }
+
+  return { botParams: {}, jobParams: {} };
+};
+
+export const buildBotConfigClipboardText = (botInfo: BotInfo | null): string => {
+  const { botParams, jobParams } = extractBotConfigParts(botInfo);
+  return JSON.stringify({ botParams, jobParams }, null, 2);
+};
+
 export const mapBotDetailsToViewModel = (
   botId: string,
   botInfo: BotInfo | null,
   botParams: Record<string, unknown> | null,
 ): BotControlDetailsViewModel => {
   const info = (botInfo ?? {}) as Record<string, unknown>;
-  const infoBotParams = ((botInfo?.botParams as Record<string, unknown> | undefined) ??
-    {}) as Record<string, unknown>;
+  const { botParams: infoBotParams, jobParams: infoJobParams } = extractBotConfigParts(botInfo);
   const params = (botParams ?? {}) as Record<string, unknown>;
 
   const paused = Boolean(params.paused ?? infoBotParams.paused ?? false);
@@ -112,8 +159,8 @@ export const mapBotDetailsToViewModel = (
     lastJobTimeFinish: toStringSafe(params.lastJobTimeFinish, '-'),
     lastJobResult: params.lastJobResult ?? info.lastJobResult ?? '-',
     isSendData: Boolean(params.isSendData ?? info.isSendData ?? false),
-    botParamsJson: JSON.stringify((botInfo?.botParams as Record<string, unknown> | undefined) ?? {}, null, 2),
-    jobParamsJson: JSON.stringify((botInfo?.jobParams as Record<string, unknown> | undefined) ?? {}, null, 2),
+    botParamsJson: JSON.stringify(infoBotParams, null, 2),
+    jobParamsJson: JSON.stringify(infoJobParams, null, 2),
   };
 };
 

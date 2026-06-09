@@ -14,7 +14,7 @@ import {
 } from '../store/slices/servers-slice';
 import { showToast } from '../services/toast';
 import { copyTextToClipboard } from '../services/clipboard';
-import { mapBotDetailsToViewModel } from '../services/bot-control-adapter';
+import { buildBotConfigClipboardText, mapBotDetailsToViewModel } from '../services/bot-control-adapter';
 import { formatLastJobResult } from '../services/format-last-job-result';
 
 interface BotControlTabProps {
@@ -109,16 +109,15 @@ export function BotControlTab({ botId }: BotControlTabProps) {
     setIsModalOpen(false);
   };
 
-  const handleCopyConfig = async () => {
-    try {
-      const botParams = JSON.parse(currentBotParamsJson || '{}') as Record<string, unknown>;
-      const jobParams = JSON.parse(currentJobParamsJson || '{}') as Record<string, unknown>;
-      const configText = JSON.stringify({ botParams, jobParams }, null, 2);
-      await copyTextToClipboard(configText);
-      showToast('success', t.botDetail.controlTab.copyConfigSuccess);
-    } catch {
-      showToast('error', t.botDetail.controlTab.copyConfigError);
-    }
+  const handleCopyConfig = () => {
+    const configText = buildBotConfigClipboardText(botInfoState.data);
+    void copyTextToClipboard(configText)
+      .then(() => {
+        showToast('success', t.botDetail.controlTab.copyConfigSuccess);
+      })
+      .catch(() => {
+        showToast('error', t.botDetail.controlTab.copyConfigError);
+      });
   };
 
   const parameters = [
@@ -197,7 +196,7 @@ export function BotControlTab({ botId }: BotControlTabProps) {
               {/* Copy config */}
               <button
                 type="button"
-                onClick={() => void handleCopyConfig()}
+                onClick={handleCopyConfig}
                 className="flex items-center gap-2 px-3 py-2 rounded transition-colors bg-muted text-muted-foreground hover:bg-accent hover:text-foreground"
                 title={t.botDetail.controlTab.copyConfig}
               >
