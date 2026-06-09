@@ -51,6 +51,11 @@ export const translations = {
       openBotHint: 'Click a row to open bot details',
       loading: 'Loading...',
       port: 'Port',
+      toConfig: 'To Config',
+      workingServers: 'Working servers',
+      notWorkingServers: 'Not working servers',
+      noWorkingServers: 'No working servers',
+      noNotWorkingServers: 'No offline servers',
       table: {
         id: 'ID',
         description: 'Description',
@@ -324,6 +329,11 @@ export const translations = {
       openBotHint: 'Нажмите на строку для открытия бота',
       loading: 'Загрузка...',
       port: 'Порт',
+      toConfig: 'К конфигу',
+      workingServers: 'Работающие серверы',
+      notWorkingServers: 'Не работающие серверы',
+      noWorkingServers: 'Нет работающих серверов',
+      noNotWorkingServers: 'Нет неработающих серверов',
       table: {
         id: 'ID',
         description: 'Описание',

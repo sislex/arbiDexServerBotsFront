@@ -9,6 +9,7 @@ export interface ServerItem {
   ip: string;
   port: string;
   name: string;
+  serverId?: string;
 }
 
 export interface DbServerItem {

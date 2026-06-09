@@ -1,13 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { ColDef } from 'ag-grid-community';
-import { Check, Circle, Loader2, Pause, Play, RefreshCw, Trash2 } from 'lucide-react';
+import {
+  Check,
+  ChevronDown,
+  Circle,
+  ExternalLink,
+  Loader2,
+  Pause,
+  Play,
+  RefreshCw,
+  Trash2,
+} from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   selectActiveServer,
   selectBotControlActionState,
   selectBotControlListState,
-  selectPendingBotPauseId,
+  selectPendingBotIds,
   selectRulesListState,
   selectServerList,
 } from '../store/selectors';
@@ -25,6 +35,8 @@ import { mapBotItemToListRow } from '../services/bot-control-adapter';
 import { AppGrid } from './shared/AppGrid';
 import { ApiInfoModal } from './ApiInfoModal';
 import { SetBotForm } from './SetBotForm';
+import { buildConfigPanelServerUrl } from '../store/constants';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 
 interface BotRow {
   id: string;
@@ -42,6 +54,7 @@ interface ServerUiItem {
   ip: string;
   port: string;
   name?: string;
+  serverId?: string;
 }
 
 type ServerHealthStatus = 'loading' | 'online' | 'offline';
@@ -66,7 +79,7 @@ export function BotsTab({
   const botControlListState = useAppSelector(selectBotControlListState);
   const botControlActionState = useAppSelector(selectBotControlActionState);
   const rulesListState = useAppSelector(selectRulesListState);
-  const pendingBotPauseId = useAppSelector(selectPendingBotPauseId);
+  const pendingBotIds = useAppSelector(selectPendingBotIds);
   const [selectedServer, setSelectedServer] = useState(`${activeServer.ip}:${activeServer.port}`);
   const [serverStatuses, setServerStatuses] = useState<Record<string, ServerHealthStatus>>({});
   const [isApiInfoOpen, setIsApiInfoOpen] = useState(false);
@@ -74,6 +87,77 @@ export function BotsTab({
   const hasServers = servers.length > 0;
   const isBulkActionLoading = botControlActionState.isLoading;
   const ruleIds = new Set(rulesListState.data.map((rule) => String(rule.id)));
+
+  const { workingServers, notWorkingServers } = useMemo(() => {
+    const working: ServerUiItem[] = [];
+    const notWorking: ServerUiItem[] = [];
+
+    servers.forEach((server) => {
+      const status = serverStatuses[`${server.ip}:${server.port}`];
+      if (status === 'online') {
+        working.push(server);
+      } else {
+        notWorking.push(server);
+      }
+    });
+
+    return { workingServers: working, notWorkingServers: notWorking };
+  }, [servers, serverStatuses]);
+
+  const renderServerItem = (server: ServerUiItem) => {
+    const serverKey = `${server.ip}:${server.port}`;
+    const isSelected = selectedServer === serverKey;
+    const configUrl = server.serverId ? buildConfigPanelServerUrl(server.serverId) : null;
+
+    return (
+      <div
+        key={serverKey}
+        className={`rounded transition-colors ${
+          isSelected ? 'bg-accent border border-border' : 'hover:bg-muted'
+        }`}
+      >
+        <button
+          onClick={() => {
+            setSelectedServer(serverKey);
+            dispatch(setActiveServer(server));
+            onServerSelect?.(serverKey);
+          }}
+          className="w-full flex items-center gap-3 px-4 py-3 text-left"
+        >
+          <Circle
+            size={8}
+            className={`${
+              serverStatuses[serverKey] === 'online'
+                ? 'fill-green-500 text-green-500'
+                : serverStatuses[serverKey] === 'offline'
+                  ? 'fill-red-500 text-red-500'
+                  : 'fill-yellow-500 text-yellow-500'
+            }`}
+          />
+          <div className="flex-1 min-w-0">
+            <div className="text-sm text-foreground truncate">{server.ip}</div>
+            <div className="text-xs text-muted-foreground">
+              {t.botsTab.port}: {server.port}
+            </div>
+          </div>
+          {isSelected && <Check size={16} className="text-primary shrink-0" />}
+        </button>
+        {configUrl && (
+          <div className="px-4 pb-2">
+            <a
+              href={configUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline"
+            >
+              <ExternalLink size={12} />
+              {t.botsTab.toConfig}
+            </a>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   useEffect(() => {
     dispatch(loadRulesList());
@@ -136,6 +220,9 @@ export function BotsTab({
     ),
   );
 
+  const totalBots = botControlListState.data.length;
+  const runningBots = botControlListState.data.filter((item) => item.running).length;
+
   const colDefs: ColDef<BotRow>[] = [
     {
       headerName: '#',
@@ -157,7 +244,7 @@ export function BotsTab({
         }
 
         const isActive = row.status === 'active';
-        const isPending = pendingBotPauseId === row.id;
+        const isPending = pendingBotIds.includes(row.id);
         const isDisabled = isBulkActionLoading || isPending;
         const title = isActive ? t.botDetail.controlTab.pause : t.botsTab.startAll;
 
@@ -218,7 +305,8 @@ export function BotsTab({
           return null;
         }
 
-        const isDisabled = isBulkActionLoading;
+        const isPending = pendingBotIds.includes(row.id);
+        const isDisabled = isBulkActionLoading || isPending;
 
         return (
           <div className="w-full h-full flex items-center justify-center">
@@ -245,7 +333,7 @@ export function BotsTab({
                   : 'bg-destructive/15 text-destructive hover:bg-destructive/25'
               }`}
             >
-              <Trash2 size={14} />
+              {isPending ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
             </button>
           </div>
         );
@@ -285,41 +373,46 @@ export function BotsTab({
           {!hasServers && (
             <div className="text-sm text-muted-foreground px-2 py-1">Loading servers from DB...</div>
           )}
-          <div className="space-y-1">
-            {servers.map((server) => (
-              <button
-                key={`${server.ip}:${server.port}`}
-                onClick={() => {
-                  const key = `${server.ip}:${server.port}`;
-                  setSelectedServer(key);
-                  dispatch(setActiveServer(server));
-                  onServerSelect?.(key);
-                }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded text-left transition-colors ${
-                  selectedServer === `${server.ip}:${server.port}`
-                    ? 'bg-accent border border-border'
-                    : 'hover:bg-muted'
-                }`}
-              >
-                <Circle
-                  size={8}
-                  className={`${
-                    serverStatuses[`${server.ip}:${server.port}`] === 'online'
-                      ? 'fill-green-500 text-green-500'
-                      : serverStatuses[`${server.ip}:${server.port}`] === 'offline'
-                        ? 'fill-red-500 text-red-500'
-                        : 'fill-yellow-500 text-yellow-500'
-                  }`}
-                />
-                <div className="flex-1">
-                  <div className="text-sm text-foreground">{server.ip}</div>
-                  <div className="text-xs text-muted-foreground">{t.botsTab.port}: {server.port}</div>
+          <div className="space-y-3">
+            <Collapsible defaultOpen>
+              <CollapsibleTrigger className="flex w-full items-center justify-between px-2 py-2 text-sm font-medium text-foreground hover:bg-muted rounded transition-colors [&[data-state=open]>svg]:rotate-180">
+                <span>
+                  {t.botsTab.workingServers} ({workingServers.length})
+                </span>
+                <ChevronDown size={16} className="text-muted-foreground transition-transform duration-200" />
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="space-y-1 pt-1">
+                  {workingServers.length > 0 ? (
+                    workingServers.map(renderServerItem)
+                  ) : (
+                    <div className="px-2 py-1 text-xs text-muted-foreground">
+                      {t.botsTab.noWorkingServers}
+                    </div>
+                  )}
                 </div>
-                {selectedServer === `${server.ip}:${server.port}` && (
-                  <Check size={16} className="text-primary" />
-                )}
-              </button>
-            ))}
+              </CollapsibleContent>
+            </Collapsible>
+
+            <Collapsible defaultOpen={false}>
+              <CollapsibleTrigger className="flex w-full items-center justify-between px-2 py-2 text-sm font-medium text-foreground hover:bg-muted rounded transition-colors [&[data-state=open]>svg]:rotate-180">
+                <span>
+                  {t.botsTab.notWorkingServers} ({notWorkingServers.length})
+                </span>
+                <ChevronDown size={16} className="text-muted-foreground transition-transform duration-200" />
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="space-y-1 pt-1">
+                  {notWorkingServers.length > 0 ? (
+                    notWorkingServers.map(renderServerItem)
+                  ) : (
+                    <div className="px-2 py-1 text-xs text-muted-foreground">
+                      {t.botsTab.noNotWorkingServers}
+                    </div>
+                  )}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
           </div>
         </div>
         <div className="p-4 border-t border-border">
@@ -335,7 +428,9 @@ export function BotsTab({
       {/* Main Content */}
       <div className="flex-1 min-w-0 min-h-0 flex flex-col overflow-hidden">
         <div className="h-11 shrink-0 border-b border-border bg-background flex items-center justify-between gap-3 px-4">
-          <h2 className="text-sm text-foreground">{t.botsTab.title}</h2>
+          <h2 className="text-sm text-foreground">
+            {t.botsTab.title} ({totalBots}/{runningBots})
+          </h2>
           <div className="flex items-center gap-2">
             <button
               onClick={async () => {
@@ -441,8 +536,9 @@ export function BotsTab({
                 columnDefs={colDefs}
                 className="h-full"
                 onRowDoubleClicked={(event) => {
-                  if (event.data?.id) {
-                    onBotSelect?.(event.data.id);
+                  const botId = event.data?.id;
+                  if (botId && !pendingBotIds.includes(botId)) {
+                    onBotSelect?.(botId);
                   }
                 }}
               />
