@@ -35,10 +35,22 @@ export const translations = {
     botsTab: {
       title: 'Bots info',
       apiInfo: 'API info',
+      actions: 'Actions',
       startAll: 'Start all',
       stopAll: 'Stop all',
       restartAll: 'Restart all',
+      startSelected: 'Start selected',
+      stopSelected: 'Stop selected',
+      restartSelected: 'Restart selected',
+      deleteSelected: 'Delete selected',
+      deleteAll: 'Delete all',
       applyingAll: 'Applying action to all bots...',
+      startSelectedSuccess: 'Started {count} bot(s)',
+      startSelectedError: 'Failed to start selected bots',
+      stopSelectedSuccess: 'Stopped {count} bot(s)',
+      stopSelectedError: 'Failed to stop selected bots',
+      restartSelectedSuccess: 'Restarted {count} bot(s)',
+      restartSelectedError: 'Failed to restart selected bots',
       startAllSuccess: 'All bots started',
       startAllError: 'Failed to start all bots',
       stopAllSuccess: 'All bots stopped',
@@ -51,6 +63,11 @@ export const translations = {
       openBotHint: 'Click a row to open bot details',
       loading: 'Loading...',
       port: 'Port',
+      toConfig: 'To Config',
+      workingServers: 'Working servers',
+      notWorkingServers: 'Not working servers',
+      noWorkingServers: 'No working servers',
+      noNotWorkingServers: 'No offline servers',
       table: {
         id: 'ID',
         description: 'Description',
@@ -60,7 +77,9 @@ export const translations = {
         errors: 'Errors',
         avgRequestTime: 'Avg Request Time',
         lastRequestTime: 'Last Request Time',
-        status: 'Status'
+        status: 'Status',
+        control: 'Start/Stop',
+        delete: 'Delete'
       },
       botDescriptions: {
         'BOT-001': 'Trading bot for BTC/USD',
@@ -81,9 +100,13 @@ export const translations = {
       },
       removeBot: {
         button: 'Remove bot',
-        confirm: 'Remove this bot from server rules? The bot will be paused and deleted from botsRulesList.',
-        success: 'Bot removed from server rules',
-        error: 'Failed to remove bot from server rules'
+        confirm: 'Removing {label}',
+        confirmBulk: 'Removing {count} bot(s): {labels}',
+        cancel: 'Cancel',
+        success: 'Removed: {label}',
+        successBulk: 'Removed {count} bot(s) from server rules',
+        error: 'Failed to remove bot from server rules',
+        errorBulk: 'Failed to remove selected bots from server rules'
       }
     },
     apiInfo: {
@@ -308,10 +331,22 @@ export const translations = {
     botsTab: {
       title: 'Информация о ботах',
       apiInfo: 'Информация API',
+      actions: 'Действия',
       startAll: 'Старт всех',
       stopAll: 'Стоп всех',
       restartAll: 'Перезапуск всех',
+      startSelected: 'Старт выбранных',
+      stopSelected: 'Стоп выбранных',
+      restartSelected: 'Перезапуск выбранных',
+      deleteSelected: 'Удалить выбранные',
+      deleteAll: 'Удалить всех',
       applyingAll: 'Применение действия ко всем ботам...',
+      startSelectedSuccess: 'Запущено ботов: {count}',
+      startSelectedError: 'Не удалось запустить выбранных ботов',
+      stopSelectedSuccess: 'Остановлено ботов: {count}',
+      stopSelectedError: 'Не удалось остановить выбранных ботов',
+      restartSelectedSuccess: 'Перезапущено ботов: {count}',
+      restartSelectedError: 'Не удалось перезапустить выбранных ботов',
       startAllSuccess: 'Все боты запущены',
       startAllError: 'Не удалось запустить всех ботов',
       stopAllSuccess: 'Все боты остановлены',
@@ -324,6 +359,11 @@ export const translations = {
       openBotHint: 'Нажмите на строку для открытия бота',
       loading: 'Загрузка...',
       port: 'Порт',
+      toConfig: 'К конфигу',
+      workingServers: 'Работающие серверы',
+      notWorkingServers: 'Не работающие серверы',
+      noWorkingServers: 'Нет работающих серверов',
+      noNotWorkingServers: 'Нет неработающих серверов',
       table: {
         id: 'ID',
         description: 'Описание',
@@ -333,7 +373,9 @@ export const translations = {
         errors: 'Ошибки',
         avgRequestTime: 'Среднее время запроса',
         lastRequestTime: 'Последнее время запроса',
-        status: 'Статус'
+        status: 'Статус',
+        control: 'Старт/Стоп',
+        delete: 'Удалить'
       },
       botDescriptions: {
         'BOT-001': 'Торговый бот для BTC/USD',
@@ -354,9 +396,13 @@ export const translations = {
       },
       removeBot: {
         button: 'Удалить бота',
-        confirm: 'Удалить этого бота из правил на сервере? Бот будет остановлен и удалён из botsRulesList.',
-        success: 'Бот удалён из правил на сервере',
-        error: 'Не удалось удалить бота из правил на сервере'
+        confirm: 'Удаление: {label}',
+        confirmBulk: 'Удаление {count} бот(ов): {labels}',
+        cancel: 'Отмена',
+        success: 'Удалён: {label}',
+        successBulk: 'Удалено ботов: {count}',
+        error: 'Не удалось удалить бота из правил на сервере',
+        errorBulk: 'Не удалось удалить выбранных ботов из правил на сервере'
       }
     },
     apiInfo: {

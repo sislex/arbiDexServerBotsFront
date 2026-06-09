@@ -5,6 +5,8 @@ import type {
   RuleItem,
   BotInfo,
   DbServerItem,
+  BotPauseBulkResultItem,
+  BotRestartBulkResultItem,
 } from '../store/types';
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL?.trim() || 'http://89.125.68.35:3001';
@@ -62,6 +64,129 @@ async function request<T>(
 
   return (await response.json()) as T;
 }
+
+const isBulkEndpointNotFound = (error: unknown) =>
+  error instanceof Error &&
+  (error.message.includes('HTTP 404') ||
+    error.message.includes('Not Found') ||
+    error.message.includes('Cannot POST /bots/pause') ||
+    error.message.includes('Cannot POST /bots/restart'));
+
+const setBotsPauseOneByOne = async (
+  activeServer: string,
+  botIds: string[],
+  pause: boolean,
+): Promise<BotPauseBulkResultItem[]> =>
+  Promise.all(
+    botIds.map(async (botId) => {
+      try {
+        const response = await request<Record<string, unknown>>(activeServer, `/bot/${botId}/pause`, {
+          method: 'POST',
+          body: JSON.stringify({ pause }),
+        });
+        return {
+          id: botId,
+          paused: Boolean(response.paused ?? pause),
+        };
+      } catch (error) {
+        return {
+          id: botId,
+          error: error instanceof Error ? error.message : 'request failed',
+        };
+      }
+    }),
+  );
+
+const restartBotsOneByOne = async (
+  activeServer: string,
+  botIds: string[],
+): Promise<BotRestartBulkResultItem[]> =>
+  Promise.all(
+    botIds.map(async (botId) => {
+      try {
+        await request<Record<string, unknown>>(activeServer, `/bot/${botId}/restart`, {
+          method: 'POST',
+        });
+        return {
+          id: botId,
+          restarted: true,
+        };
+      } catch (error) {
+        return {
+          id: botId,
+          error: error instanceof Error ? error.message : 'request failed',
+        };
+      }
+    }),
+  );
+
+const requestBotsPause = async (
+  activeServer: string,
+  botIds: string[],
+  pause: boolean,
+): Promise<BotPauseBulkResultItem[]> => {
+  if (botIds.length === 0) {
+    return [];
+  }
+
+  try {
+    return await request<BotPauseBulkResultItem[]>(activeServer, '/bots/pause', {
+      method: 'POST',
+      body: JSON.stringify({ botIds, pause }),
+    });
+  } catch (error) {
+    if (!isBulkEndpointNotFound(error)) {
+      throw error;
+    }
+    return setBotsPauseOneByOne(activeServer, botIds, pause);
+  }
+};
+
+const requestBotsRestart = async (
+  activeServer: string,
+  botIds: string[],
+): Promise<BotRestartBulkResultItem[]> => {
+  if (botIds.length === 0) {
+    return [];
+  }
+
+  try {
+    return await request<BotRestartBulkResultItem[]>(activeServer, '/bots/restart', {
+      method: 'POST',
+      body: JSON.stringify({ botIds }),
+    });
+  } catch (error) {
+    if (!isBulkEndpointNotFound(error)) {
+      throw error;
+    }
+    return restartBotsOneByOne(activeServer, botIds);
+  }
+};
+
+const unwrapSinglePauseResult = (
+  botId: string,
+  pause: boolean,
+  results: BotPauseBulkResultItem[],
+): Record<string, unknown> => {
+  const result = results.find((item) => item.id === botId) ?? results[0];
+  if (!result || result.error) {
+    throw new Error(result?.error ?? `Failed to ${pause ? 'pause' : 'resume'} bot ${botId}`);
+  }
+
+  return { id: result.id, paused: result.paused };
+};
+
+const unwrapSingleRestartResult = (
+  botId: string,
+  results: BotRestartBulkResultItem[],
+): Record<string, unknown> => {
+  const result = results.find((item) => item.id === botId) ?? results[0];
+  if (!result || result.error) {
+    throw new Error(result?.error ?? `Failed to restart bot ${botId}`);
+  }
+
+  return { id: result.id, restarted: result.restarted };
+};
 
 export const serverApi = {
   getServersFromDb(): Promise<DbServerItem[]> {
@@ -121,17 +246,30 @@ export const serverApi = {
     return request(activeServer, `/prices/key/${encodeURIComponent(key)}`);
   },
 
-  setBotPause(activeServer: string, botId: string, pause: boolean): Promise<Record<string, unknown>> {
-    return request<Record<string, unknown>>(activeServer, `/bot/${botId}/pause`, {
-      method: 'POST',
-      body: JSON.stringify({ pause }),
-    });
+  async setBotPause(
+    activeServer: string,
+    botId: string,
+    pause: boolean,
+  ): Promise<Record<string, unknown>> {
+    const results = await requestBotsPause(activeServer, [botId], pause);
+    return unwrapSinglePauseResult(botId, pause, results);
   },
 
-  restartBot(activeServer: string, botId: string): Promise<Record<string, unknown>> {
-    return request<Record<string, unknown>>(activeServer, `/bot/${botId}/restart`, {
-      method: 'POST',
-    });
+  setBotsPause(
+    activeServer: string,
+    botIds: string[],
+    pause: boolean,
+  ): Promise<BotPauseBulkResultItem[]> {
+    return requestBotsPause(activeServer, botIds, pause);
+  },
+
+  async restartBot(activeServer: string, botId: string): Promise<Record<string, unknown>> {
+    const results = await requestBotsRestart(activeServer, [botId]);
+    return unwrapSingleRestartResult(botId, results);
+  },
+
+  restartBots(activeServer: string, botIds: string[]): Promise<BotRestartBulkResultItem[]> {
+    return requestBotsRestart(activeServer, botIds);
   },
 
   setBotSendData(

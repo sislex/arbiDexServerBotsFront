@@ -6,3 +6,9 @@ export const DEFAULT_SERVER_LIST: ServerItem[] = [
 ];
 
 export const DEFAULT_ACTIVE_TAB = 'bots';
+
+export const CONFIG_PANEL_URL =
+  import.meta.env.VITE_CONFIG_PANEL_URL?.trim() || 'http://89.125.68.35:4203';
+
+export const buildConfigPanelServerUrl = (serverId: string) =>
+  `${CONFIG_PANEL_URL}/server/${serverId}`;

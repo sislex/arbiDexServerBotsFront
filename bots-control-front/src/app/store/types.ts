@@ -9,6 +9,7 @@ export interface ServerItem {
   ip: string;
   port: string;
   name: string;
+  serverId?: string;
 }
 
 export interface DbServerItem {
@@ -62,4 +63,16 @@ export interface BotInfo {
   botParams?: Record<string, unknown>;
   jobParams?: Record<string, unknown>;
   [key: string]: unknown;
+}
+
+export interface BotPauseBulkResultItem {
+  id: string;
+  paused?: boolean;
+  error?: string;
+}
+
+export interface BotRestartBulkResultItem {
+  id: string;
+  restarted?: boolean;
+  error?: string;
 }
