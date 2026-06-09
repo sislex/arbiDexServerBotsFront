@@ -87,6 +87,7 @@ export const translations = {
       removeBot: {
         button: 'Remove bot',
         confirm: 'Remove this bot from server rules? The bot will be paused and deleted from botsRulesList.',
+        cancel: 'Cancel',
         success: 'Bot removed from server rules',
         error: 'Failed to remove bot from server rules'
       }
@@ -365,6 +366,7 @@ export const translations = {
       removeBot: {
         button: 'Удалить бота',
         confirm: 'Удалить этого бота из правил на сервере? Бот будет остановлен и удалён из botsRulesList.',
+        cancel: 'Отмена',
         success: 'Бот удалён из правил на сервере',
         error: 'Не удалось удалить бота из правил на сервере'
       }

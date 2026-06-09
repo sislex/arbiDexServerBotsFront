@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ColDef } from 'ag-grid-community';
 import {
   Check,
@@ -30,7 +30,7 @@ import {
   setSingleBotPaused,
   setBotFromConfig,
 } from '../store/slices/servers-slice';
-import { showToast } from '../services/toast';
+import { showDelayedActionToast, showToast } from '../services/toast';
 import { mapBotItemToListRow } from '../services/bot-control-adapter';
 import { AppGrid } from './shared/AppGrid';
 import { ApiInfoModal } from './ApiInfoModal';
@@ -84,6 +84,8 @@ export function BotsTab({
   const [serverStatuses, setServerStatuses] = useState<Record<string, ServerHealthStatus>>({});
   const [isApiInfoOpen, setIsApiInfoOpen] = useState(false);
   const [isSetBotFormOpen, setIsSetBotFormOpen] = useState(false);
+  const [scheduledRemoveBotIds, setScheduledRemoveBotIds] = useState<string[]>([]);
+  const scheduledRemovalsRef = useRef<Map<string, () => void>>(new Map());
   const hasServers = servers.length > 0;
   const isBulkActionLoading = botControlActionState.isLoading;
   const ruleIds = new Set(rulesListState.data.map((rule) => String(rule.id)));
@@ -223,6 +225,36 @@ export function BotsTab({
   const totalBots = botControlListState.data.length;
   const runningBots = botControlListState.data.filter((item) => item.running).length;
 
+  const clearScheduledRemoval = (botId: string) => {
+    scheduledRemovalsRef.current.delete(botId);
+    setScheduledRemoveBotIds((prev) => prev.filter((id) => id !== botId));
+  };
+
+  const scheduleBotRemoval = (botId: string) => {
+    if (scheduledRemovalsRef.current.has(botId)) {
+      return;
+    }
+
+    setScheduledRemoveBotIds((prev) => [...prev, botId]);
+
+    const cancelScheduledRemoval = showDelayedActionToast({
+      message: t.botsTab.removeBot.confirm,
+      cancelLabel: t.botsTab.removeBot.cancel,
+      onCancel: () => clearScheduledRemoval(botId),
+      onConfirm: async () => {
+        clearScheduledRemoval(botId);
+        const result = await dispatch(removeBotFromServer(botId));
+        if (removeBotFromServer.fulfilled.match(result)) {
+          showToast('success', t.botsTab.removeBot.success);
+        } else {
+          showToast('error', result.error.message ?? t.botsTab.removeBot.error);
+        }
+      },
+    });
+
+    scheduledRemovalsRef.current.set(botId, cancelScheduledRemoval);
+  };
+
   const colDefs: ColDef<BotRow>[] = [
     {
       headerName: '#',
@@ -306,7 +338,8 @@ export function BotsTab({
         }
 
         const isPending = pendingBotIds.includes(row.id);
-        const isDisabled = isBulkActionLoading || isPending;
+        const isScheduled = scheduledRemoveBotIds.includes(row.id);
+        const isDisabled = isBulkActionLoading || isPending || isScheduled;
 
         return (
           <div className="w-full h-full flex items-center justify-center">
@@ -314,17 +347,9 @@ export function BotsTab({
               type="button"
               title={t.botsTab.removeBot.button}
               disabled={isDisabled}
-              onClick={async (event) => {
+              onClick={(event) => {
                 event.stopPropagation();
-                if (!window.confirm(t.botsTab.removeBot.confirm)) {
-                  return;
-                }
-                const result = await dispatch(removeBotFromServer(row.id));
-                if (removeBotFromServer.fulfilled.match(result)) {
-                  showToast('success', t.botsTab.removeBot.success);
-                } else {
-                  showToast('error', result.error.message ?? t.botsTab.removeBot.error);
-                }
+                scheduleBotRemoval(row.id);
               }}
               onDoubleClick={(event) => event.stopPropagation()}
               className={`inline-flex h-8 w-8 items-center justify-center rounded transition-colors ${
