@@ -105,10 +105,6 @@ function MainLayout() {
     }
   }, [activeTab, activeServerIpPort, dispatch]);
 
-  useEffect(() => {
-    dispatch(loadBotControlList());
-  }, [activeServerIpPort, dispatch]);
-
   const handleBotSelect = (botId: string) => {
     navigate(`/server/${activeServerIpPort}/${botId}`);
   };
@@ -119,7 +115,7 @@ function MainLayout() {
 
   return (
     <div className="size-full flex flex-col bg-background text-foreground">
-      <Toaster position="bottom-right" richColors />
+      <Toaster position="bottom-center" richColors />
       <Header onLogout={() => {
         sessionStorage.removeItem('bots-control-auth-user');
         window.location.reload();
@@ -191,7 +187,7 @@ function BotPageRoute() {
 
   return (
     <div className="size-full flex flex-col bg-background text-foreground">
-      <Toaster position="bottom-right" richColors />
+      <Toaster position="bottom-center" richColors />
       <Header onLogout={() => {
         sessionStorage.removeItem('bots-control-auth-user');
         window.location.reload();

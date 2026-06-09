@@ -64,3 +64,15 @@ export interface BotInfo {
   jobParams?: Record<string, unknown>;
   [key: string]: unknown;
 }
+
+export interface BotPauseBulkResultItem {
+  id: string;
+  paused?: boolean;
+  error?: string;
+}
+
+export interface BotRestartBulkResultItem {
+  id: string;
+  restarted?: boolean;
+  error?: string;
+}

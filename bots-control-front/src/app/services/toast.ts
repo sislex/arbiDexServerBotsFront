@@ -2,16 +2,18 @@ import { toast, type ExternalToast } from 'sonner';
 
 type ToastType = 'success' | 'error' | 'info';
 
+const toastPosition = { position: 'bottom-center' as const };
+
 export const showToast = (type: ToastType, message: string) => {
   if (type === 'success') {
-    toast.success(message);
+    toast.success(message, toastPosition);
     return;
   }
   if (type === 'error') {
-    toast.error(message);
+    toast.error(message, toastPosition);
     return;
   }
-  toast(message);
+  toast(message, toastPosition);
 };
 
 interface DelayedActionToastOptions {

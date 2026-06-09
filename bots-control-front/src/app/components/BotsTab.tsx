@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ColDef } from 'ag-grid-community';
 import {
   Check,
@@ -6,6 +6,7 @@ import {
   Circle,
   ExternalLink,
   Loader2,
+  Menu,
   Pause,
   Play,
   RefreshCw,
@@ -15,7 +16,6 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   selectActiveServer,
-  selectBotControlActionState,
   selectBotControlListState,
   selectPendingBotIds,
   selectRulesListState,
@@ -24,9 +24,12 @@ import {
 import {
   loadRulesList,
   restartAllBots,
+  restartSelectedBots,
   removeBotFromServer,
+  removeBotsFromServer,
   setActiveServer,
   setAllBotsPaused,
+  setSelectedBotsPaused,
   setSingleBotPaused,
   setBotFromConfig,
 } from '../store/slices/servers-slice';
@@ -37,6 +40,14 @@ import { ApiInfoModal } from './ApiInfoModal';
 import { SetBotForm } from './SetBotForm';
 import { buildConfigPanelServerUrl } from '../store/constants';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu';
+import { BotsGridCheckboxCell, BotsGridCheckboxHeader } from './bots-grid-checkbox';
 
 interface BotRow {
   id: string;
@@ -77,18 +88,20 @@ export function BotsTab({
   const servers = useAppSelector(selectServerList) as ServerUiItem[];
   const activeServer = useAppSelector(selectActiveServer);
   const botControlListState = useAppSelector(selectBotControlListState);
-  const botControlActionState = useAppSelector(selectBotControlActionState);
   const rulesListState = useAppSelector(selectRulesListState);
   const pendingBotIds = useAppSelector(selectPendingBotIds);
   const [selectedServer, setSelectedServer] = useState(`${activeServer.ip}:${activeServer.port}`);
   const [serverStatuses, setServerStatuses] = useState<Record<string, ServerHealthStatus>>({});
   const [isApiInfoOpen, setIsApiInfoOpen] = useState(false);
   const [isSetBotFormOpen, setIsSetBotFormOpen] = useState(false);
-  const [scheduledRemoveBotIds, setScheduledRemoveBotIds] = useState<string[]>([]);
+  const [selectedBotIds, setSelectedBotIds] = useState<Set<string>>(new Set());
+  const [hiddenBotIds, setHiddenBotIds] = useState<string[]>([]);
   const scheduledRemovalsRef = useRef<Map<string, () => void>>(new Map());
   const hasServers = servers.length > 0;
-  const isBulkActionLoading = botControlActionState.isLoading;
-  const ruleIds = new Set(rulesListState.data.map((rule) => String(rule.id)));
+  const ruleIds = useMemo(
+    () => new Set(rulesListState.data.map((rule) => String(rule.id))),
+    [rulesListState.data],
+  );
 
   const { workingServers, notWorkingServers } = useMemo(() => {
     const working: ServerUiItem[] = [];
@@ -215,57 +228,355 @@ export function BotsTab({
     };
   }, [servers]);
 
-  const rows: BotRow[] = botControlListState.data.map((item) =>
+  const allRows: BotRow[] = botControlListState.data.map((item) =>
     mapBotItemToListRow(
       item,
       t.botsTab.botDescriptions[String(item.id) as keyof typeof t.botsTab.botDescriptions] ?? '-',
     ),
   );
+  const rows = allRows.filter((row) => !hiddenBotIds.includes(row.id));
 
-  const totalBots = botControlListState.data.length;
-  const runningBots = botControlListState.data.filter((item) => item.running).length;
+  const totalBots = rows.length;
+  const runningBots = rows.filter((row) => row.status === 'active').length;
+  const allBotIds = useMemo(() => rows.map((row) => row.id), [rows]);
+  const deletableBotIds = useMemo(
+    () => allBotIds.filter((id) => ruleIds.has(id)),
+    [allBotIds, ruleIds],
+  );
+  const selectedBotIdsList = useMemo(() => [...selectedBotIds], [selectedBotIds]);
+  const selectedCount = selectedBotIds.size;
+  const selectedDeletableBotIds = useMemo(
+    () => selectedBotIdsList.filter((id) => ruleIds.has(id)),
+    [selectedBotIdsList, ruleIds],
+  );
+  const allSelected = allBotIds.length > 0 && allBotIds.every((id) => selectedBotIds.has(id));
+  const someSelected = allBotIds.some((id) => selectedBotIds.has(id));
 
-  const clearScheduledRemoval = (botId: string) => {
-    scheduledRemovalsRef.current.delete(botId);
-    setScheduledRemoveBotIds((prev) => prev.filter((id) => id !== botId));
-  };
+  const formatCountMessage = (template: string, count: number) =>
+    template.replace('{count}', String(count));
 
-  const scheduleBotRemoval = (botId: string) => {
-    if (scheduledRemovalsRef.current.has(botId)) {
+  const formatTemplateMessage = (template: string, values: Record<string, string | number>) =>
+    Object.entries(values).reduce(
+      (message, [key, value]) => message.replace(`{${key}}`, String(value)),
+      template,
+    );
+
+  const getBotRemovalLabel = useCallback(
+    (botId: string) => {
+      const row = allRows.find((item) => item.id === botId);
+      if (!row) {
+        return botId;
+      }
+
+      const description = row.description.trim();
+      if (description && description !== '-') {
+        return `${description} (${botId})`;
+      }
+
+      return botId;
+    },
+    [allRows],
+  );
+
+  const toggleBotSelection = useCallback((botId: string) => {
+    setSelectedBotIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(botId)) {
+        next.delete(botId);
+      } else {
+        next.add(botId);
+      }
+      return next;
+    });
+  }, []);
+
+  const toggleAllBotsSelection = useCallback(() => {
+    setSelectedBotIds(allSelected ? new Set() : new Set(allBotIds));
+  }, [allBotIds, allSelected]);
+
+  const isBotCheckboxDisabled = useCallback(
+    (botId: string) => pendingBotIds.includes(botId) || hiddenBotIds.includes(botId),
+    [hiddenBotIds, pendingBotIds],
+  );
+
+  const isBotRowPending = useCallback(
+    (botId: string) => pendingBotIds.includes(botId),
+    [pendingBotIds],
+  );
+
+  const isBotSelected = useCallback(
+    (botId: string) => selectedBotIds.has(botId),
+    [selectedBotIds],
+  );
+
+  useEffect(() => {
+    setSelectedBotIds((prev) => {
+      const validIds = new Set(allBotIds);
+      const next = new Set([...prev].filter((id) => validIds.has(id)));
+      return next.size === prev.size ? prev : next;
+    });
+  }, [allBotIds]);
+
+  useEffect(() => {
+    scheduledRemovalsRef.current.forEach((cancelScheduledRemoval) => cancelScheduledRemoval());
+    scheduledRemovalsRef.current.clear();
+    setHiddenBotIds([]);
+  }, [activeServer.ip, activeServer.port]);
+
+  const scheduleBotsRemoval = (botIds: string[]) => {
+    const uniqueBotIds = [...new Set(botIds.filter((id) => ruleIds.has(id)))];
+    if (uniqueBotIds.length === 0) {
       return;
     }
 
-    setScheduledRemoveBotIds((prev) => [...prev, botId]);
+    const pendingIds = uniqueBotIds.filter((id) => !hiddenBotIds.includes(id));
+    if (pendingIds.length === 0) {
+      return;
+    }
+
+    const scheduleKey = pendingIds.join('|');
+    if (scheduledRemovalsRef.current.has(scheduleKey)) {
+      return;
+    }
+
+    setHiddenBotIds((prev) => [...new Set([...prev, ...pendingIds])]);
+    setSelectedBotIds((prev) => {
+      const next = new Set(prev);
+      pendingIds.forEach((id) => next.delete(id));
+      return next;
+    });
+
+    const restoreHiddenBots = () => {
+      scheduledRemovalsRef.current.delete(scheduleKey);
+      setHiddenBotIds((prev) => prev.filter((id) => !pendingIds.includes(id)));
+    };
+
+    const removalLabels = pendingIds.map((botId) => getBotRemovalLabel(botId));
+    const removalMessage =
+      pendingIds.length === 1
+        ? formatTemplateMessage(t.botsTab.removeBot.confirm, { label: removalLabels[0] })
+        : formatTemplateMessage(t.botsTab.removeBot.confirmBulk, {
+            count: pendingIds.length,
+            labels: removalLabels.join(', '),
+          });
 
     const cancelScheduledRemoval = showDelayedActionToast({
-      message: t.botsTab.removeBot.confirm,
+      message: removalMessage,
       cancelLabel: t.botsTab.removeBot.cancel,
-      onCancel: () => clearScheduledRemoval(botId),
+      onCancel: restoreHiddenBots,
       onConfirm: async () => {
-        clearScheduledRemoval(botId);
-        const result = await dispatch(removeBotFromServer(botId));
-        if (removeBotFromServer.fulfilled.match(result)) {
-          showToast('success', t.botsTab.removeBot.success);
+        scheduledRemovalsRef.current.delete(scheduleKey);
+        const result = await dispatch(
+          pendingIds.length === 1
+            ? removeBotFromServer(pendingIds[0])
+            : removeBotsFromServer(pendingIds),
+        );
+        if (removeBotFromServer.fulfilled.match(result) || removeBotsFromServer.fulfilled.match(result)) {
+          setHiddenBotIds((prev) => prev.filter((id) => !pendingIds.includes(id)));
+          showToast(
+            'success',
+            pendingIds.length === 1
+              ? formatTemplateMessage(t.botsTab.removeBot.success, { label: removalLabels[0] })
+              : formatCountMessage(t.botsTab.removeBot.successBulk, pendingIds.length),
+          );
         } else {
-          showToast('error', result.error.message ?? t.botsTab.removeBot.error);
+          restoreHiddenBots();
+          showToast(
+            'error',
+            result.error.message ??
+              (pendingIds.length === 1
+                ? t.botsTab.removeBot.error
+                : t.botsTab.removeBot.errorBulk),
+          );
         }
       },
     });
 
-    scheduledRemovalsRef.current.set(botId, cancelScheduledRemoval);
+    scheduledRemovalsRef.current.set(scheduleKey, cancelScheduledRemoval);
   };
 
+  const scheduleBotRemoval = (botId: string) => {
+    scheduleBotsRemoval([botId]);
+  };
+
+  const showBulkPauseToast = (
+    result: Awaited<ReturnType<typeof dispatch>>,
+    pause: boolean,
+    scope: 'all' | 'selected',
+  ) => {
+    const matcher = scope === 'all' ? setAllBotsPaused.fulfilled : setSelectedBotsPaused.fulfilled;
+    const errorMessage =
+      scope === 'all'
+        ? pause
+          ? t.botsTab.stopAllError
+          : t.botsTab.startAllError
+        : pause
+          ? t.botsTab.stopSelectedError
+          : t.botsTab.startSelectedError;
+    const successMessage =
+      scope === 'all'
+        ? pause
+          ? t.botsTab.stopAllSuccess
+          : t.botsTab.startAllSuccess
+        : pause
+          ? t.botsTab.stopSelectedSuccess
+          : t.botsTab.startSelectedSuccess;
+
+    if (!matcher.match(result)) {
+      showToast('error', result.error.message ?? errorMessage);
+      return;
+    }
+
+    const success = result.payload.success ?? 0;
+    const failed = result.payload.failed ?? 0;
+    const total = result.payload.total ?? success;
+
+    if (failed > 0) {
+      showToast('info', `${successMessage} (${success}/${total})`);
+      return;
+    }
+
+    showToast(
+      'success',
+      scope === 'all' ? successMessage : formatCountMessage(successMessage, success),
+    );
+  };
+
+  const showBulkRestartToast = (
+    result: Awaited<ReturnType<typeof dispatch>>,
+    scope: 'all' | 'selected',
+  ) => {
+    const matcher = scope === 'all' ? restartAllBots.fulfilled : restartSelectedBots.fulfilled;
+    const errorMessage =
+      scope === 'all' ? t.botsTab.restartAllError : t.botsTab.restartSelectedError;
+    const successMessage =
+      scope === 'all' ? t.botsTab.restartAllSuccess : t.botsTab.restartSelectedSuccess;
+
+    if (!matcher.match(result)) {
+      showToast('error', result.error.message ?? errorMessage);
+      return;
+    }
+
+    const success = result.payload.success ?? 0;
+    const failed = result.payload.failed ?? 0;
+    const total = result.payload.total ?? success;
+
+    if (failed > 0) {
+      showToast('info', `${successMessage} (${success}/${total})`);
+      return;
+    }
+
+    showToast(
+      'success',
+      scope === 'all' ? successMessage : formatCountMessage(successMessage, success),
+    );
+  };
+
+  const runSelectedPause = async (pause: boolean) => {
+    if (selectedBotIdsList.length === 0) {
+      return;
+    }
+    const result = await dispatch(
+      setSelectedBotsPaused({ botIds: selectedBotIdsList, pause }),
+    );
+    showBulkPauseToast(result, pause, 'selected');
+  };
+
+  const runAllPause = async (pause: boolean) => {
+    if (allBotIds.length === 0) {
+      return;
+    }
+    const result = await dispatch(setAllBotsPaused({ pause, botIds: allBotIds }));
+    showBulkPauseToast(result, pause, 'all');
+  };
+
+  const runSelectedRestart = async () => {
+    if (selectedBotIdsList.length === 0) {
+      return;
+    }
+    const result = await dispatch(restartSelectedBots(selectedBotIdsList));
+    showBulkRestartToast(result, 'selected');
+  };
+
+  const runAllRestart = async () => {
+    if (allBotIds.length === 0) {
+      return;
+    }
+    const result = await dispatch(restartAllBots(allBotIds));
+    showBulkRestartToast(result, 'all');
+  };
+
+  const formatActionLabel = (label: string, count?: number) =>
+    count && count > 0 ? `${label} (${count})` : label;
+
   const colDefs: ColDef<BotRow>[] = [
+    {
+      colId: 'checkbox',
+      headerName: '',
+      pinned: 'left',
+      width: 56,
+      minWidth: 56,
+      maxWidth: 56,
+      sortable: false,
+      resizable: false,
+      suppressMovable: true,
+      headerComponent: BotsGridCheckboxHeader,
+      headerComponentParams: {
+        checked: allSelected,
+        indeterminate: someSelected && !allSelected,
+        onToggle: toggleAllBotsSelection,
+      },
+      cellRenderer: BotsGridCheckboxCell,
+      cellRendererParams: {
+        isSelected: isBotSelected,
+        onToggle: toggleBotSelection,
+        isDisabled: isBotCheckboxDisabled,
+      },
+    },
     {
       headerName: '#',
       maxWidth: 70,
       valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
     },
+    { field: 'id', headerName: t.botsTab.table.id, minWidth: 130 },
+    { field: 'description', headerName: t.botsTab.table.description, minWidth: 220, flex: 1 },
+    { field: 'created', headerName: t.botsTab.table.created, minWidth: 160 },
+    { field: 'jobs', headerName: t.botsTab.table.jobs, minWidth: 100 },
+    { field: 'arbitrages', headerName: t.botsTab.table.arbitrages, minWidth: 110 },
+    { field: 'errors', headerName: t.botsTab.table.errors, minWidth: 100 },
+    { field: 'avgReqTime', headerName: t.botsTab.table.avgRequestTime, minWidth: 160 },
+    { field: 'lastReqTime', headerName: t.botsTab.table.lastRequestTime, minWidth: 160 },
     {
-      headerName: '',
-      colId: 'control',
-      minWidth: 70,
+      field: 'status',
+      headerName: t.botsTab.table.status,
+      pinned: 'right',
+      lockPinned: true,
+      width: 80,
+      minWidth: 80,
       maxWidth: 80,
+      sortable: false,
+      resizable: false,
+      suppressMovable: true,
+      cellRenderer: (params: { value: string }) => {
+        const isActive = params.value === 'active';
+        return (
+          <div className="w-full h-full flex items-center justify-center">
+            <Circle
+              size={10}
+              className={isActive ? 'fill-green-500 text-green-500' : 'fill-yellow-500 text-yellow-500'}
+            />
+          </div>
+        );
+      },
+    },
+    {
+      headerName: t.botsTab.table.control,
+      colId: 'control',
+      pinned: 'right',
+      lockPinned: true,
+      minWidth: 90,
+      maxWidth: 90,
+      width: 90,
       sortable: false,
       resizable: false,
       suppressMovable: true,
@@ -276,8 +587,8 @@ export function BotsTab({
         }
 
         const isActive = row.status === 'active';
-        const isPending = pendingBotIds.includes(row.id);
-        const isDisabled = isBulkActionLoading || isPending;
+        const isPending = isBotRowPending(row.id);
+        const isDisabled = isPending;
         const title = isActive ? t.botDetail.controlTab.pause : t.botsTab.startAll;
 
         return (
@@ -324,10 +635,13 @@ export function BotsTab({
       },
     },
     {
-      headerName: '',
+      headerName: t.botsTab.table.delete,
       colId: 'delete',
-      minWidth: 50,
-      maxWidth: 60,
+      pinned: 'right',
+      lockPinned: true,
+      minWidth: 80,
+      maxWidth: 80,
+      width: 80,
       sortable: false,
       resizable: false,
       suppressMovable: true,
@@ -337,9 +651,8 @@ export function BotsTab({
           return null;
         }
 
-        const isPending = pendingBotIds.includes(row.id);
-        const isScheduled = scheduledRemoveBotIds.includes(row.id);
-        const isDisabled = isBulkActionLoading || isPending || isScheduled;
+        const isPending = isBotRowPending(row.id);
+        const isDisabled = isPending;
 
         return (
           <div className="w-full h-full flex items-center justify-center">
@@ -360,30 +673,6 @@ export function BotsTab({
             >
               {isPending ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
             </button>
-          </div>
-        );
-      },
-    },
-    { field: 'id', headerName: t.botsTab.table.id, minWidth: 130 },
-    { field: 'description', headerName: t.botsTab.table.description, minWidth: 220, flex: 1 },
-    { field: 'created', headerName: t.botsTab.table.created, minWidth: 160 },
-    { field: 'jobs', headerName: t.botsTab.table.jobs, minWidth: 100 },
-    { field: 'arbitrages', headerName: t.botsTab.table.arbitrages, minWidth: 110 },
-    { field: 'errors', headerName: t.botsTab.table.errors, minWidth: 100 },
-    { field: 'avgReqTime', headerName: t.botsTab.table.avgRequestTime, minWidth: 160 },
-    { field: 'lastReqTime', headerName: t.botsTab.table.lastRequestTime, minWidth: 160 },
-    {
-      field: 'status',
-      headerName: t.botsTab.table.status,
-      maxWidth: 100,
-      cellRenderer: (params: { value: string }) => {
-        const isActive = params.value === 'active';
-        return (
-          <div className="w-full h-full flex items-center justify-center">
-            <Circle
-              size={10}
-              className={isActive ? 'fill-green-500 text-green-500' : 'fill-yellow-500 text-yellow-500'}
-            />
           </div>
         );
       },
@@ -458,71 +747,14 @@ export function BotsTab({
           </h2>
           <div className="flex items-center gap-2">
             <button
-              onClick={async () => {
-                const result = await dispatch(setAllBotsPaused({ pause: false }));
-                if (setAllBotsPaused.fulfilled.match(result)) {
-                  showToast('success', t.botsTab.startAllSuccess);
-                } else {
-                  showToast('error', result.error.message ?? t.botsTab.startAllError);
-                }
-              }}
-              disabled={isBulkActionLoading || rows.length === 0}
-              className={`px-3 py-1.5 rounded text-sm transition-colors ${
-                isBulkActionLoading || rows.length === 0
-                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                  : 'bg-success text-success-foreground hover:opacity-90'
-              }`}
-            >
-              {t.botsTab.startAll}
-            </button>
-            <button
-              onClick={async () => {
-                const result = await dispatch(setAllBotsPaused({ pause: true }));
-                if (setAllBotsPaused.fulfilled.match(result)) {
-                  showToast('success', t.botsTab.stopAllSuccess);
-                } else {
-                  showToast('error', result.error.message ?? t.botsTab.stopAllError);
-                }
-              }}
-              disabled={isBulkActionLoading || rows.length === 0}
-              className={`px-3 py-1.5 rounded text-sm transition-colors ${
-                isBulkActionLoading || rows.length === 0
-                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                  : 'bg-warning text-warning-foreground hover:opacity-90'
-              }`}
-            >
-              {t.botsTab.stopAll}
-            </button>
-            <button
-              onClick={async () => {
-                const result = await dispatch(restartAllBots());
-                if (restartAllBots.fulfilled.match(result)) {
-                  showToast('success', t.botsTab.restartAllSuccess);
-                } else {
-                  showToast('error', result.error.message ?? t.botsTab.restartAllError);
-                }
-              }}
-              disabled={isBulkActionLoading || rows.length === 0}
-              className={`px-3 py-1.5 rounded text-sm transition-colors ${
-                isBulkActionLoading || rows.length === 0
-                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                  : 'bg-primary text-primary-foreground hover:opacity-90'
-              }`}
-            >
-              {t.botsTab.restartAll}
-            </button>
-            <button
+              type="button"
               onClick={() => setIsSetBotFormOpen(true)}
-              disabled={isBulkActionLoading}
-              className={`px-3 py-1.5 rounded text-sm transition-colors ${
-                isBulkActionLoading
-                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                  : 'bg-secondary text-secondary-foreground hover:opacity-90'
-              }`}
+              className="px-3 py-1.5 rounded text-sm transition-colors bg-secondary text-secondary-foreground hover:opacity-90"
             >
               {t.botsTab.setBot.button}
             </button>
             <button
+              type="button"
               onClick={onRefresh}
               disabled={!onRefresh || isRefreshing}
               className={`flex items-center gap-2 px-3 py-1.5 rounded transition-colors text-sm ${
@@ -535,6 +767,71 @@ export function BotsTab({
               <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
               <span className="text-sm">{t.header.refresh}</span>
             </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="flex items-center justify-center p-2 rounded transition-colors bg-muted text-foreground hover:bg-accent"
+                  aria-label={t.botsTab.actions}
+                  title={t.botsTab.actions}
+                >
+                  <Menu size={16} />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  disabled={allBotIds.length === 0}
+                  onClick={() => void runAllPause(false)}
+                >
+                  {t.botsTab.startAll}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  disabled={allBotIds.length === 0}
+                  onClick={() => void runAllPause(true)}
+                >
+                  {t.botsTab.stopAll}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  disabled={allBotIds.length === 0}
+                  onClick={() => void runAllRestart()}
+                >
+                  {t.botsTab.restartAll}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  variant="destructive"
+                  disabled={deletableBotIds.length === 0}
+                  onClick={() => scheduleBotsRemoval(deletableBotIds)}
+                >
+                  {t.botsTab.deleteAll}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  disabled={selectedCount === 0}
+                  onClick={() => void runSelectedPause(false)}
+                >
+                  {formatActionLabel(t.botsTab.startSelected, selectedCount)}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  disabled={selectedCount === 0}
+                  onClick={() => void runSelectedPause(true)}
+                >
+                  {formatActionLabel(t.botsTab.stopSelected, selectedCount)}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  disabled={selectedCount === 0}
+                  onClick={() => void runSelectedRestart()}
+                >
+                  {formatActionLabel(t.botsTab.restartSelected, selectedCount)}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  variant="destructive"
+                  disabled={selectedDeletableBotIds.length === 0}
+                  onClick={() => scheduleBotsRemoval(selectedDeletableBotIds)}
+                >
+                  {formatActionLabel(t.botsTab.deleteSelected, selectedDeletableBotIds.length)}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
@@ -572,12 +869,6 @@ export function BotsTab({
         )}
         {!isSetBotFormOpen && botControlListState.isLoading && (
           <div className="text-sm text-muted-foreground mt-2 px-4">{t.botsTab.loading ?? 'Loading...'}</div>
-        )}
-        {!isSetBotFormOpen && !botControlListState.isLoading && isBulkActionLoading && (
-          <div className="text-sm text-muted-foreground mt-2 px-4">{t.botsTab.applyingAll}</div>
-        )}
-        {botControlActionState.error && (
-          <div className="text-sm text-destructive mt-2 px-4">{botControlActionState.error}</div>
         )}
         {!isSetBotFormOpen && !botControlListState.isLoading && rows.length > 0 && (
           <div className="text-xs text-muted-foreground mt-2 px-4">
