@@ -107,7 +107,7 @@ export function ServerDataTab() {
                       : 'fill-yellow-500 text-yellow-500'
                 }
               />
-              <span className="text-xs text-foreground">{statusLabel(status, statusLabels)}</span>
+              <span className="text-xs text-foreground select-text">{statusLabel(status, statusLabels)}</span>
             </div>
           );
         },

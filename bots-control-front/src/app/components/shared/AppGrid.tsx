@@ -30,7 +30,7 @@ export function AppGrid<T extends object>({
   rowData,
   columnDefs,
   className,
-  enableTextSelection = false,
+  enableTextSelection = true,
   onRowClicked,
   onRowDoubleClicked,
   onGridReady,

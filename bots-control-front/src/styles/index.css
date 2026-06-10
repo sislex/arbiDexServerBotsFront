@@ -4,7 +4,9 @@
 
 .arb-dex-grid--selectable .ag-cell,
 .arb-dex-grid--selectable .ag-cell-value,
-.arb-dex-grid--selectable .ag-cell-wrapper {
+.arb-dex-grid--selectable .ag-cell-wrapper,
+.arb-dex-grid--selectable .ag-cell pre,
+.arb-dex-grid--selectable .ag-cell span {
   user-select: text;
   -webkit-user-select: text;
 }
