@@ -136,6 +136,9 @@ export const buildBotConfigClipboardText = (botInfo: BotInfo | null): string => 
   return JSON.stringify({ botParams, jobParams }, null, 2);
 };
 
+export const buildServerRulesClipboardText = (rules: BotRuleItem[]): string =>
+  JSON.stringify({ botsRulesList: rules }, null, 2);
+
 export const mapBotDetailsToViewModel = (
   botId: string,
   botInfo: BotInfo | null,
@@ -258,6 +261,31 @@ export const normalizeRulesList = (response: unknown): BotRuleItem[] => {
   }
 
   return [];
+};
+
+export const parseServerRulesConfigJson = (rawConfig: string): BotRuleItem[] => {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(rawConfig);
+  } catch {
+    throw new Error('Invalid JSON config');
+  }
+
+  if (!parsed || (typeof parsed !== 'object' && !Array.isArray(parsed))) {
+    throw new Error('Server config must be a JSON object or array');
+  }
+
+  if (!Array.isArray(parsed)) {
+    const record = parsed as Record<string, unknown>;
+    if (!('botsRulesList' in record)) {
+      throw new Error('Server config must contain botsRulesList');
+    }
+    if (!Array.isArray(record.botsRulesList)) {
+      throw new Error('botsRulesList must be an array');
+    }
+  }
+
+  return normalizeRulesList(parsed);
 };
 
 export const mergeBotRuleIntoList = (

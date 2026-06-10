@@ -16,6 +16,7 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   selectActiveServer,
+  selectBotControlActionState,
   selectBotControlListState,
   selectPendingBotIds,
   selectRulesListState,
@@ -31,12 +32,14 @@ import {
   setAllBotsPaused,
   setSelectedBotsPaused,
   setSingleBotPaused,
+  saveServerRulesFromConfig,
   setBotFromConfig,
 } from '../store/slices/servers-slice';
 import { showDelayedActionToast, showToast } from '../services/toast';
-import { mapBotItemToListRow } from '../services/bot-control-adapter';
+import { buildServerRulesClipboardText, mapBotItemToListRow } from '../services/bot-control-adapter';
 import { AppGrid } from './shared/AppGrid';
 import { ApiInfoModal } from './ApiInfoModal';
+import { GetConfigServerForm } from './GetConfigServerForm';
 import { SetBotForm } from './SetBotForm';
 import { buildConfigPanelServerUrl } from '../store/constants';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
@@ -88,12 +91,16 @@ export function BotsTab({
   const servers = useAppSelector(selectServerList) as ServerUiItem[];
   const activeServer = useAppSelector(selectActiveServer);
   const botControlListState = useAppSelector(selectBotControlListState);
+  const botControlActionState = useAppSelector(selectBotControlActionState);
   const rulesListState = useAppSelector(selectRulesListState);
   const pendingBotIds = useAppSelector(selectPendingBotIds);
   const [selectedServer, setSelectedServer] = useState(`${activeServer.ip}:${activeServer.port}`);
   const [serverStatuses, setServerStatuses] = useState<Record<string, ServerHealthStatus>>({});
   const [isApiInfoOpen, setIsApiInfoOpen] = useState(false);
   const [isSetBotFormOpen, setIsSetBotFormOpen] = useState(false);
+  const [isGetConfigServerFormOpen, setIsGetConfigServerFormOpen] = useState(false);
+  const [serverConfigInitial, setServerConfigInitial] = useState('{\n  "botsRulesList": []\n}');
+  const [isGettingServerConfig, setIsGettingServerConfig] = useState(false);
   const [selectedBotIds, setSelectedBotIds] = useState<Set<string>>(new Set());
   const [hiddenBotIds, setHiddenBotIds] = useState<string[]>([]);
   const scheduledRemovalsRef = useRef<Map<string, () => void>>(new Map());
@@ -748,10 +755,45 @@ export function BotsTab({
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => setIsSetBotFormOpen(true)}
+              onClick={() => {
+                setIsGetConfigServerFormOpen(false);
+                setIsSetBotFormOpen(true);
+              }}
               className="px-3 py-1.5 rounded text-sm transition-colors bg-secondary text-secondary-foreground hover:opacity-90"
             >
               {t.botsTab.setBot.button}
+            </button>
+            <button
+              type="button"
+              disabled={isGettingServerConfig}
+              onClick={() => {
+                setIsSetBotFormOpen(false);
+                setIsGettingServerConfig(true);
+                void dispatch(loadRulesList())
+                  .then((result) => {
+                    if (!loadRulesList.fulfilled.match(result)) {
+                      showToast(
+                        'error',
+                        result.error?.message ?? t.botsTab.getConfigServer.loadError,
+                      );
+                      return;
+                    }
+
+                    setServerConfigInitial(buildServerRulesClipboardText(result.payload ?? []));
+                    setIsGetConfigServerFormOpen(true);
+                  })
+                  .finally(() => {
+                    setIsGettingServerConfig(false);
+                  });
+              }}
+              className={`px-3 py-1.5 rounded text-sm transition-colors ${
+                isGettingServerConfig
+                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                  : 'bg-secondary text-secondary-foreground hover:opacity-90'
+              }`}
+              title={t.botsTab.getConfigServer.button}
+            >
+              {t.botsTab.getConfigServer.button}
             </button>
             <button
               type="button"
@@ -835,7 +877,24 @@ export function BotsTab({
           </div>
         </div>
 
-        {isSetBotFormOpen ? (
+        {isGetConfigServerFormOpen ? (
+          <GetConfigServerForm
+            key={serverConfigInitial}
+            initialConfig={serverConfigInitial}
+            isSaving={botControlActionState.isLoading}
+            onBack={() => setIsGetConfigServerFormOpen(false)}
+            onSave={async (config) => {
+              const result = await dispatch(saveServerRulesFromConfig(config));
+              if (saveServerRulesFromConfig.fulfilled.match(result)) {
+                showToast('success', t.botsTab.getConfigServer.saveSuccess);
+                setServerConfigInitial(config);
+                setIsGetConfigServerFormOpen(false);
+              } else {
+                showToast('error', result.error.message ?? t.botsTab.getConfigServer.saveError);
+              }
+            }}
+          />
+        ) : isSetBotFormOpen ? (
           <SetBotForm
             onBack={() => setIsSetBotFormOpen(false)}
             onSave={async (config) => {
@@ -867,10 +926,10 @@ export function BotsTab({
             )}
           </div>
         )}
-        {!isSetBotFormOpen && botControlListState.isLoading && (
+        {!isSetBotFormOpen && !isGetConfigServerFormOpen && botControlListState.isLoading && (
           <div className="text-sm text-muted-foreground mt-2 px-4">{t.botsTab.loading ?? 'Loading...'}</div>
         )}
-        {!isSetBotFormOpen && !botControlListState.isLoading && rows.length > 0 && (
+        {!isSetBotFormOpen && !isGetConfigServerFormOpen && !botControlListState.isLoading && rows.length > 0 && (
           <div className="text-xs text-muted-foreground mt-2 px-4">
             {t.botsTab.openBotHintDoubleClick ?? t.botsTab.openBotHint}
           </div>

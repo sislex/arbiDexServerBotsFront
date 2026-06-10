@@ -98,6 +98,21 @@ export const translations = {
         saveSuccess: 'Bot config applied on server',
         saveError: 'Failed to apply bot config on server'
       },
+      getConfigServer: {
+        button: 'Config server',
+        title: 'Config server',
+        hint: 'Edit botsRulesList JSON from the active server. Save changes sends POST /setBotsRulesList and restarts updated bots.',
+        cancel: 'Cancel',
+        reset: 'Reset',
+        copyConfig: 'Copy config',
+        saveChanges: 'Save changes',
+        invalidJson: 'Invalid JSON config',
+        copySuccess: 'Config copied to clipboard',
+        copyError: 'Failed to copy config',
+        loadError: 'Failed to load server config',
+        saveSuccess: 'Server config saved and bots restarted',
+        saveError: 'Failed to save server config'
+      },
       removeBot: {
         button: 'Remove bot',
         confirm: 'Removing {label}',
@@ -393,6 +408,21 @@ export const translations = {
         invalidJson: 'Некорректный JSON конфиг',
         saveSuccess: 'Конфиг бота применён на сервере',
         saveError: 'Не удалось применить конфиг бота на сервере'
+      },
+      getConfigServer: {
+        button: 'Config server',
+        title: 'Config server',
+        hint: 'Редактируйте JSON botsRulesList с активного сервера. Save changes отправляет POST /setBotsRulesList и перезапускает обновлённых ботов.',
+        cancel: 'Отмена',
+        reset: 'Сброс',
+        copyConfig: 'Copy config',
+        saveChanges: 'Save changes',
+        invalidJson: 'Некорректный JSON конфиг',
+        copySuccess: 'Конфиг скопирован в буфер обмена',
+        copyError: 'Не удалось скопировать конфиг',
+        loadError: 'Не удалось загрузить конфиг сервера',
+        saveSuccess: 'Конфиг сервера сохранён, боты перезапущены',
+        saveError: 'Не удалось сохранить конфиг сервера'
       },
       removeBot: {
         button: 'Удалить бота',

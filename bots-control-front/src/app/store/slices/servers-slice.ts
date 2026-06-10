@@ -3,6 +3,7 @@ import {
   mergeBotRuleIntoList,
   normalizeRulesList,
   parseBotConfigJson,
+  parseServerRulesConfigJson,
   removeBotRuleFromList,
 } from '../../services/bot-control-adapter';
 import { waitForBotsRunningState } from '../../services/bot-pause-utils';
@@ -210,6 +211,36 @@ export const setBotFromConfig = createAsyncThunk(
     await refreshBotControlListAfterRunningChange(activeServer, [id], !paused, dispatch);
     await dispatch(loadRulesList());
     return { id, paused };
+  },
+);
+
+export const saveServerRulesFromConfig = createAsyncThunk(
+  'servers/saveServerRulesFromConfig',
+  async (rawConfig: string, { getState, dispatch }) => {
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
+    const botsRulesList = parseServerRulesConfigJson(rawConfig);
+
+    await serverApi.setBotsRulesList(activeServer, botsRulesList);
+
+    await Promise.all(
+      botsRulesList.map((rule) =>
+        serverApi.setBotPause(activeServer, rule.id, Boolean(rule.botParams?.paused)),
+      ),
+    );
+
+    const botsToRestart = botsRulesList
+      .filter((rule) => !Boolean(rule.botParams?.paused))
+      .map((rule) => rule.id);
+
+    if (botsToRestart.length > 0) {
+      await serverApi.restartBots(activeServer, botsToRestart);
+      await refreshBotControlListAfterRunningChange(activeServer, botsToRestart, true, dispatch);
+    } else {
+      await dispatch(loadBotControlList({ silent: true }));
+    }
+
+    await dispatch(loadRulesList());
+    return { total: botsRulesList.length, restarted: botsToRestart.length };
   },
 );
 
@@ -750,6 +781,19 @@ const serversSlice = createSlice({
         state.botControlAction.isLoading = false;
         state.botControlAction.isLoaded = true;
         state.botControlAction.error = action.error.message ?? 'Failed to apply bot config on server';
+      })
+      .addCase(saveServerRulesFromConfig.pending, (state) => {
+        state.botControlAction.isLoading = true;
+        state.botControlAction.error = null;
+      })
+      .addCase(saveServerRulesFromConfig.fulfilled, (state) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+      })
+      .addCase(saveServerRulesFromConfig.rejected, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.error = action.error.message ?? 'Failed to save server config';
       })
       .addCase(removeBotFromServer.pending, (state, action) => {
         state.botControlAction.error = null;
