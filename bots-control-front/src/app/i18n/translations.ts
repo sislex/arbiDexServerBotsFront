@@ -79,6 +79,7 @@ export const translations = {
         lastRequestTime: 'Last Request Time',
         status: 'Status',
         control: 'Start/Stop',
+        copy: 'Copy',
         delete: 'Delete'
       },
       botDescriptions: {
@@ -96,7 +97,9 @@ export const translations = {
         save: 'Save',
         invalidJson: 'Invalid JSON config',
         saveSuccess: 'Bot config applied on server',
-        saveError: 'Failed to apply bot config on server'
+        saveError: 'Failed to apply bot config on server',
+        copyHint: 'Bot copy config. Change id if needed and save to create a new bot.',
+        copyError: 'Bot config not found in server rules'
       },
       getConfigServer: {
         button: 'Config server',
@@ -396,6 +399,7 @@ export const translations = {
         lastRequestTime: 'Последнее время запроса',
         status: 'Статус',
         control: 'Старт/Стоп',
+        copy: 'Copy',
         delete: 'Удалить'
       },
       botDescriptions: {
@@ -413,7 +417,9 @@ export const translations = {
         save: 'Сохранить',
         invalidJson: 'Некорректный JSON конфиг',
         saveSuccess: 'Конфиг бота применён на сервере',
-        saveError: 'Не удалось применить конфиг бота на сервере'
+        saveError: 'Не удалось применить конфиг бота на сервере',
+        copyHint: 'Конфиг копии бота. При необходимости измените id и сохраните, чтобы создать нового бота.',
+        copyError: 'Конфиг бота не найден в правилах сервера'
       },
       getConfigServer: {
         button: 'Config server',

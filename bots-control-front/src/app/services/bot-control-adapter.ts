@@ -220,6 +220,46 @@ export const buildBotSettingsPayload = (
   jobParams: Record<string, unknown>,
 ) => JSON.stringify({ id, botParams, jobParams });
 
+export const suggestCopyBotId = (rules: BotRuleItem[], sourceId: string): string => {
+  const usedIds = new Set(rules.map((rule) => rule.id));
+  const numericIds = rules
+    .map((rule) => Number(rule.id))
+    .filter((value) => Number.isFinite(value));
+
+  if (numericIds.length > 0) {
+    let candidate = Math.max(...numericIds) + 1;
+    while (usedIds.has(String(candidate))) {
+      candidate += 1;
+    }
+    return String(candidate);
+  }
+
+  let candidate = `${sourceId}_copy`;
+  let index = 2;
+  while (usedIds.has(candidate)) {
+    candidate = `${sourceId}_copy${index}`;
+    index += 1;
+  }
+  return candidate;
+};
+
+export const buildSetBotConfigText = (
+  rule: BotRuleItem,
+  id: string = rule.id,
+): string =>
+  JSON.stringify(
+    {
+      id,
+      botParams: rule.botParams,
+      jobParams: rule.jobParams,
+    },
+    null,
+    2,
+  );
+
+export const buildCopyBotConfigText = (rule: BotRuleItem, rules: BotRuleItem[]): string =>
+  buildSetBotConfigText(rule, suggestCopyBotId(rules, rule.id));
+
 export interface BotRuleItem {
   id: string;
   botParams: Record<string, unknown>;

@@ -9,6 +9,7 @@ import {
   Menu,
   Pause,
   Play,
+  Copy,
   RefreshCw,
   Trash2,
 } from 'lucide-react';
@@ -36,7 +37,13 @@ import {
   setBotFromConfig,
 } from '../store/slices/servers-slice';
 import { showDelayedActionToast, showToast } from '../services/toast';
-import { buildServerRulesClipboardText, mapBotItemToListRow } from '../services/bot-control-adapter';
+import {
+  buildCopyBotConfigText,
+  buildServerRulesClipboardText,
+  DEFAULT_BOT_CONFIG_TEMPLATE,
+  mapBotItemToListRow,
+  normalizeRulesList,
+} from '../services/bot-control-adapter';
 import { checkServerHealth, type ServerHealthStatus } from '../services/server-health';
 import { AppGrid } from './shared/AppGrid';
 import { ApiInfoModal } from './ApiInfoModal';
@@ -97,6 +104,8 @@ export function BotsTab({
   const [serverStatuses, setServerStatuses] = useState<Record<string, ServerHealthStatus>>({});
   const [isApiInfoOpen, setIsApiInfoOpen] = useState(false);
   const [isSetBotFormOpen, setIsSetBotFormOpen] = useState(false);
+  const [setBotInitialConfig, setSetBotInitialConfig] = useState(DEFAULT_BOT_CONFIG_TEMPLATE);
+  const [setBotFormHint, setSetBotFormHint] = useState<string | undefined>(undefined);
   const [isGetConfigServerFormOpen, setIsGetConfigServerFormOpen] = useState(false);
   const [serverConfigInitial, setServerConfigInitial] = useState('{\n  "botsRulesList": []\n}');
   const [isGettingServerConfig, setIsGettingServerConfig] = useState(false);
@@ -504,6 +513,24 @@ export function BotsTab({
   const formatActionLabel = (label: string, count?: number) =>
     count && count > 0 ? `${label} (${count})` : label;
 
+  const openSetBotForm = (config: string, hint?: string) => {
+    setSetBotInitialConfig(config);
+    setSetBotFormHint(hint);
+    setIsGetConfigServerFormOpen(false);
+    setIsSetBotFormOpen(true);
+  };
+
+  const openCopyBotForm = (botId: string) => {
+    const rules = normalizeRulesList(rulesListState.data);
+    const rule = rules.find((item) => item.id === botId);
+    if (!rule) {
+      showToast('error', t.botsTab.setBot.copyError);
+      return;
+    }
+
+    openSetBotForm(buildCopyBotConfigText(rule, rules), t.botsTab.setBot.copyHint);
+  };
+
   const colDefs: ColDef<BotRow>[] = [
     {
       colId: 'checkbox',
@@ -515,6 +542,8 @@ export function BotsTab({
       sortable: false,
       resizable: false,
       suppressMovable: true,
+      cellClass: 'ag-bots-compact-cell',
+      cellStyle: { padding: 0, overflow: 'hidden' },
       headerComponent: BotsGridCheckboxHeader,
       headerComponentParams: {
         checked: allSelected,
@@ -552,10 +581,12 @@ export function BotsTab({
       sortable: false,
       resizable: false,
       suppressMovable: true,
+      cellClass: 'ag-bots-compact-cell',
+      cellStyle: { padding: 0, overflow: 'hidden' },
       cellRenderer: (params: { value: string }) => {
         const isActive = params.value === 'active';
         return (
-          <div className="w-full h-full flex items-center justify-center">
+          <div className="w-full h-full max-h-full flex items-center justify-center overflow-hidden">
             <Circle
               size={10}
               className={isActive ? 'fill-green-500 text-green-500' : 'fill-yellow-500 text-yellow-500'}
@@ -565,16 +596,18 @@ export function BotsTab({
       },
     },
     {
-      headerName: t.botsTab.table.control,
-      colId: 'control',
+      headerName: t.botsTab.actions,
+      colId: 'actions',
       pinned: 'right',
       lockPinned: true,
-      minWidth: 90,
-      maxWidth: 90,
-      width: 90,
+      minWidth: 118,
+      maxWidth: 118,
+      width: 118,
       sortable: false,
       resizable: false,
       suppressMovable: true,
+      cellClass: 'ag-bots-actions-cell',
+      cellStyle: { padding: 0, overflow: 'hidden' },
       cellRenderer: (params: { data?: BotRow }) => {
         const row = params.data;
         if (!row) {
@@ -584,13 +617,18 @@ export function BotsTab({
         const isActive = row.status === 'active';
         const isPending = isBotRowPending(row.id);
         const isDisabled = isPending;
-        const title = isActive ? t.botDetail.controlTab.pause : t.botsTab.startAll;
+        const hasRule = ruleIds.has(row.id);
+        const startStopTitle = isActive ? t.botDetail.controlTab.pause : t.botsTab.startAll;
+        const actionButtonClass =
+          'inline-flex h-7 w-7 shrink-0 items-center justify-center rounded transition-colors';
+        const mutedButtonClass = `${actionButtonClass} bg-muted text-muted-foreground hover:bg-accent hover:text-foreground`;
+        const disabledButtonClass = `${actionButtonClass} bg-muted text-muted-foreground cursor-not-allowed opacity-60`;
 
         return (
-          <div className="w-full h-full flex items-center justify-center">
+          <div className="w-full h-full max-h-full flex items-center justify-center gap-1.5 overflow-hidden px-1">
             <button
               type="button"
-              title={title}
+              title={startStopTitle}
               disabled={isDisabled}
               onClick={async (event) => {
                 event.stopPropagation();
@@ -609,65 +647,60 @@ export function BotsTab({
                 }
               }}
               onDoubleClick={(event) => event.stopPropagation()}
-              className={`inline-flex h-8 w-8 items-center justify-center rounded transition-colors ${
+              className={
                 isDisabled
-                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                  : isActive
-                    ? 'bg-warning text-warning-foreground hover:opacity-90'
-                    : 'bg-success text-success-foreground hover:opacity-90'
-              }`}
+                  ? disabledButtonClass
+                  : `${actionButtonClass} ${
+                      isActive
+                        ? 'bg-warning text-warning-foreground hover:opacity-90'
+                        : 'bg-success text-success-foreground hover:opacity-90'
+                    }`
+              }
             >
               {isPending ? (
-                <Loader2 size={14} className="animate-spin" />
+                <Loader2 size={13} className="animate-spin" />
               ) : isActive ? (
-                <Pause size={14} />
+                <Pause size={13} />
               ) : (
-                <Play size={14} />
+                <Play size={13} />
               )}
             </button>
-          </div>
-        );
-      },
-    },
-    {
-      headerName: t.botsTab.table.delete,
-      colId: 'delete',
-      pinned: 'right',
-      lockPinned: true,
-      minWidth: 80,
-      maxWidth: 80,
-      width: 80,
-      sortable: false,
-      resizable: false,
-      suppressMovable: true,
-      cellRenderer: (params: { data?: BotRow }) => {
-        const row = params.data;
-        if (!row || !ruleIds.has(row.id)) {
-          return null;
-        }
 
-        const isPending = isBotRowPending(row.id);
-        const isDisabled = isPending;
+            {hasRule && (
+              <button
+                type="button"
+                title={t.botsTab.table.copy}
+                disabled={isDisabled}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  openCopyBotForm(row.id);
+                }}
+                onDoubleClick={(event) => event.stopPropagation()}
+                className={isDisabled ? disabledButtonClass : mutedButtonClass}
+              >
+                <Copy size={13} />
+              </button>
+            )}
 
-        return (
-          <div className="w-full h-full flex items-center justify-center">
-            <button
-              type="button"
-              title={t.botsTab.removeBot.button}
-              disabled={isDisabled}
-              onClick={(event) => {
-                event.stopPropagation();
-                scheduleBotRemoval(row.id);
-              }}
-              onDoubleClick={(event) => event.stopPropagation()}
-              className={`inline-flex h-8 w-8 items-center justify-center rounded transition-colors ${
-                isDisabled
-                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                  : 'bg-destructive/15 text-destructive hover:bg-destructive/25'
-              }`}
-            >
-              {isPending ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
-            </button>
+            {hasRule && (
+              <button
+                type="button"
+                title={t.botsTab.removeBot.button}
+                disabled={isDisabled}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  scheduleBotRemoval(row.id);
+                }}
+                onDoubleClick={(event) => event.stopPropagation()}
+                className={
+                  isDisabled
+                    ? disabledButtonClass
+                    : `${actionButtonClass} bg-destructive/15 text-destructive hover:bg-destructive/25`
+                }
+              >
+                <Trash2 size={13} />
+              </button>
+            )}
           </div>
         );
       },
@@ -744,8 +777,7 @@ export function BotsTab({
             <button
               type="button"
               onClick={() => {
-                setIsGetConfigServerFormOpen(false);
-                setIsSetBotFormOpen(true);
+                openSetBotForm(DEFAULT_BOT_CONFIG_TEMPLATE);
               }}
               className="px-3 py-1.5 rounded text-sm transition-colors bg-secondary text-secondary-foreground hover:opacity-90"
             >
@@ -884,12 +916,19 @@ export function BotsTab({
           />
         ) : isSetBotFormOpen ? (
           <SetBotForm
-            onBack={() => setIsSetBotFormOpen(false)}
+            key={setBotInitialConfig}
+            initialConfig={setBotInitialConfig}
+            hint={setBotFormHint}
+            onBack={() => {
+              setIsSetBotFormOpen(false);
+              setSetBotFormHint(undefined);
+            }}
             onSave={async (config) => {
               const result = await dispatch(setBotFromConfig(config));
               if (setBotFromConfig.fulfilled.match(result)) {
                 showToast('success', t.botsTab.setBot.saveSuccess);
                 setIsSetBotFormOpen(false);
+                setSetBotFormHint(undefined);
               } else {
                 showToast('error', result.error.message ?? t.botsTab.setBot.saveError);
               }

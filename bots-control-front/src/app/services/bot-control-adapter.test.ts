@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
   buildBotConfigClipboardText,
+  buildCopyBotConfigText,
   buildBotTypeRowsFromRules,
   buildJobTypeRowsFromRules,
   buildServerRulesClipboardText,
+  suggestCopyBotId,
   extractBotConfigParts,
   parseServerRulesConfigJson,
 } from './bot-control-adapter';
@@ -34,6 +36,39 @@ describe('extractBotConfigParts', () => {
     expect(result).toEqual({
       botParams: { paused: false },
       jobParams: { token0: 'ETH' },
+    });
+  });
+});
+
+describe('suggestCopyBotId', () => {
+  it('suggests next numeric id', () => {
+    expect(
+      suggestCopyBotId(
+        [
+          { id: '10', botParams: {}, jobParams: {} },
+          { id: '12', botParams: {}, jobParams: {} },
+        ],
+        '12',
+      ),
+    ).toBe('13');
+  });
+});
+
+describe('buildCopyBotConfigText', () => {
+  it('builds set-bot config with a new id', () => {
+    const text = buildCopyBotConfigText(
+      {
+        id: '12',
+        botParams: { botType: 'TestBot', paused: false },
+        jobParams: { jobType: 'get_Cex_Quotes' },
+      },
+      [{ id: '12', botParams: {}, jobParams: {} }],
+    );
+
+    expect(JSON.parse(text)).toEqual({
+      id: '13',
+      botParams: { botType: 'TestBot', paused: false },
+      jobParams: { jobType: 'get_Cex_Quotes' },
     });
   });
 });

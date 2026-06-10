@@ -3,13 +3,20 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { DEFAULT_BOT_CONFIG_TEMPLATE } from '../services/bot-control-adapter';
 
 interface SetBotFormProps {
+  initialConfig?: string;
+  hint?: string;
   onSave: (config: string) => void;
   onBack: () => void;
 }
 
-export function SetBotForm({ onSave, onBack }: SetBotFormProps) {
+export function SetBotForm({
+  initialConfig = DEFAULT_BOT_CONFIG_TEMPLATE,
+  hint,
+  onSave,
+  onBack,
+}: SetBotFormProps) {
   const { t } = useLanguage();
-  const [config, setConfig] = useState(DEFAULT_BOT_CONFIG_TEMPLATE);
+  const [config, setConfig] = useState(initialConfig);
   const [error, setError] = useState<string | null>(null);
 
   const handleSave = () => {
@@ -27,7 +34,7 @@ export function SetBotForm({ onSave, onBack }: SetBotFormProps) {
     <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
       <div className="flex-1 min-h-0 overflow-auto p-4">
         <h3 className="text-sm text-foreground mb-2">{t.botsTab.setBot.title}</h3>
-        <p className="text-xs text-muted-foreground mb-3">{t.botsTab.setBot.hint}</p>
+        <p className="text-xs text-muted-foreground mb-3">{hint ?? t.botsTab.setBot.hint}</p>
         <textarea
           value={config}
           onChange={(event) => {
