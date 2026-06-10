@@ -37,6 +37,7 @@ import {
 } from '../store/slices/servers-slice';
 import { showDelayedActionToast, showToast } from '../services/toast';
 import { buildServerRulesClipboardText, mapBotItemToListRow } from '../services/bot-control-adapter';
+import { checkServerHealth, type ServerHealthStatus } from '../services/server-health';
 import { AppGrid } from './shared/AppGrid';
 import { ApiInfoModal } from './ApiInfoModal';
 import { GetConfigServerForm } from './GetConfigServerForm';
@@ -70,8 +71,6 @@ interface ServerUiItem {
   name?: string;
   serverId?: string;
 }
-
-type ServerHealthStatus = 'loading' | 'online' | 'offline';
 
 interface BotsTabProps {
   onBotSelect?: (botId: string) => void;
@@ -202,32 +201,21 @@ export function BotsTab({
     });
     setServerStatuses(nextStatuses);
 
-    const checkServerHealth = async (server: ServerUiItem) => {
+    const probeServerHealth = async (server: ServerUiItem) => {
       const key = `${server.ip}:${server.port}`;
-      try {
-        const response = await fetch(`http://${key}/bots/get-all`);
-        if (isCancelled) {
-          return;
-        }
-
-        setServerStatuses((prev) => ({
-          ...prev,
-          [key]: response.ok ? 'online' : 'offline',
-        }));
-      } catch {
-        if (isCancelled) {
-          return;
-        }
-
-        setServerStatuses((prev) => ({
-          ...prev,
-          [key]: 'offline',
-        }));
+      const status = await checkServerHealth(server.ip, server.port);
+      if (isCancelled) {
+        return;
       }
+
+      setServerStatuses((prev) => ({
+        ...prev,
+        [key]: status,
+      }));
     };
 
     servers.forEach((server) => {
-      void checkServerHealth(server);
+      void probeServerHealth(server);
     });
 
     return () => {

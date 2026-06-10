@@ -153,12 +153,11 @@ export const translations = {
       serverData: {
         title: 'Server data',
         ip: 'IP',
-        authData: 'Authorization Data',
-        version: 'Version',
-        timeToClose: 'Time To Close',
-        timeAfterClose: 'Time After Close',
-        bots: 'Bots',
-        status: 'Status'
+        port: 'Port',
+        status: 'Status',
+        statusOnline: 'Online',
+        statusOffline: 'Offline',
+        statusLoading: 'Checking...'
       },
       botTypes: {
         title: 'Types of bots',
@@ -471,12 +470,11 @@ export const translations = {
       serverData: {
         title: 'Данные сервера',
         ip: 'IP',
-        authData: 'Данные авторизации',
-        version: 'Версия',
-        timeToClose: 'Время до закрытия',
-        timeAfterClose: 'Время после закрытия',
-        bots: 'Боты',
-        status: 'Статус'
+        port: 'Port',
+        status: 'Статус',
+        statusOnline: 'Online',
+        statusOffline: 'Offline',
+        statusLoading: 'Проверка...'
       },
       botTypes: {
         title: 'Типы ботов',

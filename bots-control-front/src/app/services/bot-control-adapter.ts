@@ -263,6 +263,31 @@ export const normalizeRulesList = (response: unknown): BotRuleItem[] => {
   return [];
 };
 
+export interface ServerConfigTypeRow {
+  id: string;
+  type: string;
+  description: string;
+}
+
+const toConfigField = (value: unknown, fallback = '-') => {
+  const text = String(value ?? '').trim();
+  return text.length > 0 ? text : fallback;
+};
+
+export const buildBotTypeRowsFromRules = (rules: BotRuleItem[]): ServerConfigTypeRow[] =>
+  rules.map((rule) => ({
+    id: rule.id,
+    type: toConfigField(rule.botParams?.botType),
+    description: toConfigField(rule.botParams?.description),
+  }));
+
+export const buildJobTypeRowsFromRules = (rules: BotRuleItem[]): ServerConfigTypeRow[] =>
+  rules.map((rule) => ({
+    id: rule.id,
+    type: toConfigField(rule.jobParams?.jobType),
+    description: toConfigField(rule.jobParams?.description),
+  }));
+
 export const parseServerRulesConfigJson = (rawConfig: string): BotRuleItem[] => {
   let parsed: unknown;
   try {

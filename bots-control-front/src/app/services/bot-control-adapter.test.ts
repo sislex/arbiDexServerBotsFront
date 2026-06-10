@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   buildBotConfigClipboardText,
+  buildBotTypeRowsFromRules,
+  buildJobTypeRowsFromRules,
   buildServerRulesClipboardText,
   extractBotConfigParts,
   parseServerRulesConfigJson,
@@ -33,6 +35,34 @@ describe('extractBotConfigParts', () => {
       botParams: { paused: false },
       jobParams: { token0: 'ETH' },
     });
+  });
+});
+
+describe('buildBotTypeRowsFromRules', () => {
+  it('maps each bot rule to type and description rows', () => {
+    const rows = buildBotTypeRowsFromRules([
+      { id: '1', botParams: { botType: 'TestBot', description: 'Bot A' }, jobParams: {} },
+      { id: '2', botParams: { botType: 'ArbBot', description: 'Bot B' }, jobParams: {} },
+    ]);
+
+    expect(rows).toEqual([
+      { id: '1', type: 'TestBot', description: 'Bot A' },
+      { id: '2', type: 'ArbBot', description: 'Bot B' },
+    ]);
+  });
+});
+
+describe('buildJobTypeRowsFromRules', () => {
+  it('maps each bot rule to job type and description rows', () => {
+    const rows = buildJobTypeRowsFromRules([
+      {
+        id: '1',
+        botParams: {},
+        jobParams: { jobType: 'get_Cex_Quotes', description: 'Quotes job' },
+      },
+    ]);
+
+    expect(rows).toEqual([{ id: '1', type: 'get_Cex_Quotes', description: 'Quotes job' }]);
   });
 });
 
