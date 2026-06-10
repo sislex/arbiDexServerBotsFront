@@ -33,7 +33,7 @@ import {
 import { showToast } from './services/toast';
 
 const VALID_TABS = new Set(['bots', 'rules', 'server-data']);
-const VALID_BOT_TABS = new Set(['control', 'errors', 'job', 'chart', 'live-chart']);
+const VALID_BOT_TABS = new Set(['control', 'errors', 'chart', 'live-chart']);
 
 const parseIpPort = (ipPort: string) => {
   const [ip = '', port = ''] = ipPort.split(':');

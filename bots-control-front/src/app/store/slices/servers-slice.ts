@@ -510,12 +510,12 @@ export const saveBotSettings = createAsyncThunk(
 export const refreshActiveBotTabData = createAsyncThunk(
   'servers/refreshActiveBotTabData',
   async (
-    { botId, activeTab }: { botId: string; activeTab: 'control' | 'errors' | 'job' | 'chart' | 'live-chart' },
+    { botId, activeTab }: { botId: string; activeTab: 'control' | 'errors' | 'chart' | 'live-chart' },
     { getState },
   ) => {
     const activeServer = getActiveServerKey(getState() as { servers: ServersState });
 
-    if (activeTab === 'control' || activeTab === 'job' || activeTab === 'chart' || activeTab === 'live-chart') {
+    if (activeTab === 'control' || activeTab === 'chart' || activeTab === 'live-chart') {
       const [info, params] = await Promise.all([
         serverApi.getBotInfo(activeServer, botId),
         serverApi.getBotParams(activeServer, botId),

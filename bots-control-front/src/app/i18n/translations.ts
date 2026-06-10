@@ -209,7 +209,6 @@ export const translations = {
       subTabs: {
         controlAndParams: 'Control and paramtrs',
         errors: 'Errors',
-        job: 'Job',
         chart: 'Chart',
         liveChart: 'Live Chart'
       },
@@ -284,19 +283,6 @@ export const translations = {
         duration: 'Duration (ms)',
         errorCode: 'Error Code',
         errorMessage: 'Error Message'
-      },
-      jobTab: {
-        title: 'Job Params',
-        launch: 'Launch',
-        rerun: 'Rerun',
-        delete: 'Delete',
-        return: 'Return',
-        saving: 'Saving...',
-        deleteConfirm: 'Clear current editor content?',
-        savedSuccess: 'Job settings saved',
-        savedError: 'Failed to save job settings',
-        rerunSuccess: 'Job saved and bot restarted',
-        rerunError: 'Failed to restart bot after save'
       },
       chartTab: {
         loading: 'Loading chart...',
@@ -532,7 +518,6 @@ export const translations = {
       subTabs: {
         controlAndParams: 'Управление и параметры',
         errors: 'Ошибки',
-        job: 'Задача',
         chart: 'График',
         liveChart: 'Живой график'
       },
@@ -607,19 +592,6 @@ export const translations = {
         duration: 'Длительность (мс)',
         errorCode: 'Код ошибки',
         errorMessage: 'Сообщение об ошибке'
-      },
-      jobTab: {
-        title: 'Параметры задачи',
-        launch: 'Запустить',
-        rerun: 'Перезапустить',
-        delete: 'Удалить',
-        return: 'Вернуть',
-        saving: 'Сохранение...',
-        deleteConfirm: 'Очистить текущий текст в редакторе?',
-        savedSuccess: 'Параметры задачи сохранены',
-        savedError: 'Не удалось сохранить параметры задачи',
-        rerunSuccess: 'Задача сохранена и бот перезапущен',
-        rerunError: 'Не удалось перезапустить бота после сохранения'
       },
       chartTab: {
         loading: 'Загрузка графика...',
