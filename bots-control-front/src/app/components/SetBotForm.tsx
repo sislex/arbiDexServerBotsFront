@@ -1,17 +1,21 @@
 import { useState } from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
-import { DEFAULT_BOT_CONFIG_TEMPLATE } from '../services/bot-control-adapter';
+import { DEFAULT_BOT_CONFIG_TEMPLATE, parseBotConfigJson } from '../services/bot-control-adapter';
 
 interface SetBotFormProps {
   initialConfig?: string;
+  title?: string;
   hint?: string;
+  isSaving?: boolean;
   onSave: (config: string) => void;
   onBack: () => void;
 }
 
 export function SetBotForm({
   initialConfig = DEFAULT_BOT_CONFIG_TEMPLATE,
+  title,
   hint,
+  isSaving = false,
   onSave,
   onBack,
 }: SetBotFormProps) {
@@ -22,9 +26,11 @@ export function SetBotForm({
   const handleSave = () => {
     setError(null);
     try {
-      JSON.parse(config);
-    } catch {
-      setError(t.botsTab.setBot.invalidJson);
+      parseBotConfigJson(config);
+    } catch (saveError) {
+      setError(
+        saveError instanceof Error ? saveError.message : t.botsTab.setBot.invalidJson,
+      );
       return;
     }
     onSave(config);
@@ -33,7 +39,7 @@ export function SetBotForm({
   return (
     <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
       <div className="flex-1 min-h-0 overflow-auto p-4">
-        <h3 className="text-sm text-foreground mb-2">{t.botsTab.setBot.title}</h3>
+        <h3 className="text-sm text-foreground mb-2">{title ?? t.botsTab.setBot.title}</h3>
         <p className="text-xs text-muted-foreground mb-3">{hint ?? t.botsTab.setBot.hint}</p>
         <textarea
           value={config}
@@ -50,14 +56,16 @@ export function SetBotForm({
         <button
           type="button"
           onClick={onBack}
-          className="px-4 py-2 text-foreground hover:bg-muted rounded transition-colors text-sm"
+          disabled={isSaving}
+          className="px-4 py-2 text-foreground hover:bg-muted rounded transition-colors text-sm disabled:opacity-50"
         >
           {t.botsTab.setBot.back}
         </button>
         <button
           type="button"
           onClick={handleSave}
-          className="px-4 py-2 bg-primary text-primary-foreground hover:opacity-90 rounded transition-opacity text-sm"
+          disabled={isSaving}
+          className="px-4 py-2 bg-primary text-primary-foreground hover:opacity-90 rounded transition-opacity text-sm disabled:opacity-50"
         >
           {t.botsTab.setBot.save}
         </button>

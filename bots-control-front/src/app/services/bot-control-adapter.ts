@@ -214,6 +214,18 @@ export const parseBotConfigJson = (rawConfig: string): ParsedBotConfig => {
   return { id, botParams, jobParams };
 };
 
+export const applyBotConfigForBotId = (
+  rawConfig: string,
+  targetBotId: string,
+): ParsedBotConfig => {
+  const { botParams, jobParams } = parseBotConfigJson(rawConfig);
+  return {
+    id: targetBotId,
+    botParams,
+    jobParams,
+  };
+};
+
 export const buildBotSettingsPayload = (
   id: string,
   botParams: Record<string, unknown>,

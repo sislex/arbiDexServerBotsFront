@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   buildBotConfigClipboardText,
+  applyBotConfigForBotId,
   buildCopyBotConfigText,
   buildBotTypeRowsFromRules,
   buildJobTypeRowsFromRules,
@@ -36,6 +37,25 @@ describe('extractBotConfigParts', () => {
     expect(result).toEqual({
       botParams: { paused: false },
       jobParams: { token0: 'ETH' },
+    });
+  });
+});
+
+describe('applyBotConfigForBotId', () => {
+  it('keeps botParams and jobParams but forces target bot id', () => {
+    const result = applyBotConfigForBotId(
+      JSON.stringify({
+        id: '99',
+        botParams: { botType: 'TestBot', paused: true },
+        jobParams: { jobType: 'get_Cex_Quotes' },
+      }),
+      '12',
+    );
+
+    expect(result).toEqual({
+      id: '12',
+      botParams: { botType: 'TestBot', paused: true },
+      jobParams: { jobType: 'get_Cex_Quotes' },
     });
   });
 });

@@ -237,6 +237,9 @@ export const translations = {
         pause: 'Pause',
         restart: 'Restart',
         edit: 'Edit',
+        editTitle: 'Edit bot',
+        editHint:
+          'Edit botParams and jobParams. id is always the current bot and cannot be changed here. Save updates this bot via POST /setBotsRulesList.',
         results: 'Results',
         parameter: 'Parameter',
         value: 'Value',
@@ -557,6 +560,9 @@ export const translations = {
         pause: 'Пауза',
         restart: 'Перезапуск',
         edit: 'Изменить',
+        editTitle: 'Редактирование бота',
+        editHint:
+          'Редактируйте botParams и jobParams. id всегда остаётся текущим ботом и здесь не меняется. Сохранение обновляет этого бота через POST /setBotsRulesList.',
         results: 'Результаты',
         parameter: 'Параметр',
         value: 'Значение',

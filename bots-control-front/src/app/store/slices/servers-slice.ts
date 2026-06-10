@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/tool
 import {
   mergeBotRuleIntoList,
   normalizeRulesList,
+  applyBotConfigForBotId,
   parseBotConfigJson,
   parseServerRulesConfigJson,
   removeBotRuleFromList,
@@ -194,6 +195,34 @@ export const setBotFromConfig = createAsyncThunk(
   async (rawConfig: string, { getState, dispatch }) => {
     const activeServer = getActiveServerKey(getState() as { servers: ServersState });
     const { id, botParams, jobParams } = parseBotConfigJson(rawConfig);
+    const newRule = { id, botParams, jobParams };
+
+    const currentRules = normalizeRulesList(await serverApi.getRules(activeServer));
+    const botsRulesList = mergeBotRuleIntoList(currentRules, newRule);
+
+    await serverApi.setBotsRulesList(activeServer, botsRulesList);
+
+    const paused = Boolean(botParams.paused);
+    await serverApi.setBotPause(activeServer, id, paused);
+
+    if (!paused) {
+      await serverApi.restartBot(activeServer, id);
+    }
+
+    await refreshBotControlListAfterRunningChange(activeServer, [id], !paused, dispatch);
+    await dispatch(loadRulesList());
+    return { id, paused };
+  },
+);
+
+export const updateBotFromConfig = createAsyncThunk(
+  'servers/updateBotFromConfig',
+  async (
+    { botId, rawConfig }: { botId: string; rawConfig: string },
+    { getState, dispatch },
+  ) => {
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
+    const { id, botParams, jobParams } = applyBotConfigForBotId(rawConfig, botId);
     const newRule = { id, botParams, jobParams };
 
     const currentRules = normalizeRulesList(await serverApi.getRules(activeServer));
@@ -781,6 +810,19 @@ const serversSlice = createSlice({
         state.botControlAction.isLoading = false;
         state.botControlAction.isLoaded = true;
         state.botControlAction.error = action.error.message ?? 'Failed to apply bot config on server';
+      })
+      .addCase(updateBotFromConfig.pending, (state) => {
+        state.botControlAction.isLoading = true;
+        state.botControlAction.error = null;
+      })
+      .addCase(updateBotFromConfig.fulfilled, (state) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+      })
+      .addCase(updateBotFromConfig.rejected, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.error = action.error.message ?? 'Failed to update bot config on server';
       })
       .addCase(saveServerRulesFromConfig.pending, (state) => {
         state.botControlAction.isLoading = true;
