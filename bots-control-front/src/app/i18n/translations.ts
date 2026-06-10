@@ -135,10 +135,17 @@ export const translations = {
     rulesTab: {
       title: 'RULES',
       subtitle: 'Rules info',
+      copyConfig: 'Copy',
+      copySuccess: 'Copied to clipboard',
+      copyError: 'Failed to copy',
+      copyRuleConfig: 'Copy full rule config',
+      copyBotRule: 'Copy bot rule',
+      copyJobRule: 'Copy job rule',
       table: {
         id: 'ID',
         botRule: 'Bot Rule',
-        jobRule: 'Job Rule'
+        jobRule: 'Job Rule',
+        copyConfig: 'Config'
       }
     },
     serverDataTab: {
@@ -446,10 +453,17 @@ export const translations = {
     rulesTab: {
       title: 'ПРАВИЛА',
       subtitle: 'Информация о правилах',
+      copyConfig: 'Копировать',
+      copySuccess: 'Скопировано в буфер обмена',
+      copyError: 'Не удалось скопировать',
+      copyRuleConfig: 'Копировать полный конфиг правила',
+      copyBotRule: 'Копировать правило бота',
+      copyJobRule: 'Копировать правило задачи',
       table: {
         id: 'ID',
         botRule: 'Правило бота',
-        jobRule: 'Правило задачи'
+        jobRule: 'Правило задачи',
+        copyConfig: 'Конфиг'
       }
     },
     serverDataTab: {

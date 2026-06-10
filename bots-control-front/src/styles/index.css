@@ -2,6 +2,13 @@
 @import './tailwind.css';
 @import './theme.css';
 
+.arb-dex-grid--selectable .ag-cell,
+.arb-dex-grid--selectable .ag-cell-value,
+.arb-dex-grid--selectable .ag-cell-wrapper {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
 .arb-dex-grid {
   --ag-background-color: hsl(var(--background));
   --ag-foreground-color: #000;

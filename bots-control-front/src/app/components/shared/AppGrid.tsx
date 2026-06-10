@@ -19,6 +19,7 @@ interface AppGridProps<T> {
   rowData: T[];
   columnDefs: ColDef<T>[];
   className?: string;
+  enableTextSelection?: boolean;
   onRowClicked?: (event: RowClickedEvent<T>) => void;
   onRowDoubleClicked?: (event: RowDoubleClickedEvent<T>) => void;
   onGridReady?: (event: GridReadyEvent<T>) => void;
@@ -29,6 +30,7 @@ export function AppGrid<T extends object>({
   rowData,
   columnDefs,
   className,
+  enableTextSelection = false,
   onRowClicked,
   onRowDoubleClicked,
   onGridReady,
@@ -43,12 +45,28 @@ export function AppGrid<T extends object>({
     [],
   );
 
+  const gridOptions = useMemo(
+    () =>
+      enableTextSelection
+        ? {
+            enableCellTextSelection: true,
+            ensureDomOrder: true,
+          }
+        : undefined,
+    [enableTextSelection],
+  );
+
   return (
-    <div className={`ag-theme-alpine arb-dex-grid w-full h-full ${className ?? ''}`}>
+    <div
+      className={`ag-theme-alpine arb-dex-grid w-full h-full ${
+        enableTextSelection ? 'arb-dex-grid--selectable ' : ''
+      }${className ?? ''}`}
+    >
       <AgGridReact<T>
         rowData={rowData}
         columnDefs={columnDefs}
         defaultColDef={defaultColDef}
+        gridOptions={gridOptions}
         onRowClicked={onRowClicked}
         onRowDoubleClicked={onRowDoubleClicked}
         onGridReady={onGridReady}

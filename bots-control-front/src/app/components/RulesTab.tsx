@@ -1,57 +1,78 @@
+import { useMemo } from 'react';
 import type { ColDef } from 'ag-grid-community';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useAppSelector } from '../store/hooks';
 import { selectRulesListState } from '../store/selectors';
+import {
+  RulesConfigCell,
+  RulesFullConfigCopyCell,
+  type RuleRowData,
+} from './rules-config-cell';
 import { AppGrid } from './shared/AppGrid';
 
-interface RuleRow {
-  id: string;
-  botParams: Record<string, unknown> | null;
-  jobParams: Record<string, unknown> | null;
-}
+const formatJson = (value: unknown) => JSON.stringify(value, null, 2);
 
 export function RulesTab() {
   const { t } = useLanguage();
   const rulesState = useAppSelector(selectRulesListState);
 
-  const rows: RuleRow[] = rulesState.data.map((rule) => ({
+  const rows: RuleRowData[] = rulesState.data.map((rule) => ({
     id: String(rule.id ?? '-'),
     botParams: (rule.botParams as Record<string, unknown> | undefined) ?? null,
     jobParams: (rule.jobParams as Record<string, unknown> | undefined) ?? null,
   }));
 
-  const colDefs: ColDef<RuleRow>[] = [
-    {
-      headerName: '#',
-      maxWidth: 70,
-      valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
-    },
-    { field: 'id', headerName: t.rulesTab.table.id, minWidth: 140 },
-    {
-      field: 'botParams',
-      headerName: t.rulesTab.table.botRule,
-      flex: 1,
-      minWidth: 280,
-      wrapText: true,
-      autoHeight: true,
-      valueFormatter: (params) => JSON.stringify(params.value, null, 2),
-      cellRenderer: (params: { valueFormatted: string }) => (
-        <pre className="whitespace-pre-wrap text-xs m-0">{params.valueFormatted ?? '-'}</pre>
-      ),
-    },
-    {
-      field: 'jobParams',
-      headerName: t.rulesTab.table.jobRule,
-      flex: 1,
-      minWidth: 280,
-      wrapText: true,
-      autoHeight: true,
-      valueFormatter: (params) => JSON.stringify(params.value, null, 2),
-      cellRenderer: (params: { valueFormatted: string }) => (
-        <pre className="whitespace-pre-wrap text-xs m-0">{params.valueFormatted ?? '-'}</pre>
-      ),
-    },
-  ];
+  const colDefs = useMemo<ColDef<RuleRowData>[]>(
+    () => [
+      {
+        headerName: '#',
+        maxWidth: 70,
+        valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
+      },
+      { field: 'id', headerName: t.rulesTab.table.id, minWidth: 140 },
+      {
+        field: 'botParams',
+        headerName: t.rulesTab.table.botRule,
+        flex: 1,
+        minWidth: 280,
+        wrapText: true,
+        autoHeight: true,
+        valueFormatter: (params) => formatJson(params.value),
+        cellRenderer: RulesConfigCell,
+        cellRendererParams: {
+          copyTitle: t.rulesTab.copyBotRule,
+        },
+      },
+      {
+        field: 'jobParams',
+        headerName: t.rulesTab.table.jobRule,
+        flex: 1,
+        minWidth: 280,
+        wrapText: true,
+        autoHeight: true,
+        valueFormatter: (params) => formatJson(params.value),
+        cellRenderer: RulesConfigCell,
+        cellRendererParams: {
+          copyTitle: t.rulesTab.copyJobRule,
+        },
+      },
+      {
+        headerName: t.rulesTab.table.copyConfig,
+        pinned: 'right',
+        width: 72,
+        minWidth: 72,
+        maxWidth: 72,
+        sortable: false,
+        resizable: false,
+        suppressMovable: true,
+        cellRenderer: RulesFullConfigCopyCell,
+        cellRendererParams: {
+          copyTitle: t.rulesTab.copyRuleConfig,
+        },
+      },
+    ],
+    [t],
+  );
 
   return (
     <div className="h-[calc(100vh-100px)] flex flex-col bg-background">
@@ -64,7 +85,12 @@ export function RulesTab() {
         {rulesState.error ? (
           <div className="p-4 text-sm text-destructive">{rulesState.error}</div>
         ) : (
-          <AppGrid<RuleRow> rowData={rows} columnDefs={colDefs} className="h-full" />
+          <AppGrid<RuleRowData>
+            rowData={rows}
+            columnDefs={colDefs}
+            className="h-full"
+            enableTextSelection
+          />
         )}
       </div>
       {rulesState.isLoading && <div className="text-sm text-muted-foreground px-4 py-2">Loading...</div>}
