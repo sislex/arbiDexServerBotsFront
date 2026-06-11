@@ -35,7 +35,7 @@ export const translations = {
     botsTab: {
       title: 'Bots info',
       subTabs: {
-        info: 'Bots info ({total}/{running})',
+        info: 'Bots info ({running}/{total})',
         setBot: 'Set bot',
         configServer: 'Config server',
       },
@@ -357,7 +357,7 @@ export const translations = {
     botsTab: {
       title: 'Информация о ботах',
       subTabs: {
-        info: 'Информация о ботах ({total}/{running})',
+        info: 'Информация о ботах ({running}/{total})',
         setBot: 'Добавить бота',
         configServer: 'Конфиг сервера',
       },

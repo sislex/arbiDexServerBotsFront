@@ -15,8 +15,8 @@ export function BotsSubTabs({ activeTab, onTabChange, botsCounts, actions }: Bot
 
   const infoLabel = botsCounts
     ? t.botsTab.subTabs.info
-        .replace('{total}', String(botsCounts.total))
         .replace('{running}', String(botsCounts.running))
+        .replace('{total}', String(botsCounts.total))
     : t.botsTab.subTabs.info;
 
   const tabs: { id: BotsPanelTab; label: string }[] = [
