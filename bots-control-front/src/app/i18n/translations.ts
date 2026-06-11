@@ -408,7 +408,7 @@ export const translations = {
         'BOT-005': 'Провайдер ликвидности BNB chain'
       },
       setBot: {
-        button: 'Set bot',
+        button: 'Добавить бота',
         title: 'Конфиг бота',
         hint: 'Вставьте JSON с полями id, botParams и jobParams. Отправляет POST /setBotsRulesList на активный сервер и объединяет с существующими правилами.',
         back: 'Назад',
@@ -416,15 +416,15 @@ export const translations = {
         invalidJson: 'Некорректный JSON конфиг',
         saveSuccess: 'Конфиг бота применён на сервере',
         saveError: 'Не удалось применить конфиг бота на сервере',
-        copyConfig: 'Copy config',
+        copyConfig: 'Копировать конфиг',
         copySuccess: 'Конфиг скопирован в буфер обмена',
         copyError: 'Не удалось скопировать конфиг',
         copyHint: 'Конфиг копии бота. При необходимости измените id и сохраните, чтобы создать нового бота.',
         copyErrorNotFound: 'Конфиг бота не найден в правилах сервера'
       },
       getConfigServer: {
-        button: 'Config server',
-        title: 'Config server',
+        button: 'Конфиг сервера',
+        title: 'Конфиг сервера',
         compareHint:
           'Слева полный оригинальный конфиг из БД, справа редактируемый текущий конфиг сервера. Изменённые строки подсвечены.',
         originalLabel: 'Оригинал (БД)',
@@ -432,8 +432,8 @@ export const translations = {
         noDbConfig: 'У сервера нет serverId в БД. Левая панель пустая.',
         cancel: 'Отмена',
         reset: 'Сброс',
-        copyConfig: 'Copy config',
-        saveChanges: 'Save changes',
+        copyConfig: 'Копировать конфиг',
+        saveChanges: 'Сохранить изменения',
         invalidJson: 'Некорректный JSON конфиг',
         copySuccess: 'Конфиг скопирован в буфер обмена',
         copyError: 'Не удалось скопировать конфиг',
