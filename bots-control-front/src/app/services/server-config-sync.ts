@@ -1,7 +1,13 @@
 import { areBotRulesEqual } from './bot-config-compare';
 import { buildBotRulesFromDbBots } from './db-config-builder';
-import { normalizeRulesList } from './bot-control-adapter';
+import { buildServerRulesClipboardText, normalizeRulesList } from './bot-control-adapter';
 import { serverApi } from './server-api';
+
+export async function loadDbConfigTextForServer(serverId: string): Promise<string> {
+  const dbBots = await serverApi.getBotsByServerId(serverId);
+  const dbRules = buildBotRulesFromDbBots(Array.isArray(dbBots) ? dbBots : []);
+  return buildServerRulesClipboardText(dbRules);
+}
 
 export async function isServerConfigChanged(
   serverId: string,

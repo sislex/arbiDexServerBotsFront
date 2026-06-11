@@ -561,12 +561,17 @@ const serversSlice = createSlice({
       .addCase(loadServersFromDb.fulfilled, (state, action) => {
         if (action.payload.length > 0) {
           state.serverList = action.payload;
-          const activeExists = action.payload.some(
-            (s) => s.ip === state.activeServer.ip && s.port === state.activeServer.port,
+          const matchingActive = action.payload.find(
+            (server) =>
+              server.ip === state.activeServer.ip && server.port === state.activeServer.port,
           );
-          if (!activeExists) {
-            state.activeServer = action.payload[0];
+
+          if (matchingActive) {
+            state.activeServer = matchingActive;
+            return;
           }
+
+          state.activeServer = action.payload[0];
         }
       })
       .addCase(loadBotTypes.pending, (state) => {

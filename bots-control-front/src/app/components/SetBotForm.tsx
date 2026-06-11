@@ -1,6 +1,9 @@
 import { useState } from 'react';
+import { Copy } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { DEFAULT_BOT_CONFIG_TEMPLATE, parseBotConfigJson } from '../services/bot-control-adapter';
+import { copyTextToClipboard } from '../services/clipboard';
+import { showToast } from '../services/toast';
 
 interface SetBotFormProps {
   initialConfig?: string;
@@ -36,6 +39,16 @@ export function SetBotForm({
     onSave(config);
   };
 
+  const handleCopyConfig = () => {
+    void copyTextToClipboard(config)
+      .then(() => {
+        showToast('success', t.botsTab.setBot.copySuccess);
+      })
+      .catch(() => {
+        showToast('error', t.botsTab.setBot.copyError);
+      });
+  };
+
   return (
     <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
       <div className="flex-1 min-h-0 overflow-auto p-4">
@@ -60,6 +73,15 @@ export function SetBotForm({
           className="px-4 py-2 text-foreground hover:bg-muted rounded transition-colors text-sm disabled:opacity-50"
         >
           {t.botsTab.setBot.back}
+        </button>
+        <button
+          type="button"
+          onClick={handleCopyConfig}
+          disabled={isSaving}
+          className="flex items-center gap-2 px-4 py-2 bg-muted text-foreground hover:bg-accent rounded transition-colors text-sm disabled:opacity-50"
+        >
+          <Copy size={16} />
+          {t.botsTab.setBot.copyConfig}
         </button>
         <button
           type="button"

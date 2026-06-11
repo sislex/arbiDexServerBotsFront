@@ -45,7 +45,7 @@ import {
   normalizeRulesList,
 } from '../services/bot-control-adapter';
 import { checkServerHealth, type ServerHealthStatus } from '../services/server-health';
-import { isServerConfigChanged } from '../services/server-config-sync';
+import { isServerConfigChanged, loadDbConfigTextForServer } from '../services/server-config-sync';
 import { AppGrid } from './shared/AppGrid';
 import { ApiInfoModal } from './ApiInfoModal';
 import { GetConfigServerForm } from './GetConfigServerForm';
@@ -110,6 +110,8 @@ export function BotsTab({
   const [setBotFormHint, setSetBotFormHint] = useState<string | undefined>(undefined);
   const [isGetConfigServerFormOpen, setIsGetConfigServerFormOpen] = useState(false);
   const [serverConfigInitial, setServerConfigInitial] = useState('{\n  "botsRulesList": []\n}');
+  const [serverConfigOriginal, setServerConfigOriginal] = useState('{\n  "botsRulesList": []\n}');
+  const [hasDbConfigOriginal, setHasDbConfigOriginal] = useState(false);
   const [isGettingServerConfig, setIsGettingServerConfig] = useState(false);
   const [selectedBotIds, setSelectedBotIds] = useState<Set<string>>(new Set());
   const [hiddenBotIds, setHiddenBotIds] = useState<string[]>([]);
@@ -135,6 +137,14 @@ export function BotsTab({
 
     return { workingServers: working, notWorkingServers: notWorking };
   }, [servers, serverStatuses]);
+
+  const resolveActiveServerFromList = useCallback(
+    () =>
+      servers.find(
+        (server) => server.ip === activeServer.ip && server.port === activeServer.port,
+      ) ?? activeServer,
+    [activeServer, servers],
+  );
 
   const renderServerItem = (server: ServerUiItem) => {
     const serverKey = `${server.ip}:${server.port}`;
@@ -202,6 +212,11 @@ export function BotsTab({
 
   useEffect(() => {
     setSelectedServer(`${activeServer.ip}:${activeServer.port}`);
+  }, [activeServer.ip, activeServer.port]);
+
+  useEffect(() => {
+    setIsGetConfigServerFormOpen(false);
+    setIsGettingServerConfig(false);
   }, [activeServer.ip, activeServer.port]);
 
   useEffect(() => {
@@ -583,7 +598,7 @@ export function BotsTab({
     const rules = normalizeRulesList(rulesListState.data);
     const rule = rules.find((item) => item.id === botId);
     if (!rule) {
-      showToast('error', t.botsTab.setBot.copyError);
+      showToast('error', t.botsTab.setBot.copyErrorNotFound);
       return;
     }
 
@@ -848,18 +863,31 @@ export function BotsTab({
               onClick={() => {
                 setIsSetBotFormOpen(false);
                 setIsGettingServerConfig(true);
-                void dispatch(loadRulesList())
-                  .then((result) => {
-                    if (!loadRulesList.fulfilled.match(result)) {
+                const resolvedServer = resolveActiveServerFromList();
+                const dbConfigPromise = resolvedServer.serverId
+                  ? loadDbConfigTextForServer(resolvedServer.serverId)
+                  : Promise.resolve('{\n  "botsRulesList": []\n}');
+
+                void Promise.all([dispatch(loadRulesList()), dbConfigPromise])
+                  .then(([rulesResult, dbConfig]) => {
+                    if (!loadRulesList.fulfilled.match(rulesResult)) {
                       showToast(
                         'error',
-                        result.error?.message ?? t.botsTab.getConfigServer.loadError,
+                        rulesResult.error?.message ?? t.botsTab.getConfigServer.loadError,
                       );
                       return;
                     }
 
-                    setServerConfigInitial(buildServerRulesClipboardText(result.payload ?? []));
+                    setServerConfigOriginal(dbConfig);
+                    setHasDbConfigOriginal(Boolean(resolvedServer.serverId));
+                    setServerConfigInitial(buildServerRulesClipboardText(rulesResult.payload ?? []));
                     setIsGetConfigServerFormOpen(true);
+                  })
+                  .catch((error: unknown) => {
+                    showToast(
+                      'error',
+                      error instanceof Error ? error.message : t.botsTab.getConfigServer.loadError,
+                    );
                   })
                   .finally(() => {
                     setIsGettingServerConfig(false);
@@ -958,8 +986,10 @@ export function BotsTab({
 
         {isGetConfigServerFormOpen ? (
           <GetConfigServerForm
-            key={serverConfigInitial}
+            key={`${serverConfigInitial}:${serverConfigOriginal}`}
+            originalConfig={serverConfigOriginal}
             initialConfig={serverConfigInitial}
+            hasDbOriginal={hasDbConfigOriginal}
             isSaving={botControlActionState.isLoading}
             onBack={() => setIsGetConfigServerFormOpen(false)}
             onSave={async (config) => {

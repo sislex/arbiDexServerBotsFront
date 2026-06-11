@@ -1,27 +1,30 @@
 import { useMemo, useState } from 'react';
-import { Copy } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { parseServerRulesConfigJson } from '../services/bot-control-adapter';
-import { copyTextToClipboard } from '../services/clipboard';
-import { showToast } from '../services/toast';
+import { formatConfigForDiff } from '../services/config-diff-format';
+import { ConfigServerCompareEditor } from './ConfigServerCompareEditor';
 
 interface GetConfigServerFormProps {
+  originalConfig: string;
   initialConfig: string;
+  hasDbOriginal?: boolean;
   isSaving?: boolean;
   onSave: (config: string) => void;
   onBack: () => void;
 }
 
 export function GetConfigServerForm({
+  originalConfig,
   initialConfig,
+  hasDbOriginal = true,
   isSaving = false,
   onSave,
   onBack,
 }: GetConfigServerFormProps) {
   const { t } = useLanguage();
-  const [config, setConfig] = useState(initialConfig);
+  const [config, setConfig] = useState(() => formatConfigForDiff(initialConfig));
   const [error, setError] = useState<string | null>(null);
-  const hasChanges = useMemo(() => config !== initialConfig, [config, initialConfig]);
+  const hasChanges = useMemo(() => config !== formatConfigForDiff(initialConfig), [config, initialConfig]);
 
   const handleSave = () => {
     setError(null);
@@ -36,32 +39,34 @@ export function GetConfigServerForm({
     onSave(config);
   };
 
-  const handleCopyConfig = () => {
-    void copyTextToClipboard(config)
-      .then(() => {
-        showToast('success', t.botsTab.getConfigServer.copySuccess);
-      })
-      .catch(() => {
-        showToast('error', t.botsTab.getConfigServer.copyError);
-      });
-  };
-
   return (
     <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+      <div className="shrink-0 px-4 pt-4 pb-2 border-b border-border bg-background">
+        <h3 className="text-sm text-foreground">{t.botsTab.getConfigServer.title}</h3>
+        <p className="text-xs text-muted-foreground mt-1">{t.botsTab.getConfigServer.compareHint}</p>
+        {!hasDbOriginal && (
+          <p className="text-xs text-warning mt-1">{t.botsTab.getConfigServer.noDbConfig}</p>
+        )}
+      </div>
+
       <div className="flex-1 min-h-0 overflow-auto p-4">
-        <h3 className="text-sm text-foreground mb-2">{t.botsTab.getConfigServer.title}</h3>
-        <p className="text-xs text-muted-foreground mb-3">{t.botsTab.getConfigServer.hint}</p>
-        <textarea
-          value={config}
-          onChange={(event) => {
-            setConfig(event.target.value);
+        <ConfigServerCompareEditor
+          originalConfig={originalConfig}
+          currentConfig={config}
+          onCurrentConfigChange={(value) => {
+            setConfig(value);
             setError(null);
           }}
-          className="w-full min-h-[calc(100vh-280px)] bg-muted text-foreground border border-border rounded p-4 text-sm font-mono resize-y focus:outline-none focus:ring-1 focus:ring-primary"
-          spellCheck={false}
+          leftTitle={t.botsTab.getConfigServer.originalLabel}
+          rightTitle={t.botsTab.getConfigServer.updatedLabel}
+          parseErrorLabel={t.botsTab.getConfigServer.invalidJson}
+          copyTitle={t.botsTab.getConfigServer.copyConfig}
+          copySuccess={t.botsTab.getConfigServer.copySuccess}
+          copyError={t.botsTab.getConfigServer.copyError}
         />
         {error && <div className="text-sm text-destructive mt-2">{error}</div>}
       </div>
+
       <div className="shrink-0 flex items-center justify-end gap-3 px-4 py-3 border-t border-border bg-background">
         <button
           type="button"
@@ -74,22 +79,13 @@ export function GetConfigServerForm({
         <button
           type="button"
           onClick={() => {
-            setConfig(initialConfig);
+            setConfig(formatConfigForDiff(initialConfig));
             setError(null);
           }}
           disabled={isSaving || !hasChanges}
           className="px-4 py-2 bg-muted text-foreground hover:bg-accent rounded transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {t.botsTab.getConfigServer.reset}
-        </button>
-        <button
-          type="button"
-          onClick={handleCopyConfig}
-          disabled={isSaving}
-          className="flex items-center gap-2 px-4 py-2 bg-muted text-foreground hover:bg-accent rounded transition-colors text-sm disabled:opacity-50"
-        >
-          <Copy size={16} />
-          {t.botsTab.getConfigServer.copyConfig}
         </button>
         <button
           type="button"

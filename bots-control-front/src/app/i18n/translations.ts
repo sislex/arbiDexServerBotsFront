@@ -99,13 +99,20 @@ export const translations = {
         invalidJson: 'Invalid JSON config',
         saveSuccess: 'Bot config applied on server',
         saveError: 'Failed to apply bot config on server',
+        copyConfig: 'Copy config',
+        copySuccess: 'Config copied to clipboard',
+        copyError: 'Failed to copy config',
         copyHint: 'Bot copy config. Change id if needed and save to create a new bot.',
-        copyError: 'Bot config not found in server rules'
+        copyErrorNotFound: 'Bot config not found in server rules'
       },
       getConfigServer: {
         button: 'Config server',
         title: 'Config server',
-        hint: 'Edit botsRulesList JSON from the active server. Save changes sends POST /setBotsRulesList and restarts updated bots.',
+        compareHint:
+          'Full original config from DB on the left, editable current server config on the right. Changed lines are highlighted.',
+        originalLabel: 'Original (DB)',
+        updatedLabel: 'Current (Server)',
+        noDbConfig: 'This server has no serverId in DB. The original panel is empty.',
         cancel: 'Cancel',
         reset: 'Reset',
         copyConfig: 'Copy config',
@@ -409,13 +416,20 @@ export const translations = {
         invalidJson: 'Некорректный JSON конфиг',
         saveSuccess: 'Конфиг бота применён на сервере',
         saveError: 'Не удалось применить конфиг бота на сервере',
+        copyConfig: 'Copy config',
+        copySuccess: 'Конфиг скопирован в буфер обмена',
+        copyError: 'Не удалось скопировать конфиг',
         copyHint: 'Конфиг копии бота. При необходимости измените id и сохраните, чтобы создать нового бота.',
-        copyError: 'Конфиг бота не найден в правилах сервера'
+        copyErrorNotFound: 'Конфиг бота не найден в правилах сервера'
       },
       getConfigServer: {
         button: 'Config server',
         title: 'Config server',
-        hint: 'Редактируйте JSON botsRulesList с активного сервера. Save changes отправляет POST /setBotsRulesList и перезапускает обновлённых ботов.',
+        compareHint:
+          'Слева полный оригинальный конфиг из БД, справа редактируемый текущий конфиг сервера. Изменённые строки подсвечены.',
+        originalLabel: 'Оригинал (БД)',
+        updatedLabel: 'Текущий (сервер)',
+        noDbConfig: 'У сервера нет serverId в БД. Левая панель пустая.',
         cancel: 'Отмена',
         reset: 'Сброс',
         copyConfig: 'Copy config',
