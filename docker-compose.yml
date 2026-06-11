@@ -1,9 +1,19 @@
 services:
+  # Старый Angular-фронтенд (корень репозитория)
+  # frontend:
+  #   build:
+  #     context: .
+  #     dockerfile: DockerfileFrontend
+  #   container_name: angular-arbidex-front
+  #   ports:
+  #     - "8230:82"
+  #   restart: unless-stopped
+
   frontend:
     build:
-      context: .
+      context: ./bots-control-front
       dockerfile: DockerfileFrontend
-    container_name: angular-arbidex-front
+    container_name: react-arbidex-front
     ports:
-      - "8230:82"
+      - "8230:4204"
     restart: unless-stopped

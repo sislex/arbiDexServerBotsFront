@@ -2,6 +2,30 @@
 @import './tailwind.css';
 @import './theme.css';
 
+.arb-dex-grid .ag-bots-compact-cell,
+.arb-dex-grid .ag-bots-actions-cell {
+  padding: 0;
+  overflow: hidden;
+}
+
+.arb-dex-grid .ag-bots-compact-cell .ag-cell-wrapper,
+.arb-dex-grid .ag-bots-compact-cell .ag-react-container,
+.arb-dex-grid .ag-bots-actions-cell .ag-cell-wrapper,
+.arb-dex-grid .ag-bots-actions-cell .ag-react-container {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.arb-dex-grid--selectable .ag-cell,
+.arb-dex-grid--selectable .ag-cell-value,
+.arb-dex-grid--selectable .ag-cell-wrapper,
+.arb-dex-grid--selectable .ag-cell pre,
+.arb-dex-grid--selectable .ag-cell span {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
 .arb-dex-grid {
   --ag-background-color: hsl(var(--background));
   --ag-foreground-color: #000;

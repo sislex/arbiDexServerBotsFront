@@ -1,6 +1,6 @@
 import { useLanguage } from '../i18n/LanguageContext';
 
-type BotSubTab = 'control' | 'errors' | 'job' | 'chart' | 'live-chart';
+type BotSubTab = 'control' | 'errors' | 'chart' | 'live-chart';
 
 interface BotSubTabsProps {
   activeTab: BotSubTab;
@@ -13,7 +13,6 @@ export function BotSubTabs({ activeTab, onTabChange }: BotSubTabsProps) {
   const tabs = [
     { id: 'control', label: t.botDetail.subTabs.controlAndParams },
     { id: 'errors', label: t.botDetail.subTabs.errors },
-    { id: 'job', label: t.botDetail.subTabs.job },
     { id: 'chart', label: t.botDetail.subTabs.chart },
     { id: 'live-chart', label: t.botDetail.subTabs.liveChart }
   ];

@@ -2,7 +2,9 @@ import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/tool
 import {
   mergeBotRuleIntoList,
   normalizeRulesList,
+  applyBotConfigForBotId,
   parseBotConfigJson,
+  parseServerRulesConfigJson,
   removeBotRuleFromList,
 } from '../../services/bot-control-adapter';
 import { waitForBotsRunningState } from '../../services/bot-pause-utils';
@@ -95,6 +97,8 @@ const splitBulkBotResults = (results: { id: string; error?: string }[], requeste
 const getActiveServerKey = (state: { servers: ServersState }) =>
   `${state.servers.activeServer.ip}:${state.servers.activeServer.port}`;
 
+const getServerKey = (server: Pick<ServerItem, 'ip' | 'port'>) => `${server.ip}:${server.port}`;
+
 const mapApiBotsToControlItems = (items: Record<string, unknown>[]): BotControlItem[] =>
   items.map((item) => ({
     ...(item as BotControlItem),
@@ -162,15 +166,30 @@ export const loadJobTypes = createAsyncThunk('servers/loadJobTypes', async (_, {
 export interface LoadBotControlListOptions {
   silent?: boolean;
   prefetchedBots?: Record<string, unknown>[];
+  serverKey?: string;
+}
+
+export interface RemoveBotFromServerPayload {
+  botId: string;
+  serverKey: string;
+}
+
+export interface RemoveBotsFromServerPayload {
+  botIds: string[];
+  serverKey: string;
 }
 
 export const loadBotControlList = createAsyncThunk(
   'servers/loadBotControlList',
   async (options: LoadBotControlListOptions | void, { getState }) => {
-    const serverKey = getActiveServerKey(getState() as { servers: ServersState });
+    const serverKey =
+      options?.serverKey ?? getActiveServerKey(getState() as { servers: ServersState });
     const items =
       options?.prefetchedBots ?? (await serverApi.getBots(serverKey));
-    return mapApiBotsToControlItems(Array.isArray(items) ? items : []);
+    return {
+      serverKey,
+      bots: mapApiBotsToControlItems(Array.isArray(items) ? items : []),
+    };
   },
 );
 
@@ -182,9 +201,11 @@ const refreshBotControlListAfterRunningChange = async (
 ) => {
   try {
     const bots = await waitForBotsRunningState(activeServer, botIds, expectedRunning);
-    await dispatch(loadBotControlList({ silent: true, prefetchedBots: bots }));
+    await dispatch(
+      loadBotControlList({ silent: true, prefetchedBots: bots, serverKey: activeServer }),
+    );
   } catch {
-    await dispatch(loadBotControlList({ silent: true }));
+    await dispatch(loadBotControlList({ silent: true, serverKey: activeServer }));
   }
 };
 
@@ -210,6 +231,64 @@ export const setBotFromConfig = createAsyncThunk(
     await refreshBotControlListAfterRunningChange(activeServer, [id], !paused, dispatch);
     await dispatch(loadRulesList());
     return { id, paused };
+  },
+);
+
+export const updateBotFromConfig = createAsyncThunk(
+  'servers/updateBotFromConfig',
+  async (
+    { botId, rawConfig }: { botId: string; rawConfig: string },
+    { getState, dispatch },
+  ) => {
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
+    const { id, botParams, jobParams } = applyBotConfigForBotId(rawConfig, botId);
+    const newRule = { id, botParams, jobParams };
+
+    const currentRules = normalizeRulesList(await serverApi.getRules(activeServer));
+    const botsRulesList = mergeBotRuleIntoList(currentRules, newRule);
+
+    await serverApi.setBotsRulesList(activeServer, botsRulesList);
+
+    const paused = Boolean(botParams.paused);
+    await serverApi.setBotPause(activeServer, id, paused);
+
+    if (!paused) {
+      await serverApi.restartBot(activeServer, id);
+    }
+
+    await refreshBotControlListAfterRunningChange(activeServer, [id], !paused, dispatch);
+    await dispatch(loadRulesList());
+    return { id, paused };
+  },
+);
+
+export const saveServerRulesFromConfig = createAsyncThunk(
+  'servers/saveServerRulesFromConfig',
+  async (rawConfig: string, { getState, dispatch }) => {
+    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
+    const botsRulesList = parseServerRulesConfigJson(rawConfig);
+
+    await serverApi.setBotsRulesList(activeServer, botsRulesList);
+
+    await Promise.all(
+      botsRulesList.map((rule) =>
+        serverApi.setBotPause(activeServer, rule.id, Boolean(rule.botParams?.paused)),
+      ),
+    );
+
+    const botsToRestart = botsRulesList
+      .filter((rule) => !Boolean(rule.botParams?.paused))
+      .map((rule) => rule.id);
+
+    if (botsToRestart.length > 0) {
+      await serverApi.restartBots(activeServer, botsToRestart);
+      await refreshBotControlListAfterRunningChange(activeServer, botsToRestart, true, dispatch);
+    } else {
+      await dispatch(loadBotControlList({ silent: true }));
+    }
+
+    await dispatch(loadRulesList());
+    return { total: botsRulesList.length, restarted: botsToRestart.length };
   },
 );
 
@@ -241,32 +320,38 @@ const removeBotsFromServerRules = async (
 
   await serverApi.setBotsPause(activeServer, removedBotIds, true);
   await serverApi.setBotsRulesList(activeServer, botsRulesList);
-  await dispatch(loadBotControlList({ silent: true }));
-  await dispatch(loadRulesList());
+  await dispatch(loadBotControlList({ silent: true, serverKey: activeServer }));
+  await dispatch(loadRulesList({ serverKey: activeServer }));
   return removedBotIds;
 };
 
 export const removeBotFromServer = createAsyncThunk(
   'servers/removeBotFromServer',
-  async (botId: string, { getState, dispatch }) => {
-    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
-    const removedBotIds = await removeBotsFromServerRules(activeServer, [botId], dispatch);
+  async ({ botId, serverKey }: RemoveBotFromServerPayload, { dispatch }) => {
+    const removedBotIds = await removeBotsFromServerRules(serverKey, [botId], dispatch);
     return removedBotIds[0] ?? botId;
   },
 );
 
 export const removeBotsFromServer = createAsyncThunk(
   'servers/removeBotsFromServer',
-  async (botIds: string[], { getState, dispatch }) => {
-    const activeServer = getActiveServerKey(getState() as { servers: ServersState });
-    return removeBotsFromServerRules(activeServer, botIds, dispatch);
+  async ({ botIds, serverKey }: RemoveBotsFromServerPayload, { dispatch }) => {
+    return removeBotsFromServerRules(serverKey, botIds, dispatch);
   },
 );
 
-export const loadRulesList = createAsyncThunk('servers/loadRulesList', async (_, { getState }) => {
-  const response = await serverApi.getRules(getActiveServerKey(getState() as { servers: ServersState }));
-  return normalizeRulesList(response);
-});
+export const loadRulesList = createAsyncThunk(
+  'servers/loadRulesList',
+  async (options: { serverKey?: string } | void, { getState }) => {
+    const serverKey =
+      options?.serverKey ?? getActiveServerKey(getState() as { servers: ServersState });
+    const response = await serverApi.getRules(serverKey);
+    return {
+      serverKey,
+      rules: normalizeRulesList(response),
+    };
+  },
+);
 
 export const loadActiveBotAll = createAsyncThunk(
   'servers/loadActiveBotAll',
@@ -450,12 +535,12 @@ export const saveBotSettings = createAsyncThunk(
 export const refreshActiveBotTabData = createAsyncThunk(
   'servers/refreshActiveBotTabData',
   async (
-    { botId, activeTab }: { botId: string; activeTab: 'control' | 'errors' | 'job' | 'chart' | 'live-chart' },
+    { botId, activeTab }: { botId: string; activeTab: 'control' | 'errors' | 'chart' | 'live-chart' },
     { getState },
   ) => {
     const activeServer = getActiveServerKey(getState() as { servers: ServersState });
 
-    if (activeTab === 'control' || activeTab === 'job' || activeTab === 'chart' || activeTab === 'live-chart') {
+    if (activeTab === 'control' || activeTab === 'chart' || activeTab === 'live-chart') {
       const [info, params] = await Promise.all([
         serverApi.getBotInfo(activeServer, botId),
         serverApi.getBotParams(activeServer, botId),
@@ -473,6 +558,12 @@ const serversSlice = createSlice({
   initialState,
   reducers: {
     setActiveServer(state, action: PayloadAction<ServerItem>) {
+      const nextKey = getServerKey(action.payload);
+      const currentKey = getServerKey(state.activeServer);
+      if (nextKey !== currentKey) {
+        state.botControlList = createAsyncState<BotControlItem[]>([]);
+        state.rulesList = createAsyncState<RuleItem[]>([]);
+      }
       state.activeServer = action.payload;
     },
     clearActiveBotData(state) {
@@ -501,11 +592,13 @@ const serversSlice = createSlice({
       .addCase(loadServersFromDb.fulfilled, (state, action) => {
         if (action.payload.length > 0) {
           state.serverList = action.payload;
-          const activeExists = action.payload.some(
-            (s) => s.ip === state.activeServer.ip && s.port === state.activeServer.port,
+          const matchingActive = action.payload.find(
+            (server) =>
+              server.ip === state.activeServer.ip && server.port === state.activeServer.port,
           );
-          if (!activeExists) {
-            state.activeServer = action.payload[0];
+
+          if (matchingActive) {
+            state.activeServer = matchingActive;
           }
         }
       })
@@ -544,9 +637,12 @@ const serversSlice = createSlice({
         state.botControlList.error = null;
       })
       .addCase(loadBotControlList.fulfilled, (state, action) => {
+        if (action.payload.serverKey !== getServerKey(state.activeServer)) {
+          return;
+        }
         state.botControlList.isLoading = false;
         state.botControlList.isLoaded = true;
-        state.botControlList.data = action.payload;
+        state.botControlList.data = action.payload.bots;
       })
       .addCase(loadBotControlList.rejected, (state, action) => {
         state.botControlList.isLoading = false;
@@ -558,9 +654,12 @@ const serversSlice = createSlice({
         state.rulesList.error = null;
       })
       .addCase(loadRulesList.fulfilled, (state, action) => {
+        if (action.payload.serverKey !== getServerKey(state.activeServer)) {
+          return;
+        }
         state.rulesList.isLoading = false;
         state.rulesList.isLoaded = true;
-        state.rulesList.data = action.payload ?? [];
+        state.rulesList.data = action.payload.rules ?? [];
       })
       .addCase(loadRulesList.rejected, (state, action) => {
         state.rulesList.isLoading = false;
@@ -751,31 +850,57 @@ const serversSlice = createSlice({
         state.botControlAction.isLoaded = true;
         state.botControlAction.error = action.error.message ?? 'Failed to apply bot config on server';
       })
+      .addCase(updateBotFromConfig.pending, (state) => {
+        state.botControlAction.isLoading = true;
+        state.botControlAction.error = null;
+      })
+      .addCase(updateBotFromConfig.fulfilled, (state) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+      })
+      .addCase(updateBotFromConfig.rejected, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.error = action.error.message ?? 'Failed to update bot config on server';
+      })
+      .addCase(saveServerRulesFromConfig.pending, (state) => {
+        state.botControlAction.isLoading = true;
+        state.botControlAction.error = null;
+      })
+      .addCase(saveServerRulesFromConfig.fulfilled, (state) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+      })
+      .addCase(saveServerRulesFromConfig.rejected, (state, action) => {
+        state.botControlAction.isLoading = false;
+        state.botControlAction.isLoaded = true;
+        state.botControlAction.error = action.error.message ?? 'Failed to save server config';
+      })
       .addCase(removeBotFromServer.pending, (state, action) => {
         state.botControlAction.error = null;
-        addPendingBotId(state, action.meta.arg);
+        addPendingBotId(state, action.meta.arg.botId);
       })
       .addCase(removeBotFromServer.fulfilled, (state, action) => {
         state.botControlAction.isLoaded = true;
-        removePendingBotId(state, action.meta.arg);
+        removePendingBotId(state, action.meta.arg.botId);
       })
       .addCase(removeBotFromServer.rejected, (state, action) => {
         state.botControlAction.isLoaded = true;
         state.botControlAction.error = action.error.message ?? 'Failed to remove bot from server';
-        removePendingBotId(state, action.meta.arg);
+        removePendingBotId(state, action.meta.arg.botId);
       })
       .addCase(removeBotsFromServer.pending, (state, action) => {
         state.botControlAction.error = null;
-        action.meta.arg.forEach((botId) => addPendingBotId(state, botId));
+        action.meta.arg.botIds.forEach((botId) => addPendingBotId(state, botId));
       })
       .addCase(removeBotsFromServer.fulfilled, (state, action) => {
         state.botControlAction.isLoaded = true;
-        action.payload.forEach((botId) => removePendingBotId(state, botId));
+        action.meta.arg.botIds.forEach((botId) => removePendingBotId(state, botId));
       })
       .addCase(removeBotsFromServer.rejected, (state, action) => {
         state.botControlAction.isLoaded = true;
         state.botControlAction.error = action.error.message ?? 'Failed to remove bots from server';
-        action.meta.arg.forEach((botId) => removePendingBotId(state, botId));
+        action.meta.arg.botIds.forEach((botId) => removePendingBotId(state, botId));
       })
       .addCase(setSelectedBotsPaused.pending, (state, action) => {
         state.botControlAction.error = null;

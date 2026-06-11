@@ -9,6 +9,7 @@ import {
   Menu,
   Pause,
   Play,
+  Copy,
   RefreshCw,
   Trash2,
 } from 'lucide-react';
@@ -16,6 +17,7 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   selectActiveServer,
+  selectBotControlActionState,
   selectBotControlListState,
   selectPendingBotIds,
   selectRulesListState,
@@ -31,12 +33,23 @@ import {
   setAllBotsPaused,
   setSelectedBotsPaused,
   setSingleBotPaused,
+  saveServerRulesFromConfig,
   setBotFromConfig,
 } from '../store/slices/servers-slice';
+import { store } from '../store/store';
 import { showDelayedActionToast, showToast } from '../services/toast';
-import { mapBotItemToListRow } from '../services/bot-control-adapter';
+import {
+  buildCopyBotConfigText,
+  buildServerRulesClipboardText,
+  DEFAULT_BOT_CONFIG_TEMPLATE,
+  mapBotItemToListRow,
+  normalizeRulesList,
+} from '../services/bot-control-adapter';
+import { checkServerHealth, type ServerHealthStatus } from '../services/server-health';
+import { isServerConfigChanged, loadDbConfigTextForServer } from '../services/server-config-sync';
 import { AppGrid } from './shared/AppGrid';
 import { ApiInfoModal } from './ApiInfoModal';
+import { GetConfigServerForm } from './GetConfigServerForm';
 import { SetBotForm } from './SetBotForm';
 import { buildConfigPanelServerUrl } from '../store/constants';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
@@ -68,8 +81,6 @@ interface ServerUiItem {
   serverId?: string;
 }
 
-type ServerHealthStatus = 'loading' | 'online' | 'offline';
-
 interface BotsTabProps {
   onBotSelect?: (botId: string) => void;
   onServerSelect?: (ipPort: string) => void;
@@ -88,12 +99,21 @@ export function BotsTab({
   const servers = useAppSelector(selectServerList) as ServerUiItem[];
   const activeServer = useAppSelector(selectActiveServer);
   const botControlListState = useAppSelector(selectBotControlListState);
+  const botControlActionState = useAppSelector(selectBotControlActionState);
   const rulesListState = useAppSelector(selectRulesListState);
   const pendingBotIds = useAppSelector(selectPendingBotIds);
   const [selectedServer, setSelectedServer] = useState(`${activeServer.ip}:${activeServer.port}`);
   const [serverStatuses, setServerStatuses] = useState<Record<string, ServerHealthStatus>>({});
+  const [serverConfigChanged, setServerConfigChanged] = useState<Record<string, boolean>>({});
   const [isApiInfoOpen, setIsApiInfoOpen] = useState(false);
   const [isSetBotFormOpen, setIsSetBotFormOpen] = useState(false);
+  const [setBotInitialConfig, setSetBotInitialConfig] = useState(DEFAULT_BOT_CONFIG_TEMPLATE);
+  const [setBotFormHint, setSetBotFormHint] = useState<string | undefined>(undefined);
+  const [isGetConfigServerFormOpen, setIsGetConfigServerFormOpen] = useState(false);
+  const [serverConfigInitial, setServerConfigInitial] = useState('{\n  "botsRulesList": []\n}');
+  const [serverConfigOriginal, setServerConfigOriginal] = useState('{\n  "botsRulesList": []\n}');
+  const [hasDbConfigOriginal, setHasDbConfigOriginal] = useState(false);
+  const [isGettingServerConfig, setIsGettingServerConfig] = useState(false);
   const [selectedBotIds, setSelectedBotIds] = useState<Set<string>>(new Set());
   const [hiddenBotIds, setHiddenBotIds] = useState<string[]>([]);
   const scheduledRemovalsRef = useRef<Map<string, () => void>>(new Map());
@@ -118,6 +138,14 @@ export function BotsTab({
 
     return { workingServers: working, notWorkingServers: notWorking };
   }, [servers, serverStatuses]);
+
+  const resolveActiveServerFromList = useCallback(
+    () =>
+      servers.find(
+        (server) => server.ip === activeServer.ip && server.port === activeServer.port,
+      ) ?? activeServer,
+    [activeServer, servers],
+  );
 
   const renderServerItem = (server: ServerUiItem) => {
     const serverKey = `${server.ip}:${server.port}`;
@@ -151,8 +179,13 @@ export function BotsTab({
           />
           <div className="flex-1 min-w-0">
             <div className="text-sm text-foreground truncate">{server.ip}</div>
-            <div className="text-xs text-muted-foreground">
-              {t.botsTab.port}: {server.port}
+            <div className="text-xs text-muted-foreground flex items-center gap-2 flex-wrap">
+              <span>
+                {t.botsTab.port}: {server.port}
+              </span>
+              {serverConfigChanged[serverKey] && (
+                <span className="text-warning font-medium">{t.botsTab.configChanged}</span>
+              )}
             </div>
           </div>
           {isSelected && <Check size={16} className="text-primary shrink-0" />}
@@ -183,6 +216,13 @@ export function BotsTab({
   }, [activeServer.ip, activeServer.port]);
 
   useEffect(() => {
+    setIsGetConfigServerFormOpen(false);
+    setIsGettingServerConfig(false);
+    setIsSetBotFormOpen(false);
+    setSetBotFormHint(undefined);
+  }, [activeServer.ip, activeServer.port]);
+
+  useEffect(() => {
     if (servers.length === 0) {
       setServerStatuses({});
       return;
@@ -195,38 +235,79 @@ export function BotsTab({
     });
     setServerStatuses(nextStatuses);
 
-    const checkServerHealth = async (server: ServerUiItem) => {
+    const probeServerHealth = async (server: ServerUiItem) => {
       const key = `${server.ip}:${server.port}`;
-      try {
-        const response = await fetch(`http://${key}/bots/get-all`);
-        if (isCancelled) {
-          return;
-        }
-
-        setServerStatuses((prev) => ({
-          ...prev,
-          [key]: response.ok ? 'online' : 'offline',
-        }));
-      } catch {
-        if (isCancelled) {
-          return;
-        }
-
-        setServerStatuses((prev) => ({
-          ...prev,
-          [key]: 'offline',
-        }));
+      const status = await checkServerHealth(server.ip, server.port);
+      if (isCancelled) {
+        return;
       }
+
+      setServerStatuses((prev) => ({
+        ...prev,
+        [key]: status,
+      }));
     };
 
     servers.forEach((server) => {
-      void checkServerHealth(server);
+      void probeServerHealth(server);
     });
 
     return () => {
       isCancelled = true;
     };
   }, [servers]);
+
+  useEffect(() => {
+    if (servers.length === 0) {
+      setServerConfigChanged({});
+      return;
+    }
+
+    let isCancelled = false;
+
+    const checkConfigSync = async (server: ServerUiItem) => {
+      const key = `${server.ip}:${server.port}`;
+      if (!server.serverId || serverStatuses[key] !== 'online') {
+        if (!isCancelled) {
+          setServerConfigChanged((prev) => {
+            if (!(key in prev)) {
+              return prev;
+            }
+            const next = { ...prev };
+            delete next[key];
+            return next;
+          });
+        }
+        return;
+      }
+
+      try {
+        const changed = await isServerConfigChanged(server.serverId, server.ip, server.port);
+        if (!isCancelled) {
+          setServerConfigChanged((prev) => ({ ...prev, [key]: changed }));
+        }
+      } catch {
+        if (!isCancelled) {
+          setServerConfigChanged((prev) => {
+            if (!(key in prev)) {
+              return prev;
+            }
+            const next = { ...prev };
+            delete next[key];
+            return next;
+          });
+        }
+      }
+    };
+
+    servers.forEach((server) => {
+      void checkConfigSync(server);
+    });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [servers, serverStatuses, rulesListState.data, rulesListState.isLoaded]);
 
   const allRows: BotRow[] = botControlListState.data.map((item) =>
     mapBotItemToListRow(
@@ -318,8 +399,6 @@ export function BotsTab({
   }, [allBotIds]);
 
   useEffect(() => {
-    scheduledRemovalsRef.current.forEach((cancelScheduledRemoval) => cancelScheduledRemoval());
-    scheduledRemovalsRef.current.clear();
     setHiddenBotIds([]);
   }, [activeServer.ip, activeServer.port]);
 
@@ -339,6 +418,8 @@ export function BotsTab({
       return;
     }
 
+    const serverKeyAtSchedule = `${activeServer.ip}:${activeServer.port}`;
+
     setHiddenBotIds((prev) => [...new Set([...prev, ...pendingIds])]);
     setSelectedBotIds((prev) => {
       const next = new Set(prev);
@@ -348,6 +429,10 @@ export function BotsTab({
 
     const restoreHiddenBots = () => {
       scheduledRemovalsRef.current.delete(scheduleKey);
+      const { ip, port } = store.getState().servers.activeServer;
+      if (`${ip}:${port}` !== serverKeyAtSchedule) {
+        return;
+      }
       setHiddenBotIds((prev) => prev.filter((id) => !pendingIds.includes(id)));
     };
 
@@ -368,11 +453,14 @@ export function BotsTab({
         scheduledRemovalsRef.current.delete(scheduleKey);
         const result = await dispatch(
           pendingIds.length === 1
-            ? removeBotFromServer(pendingIds[0])
-            : removeBotsFromServer(pendingIds),
+            ? removeBotFromServer({ botId: pendingIds[0], serverKey: serverKeyAtSchedule })
+            : removeBotsFromServer({ botIds: pendingIds, serverKey: serverKeyAtSchedule }),
         );
         if (removeBotFromServer.fulfilled.match(result) || removeBotsFromServer.fulfilled.match(result)) {
-          setHiddenBotIds((prev) => prev.filter((id) => !pendingIds.includes(id)));
+          const { ip, port } = store.getState().servers.activeServer;
+          if (`${ip}:${port}` === serverKeyAtSchedule) {
+            setHiddenBotIds((prev) => prev.filter((id) => !pendingIds.includes(id)));
+          }
           showToast(
             'success',
             pendingIds.length === 1
@@ -509,6 +597,24 @@ export function BotsTab({
   const formatActionLabel = (label: string, count?: number) =>
     count && count > 0 ? `${label} (${count})` : label;
 
+  const openSetBotForm = (config: string, hint?: string) => {
+    setSetBotInitialConfig(config);
+    setSetBotFormHint(hint);
+    setIsGetConfigServerFormOpen(false);
+    setIsSetBotFormOpen(true);
+  };
+
+  const openCopyBotForm = (botId: string) => {
+    const rules = normalizeRulesList(rulesListState.data);
+    const rule = rules.find((item) => item.id === botId);
+    if (!rule) {
+      showToast('error', t.botsTab.setBot.copyErrorNotFound);
+      return;
+    }
+
+    openSetBotForm(buildCopyBotConfigText(rule, rules), t.botsTab.setBot.copyHint);
+  };
+
   const colDefs: ColDef<BotRow>[] = [
     {
       colId: 'checkbox',
@@ -520,6 +626,8 @@ export function BotsTab({
       sortable: false,
       resizable: false,
       suppressMovable: true,
+      cellClass: 'ag-bots-compact-cell',
+      cellStyle: { padding: 0, overflow: 'hidden' },
       headerComponent: BotsGridCheckboxHeader,
       headerComponentParams: {
         checked: allSelected,
@@ -557,10 +665,12 @@ export function BotsTab({
       sortable: false,
       resizable: false,
       suppressMovable: true,
+      cellClass: 'ag-bots-compact-cell',
+      cellStyle: { padding: 0, overflow: 'hidden' },
       cellRenderer: (params: { value: string }) => {
         const isActive = params.value === 'active';
         return (
-          <div className="w-full h-full flex items-center justify-center">
+          <div className="w-full h-full max-h-full flex items-center justify-center overflow-hidden">
             <Circle
               size={10}
               className={isActive ? 'fill-green-500 text-green-500' : 'fill-yellow-500 text-yellow-500'}
@@ -570,16 +680,18 @@ export function BotsTab({
       },
     },
     {
-      headerName: t.botsTab.table.control,
-      colId: 'control',
+      headerName: t.botsTab.actions,
+      colId: 'actions',
       pinned: 'right',
       lockPinned: true,
-      minWidth: 90,
-      maxWidth: 90,
-      width: 90,
+      minWidth: 118,
+      maxWidth: 118,
+      width: 118,
       sortable: false,
       resizable: false,
       suppressMovable: true,
+      cellClass: 'ag-bots-actions-cell',
+      cellStyle: { padding: 0, overflow: 'hidden' },
       cellRenderer: (params: { data?: BotRow }) => {
         const row = params.data;
         if (!row) {
@@ -589,13 +701,18 @@ export function BotsTab({
         const isActive = row.status === 'active';
         const isPending = isBotRowPending(row.id);
         const isDisabled = isPending;
-        const title = isActive ? t.botDetail.controlTab.pause : t.botsTab.startAll;
+        const hasRule = ruleIds.has(row.id);
+        const startStopTitle = isActive ? t.botDetail.controlTab.pause : t.botsTab.startAll;
+        const actionButtonClass =
+          'inline-flex h-7 w-7 shrink-0 items-center justify-center rounded transition-colors';
+        const mutedButtonClass = `${actionButtonClass} bg-muted text-muted-foreground hover:bg-accent hover:text-foreground`;
+        const disabledButtonClass = `${actionButtonClass} bg-muted text-muted-foreground cursor-not-allowed opacity-60`;
 
         return (
-          <div className="w-full h-full flex items-center justify-center">
+          <div className="w-full h-full max-h-full flex items-center justify-center gap-1.5 overflow-hidden px-1">
             <button
               type="button"
-              title={title}
+              title={startStopTitle}
               disabled={isDisabled}
               onClick={async (event) => {
                 event.stopPropagation();
@@ -614,65 +731,60 @@ export function BotsTab({
                 }
               }}
               onDoubleClick={(event) => event.stopPropagation()}
-              className={`inline-flex h-8 w-8 items-center justify-center rounded transition-colors ${
+              className={
                 isDisabled
-                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                  : isActive
-                    ? 'bg-warning text-warning-foreground hover:opacity-90'
-                    : 'bg-success text-success-foreground hover:opacity-90'
-              }`}
+                  ? disabledButtonClass
+                  : `${actionButtonClass} ${
+                      isActive
+                        ? 'bg-warning text-warning-foreground hover:opacity-90'
+                        : 'bg-success text-success-foreground hover:opacity-90'
+                    }`
+              }
             >
               {isPending ? (
-                <Loader2 size={14} className="animate-spin" />
+                <Loader2 size={13} className="animate-spin" />
               ) : isActive ? (
-                <Pause size={14} />
+                <Pause size={13} />
               ) : (
-                <Play size={14} />
+                <Play size={13} />
               )}
             </button>
-          </div>
-        );
-      },
-    },
-    {
-      headerName: t.botsTab.table.delete,
-      colId: 'delete',
-      pinned: 'right',
-      lockPinned: true,
-      minWidth: 80,
-      maxWidth: 80,
-      width: 80,
-      sortable: false,
-      resizable: false,
-      suppressMovable: true,
-      cellRenderer: (params: { data?: BotRow }) => {
-        const row = params.data;
-        if (!row || !ruleIds.has(row.id)) {
-          return null;
-        }
 
-        const isPending = isBotRowPending(row.id);
-        const isDisabled = isPending;
+            {hasRule && (
+              <button
+                type="button"
+                title={t.botsTab.table.copy}
+                disabled={isDisabled}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  openCopyBotForm(row.id);
+                }}
+                onDoubleClick={(event) => event.stopPropagation()}
+                className={isDisabled ? disabledButtonClass : mutedButtonClass}
+              >
+                <Copy size={13} />
+              </button>
+            )}
 
-        return (
-          <div className="w-full h-full flex items-center justify-center">
-            <button
-              type="button"
-              title={t.botsTab.removeBot.button}
-              disabled={isDisabled}
-              onClick={(event) => {
-                event.stopPropagation();
-                scheduleBotRemoval(row.id);
-              }}
-              onDoubleClick={(event) => event.stopPropagation()}
-              className={`inline-flex h-8 w-8 items-center justify-center rounded transition-colors ${
-                isDisabled
-                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                  : 'bg-destructive/15 text-destructive hover:bg-destructive/25'
-              }`}
-            >
-              {isPending ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
-            </button>
+            {hasRule && (
+              <button
+                type="button"
+                title={t.botsTab.removeBot.button}
+                disabled={isDisabled}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  scheduleBotRemoval(row.id);
+                }}
+                onDoubleClick={(event) => event.stopPropagation()}
+                className={
+                  isDisabled
+                    ? disabledButtonClass
+                    : `${actionButtonClass} bg-destructive/15 text-destructive hover:bg-destructive/25`
+                }
+              >
+                <Trash2 size={13} />
+              </button>
+            )}
           </div>
         );
       },
@@ -748,10 +860,59 @@ export function BotsTab({
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => setIsSetBotFormOpen(true)}
+              onClick={() => {
+                openSetBotForm(DEFAULT_BOT_CONFIG_TEMPLATE);
+              }}
               className="px-3 py-1.5 rounded text-sm transition-colors bg-secondary text-secondary-foreground hover:opacity-90"
             >
               {t.botsTab.setBot.button}
+            </button>
+            <button
+              type="button"
+              disabled={isGettingServerConfig}
+              onClick={() => {
+                setIsSetBotFormOpen(false);
+                setIsGettingServerConfig(true);
+                const resolvedServer = resolveActiveServerFromList();
+                const dbConfigPromise = resolvedServer.serverId
+                  ? loadDbConfigTextForServer(resolvedServer.serverId)
+                  : Promise.resolve('{\n  "botsRulesList": []\n}');
+
+                void Promise.all([dispatch(loadRulesList()), dbConfigPromise])
+                  .then(([rulesResult, dbConfig]) => {
+                    if (!loadRulesList.fulfilled.match(rulesResult)) {
+                      showToast(
+                        'error',
+                        rulesResult.error?.message ?? t.botsTab.getConfigServer.loadError,
+                      );
+                      return;
+                    }
+
+                    setServerConfigOriginal(dbConfig);
+                    setHasDbConfigOriginal(Boolean(resolvedServer.serverId));
+                    setServerConfigInitial(
+                      buildServerRulesClipboardText(rulesResult.payload.rules ?? []),
+                    );
+                    setIsGetConfigServerFormOpen(true);
+                  })
+                  .catch((error: unknown) => {
+                    showToast(
+                      'error',
+                      error instanceof Error ? error.message : t.botsTab.getConfigServer.loadError,
+                    );
+                  })
+                  .finally(() => {
+                    setIsGettingServerConfig(false);
+                  });
+              }}
+              className={`px-3 py-1.5 rounded text-sm transition-colors ${
+                isGettingServerConfig
+                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                  : 'bg-secondary text-secondary-foreground hover:opacity-90'
+              }`}
+              title={t.botsTab.getConfigServer.button}
+            >
+              {t.botsTab.getConfigServer.button}
             </button>
             <button
               type="button"
@@ -835,14 +996,40 @@ export function BotsTab({
           </div>
         </div>
 
-        {isSetBotFormOpen ? (
+        {isGetConfigServerFormOpen ? (
+          <GetConfigServerForm
+            key={`${serverConfigInitial}:${serverConfigOriginal}`}
+            originalConfig={serverConfigOriginal}
+            initialConfig={serverConfigInitial}
+            hasDbOriginal={hasDbConfigOriginal}
+            isSaving={botControlActionState.isLoading}
+            onBack={() => setIsGetConfigServerFormOpen(false)}
+            onSave={async (config) => {
+              const result = await dispatch(saveServerRulesFromConfig(config));
+              if (saveServerRulesFromConfig.fulfilled.match(result)) {
+                showToast('success', t.botsTab.getConfigServer.saveSuccess);
+                setServerConfigInitial(config);
+                setIsGetConfigServerFormOpen(false);
+              } else {
+                showToast('error', result.error.message ?? t.botsTab.getConfigServer.saveError);
+              }
+            }}
+          />
+        ) : isSetBotFormOpen ? (
           <SetBotForm
-            onBack={() => setIsSetBotFormOpen(false)}
+            key={setBotInitialConfig}
+            initialConfig={setBotInitialConfig}
+            hint={setBotFormHint}
+            onBack={() => {
+              setIsSetBotFormOpen(false);
+              setSetBotFormHint(undefined);
+            }}
             onSave={async (config) => {
               const result = await dispatch(setBotFromConfig(config));
               if (setBotFromConfig.fulfilled.match(result)) {
                 showToast('success', t.botsTab.setBot.saveSuccess);
                 setIsSetBotFormOpen(false);
+                setSetBotFormHint(undefined);
               } else {
                 showToast('error', result.error.message ?? t.botsTab.setBot.saveError);
               }
@@ -867,10 +1054,10 @@ export function BotsTab({
             )}
           </div>
         )}
-        {!isSetBotFormOpen && botControlListState.isLoading && (
+        {!isSetBotFormOpen && !isGetConfigServerFormOpen && botControlListState.isLoading && (
           <div className="text-sm text-muted-foreground mt-2 px-4">{t.botsTab.loading ?? 'Loading...'}</div>
         )}
-        {!isSetBotFormOpen && !botControlListState.isLoading && rows.length > 0 && (
+        {!isSetBotFormOpen && !isGetConfigServerFormOpen && !botControlListState.isLoading && rows.length > 0 && (
           <div className="text-xs text-muted-foreground mt-2 px-4">
             {t.botsTab.openBotHintDoubleClick ?? t.botsTab.openBotHint}
           </div>

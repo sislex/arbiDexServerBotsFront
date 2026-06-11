@@ -63,6 +63,7 @@ export const translations = {
       openBotHint: 'Click a row to open bot details',
       loading: 'Loading...',
       port: 'Port',
+      configChanged: 'is changed',
       toConfig: 'To Config',
       workingServers: 'Working servers',
       notWorkingServers: 'Not working servers',
@@ -79,6 +80,7 @@ export const translations = {
         lastRequestTime: 'Last Request Time',
         status: 'Status',
         control: 'Start/Stop',
+        copy: 'Copy',
         delete: 'Delete'
       },
       botDescriptions: {
@@ -96,7 +98,31 @@ export const translations = {
         save: 'Save',
         invalidJson: 'Invalid JSON config',
         saveSuccess: 'Bot config applied on server',
-        saveError: 'Failed to apply bot config on server'
+        saveError: 'Failed to apply bot config on server',
+        copyConfig: 'Copy config',
+        copySuccess: 'Config copied to clipboard',
+        copyError: 'Failed to copy config',
+        copyHint: 'Bot copy config. Change id if needed and save to create a new bot.',
+        copyErrorNotFound: 'Bot config not found in server rules'
+      },
+      getConfigServer: {
+        button: 'Config server',
+        title: 'Config server',
+        compareHint:
+          'Full original config from DB on the left, editable current server config on the right. Changed lines are highlighted.',
+        originalLabel: 'Original (DB)',
+        updatedLabel: 'Current (Server)',
+        noDbConfig: 'This server has no serverId in DB. The original panel is empty.',
+        cancel: 'Cancel',
+        reset: 'Reset',
+        copyConfig: 'Copy config',
+        saveChanges: 'Save changes',
+        invalidJson: 'Invalid JSON config',
+        copySuccess: 'Config copied to clipboard',
+        copyError: 'Failed to copy config',
+        loadError: 'Failed to load server config',
+        saveSuccess: 'Server config saved and bots restarted',
+        saveError: 'Failed to save server config'
       },
       removeBot: {
         button: 'Remove bot',
@@ -120,10 +146,17 @@ export const translations = {
     rulesTab: {
       title: 'RULES',
       subtitle: 'Rules info',
+      copyConfig: 'Copy',
+      copySuccess: 'Copied to clipboard',
+      copyError: 'Failed to copy',
+      copyRuleConfig: 'Copy full rule config',
+      copyBotRule: 'Copy bot rule',
+      copyJobRule: 'Copy job rule',
       table: {
         id: 'ID',
         botRule: 'Bot Rule',
-        jobRule: 'Job Rule'
+        jobRule: 'Job Rule',
+        copyConfig: 'Config'
       }
     },
     serverDataTab: {
@@ -131,12 +164,11 @@ export const translations = {
       serverData: {
         title: 'Server data',
         ip: 'IP',
-        authData: 'Authorization Data',
-        version: 'Version',
-        timeToClose: 'Time To Close',
-        timeAfterClose: 'Time After Close',
-        bots: 'Bots',
-        status: 'Status'
+        port: 'Port',
+        status: 'Status',
+        statusOnline: 'Online',
+        statusOffline: 'Offline',
+        statusLoading: 'Checking...'
       },
       botTypes: {
         title: 'Types of bots',
@@ -185,7 +217,6 @@ export const translations = {
       subTabs: {
         controlAndParams: 'Control and paramtrs',
         errors: 'Errors',
-        job: 'Job',
         chart: 'Chart',
         liveChart: 'Live Chart'
       },
@@ -213,6 +244,9 @@ export const translations = {
         pause: 'Pause',
         restart: 'Restart',
         edit: 'Edit',
+        editTitle: 'Edit bot',
+        editHint:
+          'Edit botParams and jobParams. id is always the current bot and cannot be changed here. Save updates this bot via POST /setBotsRulesList.',
         results: 'Results',
         parameter: 'Parameter',
         value: 'Value',
@@ -257,19 +291,6 @@ export const translations = {
         duration: 'Duration (ms)',
         errorCode: 'Error Code',
         errorMessage: 'Error Message'
-      },
-      jobTab: {
-        title: 'Job Params',
-        launch: 'Launch',
-        rerun: 'Rerun',
-        delete: 'Delete',
-        return: 'Return',
-        saving: 'Saving...',
-        deleteConfirm: 'Clear current editor content?',
-        savedSuccess: 'Job settings saved',
-        savedError: 'Failed to save job settings',
-        rerunSuccess: 'Job saved and bot restarted',
-        rerunError: 'Failed to restart bot after save'
       },
       chartTab: {
         loading: 'Loading chart...',
@@ -359,6 +380,7 @@ export const translations = {
       openBotHint: 'Нажмите на строку для открытия бота',
       loading: 'Загрузка...',
       port: 'Порт',
+      configChanged: 'изменен',
       toConfig: 'К конфигу',
       workingServers: 'Работающие серверы',
       notWorkingServers: 'Не работающие серверы',
@@ -375,6 +397,7 @@ export const translations = {
         lastRequestTime: 'Последнее время запроса',
         status: 'Статус',
         control: 'Старт/Стоп',
+        copy: 'Copy',
         delete: 'Удалить'
       },
       botDescriptions: {
@@ -392,7 +415,31 @@ export const translations = {
         save: 'Сохранить',
         invalidJson: 'Некорректный JSON конфиг',
         saveSuccess: 'Конфиг бота применён на сервере',
-        saveError: 'Не удалось применить конфиг бота на сервере'
+        saveError: 'Не удалось применить конфиг бота на сервере',
+        copyConfig: 'Copy config',
+        copySuccess: 'Конфиг скопирован в буфер обмена',
+        copyError: 'Не удалось скопировать конфиг',
+        copyHint: 'Конфиг копии бота. При необходимости измените id и сохраните, чтобы создать нового бота.',
+        copyErrorNotFound: 'Конфиг бота не найден в правилах сервера'
+      },
+      getConfigServer: {
+        button: 'Config server',
+        title: 'Config server',
+        compareHint:
+          'Слева полный оригинальный конфиг из БД, справа редактируемый текущий конфиг сервера. Изменённые строки подсвечены.',
+        originalLabel: 'Оригинал (БД)',
+        updatedLabel: 'Текущий (сервер)',
+        noDbConfig: 'У сервера нет serverId в БД. Левая панель пустая.',
+        cancel: 'Отмена',
+        reset: 'Сброс',
+        copyConfig: 'Copy config',
+        saveChanges: 'Save changes',
+        invalidJson: 'Некорректный JSON конфиг',
+        copySuccess: 'Конфиг скопирован в буфер обмена',
+        copyError: 'Не удалось скопировать конфиг',
+        loadError: 'Не удалось загрузить конфиг сервера',
+        saveSuccess: 'Конфиг сервера сохранён, боты перезапущены',
+        saveError: 'Не удалось сохранить конфиг сервера'
       },
       removeBot: {
         button: 'Удалить бота',
@@ -416,10 +463,17 @@ export const translations = {
     rulesTab: {
       title: 'ПРАВИЛА',
       subtitle: 'Информация о правилах',
+      copyConfig: 'Копировать',
+      copySuccess: 'Скопировано в буфер обмена',
+      copyError: 'Не удалось скопировать',
+      copyRuleConfig: 'Копировать полный конфиг правила',
+      copyBotRule: 'Копировать правило бота',
+      copyJobRule: 'Копировать правило задачи',
       table: {
         id: 'ID',
         botRule: 'Правило бота',
-        jobRule: 'Правило задачи'
+        jobRule: 'Правило задачи',
+        copyConfig: 'Конфиг'
       }
     },
     serverDataTab: {
@@ -427,12 +481,11 @@ export const translations = {
       serverData: {
         title: 'Данные сервера',
         ip: 'IP',
-        authData: 'Данные авторизации',
-        version: 'Версия',
-        timeToClose: 'Время до закрытия',
-        timeAfterClose: 'Время после закрытия',
-        bots: 'Боты',
-        status: 'Статус'
+        port: 'Port',
+        status: 'Статус',
+        statusOnline: 'Online',
+        statusOffline: 'Offline',
+        statusLoading: 'Проверка...'
       },
       botTypes: {
         title: 'Типы ботов',
@@ -481,7 +534,6 @@ export const translations = {
       subTabs: {
         controlAndParams: 'Управление и параметры',
         errors: 'Ошибки',
-        job: 'Задача',
         chart: 'График',
         liveChart: 'Живой график'
       },
@@ -509,6 +561,9 @@ export const translations = {
         pause: 'Пауза',
         restart: 'Перезапуск',
         edit: 'Изменить',
+        editTitle: 'Редактирование бота',
+        editHint:
+          'Редактируйте botParams и jobParams. id всегда остаётся текущим ботом и здесь не меняется. Сохранение обновляет этого бота через POST /setBotsRulesList.',
         results: 'Результаты',
         parameter: 'Параметр',
         value: 'Значение',
@@ -553,19 +608,6 @@ export const translations = {
         duration: 'Длительность (мс)',
         errorCode: 'Код ошибки',
         errorMessage: 'Сообщение об ошибке'
-      },
-      jobTab: {
-        title: 'Параметры задачи',
-        launch: 'Запустить',
-        rerun: 'Перезапустить',
-        delete: 'Удалить',
-        return: 'Вернуть',
-        saving: 'Сохранение...',
-        deleteConfirm: 'Очистить текущий текст в редакторе?',
-        savedSuccess: 'Параметры задачи сохранены',
-        savedError: 'Не удалось сохранить параметры задачи',
-        rerunSuccess: 'Задача сохранена и бот перезапущен',
-        rerunError: 'Не удалось перезапустить бота после сохранения'
       },
       chartTab: {
         loading: 'Загрузка графика...',

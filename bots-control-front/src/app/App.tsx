@@ -22,22 +22,18 @@ import {
   selectActiveTab,
   selectBotControlListState,
   selectRulesListState,
-  selectServerDataState,
 } from './store/selectors';
 import { setActiveTab } from './store/slices/view-slice';
 import {
   loadServersFromDb,
   loadBotControlList,
-  loadBotTypes,
-  loadJobTypes,
   loadRulesList,
-  loadServerData,
   setActiveServer,
 } from './store/slices/servers-slice';
 import { showToast } from './services/toast';
 
 const VALID_TABS = new Set(['bots', 'rules', 'server-data']);
-const VALID_BOT_TABS = new Set(['control', 'errors', 'job', 'chart', 'live-chart']);
+const VALID_BOT_TABS = new Set(['control', 'errors', 'chart', 'live-chart']);
 
 const parseIpPort = (ipPort: string) => {
   const [ip = '', port = ''] = ipPort.split(':');
@@ -67,15 +63,12 @@ function MainLayout() {
   const activeServer = useAppSelector(selectActiveServer);
   const botControlListState = useAppSelector(selectBotControlListState);
   const rulesListState = useAppSelector(selectRulesListState);
-  const serverDataState = useAppSelector(selectServerDataState);
 
   const activeServerIpPort = `${activeServer.ip}:${activeServer.port}`;
   const isRefreshing =
     activeTab === 'bots'
       ? botControlListState.isLoading
-      : activeTab === 'rules'
-        ? rulesListState.isLoading
-        : serverDataState.isLoading;
+      : rulesListState.isLoading;
 
   const refreshActiveTabData = () => {
     if (activeTab === 'bots') {
@@ -83,9 +76,7 @@ function MainLayout() {
     } else if (activeTab === 'rules') {
       dispatch(loadRulesList());
     } else if (activeTab === 'server-data') {
-      dispatch(loadServerData());
-      dispatch(loadBotTypes());
-      dispatch(loadJobTypes());
+      dispatch(loadRulesList());
     }
   };
 
@@ -96,12 +87,8 @@ function MainLayout() {
   useEffect(() => {
     if (activeTab === 'bots') {
       dispatch(loadBotControlList());
-    } else if (activeTab === 'rules') {
+    } else if (activeTab === 'rules' || activeTab === 'server-data') {
       dispatch(loadRulesList());
-    } else if (activeTab === 'server-data') {
-      dispatch(loadServerData());
-      dispatch(loadBotTypes());
-      dispatch(loadJobTypes());
     }
   }, [activeTab, activeServerIpPort, dispatch]);
 

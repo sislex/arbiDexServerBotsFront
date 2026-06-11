@@ -88,14 +88,64 @@ export const mapBotItemToListRow = (
   };
 };
 
+const asConfigObject = (value: unknown): Record<string, unknown> =>
+  value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
+
+export const extractBotConfigParts = (
+  botInfo: BotInfo | null,
+): { botParams: Record<string, unknown>; jobParams: Record<string, unknown> } => {
+  if (!botInfo) {
+    return { botParams: {}, jobParams: {} };
+  }
+
+  if (botInfo.botParams || botInfo.jobParams) {
+    return {
+      botParams: asConfigObject(botInfo.botParams),
+      jobParams: asConfigObject(botInfo.jobParams),
+    };
+  }
+
+  const rawData = (botInfo as Record<string, unknown>).data;
+  if (typeof rawData === 'string' && rawData.trim()) {
+    try {
+      const parsed = JSON.parse(rawData) as Record<string, unknown>;
+      return {
+        botParams: asConfigObject(parsed.botParams),
+        jobParams: asConfigObject(parsed.jobParams),
+      };
+    } catch {
+      return { botParams: {}, jobParams: {} };
+    }
+  }
+
+  if (rawData && typeof rawData === 'object') {
+    const parsed = rawData as Record<string, unknown>;
+    return {
+      botParams: asConfigObject(parsed.botParams),
+      jobParams: asConfigObject(parsed.jobParams),
+    };
+  }
+
+  return { botParams: {}, jobParams: {} };
+};
+
+export const buildBotConfigClipboardText = (botInfo: BotInfo | null): string => {
+  const { botParams, jobParams } = extractBotConfigParts(botInfo);
+  return JSON.stringify({ botParams, jobParams }, null, 2);
+};
+
+export const buildServerRulesClipboardText = (rules: BotRuleItem[]): string =>
+  JSON.stringify({ botsRulesList: rules }, null, 2);
+
 export const mapBotDetailsToViewModel = (
   botId: string,
   botInfo: BotInfo | null,
   botParams: Record<string, unknown> | null,
 ): BotControlDetailsViewModel => {
   const info = (botInfo ?? {}) as Record<string, unknown>;
-  const infoBotParams = ((botInfo?.botParams as Record<string, unknown> | undefined) ??
-    {}) as Record<string, unknown>;
+  const { botParams: infoBotParams, jobParams: infoJobParams } = extractBotConfigParts(botInfo);
   const params = (botParams ?? {}) as Record<string, unknown>;
 
   const paused = Boolean(params.paused ?? infoBotParams.paused ?? false);
@@ -112,8 +162,8 @@ export const mapBotDetailsToViewModel = (
     lastJobTimeFinish: toStringSafe(params.lastJobTimeFinish, '-'),
     lastJobResult: params.lastJobResult ?? info.lastJobResult ?? '-',
     isSendData: Boolean(params.isSendData ?? info.isSendData ?? false),
-    botParamsJson: JSON.stringify((botInfo?.botParams as Record<string, unknown> | undefined) ?? {}, null, 2),
-    jobParamsJson: JSON.stringify((botInfo?.jobParams as Record<string, unknown> | undefined) ?? {}, null, 2),
+    botParamsJson: JSON.stringify(infoBotParams, null, 2),
+    jobParamsJson: JSON.stringify(infoJobParams, null, 2),
   };
 };
 
@@ -164,11 +214,63 @@ export const parseBotConfigJson = (rawConfig: string): ParsedBotConfig => {
   return { id, botParams, jobParams };
 };
 
+export const applyBotConfigForBotId = (
+  rawConfig: string,
+  targetBotId: string,
+): ParsedBotConfig => {
+  const { botParams, jobParams } = parseBotConfigJson(rawConfig);
+  return {
+    id: targetBotId,
+    botParams,
+    jobParams,
+  };
+};
+
 export const buildBotSettingsPayload = (
   id: string,
   botParams: Record<string, unknown>,
   jobParams: Record<string, unknown>,
 ) => JSON.stringify({ id, botParams, jobParams });
+
+export const suggestCopyBotId = (rules: BotRuleItem[], sourceId: string): string => {
+  const usedIds = new Set(rules.map((rule) => rule.id));
+  const numericIds = rules
+    .map((rule) => Number(rule.id))
+    .filter((value) => Number.isFinite(value));
+
+  if (numericIds.length > 0) {
+    let candidate = Math.max(...numericIds) + 1;
+    while (usedIds.has(String(candidate))) {
+      candidate += 1;
+    }
+    return String(candidate);
+  }
+
+  let candidate = `${sourceId}_copy`;
+  let index = 2;
+  while (usedIds.has(candidate)) {
+    candidate = `${sourceId}_copy${index}`;
+    index += 1;
+  }
+  return candidate;
+};
+
+export const buildSetBotConfigText = (
+  rule: BotRuleItem,
+  id: string = rule.id,
+): string =>
+  JSON.stringify(
+    {
+      id,
+      botParams: rule.botParams,
+      jobParams: rule.jobParams,
+    },
+    null,
+    2,
+  );
+
+export const buildCopyBotConfigText = (rule: BotRuleItem, rules: BotRuleItem[]): string =>
+  buildSetBotConfigText(rule, suggestCopyBotId(rules, rule.id));
 
 export interface BotRuleItem {
   id: string;
@@ -213,13 +315,63 @@ export const normalizeRulesList = (response: unknown): BotRuleItem[] => {
   return [];
 };
 
+export interface ServerConfigTypeRow {
+  id: string;
+  type: string;
+  description: string;
+}
+
+const toConfigField = (value: unknown, fallback = '-') => {
+  const text = String(value ?? '').trim();
+  return text.length > 0 ? text : fallback;
+};
+
+export const buildBotTypeRowsFromRules = (rules: BotRuleItem[]): ServerConfigTypeRow[] =>
+  rules.map((rule) => ({
+    id: rule.id,
+    type: toConfigField(rule.botParams?.botType),
+    description: toConfigField(rule.botParams?.description),
+  }));
+
+export const buildJobTypeRowsFromRules = (rules: BotRuleItem[]): ServerConfigTypeRow[] =>
+  rules.map((rule) => ({
+    id: rule.id,
+    type: toConfigField(rule.jobParams?.jobType),
+    description: toConfigField(rule.jobParams?.description),
+  }));
+
+export const parseServerRulesConfigJson = (rawConfig: string): BotRuleItem[] => {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(rawConfig);
+  } catch {
+    throw new Error('Invalid JSON config');
+  }
+
+  if (!parsed || (typeof parsed !== 'object' && !Array.isArray(parsed))) {
+    throw new Error('Server config must be a JSON object or array');
+  }
+
+  if (!Array.isArray(parsed)) {
+    const record = parsed as Record<string, unknown>;
+    if (!('botsRulesList' in record)) {
+      throw new Error('Server config must contain botsRulesList');
+    }
+    if (!Array.isArray(record.botsRulesList)) {
+      throw new Error('botsRulesList must be an array');
+    }
+  }
+
+  return normalizeRulesList(parsed);
+};
+
 export const mergeBotRuleIntoList = (
   rules: BotRuleItem[],
   newRule: BotRuleItem,
 ): BotRuleItem[] => {
   const index = rules.findIndex((rule) => rule.id === newRule.id);
   if (index === -1) {
-    return [...rules, newRule];
+    return [newRule, ...rules];
   }
 
   const next = [...rules];

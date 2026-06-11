@@ -3,7 +3,6 @@ import { BotDetailHeader } from './BotDetailHeader';
 import { BotSubTabs } from './BotSubTabs';
 import { BotControlTab } from './BotControlTab';
 import { BotErrorsTab } from './BotErrorsTab';
-import { BotJobTab } from './BotJobTab';
 const PriceChartContainer = lazy(async () =>
   import('./charts/PriceChartContainer').then((module) => ({ default: module.PriceChartContainer })),
 );
@@ -22,8 +21,8 @@ import { useLanguage } from '../i18n/LanguageContext';
 
 interface BotDetailPageProps {
   botId: string;
-  activeSubTab: 'control' | 'errors' | 'job' | 'chart' | 'live-chart';
-  onSubTabChange: (tab: 'control' | 'errors' | 'job' | 'chart' | 'live-chart') => void;
+  activeSubTab: 'control' | 'errors' | 'chart' | 'live-chart';
+  onSubTabChange: (tab: 'control' | 'errors' | 'chart' | 'live-chart') => void;
   onBack: () => void;
 }
 
@@ -54,7 +53,7 @@ export function BotDetailPage({ botId, activeSubTab, onSubTabChange, onBack }: B
           const result = await dispatch(
             refreshActiveBotTabData({
               botId,
-              activeTab: activeSubTab as 'control' | 'errors' | 'job' | 'chart' | 'live-chart',
+              activeTab: activeSubTab,
             }),
           );
           if (refreshActiveBotTabData.fulfilled.match(result)) {
@@ -72,7 +71,6 @@ export function BotDetailPage({ botId, activeSubTab, onSubTabChange, onBack }: B
 
       {activeSubTab === 'control' && <BotControlTab botId={botId} />}
       {activeSubTab === 'errors' && <BotErrorsTab />}
-      {activeSubTab === 'job' && <BotJobTab botId={botId} />}
       {activeSubTab === 'chart' && (
         <Suspense fallback={tabLoader}>
           <div className="flex-1 min-h-0 flex flex-col">
