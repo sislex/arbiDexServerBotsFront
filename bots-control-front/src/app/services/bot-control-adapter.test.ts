@@ -9,6 +9,7 @@ import {
   suggestCopyBotId,
   extractBotConfigParts,
   parseServerRulesConfigJson,
+  mergeBotRuleIntoList,
 } from './bot-control-adapter';
 
 describe('extractBotConfigParts', () => {
@@ -161,5 +162,28 @@ describe('buildBotConfigClipboardText', () => {
       botParams: { paused: true },
       jobParams: { source: 'binance' },
     });
+  });
+});
+
+describe('mergeBotRuleIntoList', () => {
+  const existing = [
+    { id: '1', botParams: { paused: true }, jobParams: { source: 'binance' } },
+    { id: '2', botParams: { paused: false }, jobParams: { source: 'okx' } },
+  ];
+
+  it('prepends a new bot to the start of the list', () => {
+    const newRule = { id: '3', botParams: { paused: true }, jobParams: { source: 'dzengi' } };
+    expect(mergeBotRuleIntoList(existing, newRule).map((rule) => rule.id)).toEqual(['3', '1', '2']);
+  });
+
+  it('updates an existing bot in place without changing order', () => {
+    const updated = {
+      id: '2',
+      botParams: { paused: true },
+      jobParams: { source: 'okx', token0: 'BTC' },
+    };
+    const result = mergeBotRuleIntoList(existing, updated);
+    expect(result.map((rule) => rule.id)).toEqual(['1', '2']);
+    expect(result[1]).toEqual(updated);
   });
 });

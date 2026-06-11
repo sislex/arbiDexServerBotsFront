@@ -53,14 +53,18 @@ export const showDelayedActionToast = ({
     if (cancelled) {
       return;
     }
+    cancelled = true;
     toast.dismiss(toastId);
     await onConfirm();
   }, durationMs);
 
   return () => {
+    if (cancelled) {
+      return;
+    }
     cancelled = true;
     window.clearTimeout(timeoutId);
-    onCancel?.();
     toast.dismiss(toastId);
+    onCancel?.();
   };
 };

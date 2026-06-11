@@ -36,6 +36,7 @@ import {
   saveServerRulesFromConfig,
   setBotFromConfig,
 } from '../store/slices/servers-slice';
+import { store } from '../store/store';
 import { showDelayedActionToast, showToast } from '../services/toast';
 import {
   buildCopyBotConfigText,
@@ -217,6 +218,8 @@ export function BotsTab({
   useEffect(() => {
     setIsGetConfigServerFormOpen(false);
     setIsGettingServerConfig(false);
+    setIsSetBotFormOpen(false);
+    setSetBotFormHint(undefined);
   }, [activeServer.ip, activeServer.port]);
 
   useEffect(() => {
@@ -396,8 +399,6 @@ export function BotsTab({
   }, [allBotIds]);
 
   useEffect(() => {
-    scheduledRemovalsRef.current.forEach((cancelScheduledRemoval) => cancelScheduledRemoval());
-    scheduledRemovalsRef.current.clear();
     setHiddenBotIds([]);
   }, [activeServer.ip, activeServer.port]);
 
@@ -417,6 +418,8 @@ export function BotsTab({
       return;
     }
 
+    const serverKeyAtSchedule = `${activeServer.ip}:${activeServer.port}`;
+
     setHiddenBotIds((prev) => [...new Set([...prev, ...pendingIds])]);
     setSelectedBotIds((prev) => {
       const next = new Set(prev);
@@ -426,6 +429,10 @@ export function BotsTab({
 
     const restoreHiddenBots = () => {
       scheduledRemovalsRef.current.delete(scheduleKey);
+      const { ip, port } = store.getState().servers.activeServer;
+      if (`${ip}:${port}` !== serverKeyAtSchedule) {
+        return;
+      }
       setHiddenBotIds((prev) => prev.filter((id) => !pendingIds.includes(id)));
     };
 
@@ -446,11 +453,14 @@ export function BotsTab({
         scheduledRemovalsRef.current.delete(scheduleKey);
         const result = await dispatch(
           pendingIds.length === 1
-            ? removeBotFromServer(pendingIds[0])
-            : removeBotsFromServer(pendingIds),
+            ? removeBotFromServer({ botId: pendingIds[0], serverKey: serverKeyAtSchedule })
+            : removeBotsFromServer({ botIds: pendingIds, serverKey: serverKeyAtSchedule }),
         );
         if (removeBotFromServer.fulfilled.match(result) || removeBotsFromServer.fulfilled.match(result)) {
-          setHiddenBotIds((prev) => prev.filter((id) => !pendingIds.includes(id)));
+          const { ip, port } = store.getState().servers.activeServer;
+          if (`${ip}:${port}` === serverKeyAtSchedule) {
+            setHiddenBotIds((prev) => prev.filter((id) => !pendingIds.includes(id)));
+          }
           showToast(
             'success',
             pendingIds.length === 1
@@ -880,7 +890,9 @@ export function BotsTab({
 
                     setServerConfigOriginal(dbConfig);
                     setHasDbConfigOriginal(Boolean(resolvedServer.serverId));
-                    setServerConfigInitial(buildServerRulesClipboardText(rulesResult.payload ?? []));
+                    setServerConfigInitial(
+                      buildServerRulesClipboardText(rulesResult.payload.rules ?? []),
+                    );
                     setIsGetConfigServerFormOpen(true);
                   })
                   .catch((error: unknown) => {

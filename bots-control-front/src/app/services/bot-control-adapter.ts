@@ -371,7 +371,7 @@ export const mergeBotRuleIntoList = (
 ): BotRuleItem[] => {
   const index = rules.findIndex((rule) => rule.id === newRule.id);
   if (index === -1) {
-    return [...rules, newRule];
+    return [newRule, ...rules];
   }
 
   const next = [...rules];
