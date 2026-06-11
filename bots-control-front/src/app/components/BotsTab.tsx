@@ -149,6 +149,16 @@ export function BotsTab({
     [activeServer, servers],
   );
 
+  const selectServer = useCallback(
+    (server: ServerUiItem) => {
+      const serverKey = `${server.ip}:${server.port}`;
+      setSelectedServer(serverKey);
+      dispatch(setActiveServer(server));
+      onServerSelect?.(serverKey);
+    },
+    [dispatch, onServerSelect],
+  );
+
   const renderServerItem = (server: ServerUiItem) => {
     const serverKey = `${server.ip}:${server.port}`;
     const isSelected = selectedServer === serverKey;
@@ -157,18 +167,20 @@ export function BotsTab({
     return (
       <div
         key={serverKey}
-        className={`rounded transition-colors ${
+        role="button"
+        tabIndex={0}
+        onClick={() => selectServer(server)}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            selectServer(server);
+          }
+        }}
+        className={`rounded transition-colors cursor-pointer ${
           isSelected ? 'bg-accent border border-border' : 'hover:bg-muted'
         }`}
       >
-        <button
-          onClick={() => {
-            setSelectedServer(serverKey);
-            dispatch(setActiveServer(server));
-            onServerSelect?.(serverKey);
-          }}
-          className="w-full flex items-center gap-3 px-4 py-3 text-left"
-        >
+        <div className="w-full flex items-center gap-3 px-4 py-3 text-left">
           <Circle
             size={8}
             className={`${
@@ -191,7 +203,7 @@ export function BotsTab({
             </div>
           </div>
           {isSelected && <Check size={16} className="text-primary shrink-0" />}
-        </button>
+        </div>
         {configUrl && (
           <div className="px-4 pb-2">
             <a
