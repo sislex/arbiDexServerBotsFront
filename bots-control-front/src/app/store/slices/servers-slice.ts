@@ -7,7 +7,11 @@ import {
   parseServerRulesConfigJson,
   removeBotRuleFromList,
 } from '../../services/bot-control-adapter';
-import { waitForBotsRunningState } from '../../services/bot-pause-utils';
+import {
+  buildBotRuntimeSnapshots,
+  waitForBotsRestart,
+  waitForBotsRunningState,
+} from '../../services/bot-pause-utils';
 import { serverApi } from '../../services/server-api';
 import { DEFAULT_SERVER_LIST } from '../constants';
 import { createAsyncState } from '../utils';
@@ -209,6 +213,22 @@ const refreshBotControlListAfterRunningChange = async (
   }
 };
 
+const refreshBotControlListAfterRestart = async (
+  activeServer: string,
+  botIds: string[],
+  snapshotsBefore: ReturnType<typeof buildBotRuntimeSnapshots>,
+  dispatch: (action: unknown) => unknown,
+) => {
+  try {
+    const bots = await waitForBotsRestart(activeServer, botIds, snapshotsBefore);
+    await dispatch(
+      loadBotControlList({ silent: true, prefetchedBots: bots, serverKey: activeServer }),
+    );
+  } catch {
+    await dispatch(loadBotControlList({ silent: true, serverKey: activeServer }));
+  }
+};
+
 export const setBotFromConfig = createAsyncThunk(
   'servers/setBotFromConfig',
   async (rawConfig: string, { getState, dispatch }) => {
@@ -225,10 +245,17 @@ export const setBotFromConfig = createAsyncThunk(
     await serverApi.setBotPause(activeServer, id, paused);
 
     if (!paused) {
+      const botsBefore = await serverApi.getBots(activeServer);
+      const snapshots = buildBotRuntimeSnapshots(
+        botsBefore as Record<string, unknown>[],
+        [id],
+      );
       await serverApi.restartBot(activeServer, id);
+      await refreshBotControlListAfterRestart(activeServer, [id], snapshots, dispatch);
+    } else {
+      await refreshBotControlListAfterRunningChange(activeServer, [id], false, dispatch);
     }
 
-    await refreshBotControlListAfterRunningChange(activeServer, [id], !paused, dispatch);
     await dispatch(loadRulesList());
     return { id, paused };
   },
@@ -253,10 +280,17 @@ export const updateBotFromConfig = createAsyncThunk(
     await serverApi.setBotPause(activeServer, id, paused);
 
     if (!paused) {
+      const botsBefore = await serverApi.getBots(activeServer);
+      const snapshots = buildBotRuntimeSnapshots(
+        botsBefore as Record<string, unknown>[],
+        [id],
+      );
       await serverApi.restartBot(activeServer, id);
+      await refreshBotControlListAfterRestart(activeServer, [id], snapshots, dispatch);
+    } else {
+      await refreshBotControlListAfterRunningChange(activeServer, [id], false, dispatch);
     }
 
-    await refreshBotControlListAfterRunningChange(activeServer, [id], !paused, dispatch);
     await dispatch(loadRulesList());
     return { id, paused };
   },
@@ -281,8 +315,18 @@ export const saveServerRulesFromConfig = createAsyncThunk(
       .map((rule) => rule.id);
 
     if (botsToRestart.length > 0) {
+      const botsBefore = await serverApi.getBots(activeServer);
+      const snapshots = buildBotRuntimeSnapshots(
+        botsBefore as Record<string, unknown>[],
+        botsToRestart,
+      );
       await serverApi.restartBots(activeServer, botsToRestart);
-      await refreshBotControlListAfterRunningChange(activeServer, botsToRestart, true, dispatch);
+      await refreshBotControlListAfterRestart(
+        activeServer,
+        botsToRestart,
+        snapshots,
+        dispatch,
+      );
     } else {
       await dispatch(loadBotControlList({ silent: true }));
     }
@@ -440,11 +484,22 @@ const restartBotIds = async (
     throw new Error('No bots selected');
   }
 
+  const botsBefore = await serverApi.getBots(activeServer);
+  const snapshots = buildBotRuntimeSnapshots(
+    botsBefore as Record<string, unknown>[],
+    uniqueBotIds,
+  );
+
   const results = await serverApi.restartBots(activeServer, uniqueBotIds);
   const { successfulBotIds, failed: failedCount } = splitBulkBotResults(results, uniqueBotIds);
 
   if (successfulBotIds.length > 0) {
-    await refreshBotControlListAfterRunningChange(activeServer, successfulBotIds, true, dispatch);
+    await refreshBotControlListAfterRestart(
+      activeServer,
+      successfulBotIds,
+      snapshots,
+      dispatch,
+    );
   }
 
   if (successfulBotIds.length === 0) {
@@ -490,8 +545,13 @@ export const restartBot = createAsyncThunk(
   async (botId: string, { getState, dispatch }) => {
     const activeServer = getActiveServerKey(getState() as { servers: ServersState });
 
+    const botsBefore = await serverApi.getBots(activeServer);
+    const snapshots = buildBotRuntimeSnapshots(
+      botsBefore as Record<string, unknown>[],
+      [botId],
+    );
     const response = await serverApi.restartBot(activeServer, botId);
-    await refreshBotControlListAfterRunningChange(activeServer, [botId], true, dispatch);
+    await refreshBotControlListAfterRestart(activeServer, [botId], snapshots, dispatch);
     await dispatch(loadActiveBotAll(botId));
     return response;
   },

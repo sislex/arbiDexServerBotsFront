@@ -1,14 +1,15 @@
+import { getStoredAuthLogin } from './auth-storage';
+
 export type ThemeMode = 'light' | 'dark';
 
 const THEME_STORAGE_PREFIX = 'bots-control-theme';
-const AUTH_USER_KEY = 'bots-control-auth-user';
 
 export const getThemeStorageKey = (userLogin?: string | null) => {
   const user = userLogin?.trim();
   return user ? `${THEME_STORAGE_PREFIX}:${user}` : `${THEME_STORAGE_PREFIX}:default`;
 };
 
-export const getAuthUserLogin = () => sessionStorage.getItem(AUTH_USER_KEY);
+export const getAuthUserLogin = () => getStoredAuthLogin();
 
 export const getStoredTheme = (userLogin?: string | null): ThemeMode => {
   try {

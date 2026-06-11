@@ -31,6 +31,7 @@ import {
   setActiveServer,
 } from './store/slices/servers-slice';
 import { showToast } from './services/toast';
+import { clearAuthSession, getStoredAuthLogin, saveAuthSession } from './services/auth-storage';
 
 const VALID_TABS = new Set(['bots', 'rules', 'server-data']);
 const VALID_BOT_TABS = new Set(['control', 'errors', 'chart', 'live-chart']);
@@ -55,6 +56,11 @@ const PageLoader = () => (
     Loading...
   </div>
 );
+
+const handleLogout = () => {
+  clearAuthSession();
+  window.location.reload();
+};
 
 function MainLayout() {
   const dispatch = useAppDispatch();
@@ -103,10 +109,7 @@ function MainLayout() {
   return (
     <div className="size-full flex flex-col bg-background text-foreground">
       <Toaster position="bottom-center" richColors />
-      <Header onLogout={() => {
-        sessionStorage.removeItem('bots-control-auth-user');
-        window.location.reload();
-      }} />
+      <Header onLogout={handleLogout} />
       <Tabs
         activeTab={activeTab}
         onTabChange={(tab) => {
@@ -175,10 +178,7 @@ function BotPageRoute() {
   return (
     <div className="size-full flex flex-col bg-background text-foreground">
       <Toaster position="bottom-center" richColors />
-      <Header onLogout={() => {
-        sessionStorage.removeItem('bots-control-auth-user');
-        window.location.reload();
-      }} />
+      <Header onLogout={handleLogout} />
       <Suspense fallback={<PageLoader />}>
         <BotDetailPage
           botId={botId}
@@ -222,7 +222,7 @@ function TabRouteSync() {
 }
 
 export default function App() {
-  const [authUser, setAuthUser] = useState(() => sessionStorage.getItem('bots-control-auth-user'));
+  const [authUser, setAuthUser] = useState(() => getStoredAuthLogin());
 
   if (!authUser) {
     return (
@@ -230,8 +230,8 @@ export default function App() {
         <ThemeProvider>
           <Suspense fallback={<PageLoader />}>
             <LoginForm
-              onLogin={(login) => {
-                sessionStorage.setItem('bots-control-auth-user', login);
+              onLogin={(login, password) => {
+                saveAuthSession(login, password);
                 setAuthUser(login);
               }}
             />

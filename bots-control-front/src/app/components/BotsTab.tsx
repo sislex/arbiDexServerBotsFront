@@ -51,6 +51,7 @@ import { AppGrid } from './shared/AppGrid';
 import { ApiInfoModal } from './ApiInfoModal';
 import { GetConfigServerForm } from './GetConfigServerForm';
 import { SetBotForm } from './SetBotForm';
+import { BotsSubTabs, type BotsPanelTab } from './BotsSubTabs';
 import { buildConfigPanelServerUrl } from '../store/constants';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 import {
@@ -106,17 +107,18 @@ export function BotsTab({
   const [serverStatuses, setServerStatuses] = useState<Record<string, ServerHealthStatus>>({});
   const [serverConfigChanged, setServerConfigChanged] = useState<Record<string, boolean>>({});
   const [isApiInfoOpen, setIsApiInfoOpen] = useState(false);
-  const [isSetBotFormOpen, setIsSetBotFormOpen] = useState(false);
+  const [activePanelTab, setActivePanelTab] = useState<BotsPanelTab>('info');
   const [setBotInitialConfig, setSetBotInitialConfig] = useState(DEFAULT_BOT_CONFIG_TEMPLATE);
   const [setBotFormHint, setSetBotFormHint] = useState<string | undefined>(undefined);
-  const [isGetConfigServerFormOpen, setIsGetConfigServerFormOpen] = useState(false);
   const [serverConfigInitial, setServerConfigInitial] = useState('{\n  "botsRulesList": []\n}');
   const [serverConfigOriginal, setServerConfigOriginal] = useState('{\n  "botsRulesList": []\n}');
   const [hasDbConfigOriginal, setHasDbConfigOriginal] = useState(false);
   const [isGettingServerConfig, setIsGettingServerConfig] = useState(false);
+  const [isConfigServerReady, setIsConfigServerReady] = useState(false);
   const [selectedBotIds, setSelectedBotIds] = useState<Set<string>>(new Set());
   const [hiddenBotIds, setHiddenBotIds] = useState<string[]>([]);
   const scheduledRemovalsRef = useRef<Map<string, () => void>>(new Map());
+  const skipSetBotResetRef = useRef(false);
   const hasServers = servers.length > 0;
   const ruleIds = useMemo(
     () => new Set(rulesListState.data.map((rule) => String(rule.id))),
@@ -216,11 +218,54 @@ export function BotsTab({
   }, [activeServer.ip, activeServer.port]);
 
   useEffect(() => {
-    setIsGetConfigServerFormOpen(false);
+    setActivePanelTab('info');
     setIsGettingServerConfig(false);
-    setIsSetBotFormOpen(false);
+    setIsConfigServerReady(false);
     setSetBotFormHint(undefined);
   }, [activeServer.ip, activeServer.port]);
+
+  const loadConfigServerData = useCallback(async () => {
+    setIsGettingServerConfig(true);
+    setIsConfigServerReady(false);
+    const resolvedServer = resolveActiveServerFromList();
+    const dbConfigPromise = resolvedServer.serverId
+      ? loadDbConfigTextForServer(resolvedServer.serverId)
+      : Promise.resolve('{\n  "botsRulesList": []\n}');
+
+    try {
+      const [rulesResult, dbConfig] = await Promise.all([
+        dispatch(loadRulesList()),
+        dbConfigPromise,
+      ]);
+
+      if (!loadRulesList.fulfilled.match(rulesResult)) {
+        showToast(
+          'error',
+          rulesResult.error?.message ?? t.botsTab.getConfigServer.loadError,
+        );
+        return;
+      }
+
+      setServerConfigOriginal(dbConfig);
+      setHasDbConfigOriginal(Boolean(resolvedServer.serverId));
+      setServerConfigInitial(buildServerRulesClipboardText(rulesResult.payload.rules ?? []));
+      setIsConfigServerReady(true);
+    } catch (error: unknown) {
+      showToast(
+        'error',
+        error instanceof Error ? error.message : t.botsTab.getConfigServer.loadError,
+      );
+    } finally {
+      setIsGettingServerConfig(false);
+    }
+  }, [dispatch, resolveActiveServerFromList, t.botsTab.getConfigServer.loadError]);
+
+  useEffect(() => {
+    if (activePanelTab !== 'config-server') {
+      return;
+    }
+    void loadConfigServerData();
+  }, [activePanelTab, activeServer.ip, activeServer.port, loadConfigServerData]);
 
   useEffect(() => {
     if (servers.length === 0) {
@@ -598,10 +643,19 @@ export function BotsTab({
     count && count > 0 ? `${label} (${count})` : label;
 
   const openSetBotForm = (config: string, hint?: string) => {
+    skipSetBotResetRef.current = true;
     setSetBotInitialConfig(config);
     setSetBotFormHint(hint);
-    setIsGetConfigServerFormOpen(false);
-    setIsSetBotFormOpen(true);
+    setActivePanelTab('set-bot');
+  };
+
+  const handlePanelTabChange = (tab: BotsPanelTab) => {
+    if (tab === 'set-bot' && !skipSetBotResetRef.current) {
+      setSetBotInitialConfig(DEFAULT_BOT_CONFIG_TEMPLATE);
+      setSetBotFormHint(undefined);
+    }
+    skipSetBotResetRef.current = false;
+    setActivePanelTab(tab);
   };
 
   const openCopyBotForm = (botId: string) => {
@@ -853,182 +907,137 @@ export function BotsTab({
 
       {/* Main Content */}
       <div className="flex-1 min-w-0 min-h-0 flex flex-col overflow-hidden">
-        <div className="h-11 shrink-0 border-b border-border bg-background flex items-center justify-between gap-3 px-4">
-          <h2 className="text-sm text-foreground">
-            {t.botsTab.title} ({totalBots}/{runningBots})
-          </h2>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => {
-                openSetBotForm(DEFAULT_BOT_CONFIG_TEMPLATE);
-              }}
-              className="px-3 py-1.5 rounded text-sm transition-colors bg-secondary text-secondary-foreground hover:opacity-90"
-            >
-              {t.botsTab.setBot.button}
-            </button>
-            <button
-              type="button"
-              disabled={isGettingServerConfig}
-              onClick={() => {
-                setIsSetBotFormOpen(false);
-                setIsGettingServerConfig(true);
-                const resolvedServer = resolveActiveServerFromList();
-                const dbConfigPromise = resolvedServer.serverId
-                  ? loadDbConfigTextForServer(resolvedServer.serverId)
-                  : Promise.resolve('{\n  "botsRulesList": []\n}');
-
-                void Promise.all([dispatch(loadRulesList()), dbConfigPromise])
-                  .then(([rulesResult, dbConfig]) => {
-                    if (!loadRulesList.fulfilled.match(rulesResult)) {
-                      showToast(
-                        'error',
-                        rulesResult.error?.message ?? t.botsTab.getConfigServer.loadError,
-                      );
-                      return;
-                    }
-
-                    setServerConfigOriginal(dbConfig);
-                    setHasDbConfigOriginal(Boolean(resolvedServer.serverId));
-                    setServerConfigInitial(
-                      buildServerRulesClipboardText(rulesResult.payload.rules ?? []),
-                    );
-                    setIsGetConfigServerFormOpen(true);
-                  })
-                  .catch((error: unknown) => {
-                    showToast(
-                      'error',
-                      error instanceof Error ? error.message : t.botsTab.getConfigServer.loadError,
-                    );
-                  })
-                  .finally(() => {
-                    setIsGettingServerConfig(false);
-                  });
-              }}
-              className={`px-3 py-1.5 rounded text-sm transition-colors ${
-                isGettingServerConfig
-                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                  : 'bg-secondary text-secondary-foreground hover:opacity-90'
-              }`}
-              title={t.botsTab.getConfigServer.button}
-            >
-              {t.botsTab.getConfigServer.button}
-            </button>
-            <button
-              type="button"
-              onClick={onRefresh}
-              disabled={!onRefresh || isRefreshing}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded transition-colors text-sm ${
-                isRefreshing
-                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                  : 'bg-primary text-primary-foreground hover:opacity-90'
-              }`}
-              title={t.header.refresh}
-            >
-              <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
-              <span className="text-sm">{t.header.refresh}</span>
-            </button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+        <BotsSubTabs
+          activeTab={activePanelTab}
+          onTabChange={handlePanelTabChange}
+          botsCounts={{ total: totalBots, running: runningBots }}
+          actions={
+            activePanelTab === 'info' ? (
+              <>
                 <button
                   type="button"
-                  className="flex items-center justify-center p-2 rounded transition-colors bg-muted text-foreground hover:bg-accent"
-                  aria-label={t.botsTab.actions}
-                  title={t.botsTab.actions}
+                  onClick={onRefresh}
+                  disabled={!onRefresh || isRefreshing}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded transition-colors text-sm ${
+                    isRefreshing
+                      ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                      : 'bg-primary text-primary-foreground hover:opacity-90'
+                  }`}
+                  title={t.header.refresh}
                 >
-                  <Menu size={16} />
+                  <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
+                  <span className="text-sm">{t.header.refresh}</span>
                 </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  disabled={allBotIds.length === 0}
-                  onClick={() => void runAllPause(false)}
-                >
-                  {t.botsTab.startAll}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  disabled={allBotIds.length === 0}
-                  onClick={() => void runAllPause(true)}
-                >
-                  {t.botsTab.stopAll}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  disabled={allBotIds.length === 0}
-                  onClick={() => void runAllRestart()}
-                >
-                  {t.botsTab.restartAll}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  variant="destructive"
-                  disabled={deletableBotIds.length === 0}
-                  onClick={() => scheduleBotsRemoval(deletableBotIds)}
-                >
-                  {t.botsTab.deleteAll}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  disabled={selectedCount === 0}
-                  onClick={() => void runSelectedPause(false)}
-                >
-                  {formatActionLabel(t.botsTab.startSelected, selectedCount)}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  disabled={selectedCount === 0}
-                  onClick={() => void runSelectedPause(true)}
-                >
-                  {formatActionLabel(t.botsTab.stopSelected, selectedCount)}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  disabled={selectedCount === 0}
-                  onClick={() => void runSelectedRestart()}
-                >
-                  {formatActionLabel(t.botsTab.restartSelected, selectedCount)}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  variant="destructive"
-                  disabled={selectedDeletableBotIds.length === 0}
-                  onClick={() => scheduleBotsRemoval(selectedDeletableBotIds)}
-                >
-                  {formatActionLabel(t.botsTab.deleteSelected, selectedDeletableBotIds.length)}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      className="flex items-center justify-center p-2 rounded transition-colors bg-muted text-foreground hover:bg-accent"
+                      aria-label={t.botsTab.actions}
+                      title={t.botsTab.actions}
+                    >
+                      <Menu size={16} />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      disabled={allBotIds.length === 0}
+                      onClick={() => void runAllPause(false)}
+                    >
+                      {t.botsTab.startAll}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      disabled={allBotIds.length === 0}
+                      onClick={() => void runAllPause(true)}
+                    >
+                      {t.botsTab.stopAll}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      disabled={allBotIds.length === 0}
+                      onClick={() => void runAllRestart()}
+                    >
+                      {t.botsTab.restartAll}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      variant="destructive"
+                      disabled={deletableBotIds.length === 0}
+                      onClick={() => scheduleBotsRemoval(deletableBotIds)}
+                    >
+                      {t.botsTab.deleteAll}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      disabled={selectedCount === 0}
+                      onClick={() => void runSelectedPause(false)}
+                    >
+                      {formatActionLabel(t.botsTab.startSelected, selectedCount)}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      disabled={selectedCount === 0}
+                      onClick={() => void runSelectedPause(true)}
+                    >
+                      {formatActionLabel(t.botsTab.stopSelected, selectedCount)}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      disabled={selectedCount === 0}
+                      onClick={() => void runSelectedRestart()}
+                    >
+                      {formatActionLabel(t.botsTab.restartSelected, selectedCount)}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      variant="destructive"
+                      disabled={selectedDeletableBotIds.length === 0}
+                      onClick={() => scheduleBotsRemoval(selectedDeletableBotIds)}
+                    >
+                      {formatActionLabel(t.botsTab.deleteSelected, selectedDeletableBotIds.length)}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : undefined
+          }
+        />
 
-        {isGetConfigServerFormOpen ? (
-          <GetConfigServerForm
-            key={`${serverConfigInitial}:${serverConfigOriginal}`}
-            originalConfig={serverConfigOriginal}
-            initialConfig={serverConfigInitial}
-            hasDbOriginal={hasDbConfigOriginal}
-            isSaving={botControlActionState.isLoading}
-            onBack={() => setIsGetConfigServerFormOpen(false)}
-            onSave={async (config) => {
-              const result = await dispatch(saveServerRulesFromConfig(config));
-              if (saveServerRulesFromConfig.fulfilled.match(result)) {
-                showToast('success', t.botsTab.getConfigServer.saveSuccess);
-                setServerConfigInitial(config);
-                setIsGetConfigServerFormOpen(false);
-              } else {
-                showToast('error', result.error.message ?? t.botsTab.getConfigServer.saveError);
-              }
-            }}
-          />
-        ) : isSetBotFormOpen ? (
+        {activePanelTab === 'config-server' ? (
+          isGettingServerConfig || !isConfigServerReady ? (
+            <div className="flex-1 flex items-center justify-center text-sm text-muted-foreground">
+              {t.botsTab.loading ?? 'Loading...'}
+            </div>
+          ) : (
+            <GetConfigServerForm
+              key={`${serverConfigInitial}:${serverConfigOriginal}`}
+              originalConfig={serverConfigOriginal}
+              initialConfig={serverConfigInitial}
+              hasDbOriginal={hasDbConfigOriginal}
+              isSaving={botControlActionState.isLoading}
+              onBack={() => setActivePanelTab('info')}
+              onSave={async (config) => {
+                const result = await dispatch(saveServerRulesFromConfig(config));
+                if (saveServerRulesFromConfig.fulfilled.match(result)) {
+                  showToast('success', t.botsTab.getConfigServer.saveSuccess);
+                  setServerConfigInitial(config);
+                  setActivePanelTab('info');
+                } else {
+                  showToast('error', result.error.message ?? t.botsTab.getConfigServer.saveError);
+                }
+              }}
+            />
+          )
+        ) : activePanelTab === 'set-bot' ? (
           <SetBotForm
             key={setBotInitialConfig}
             initialConfig={setBotInitialConfig}
             hint={setBotFormHint}
+            isSaving={botControlActionState.isLoading}
             onBack={() => {
-              setIsSetBotFormOpen(false);
+              setActivePanelTab('info');
               setSetBotFormHint(undefined);
             }}
             onSave={async (config) => {
               const result = await dispatch(setBotFromConfig(config));
               if (setBotFromConfig.fulfilled.match(result)) {
                 showToast('success', t.botsTab.setBot.saveSuccess);
-                setIsSetBotFormOpen(false);
+                setActivePanelTab('info');
                 setSetBotFormHint(undefined);
               } else {
                 showToast('error', result.error.message ?? t.botsTab.setBot.saveError);
@@ -1036,30 +1045,34 @@ export function BotsTab({
             }}
           />
         ) : (
-          <div className="flex-1 min-h-0 min-w-0 overflow-hidden">
-            {botControlListState.error ? (
-              <div className="p-4 text-sm text-destructive">{botControlListState.error}</div>
-            ) : (
-              <AppGrid<BotRow>
-                rowData={rows}
-                columnDefs={colDefs}
-                className="h-full"
-                onRowDoubleClicked={(event) => {
-                  const botId = event.data?.id;
-                  if (botId && !pendingBotIds.includes(botId)) {
-                    onBotSelect?.(botId);
-                  }
-                }}
-              />
+          <div className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden">
+            <div className="flex-1 min-h-0 min-w-0 overflow-hidden">
+              {botControlListState.error ? (
+                <div className="p-4 text-sm text-destructive">{botControlListState.error}</div>
+              ) : (
+                <AppGrid<BotRow>
+                  rowData={rows}
+                  columnDefs={colDefs}
+                  className="h-full"
+                  onRowDoubleClicked={(event) => {
+                    const botId = event.data?.id;
+                    if (botId && !pendingBotIds.includes(botId)) {
+                      onBotSelect?.(botId);
+                    }
+                  }}
+                />
+              )}
+            </div>
+            {botControlListState.isLoading && (
+              <div className="text-sm text-muted-foreground mt-2 px-4">
+                {t.botsTab.loading ?? 'Loading...'}
+              </div>
             )}
-          </div>
-        )}
-        {!isSetBotFormOpen && !isGetConfigServerFormOpen && botControlListState.isLoading && (
-          <div className="text-sm text-muted-foreground mt-2 px-4">{t.botsTab.loading ?? 'Loading...'}</div>
-        )}
-        {!isSetBotFormOpen && !isGetConfigServerFormOpen && !botControlListState.isLoading && rows.length > 0 && (
-          <div className="text-xs text-muted-foreground mt-2 px-4">
-            {t.botsTab.openBotHintDoubleClick ?? t.botsTab.openBotHint}
+            {!botControlListState.isLoading && rows.length > 0 && (
+              <div className="text-xs text-muted-foreground mt-2 px-4 pb-2">
+                {t.botsTab.openBotHintDoubleClick ?? t.botsTab.openBotHint}
+              </div>
+            )}
           </div>
         )}
       </div>
