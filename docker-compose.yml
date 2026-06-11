@@ -15,5 +15,5 @@ services:
       dockerfile: DockerfileFrontend
     container_name: react-arbidex-front
     ports:
-      - "8230:4204"
+      - "4204:4204"
     restart: unless-stopped
