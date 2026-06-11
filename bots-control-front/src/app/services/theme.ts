@@ -1,4 +1,4 @@
-import { getStoredAuthLogin } from './auth-storage';
+import { getStoredAuthLogin, getStoredAuthTheme } from './auth-storage';
 
 export type ThemeMode = 'light' | 'dark';
 
@@ -20,6 +20,15 @@ export const getStoredTheme = (userLogin?: string | null): ThemeMode => {
   }
 };
 
+export const resolveInitialTheme = (userLogin?: string | null): ThemeMode => {
+  const sessionTheme = getStoredAuthTheme();
+  if (sessionTheme) {
+    return sessionTheme;
+  }
+
+  return getStoredTheme(userLogin);
+};
+
 export const setStoredTheme = (theme: ThemeMode, userLogin?: string | null) => {
   try {
     localStorage.setItem(getThemeStorageKey(userLogin), theme);
@@ -37,5 +46,5 @@ export const applyThemeToDocument = (theme: ThemeMode) => {
 };
 
 export const initThemeFromStorage = () => {
-  applyThemeToDocument(getStoredTheme(getAuthUserLogin()));
+  applyThemeToDocument(resolveInitialTheme(getAuthUserLogin()));
 };

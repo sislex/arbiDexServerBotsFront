@@ -1,7 +1,11 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import {
+  getAuthSession,
+  updateAuthSessionPreferences,
+} from '../services/auth-storage';
+import {
   applyThemeToDocument,
-  getStoredTheme,
+  resolveInitialTheme,
   setStoredTheme,
   type ThemeMode,
 } from '../services/theme';
@@ -21,16 +25,20 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children, userLogin = null }: ThemeProviderProps) {
-  const [theme, setThemeState] = useState<ThemeMode>(() => getStoredTheme(userLogin));
+  const [theme, setThemeState] = useState<ThemeMode>(() => resolveInitialTheme(userLogin));
 
   useEffect(() => {
-    const storedTheme = getStoredTheme(userLogin);
+    const storedTheme = resolveInitialTheme(userLogin);
     setThemeState(storedTheme);
     applyThemeToDocument(storedTheme);
   }, [userLogin]);
 
   useEffect(() => {
     applyThemeToDocument(theme);
+    if (getAuthSession()) {
+      updateAuthSessionPreferences({ theme });
+      return;
+    }
     setStoredTheme(theme, userLogin);
   }, [theme, userLogin]);
 

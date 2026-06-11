@@ -1,4 +1,9 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import {
+  getAuthSession,
+  getStoredAuthLanguage,
+  updateAuthSessionPreferences,
+} from '../services/auth-storage';
 import { translations, Language, TranslationKeys } from './translations';
 
 interface LanguageContextType {
@@ -9,20 +14,35 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>('en');
+interface LanguageProviderProps {
+  children: ReactNode;
+  userLogin?: string | null;
+}
+
+const resolveInitialLanguage = (userLogin?: string | null): Language =>
+  userLogin ? (getStoredAuthLanguage() ?? 'en') : 'en';
+
+export function LanguageProvider({ children, userLogin = null }: LanguageProviderProps) {
+  const [language, setLanguageState] = useState<Language>(() => resolveInitialLanguage(userLogin));
+
+  useEffect(() => {
+    setLanguageState(resolveInitialLanguage(userLogin));
+  }, [userLogin]);
+
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
+    if (getAuthSession()) {
+      updateAuthSessionPreferences({ language: lang });
+    }
+  };
 
   const value = {
     language,
     setLanguage,
-    t: translations[language]
+    t: translations[language],
   };
 
-  return (
-    <LanguageContext.Provider value={value}>
-      {children}
-    </LanguageContext.Provider>
-  );
+  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }
 
 export function useLanguage() {

@@ -11,11 +11,9 @@ const ServerDataTab = lazy(async () =>
 const BotDetailPage = lazy(async () =>
   import('./components/BotDetailPage').then((module) => ({ default: module.BotDetailPage })),
 );
-const LoginForm = lazy(async () =>
-  import('./components/LoginForm').then((module) => ({ default: module.LoginForm })),
-);
+import { LoginForm } from './components/LoginForm';
 import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
-import { ThemeProvider } from './theme/ThemeProvider';
+import { ThemeProvider, useTheme } from './theme/ThemeProvider';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import {
   selectActiveServer,
@@ -61,6 +59,20 @@ const handleLogout = () => {
   clearAuthSession();
   window.location.reload();
 };
+
+function LoginScreen({ onAuthenticated }: { onAuthenticated: (login: string) => void }) {
+  const { language } = useLanguage();
+  const { theme } = useTheme();
+
+  return (
+    <LoginForm
+      onLogin={(login, password) => {
+        saveAuthSession(login, password, { language, theme });
+        onAuthenticated(login);
+      }}
+    />
+  );
+}
 
 function MainLayout() {
   const dispatch = useAppDispatch();
@@ -229,12 +241,7 @@ export default function App() {
       <LanguageProvider>
         <ThemeProvider>
           <Suspense fallback={<PageLoader />}>
-            <LoginForm
-              onLogin={(login, password) => {
-                saveAuthSession(login, password);
-                setAuthUser(login);
-              }}
-            />
+            <LoginScreen onAuthenticated={setAuthUser} />
           </Suspense>
         </ThemeProvider>
       </LanguageProvider>
@@ -242,7 +249,7 @@ export default function App() {
   }
 
   return (
-    <LanguageProvider>
+    <LanguageProvider userLogin={authUser}>
       <ThemeProvider userLogin={authUser}>
         <Routes>
           <Route path="/server/:ipPort/tab/:tabId" element={<TabRouteSync />} />
