@@ -45,6 +45,7 @@ import {
   normalizeRulesList,
 } from '../services/bot-control-adapter';
 import { checkServerHealth, type ServerHealthStatus } from '../services/server-health';
+import { isServerConfigChanged } from '../services/server-config-sync';
 import { AppGrid } from './shared/AppGrid';
 import { ApiInfoModal } from './ApiInfoModal';
 import { GetConfigServerForm } from './GetConfigServerForm';
@@ -102,6 +103,7 @@ export function BotsTab({
   const pendingBotIds = useAppSelector(selectPendingBotIds);
   const [selectedServer, setSelectedServer] = useState(`${activeServer.ip}:${activeServer.port}`);
   const [serverStatuses, setServerStatuses] = useState<Record<string, ServerHealthStatus>>({});
+  const [serverConfigChanged, setServerConfigChanged] = useState<Record<string, boolean>>({});
   const [isApiInfoOpen, setIsApiInfoOpen] = useState(false);
   const [isSetBotFormOpen, setIsSetBotFormOpen] = useState(false);
   const [setBotInitialConfig, setSetBotInitialConfig] = useState(DEFAULT_BOT_CONFIG_TEMPLATE);
@@ -166,8 +168,13 @@ export function BotsTab({
           />
           <div className="flex-1 min-w-0">
             <div className="text-sm text-foreground truncate">{server.ip}</div>
-            <div className="text-xs text-muted-foreground">
-              {t.botsTab.port}: {server.port}
+            <div className="text-xs text-muted-foreground flex items-center gap-2 flex-wrap">
+              <span>
+                {t.botsTab.port}: {server.port}
+              </span>
+              {serverConfigChanged[serverKey] && (
+                <span className="text-warning font-medium">{t.botsTab.configChanged}</span>
+              )}
             </div>
           </div>
           {isSelected && <Check size={16} className="text-primary shrink-0" />}
@@ -231,6 +238,58 @@ export function BotsTab({
       isCancelled = true;
     };
   }, [servers]);
+
+  useEffect(() => {
+    if (servers.length === 0) {
+      setServerConfigChanged({});
+      return;
+    }
+
+    let isCancelled = false;
+
+    const checkConfigSync = async (server: ServerUiItem) => {
+      const key = `${server.ip}:${server.port}`;
+      if (!server.serverId || serverStatuses[key] !== 'online') {
+        if (!isCancelled) {
+          setServerConfigChanged((prev) => {
+            if (!(key in prev)) {
+              return prev;
+            }
+            const next = { ...prev };
+            delete next[key];
+            return next;
+          });
+        }
+        return;
+      }
+
+      try {
+        const changed = await isServerConfigChanged(server.serverId, server.ip, server.port);
+        if (!isCancelled) {
+          setServerConfigChanged((prev) => ({ ...prev, [key]: changed }));
+        }
+      } catch {
+        if (!isCancelled) {
+          setServerConfigChanged((prev) => {
+            if (!(key in prev)) {
+              return prev;
+            }
+            const next = { ...prev };
+            delete next[key];
+            return next;
+          });
+        }
+      }
+    };
+
+    servers.forEach((server) => {
+      void checkConfigSync(server);
+    });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [servers, serverStatuses, rulesListState.data, rulesListState.isLoaded]);
 
   const allRows: BotRow[] = botControlListState.data.map((item) =>
     mapBotItemToListRow(
